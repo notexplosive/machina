@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace HelloGame.Hello
+namespace Machina
 {
     class Actor
     {
@@ -21,16 +21,16 @@ namespace HelloGame.Hello
             var curKeys = Keyboard.GetState();
 
             if (curKeys.IsKeyDown(Keys.Up))
-                position.Y -= 120f * dt;
+                position.Y -= 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Down))
-                position.Y += 120f * dt;
+                position.Y += 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Left))
-                position.X -= 120f * dt;
+                position.X -= 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Right))
-                position.X += 120f * dt;
+                position.X += 500f * dt;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using HelloGame.Hello;
+﻿using Machina;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,10 +8,9 @@ namespace HelloGame
 {
     public class GameCore : Game
     {
-        private GraphicsDeviceManager graphics;
+        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         Texture2D ballTexture;
-        private Vector2 ballPosition;
         private Actor firstActor;
         Primitive prim;
         private KeyboardState previousKeys;
@@ -25,8 +24,10 @@ namespace HelloGame
 
         protected override void Initialize()
         {
-            firstActor = new Actor();
-            firstActor.position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            firstActor = new Actor
+            {
+                position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
+            };
 
             base.Initialize();
             prim = new Primitive(graphics.GraphicsDevice, spriteBatch)

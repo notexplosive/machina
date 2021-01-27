@@ -7,8 +7,8 @@ namespace HelloGame
         [STAThread]
         static void Main()
         {
-            using (var game = new GameCore())
-                game.Run();
+            using var game = new GameCore();
+            game.Run();
         }
     }
 }
