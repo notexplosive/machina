@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace Machina
@@ -46,22 +48,55 @@ namespace Machina
         /// <returns></returns>
         public BaseComponent AddComponent(BaseComponent component)
         {
+            Type type = component.GetType();
+            Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
+
             components.Add(component);
             return component;
         }
 
+        /// <summary>
+        /// Acquire a component of type T if it exists. Otherwise get null.
+        /// </summary>
+        /// <typeparam name="T">Component that inherits from BaseComponent</typeparam>
+        /// <returns></returns>
         public T GetComponent<T>() where T : BaseComponent
         {
             foreach (BaseComponent component in this.components)
             {
                 T converted = component as T;
-
                 if (converted != null)
                 {
                     return converted;
                 }
             }
 
+            return null;
+        }
+
+        public IEnumerable<T> GetComponents<T>() where T : BaseComponent
+        {
+            var result = new List<T>();
+            foreach (BaseComponent component in this.components)
+            {
+                if (component is T converted)
+                {
+                    result.Add(converted);
+                }
+            }
+
+            return result;
+        }
+
+        private BaseComponent GetComponentByName(string fullName)
+        {
+            foreach (BaseComponent component in this.components)
+            {
+                if (component.GetType().FullName == fullName)
+                {
+                    return component;
+                }
+            }
             return null;
         }
     }

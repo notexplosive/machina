@@ -5,11 +5,14 @@ using System.Text;
 
 namespace Machina
 {
+    /// <summary>
+    /// Base class for all components. Child components are expected to implement their own Update and Draw functions.
+    /// </summary>
     abstract class BaseComponent
     {
         protected Actor actor;
-        public virtual void Update(float dt) { }
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public abstract void Update(float dt);
+        public abstract void Draw(SpriteBatch spriteBatch);
 
         public BaseComponent(Actor actor)
         {
@@ -17,5 +20,36 @@ namespace Machina
             // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
             this.actor.AddComponent(this);
         }
+    }
+
+    /// <summary>
+    /// Component that does not need to implement any entrypoint functions. Essentially it's a component that just holds data
+    /// </summary>
+    abstract class DataComponent : BaseComponent
+    {
+        public DataComponent(Actor actor) : base(actor) { }
+
+        public override void Update(float dt) { }
+        public override void Draw(SpriteBatch spriteBatch) { }
+    }
+
+    /// <summary>
+    /// Component that does not update, but does draw
+    /// </summary>
+    abstract class DrawOnlyComponent : BaseComponent
+    {
+        public DrawOnlyComponent(Actor actor) : base(actor) { }
+
+        public override void Update(float dt) { }
+    }
+
+    /// <summary>
+    /// Component that does not draw, but does update
+    /// </summary>
+    abstract class UpdateOnlyComponent : BaseComponent
+    {
+        public UpdateOnlyComponent(Actor actor) : base(actor) { }
+
+        public override void Draw(SpriteBatch spriteBatch) { }
     }
 }
