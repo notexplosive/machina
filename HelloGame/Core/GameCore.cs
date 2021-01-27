@@ -1,21 +1,22 @@
-﻿using Microsoft.Xna.Framework;
+﻿using HelloGame.Hello;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PrimitiveBuddy;
 
 namespace HelloGame
 {
-    public class Game1 : Game
+    public class GameCore : Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         Texture2D ballTexture;
         private Vector2 ballPosition;
-        private float ballSpeed;
+        private Actor firstActor;
         Primitive prim;
         private KeyboardState previousKeys;
 
-        public Game1()
+        public GameCore()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -24,22 +25,24 @@ namespace HelloGame
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            ballPosition = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
-            ballSpeed = 100f;
-
+            firstActor = new Actor();
+            firstActor.position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
 
             base.Initialize();
-            prim = new Primitive(graphics.GraphicsDevice, spriteBatch);
-            prim.NumCircleSegments = 3;
+            prim = new Primitive(graphics.GraphicsDevice, spriteBatch)
+            {
+                NumCircleSegments = 16
+            };
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            // Load all textures and other content
             ballTexture = Content.Load<Texture2D>("ball");
+
+            firstActor.texture = ballTexture;
         }
 
         protected override void Update(GameTime gameTime)
@@ -49,27 +52,7 @@ namespace HelloGame
 
             var curKeys = Keyboard.GetState();
 
-            if (curKeys.IsKeyDown(Keys.Up))
-                ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (curKeys.IsKeyDown(Keys.Down))
-                ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (curKeys.IsKeyDown(Keys.Left))
-                ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (curKeys.IsKeyDown(Keys.Right))
-                ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (ballPosition.X > graphics.PreferredBackBufferWidth - ballTexture.Width / 2)
-                ballPosition.X = graphics.PreferredBackBufferWidth - ballTexture.Width / 2;
-            else if (ballPosition.X < ballTexture.Width / 2)
-                ballPosition.X = ballTexture.Width / 2;
-
-            if (ballPosition.Y > graphics.PreferredBackBufferHeight - ballTexture.Height / 2)
-                ballPosition.Y = graphics.PreferredBackBufferHeight - ballTexture.Height / 2;
-            else if (ballPosition.Y < ballTexture.Height / 2)
-                ballPosition.Y = ballTexture.Height / 2;
+            firstActor.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (previousKeys.IsKeyUp(Keys.A) && curKeys.IsKeyDown(Keys.A))
             {
@@ -91,7 +74,8 @@ namespace HelloGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+
+            firstActor.Draw(spriteBatch);
 
             prim.Circle(new Vector2(128f, 128f), 64f, Color.White);
             prim.Pie(new Vector2(256f, 256f), 64f, MathHelper.PiOver2, MathHelper.PiOver2, Color.White);
