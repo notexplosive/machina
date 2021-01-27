@@ -15,6 +15,8 @@ namespace HelloGame
         Primitive prim;
         private KeyboardState previousKeys;
 
+        Scene gameScene;
+
         public GameCore()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -28,6 +30,9 @@ namespace HelloGame
             {
                 position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
             };
+
+            gameScene = new Scene();
+            gameScene.AddActor(firstActor);
 
             base.Initialize();
             prim = new Primitive(graphics.GraphicsDevice, spriteBatch)
@@ -53,7 +58,7 @@ namespace HelloGame
 
             var curKeys = Keyboard.GetState();
 
-            firstActor.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            gameScene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             if (previousKeys.IsKeyUp(Keys.A) && curKeys.IsKeyDown(Keys.A))
             {
@@ -76,7 +81,7 @@ namespace HelloGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            firstActor.Draw(spriteBatch);
+            gameScene.Draw(spriteBatch);
 
             prim.Circle(new Vector2(128f, 128f), 64f, Color.White);
             prim.Pie(new Vector2(256f, 256f), 64f, MathHelper.PiOver2, MathHelper.PiOver2, Color.White);
