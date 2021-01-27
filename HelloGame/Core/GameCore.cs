@@ -1,4 +1,5 @@
 ﻿using Machina;
+using Machina.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -48,7 +49,7 @@ namespace HelloGame
             // Load all textures and other content
             ballTexture = Content.Load<Texture2D>("ball");
 
-            firstActor.texture = ballTexture;
+            new TextureRenderer(firstActor, ballTexture);
         }
 
         protected override void Update(GameTime gameTime)
