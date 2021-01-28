@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\KeyboardMovement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextureRenderer.cs" />

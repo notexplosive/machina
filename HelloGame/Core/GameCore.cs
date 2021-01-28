@@ -10,12 +10,13 @@ namespace HelloGame
     {
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-        Texture2D ballTexture;
+        static AssetLibrary assets;
 
         Scene gameScene;
 
         public GameCore()
         {
+            assets = new AssetLibrary(this);
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -32,16 +33,15 @@ namespace HelloGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load all textures and other content
-            ballTexture = Content.Load<Texture2D>("ball");
-
+            assets.LoadTexture("ball");
+            assets.LoadTexture("window-frame");
 
             Actor firstActor = new Actor
             {
                 position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
             };
             gameScene.AddActor(firstActor);
-            new TextureRenderer(firstActor, ballTexture);
+            new TextureRenderer(firstActor, assets.GetTexture("ball"));
             new KeyboardMovement(firstActor);
         }
 
