@@ -13,9 +13,7 @@ namespace HelloGame
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         Texture2D ballTexture;
-        private Actor firstActor;
         Primitive prim;
-        private KeyboardState previousKeys;
         PrimitiveShapes primitiveShapes;
 
         Scene gameScene;
@@ -29,13 +27,7 @@ namespace HelloGame
 
         protected override void Initialize()
         {
-            firstActor = new Actor
-            {
-                position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
-            };
-
             gameScene = new Scene();
-            gameScene.AddActor(firstActor);
 
             base.Initialize();
 
@@ -57,6 +49,12 @@ namespace HelloGame
             // Load all textures and other content
             ballTexture = Content.Load<Texture2D>("ball");
 
+
+            Actor firstActor = new Actor
+            {
+                position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
+            };
+            gameScene.AddActor(firstActor);
             new TextureRenderer(firstActor, ballTexture);
             new KeyboardMovement(firstActor);
         }
