@@ -1,10 +1,8 @@
 ﻿using Machina;
 using Machina.Components;
-using Machina.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using PrimitiveBuddy;
 
 namespace HelloGame
 {
@@ -13,8 +11,6 @@ namespace HelloGame
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         Texture2D ballTexture;
-        Primitive prim;
-        PrimitiveShapes primitiveShapes;
 
         Scene gameScene;
 
@@ -30,16 +26,6 @@ namespace HelloGame
             gameScene = new Scene();
 
             base.Initialize();
-
-            // Initialize PrimitiveBuddy
-            prim = new Primitive(graphics.GraphicsDevice, spriteBatch)
-            {
-                NumCircleSegments = 16
-            };
-
-            // Initialize Helpers.PrimitiveShapes
-            primitiveShapes = new PrimitiveShapes(graphics.GraphicsDevice, spriteBatch);
-
         }
 
         protected override void LoadContent()
