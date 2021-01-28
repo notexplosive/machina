@@ -1,5 +1,6 @@
 ﻿using Machina;
 using Machina.Components;
+using Machina.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,6 +16,7 @@ namespace HelloGame
         private Actor firstActor;
         Primitive prim;
         private KeyboardState previousKeys;
+        PrimitiveShapes primitiveShapes;
 
         Scene gameScene;
 
@@ -36,10 +38,16 @@ namespace HelloGame
             gameScene.AddActor(firstActor);
 
             base.Initialize();
+
+            // Initialize PrimitiveBuddy
             prim = new Primitive(graphics.GraphicsDevice, spriteBatch)
             {
                 NumCircleSegments = 16
             };
+
+            // Initialize Helpers.PrimitiveShapes
+            primitiveShapes = new PrimitiveShapes(graphics.GraphicsDevice, spriteBatch);
+
         }
 
         protected override void LoadContent()
@@ -50,6 +58,7 @@ namespace HelloGame
             ballTexture = Content.Load<Texture2D>("ball");
 
             new TextureRenderer(firstActor, ballTexture);
+            new KeyboardMovement(firstActor);
         }
 
         protected override void Update(GameTime gameTime)
@@ -57,36 +66,19 @@ namespace HelloGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var curKeys = Keyboard.GetState();
-
             gameScene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-
-            if (previousKeys.IsKeyUp(Keys.A) && curKeys.IsKeyDown(Keys.A))
-            {
-                prim.NumCircleSegments++;
-            }
-            else if (previousKeys.IsKeyUp(Keys.S) && curKeys.IsKeyDown(Keys.S))
-            {
-                prim.NumCircleSegments--;
-            }
-
-            previousKeys = curKeys;
 
             base.Update(gameTime);
         }
+
+
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
-
             gameScene.Draw(spriteBatch);
-
-            prim.Circle(new Vector2(128f, 128f), 64f, Color.White);
-            prim.Pie(new Vector2(256f, 256f), 64f, MathHelper.PiOver2, MathHelper.PiOver2, Color.White);
-
             spriteBatch.End();
 
 

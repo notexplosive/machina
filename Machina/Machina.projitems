@@ -11,8 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\KeyboardMovement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\PrimitiveRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextureRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\PrimitiveShapes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestGame.cs" />
   </ItemGroup>

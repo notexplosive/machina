@@ -25,19 +25,10 @@ namespace Machina
 
         public void Update(float dt)
         {
-            var curKeys = Keyboard.GetState();
-
-            if (curKeys.IsKeyDown(Keys.Up))
-                position.Y -= 500f * dt;
-
-            if (curKeys.IsKeyDown(Keys.Down))
-                position.Y += 500f * dt;
-
-            if (curKeys.IsKeyDown(Keys.Left))
-                position.X -= 500f * dt;
-
-            if (curKeys.IsKeyDown(Keys.Right))
-                position.X += 500f * dt;
+            foreach (var component in this.components)
+            {
+                component.Update(dt);
+            }
         }
 
         /// <summary>

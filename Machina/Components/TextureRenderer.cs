@@ -22,7 +22,7 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            throw new NotImplementedException();
+
         }
     }
 }
