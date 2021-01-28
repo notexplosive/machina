@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using System.IO;
 
 namespace Machina
 {
@@ -16,14 +17,41 @@ namespace Machina
         {
             this.content = game.Content;
         }
-
-        // Called by the game
-        public Texture2D LoadTexture(string name)
+        public List<string> GetFilesAtContentDirectory(string contentFolder)
         {
+            var result = new List<string>();
+
+            DirectoryInfo dir = new DirectoryInfo(this.content.RootDirectory + "\\" + contentFolder);
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException();
+            }
+
+            FileInfo[] files = dir.GetFiles("*.*");
+            foreach (FileInfo file in files)
+            {
+                result.Add(Path.GetFileNameWithoutExtension(file.Name));
+            }
+
+            return result;
+        }
+
+        public void LoadAllTextures()
+        {
+            foreach (var imageName in GetFilesAtContentDirectory("images"))
+            {
+                LoadTexture(imageName);
+            }
+        }
+
+        private void LoadTexture(string fullName)
+        {
+            var splitName = fullName.Split('/');
+            var name = splitName[^1];
+
             var texture = this.content.Load<Texture2D>(name);
             textures.Add(name, texture);
             Console.WriteLine(string.Format("Loaded asset: {0}", name));
-            return texture;
         }
 
         public Texture2D GetTexture(string name)

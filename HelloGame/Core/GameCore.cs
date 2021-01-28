@@ -16,10 +16,10 @@ namespace HelloGame
 
         public GameCore()
         {
-            assets = new AssetLibrary(this);
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            assets = new AssetLibrary(this);
         }
 
         protected override void Initialize()
@@ -33,8 +33,7 @@ namespace HelloGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            assets.LoadTexture("ball");
-            assets.LoadTexture("window-frame");
+            assets.LoadAllTextures();
 
             Actor firstActor = new Actor
             {
