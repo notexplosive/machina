@@ -14,6 +14,7 @@ namespace HelloGame
         static AssetLibrary assets;
 
         Scene gameScene;
+        private Camera camera;
 
         public GameCore()
         {
@@ -46,6 +47,8 @@ namespace HelloGame
                 position = new Vector2(200, 200)
             };
 
+            this.camera = new Camera();
+
             gameScene.AddActor(linkin);
             new SpriteRenderer(linkin, new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
 
@@ -59,7 +62,7 @@ namespace HelloGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            gameScene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
         }
@@ -70,7 +73,7 @@ namespace HelloGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, DepthStencilState.Default, null, null, camera.TranslationMatrix);
             gameScene.Draw(spriteBatch);
             spriteBatch.End();
 
