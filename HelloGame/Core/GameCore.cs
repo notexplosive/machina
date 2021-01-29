@@ -1,5 +1,6 @@
 ﻿using Machina;
 using Machina.Components;
+using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -35,13 +36,22 @@ namespace HelloGame
 
             assets.LoadAllTextures();
 
-            Actor firstActor = new Actor
+            Actor ballActor = new Actor
             {
                 position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
             };
-            gameScene.AddActor(firstActor);
-            new TextureRenderer(firstActor, assets.GetTexture("ball"));
-            new KeyboardMovement(firstActor);
+
+            Actor linkin = new Actor
+            {
+                position = new Vector2(200, 200)
+            };
+
+            gameScene.AddActor(linkin);
+            new SpriteRenderer(linkin, new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
+
+            gameScene.AddActor(ballActor);
+            new TextureRenderer(ballActor, assets.GetTexture("ball"));
+            new KeyboardMovement(ballActor);
         }
 
         protected override void Update(GameTime gameTime)

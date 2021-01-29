@@ -30,7 +30,7 @@ namespace Machina
             FileInfo[] files = dir.GetFiles("*.*");
             foreach (FileInfo file in files)
             {
-                result.Add(Path.GetFileNameWithoutExtension(file.Name));
+                result.Add(Path.GetFileNameWithoutExtension(file.FullName));
             }
 
             return result;
@@ -40,7 +40,7 @@ namespace Machina
         {
             foreach (var imageName in GetFilesAtContentDirectory("images"))
             {
-                LoadTexture(imageName);
+                LoadTexture("images/" + imageName);
             }
         }
 
@@ -49,9 +49,9 @@ namespace Machina
             var splitName = fullName.Split('/');
             var name = splitName[^1];
 
-            var texture = this.content.Load<Texture2D>(name);
+            var texture = this.content.Load<Texture2D>(fullName);
             textures.Add(name, texture);
-            Console.WriteLine(string.Format("Loaded asset: {0}", name));
+            Console.WriteLine(string.Format("Loaded asset: {0}", fullName));
         }
 
         public Texture2D GetTexture(string name)

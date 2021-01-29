@@ -13,7 +13,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\KeyboardMovement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\SpriteRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextureRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\SpriteSheet.cs" />
+    <Compile Include="..\Machina\Data\GridBasedSpriteSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TestGame.cs" />
   </ItemGroup>
