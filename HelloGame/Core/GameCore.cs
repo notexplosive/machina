@@ -4,6 +4,7 @@ using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace HelloGame
 {
@@ -15,6 +16,7 @@ namespace HelloGame
 
         Scene gameScene;
         private Camera camera;
+        private int previousScroll;
 
         public GameCore()
         {
@@ -61,6 +63,13 @@ namespace HelloGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            var currentScroll = Mouse.GetState().ScrollWheelValue;
+            var scrollDelta = currentScroll - this.previousScroll;
+            this.previousScroll = currentScroll;
+
+
+            camera.AdjustZoom((float) (scrollDelta / 100) / 10);
 
             gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
 

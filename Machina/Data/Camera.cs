@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Machina.Data
 {
+    // Initial implementation of this camera comes from https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/
     public class Camera
     {
         public Camera()
@@ -49,10 +50,10 @@ namespace Machina.Data
             get
             {
                 return
-                    Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0) *
-                    Matrix.CreateRotationZ(Rotation) *
-                    Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
-                    Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
+                    Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+                    * Matrix.CreateRotationZ(Rotation)
+                    * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
+                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
             }
         }
 
