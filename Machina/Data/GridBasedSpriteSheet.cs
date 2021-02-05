@@ -13,9 +13,10 @@ namespace Machina.Data
     /// </summary>
     class GridBasedSpriteSheet : SpriteSheet
     {
+        public readonly Point frameSize;
+
         private readonly int columnCount;
         private readonly int rowCount;
-        private readonly Point frameSize;
         private readonly int frameCount;
 
         public override int FrameCount
@@ -49,8 +50,8 @@ namespace Machina.Data
             spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
             spriteBatch.DrawRectangle(sourceRect, Color.White);
 
-            var adjustedFrameSize = (this.frameSize.ToVector2() * scale).ToPoint();
-            var destRect = new Rectangle(position.ToPoint(), adjustedFrameSize);
+            var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
+            var destRect = new Rectangle(position.ToPoint() - (adjustedFrameSize / 2).ToPoint(), adjustedFrameSize.ToPoint());
 
             spriteBatch.Draw(this.texture, destRect, sourceRect, Color.White);
         }

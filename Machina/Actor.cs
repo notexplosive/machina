@@ -9,8 +9,8 @@ namespace Machina
 {
     class Actor
     {
-        public Vector2 position = new Vector2();
-        public Color color = new Color();
+        public Vector2 position;
+        public Color color;
         private readonly List<BaseComponent> components = new List<BaseComponent>();
 
         public void Draw(SpriteBatch spriteBatch)

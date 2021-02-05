@@ -61,6 +61,21 @@ namespace HelloGame
 
             linkin.GetComponent<SpriteRenderer>().SetAnimation(walkAnim);
 
+            new BoundingRect(linkin, 32, 32);
+            new BoundingRectRenderer(linkin);
+
+            linkin.GetComponent<SpriteRenderer>().SetupBoundingRect();
+
+            var box = new Actor
+            {
+                position = new Vector2(50, 350)
+            };
+
+            new BoundingRect(box, new Point(32, 32), new Vector2(16, 16));
+            new BoundingRectRenderer(box);
+
+            gameScene.AddActor(box);
+
             gameScene.AddActor(ballActor);
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
             new KeyboardMovement(ballActor);

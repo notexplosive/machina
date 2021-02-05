@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Components
@@ -12,6 +13,7 @@ namespace Machina.Components
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private int framesPerSecond = 15;
+        private float scale = 6f;
 
         public SpriteRenderer(Actor actor, SpriteSheet spriteSheet) : base(actor)
         {
@@ -19,9 +21,27 @@ namespace Machina.Components
             currentAnimation = spriteSheet.DefaultAnimation;
         }
 
+        public void SetupBoundingRect()
+        {
+            var boundingRect = this.actor.GetComponent<BoundingRect>();
+            var gridBasedSpriteSheet = this.spriteSheet as GridBasedSpriteSheet;
+
+            Debug.Assert(gridBasedSpriteSheet != null, "SpriteSheet is not compatible with SetupBoundingRect");
+
+            if (boundingRect == null)
+            {
+                boundingRect = new BoundingRect(this.actor, 0, 0);
+            }
+
+            boundingRect.Width = (int) (gridBasedSpriteSheet.frameSize.X * this.scale);
+            boundingRect.Height = (int) (gridBasedSpriteSheet.frameSize.Y * this.scale);
+
+            boundingRect.SetOffsetToCenter();
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, 6f);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale);
         }
 
         public override void Update(float dt)

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina
@@ -15,6 +16,12 @@ namespace Machina
         public abstract void Draw(SpriteBatch spriteBatch);
         public virtual void OnScroll(int scrollDelta)
         {
+        }
+        protected T RequireComponent<T>() where T : BaseComponent
+        {
+            var component = this.actor.GetComponent<T>();
+            Debug.Assert(component != null, "Missing component " + typeof(T).FullName);
+            return component;
         }
 
         public BaseComponent(Actor actor)
