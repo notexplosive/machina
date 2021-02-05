@@ -38,12 +38,12 @@ namespace HelloGame
 
             assets.LoadAllTextures();
 
-            Actor ballActor = new Actor
+            Actor ballActor = new Actor(gameScene)
             {
                 position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
             };
 
-            Actor linkin = new Actor
+            Actor linkin = new Actor(gameScene)
             {
                 position = new Vector2(200, 200)
             };
@@ -66,7 +66,7 @@ namespace HelloGame
 
             linkin.GetComponent<SpriteRenderer>().SetupBoundingRect();
 
-            var box = new Actor
+            var box = new Actor(gameScene)
             {
                 position = new Vector2(50, 350)
             };
@@ -77,6 +77,8 @@ namespace HelloGame
             gameScene.AddActor(box);
 
             gameScene.AddActor(ballActor);
+
+            box.Destroy();
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
             new KeyboardMovement(ballActor);
         }
@@ -91,8 +93,6 @@ namespace HelloGame
 
             base.Update(gameTime);
         }
-
-
 
         protected override void Draw(GameTime gameTime)
         {

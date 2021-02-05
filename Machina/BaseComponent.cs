@@ -17,6 +17,10 @@ namespace Machina
         public virtual void OnScroll(int scrollDelta)
         {
         }
+        public virtual void OnActorDestroy()
+        {
+        }
+
         protected T RequireComponent<T>() where T : BaseComponent
         {
             var component = this.actor.GetComponent<T>();

@@ -46,9 +46,11 @@ namespace Machina.Data
             int y = index / this.columnCount;
             var sourceRect = new Rectangle(new Point(x * frameSize.X, y * frameSize.Y), frameSize);
 
+            /*
             spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);
             spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
             spriteBatch.DrawRectangle(sourceRect, Color.White);
+            */
 
             var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
             var destRect = new Rectangle(position.ToPoint() - (adjustedFrameSize / 2).ToPoint(), adjustedFrameSize.ToPoint());

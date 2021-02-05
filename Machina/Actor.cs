@@ -10,8 +10,13 @@ namespace Machina
     class Actor
     {
         public Vector2 position;
-        public Color color;
+        private readonly Scene scene;
         private readonly List<BaseComponent> components = new List<BaseComponent>();
+
+        public Actor(Scene scene)
+        {
+            this.scene = scene;
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -31,12 +36,22 @@ namespace Machina
             }
         }
 
-        internal void OnScroll(int scrollDelta)
+        public void OnScroll(int scrollDelta)
         {
             foreach (var component in this.components)
             {
                 component.OnScroll(scrollDelta);
             }
+        }
+
+        public void Destroy()
+        {
+            foreach (var component in this.components)
+            {
+                component.OnActorDestroy();
+            }
+
+            this.scene.RemoveActor(this);
         }
 
         /// <summary>
@@ -85,6 +100,11 @@ namespace Machina
             }
 
             return result;
+        }
+
+        public void RemoveComponent<T>() where T : BaseComponent
+        {
+            this.components.Remove(GetComponent<T>());
         }
 
         private BaseComponent GetComponentByName(string fullName)
