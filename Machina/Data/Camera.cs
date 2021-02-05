@@ -11,6 +11,7 @@ namespace Machina.Data
         public Camera()
         {
             Zoom = 1.0f;
+            NativeScaleFactor = 1.0f;
         }
 
         public Vector2 Position
@@ -52,9 +53,15 @@ namespace Machina.Data
                 return
                     Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
                     * Matrix.CreateRotationZ(Rotation)
-                    * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
+                    * Matrix.CreateScale(new Vector3(Zoom * NativeScaleFactor, Zoom * NativeScaleFactor, 1))
                     * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
             }
+        }
+
+        public float NativeScaleFactor
+        {
+            get;
+            set;
         }
 
         public void AdjustZoom(float amount)

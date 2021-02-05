@@ -13,6 +13,7 @@ namespace HelloGame
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         static AssetLibrary assets;
+        private ResizeStatus resizing;
 
         Scene gameScene;
         private Camera camera;
@@ -23,10 +24,27 @@ namespace HelloGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             assets = new AssetLibrary(this);
+            resizing = new ResizeStatus(1600, 900);
+
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
+        }
+
+        private void OnResize(object sender, EventArgs e)
+        {
+            resizing.Pending = true;
+            resizing.Width = Window.ClientBounds.Width;
+            resizing.Height = Window.ClientBounds.Height;
+            var rect = resizing.ViewportRect;
+            Console.WriteLine(string.Format("{0} , {1}", resizing.Width, resizing.Height));
         }
 
         protected override void Initialize()
         {
+            graphics.PreferredBackBufferWidth = 1600;
+            graphics.PreferredBackBufferHeight = 900;
+            graphics.ApplyChanges();
+
             gameScene = new Scene();
 
             base.Initialize();
@@ -88,10 +106,31 @@ namespace HelloGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.F4))
+            {
+                if (!graphics.IsFullScreen)
+                {
+                    graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                    graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                    graphics.IsFullScreen = true;
+                    graphics.ApplyChanges();
+                }
+            }
+
             // camera.AdjustZoom((float) (scrollDelta / 100) / 10);
-            gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+            gameScene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
+
+            if (resizing.Pending)
+            {
+                camera.NativeScaleFactor = resizing.ScaleFactor;
+                graphics.PreferredBackBufferWidth = resizing.Width;
+                graphics.PreferredBackBufferHeight = resizing.Height;
+                graphics.ApplyChanges();
+                //camera.UpdateProjection(resizing.Width, resizing.Height);
+                resizing.Pending = false;
+            }
         }
 
         protected override void Draw(GameTime gameTime)
