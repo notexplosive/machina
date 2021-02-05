@@ -29,8 +29,8 @@ namespace Machina.Data
             Debug.Assert(texture.Height % frameSize.Y == 0, "Texture does not evenly divide by cell height");
 
             this.frameSize = frameSize;
-            this.columnCount = texture.Width / (int) frameSize.X;
-            this.rowCount = texture.Height / (int) frameSize.Y;
+            this.columnCount = texture.Width / frameSize.X;
+            this.rowCount = texture.Height / frameSize.Y;
             this.frameCount = columnCount * rowCount;
         }
 

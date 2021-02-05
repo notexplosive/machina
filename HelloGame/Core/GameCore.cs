@@ -54,6 +54,14 @@ namespace HelloGame
             gameScene.AddActor(linkin);
             new SpriteRenderer(linkin, new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
 
+            var standAnim = new LinearFrameAnimation(0, 5);
+            var walkAnim = new LinearFrameAnimation(6, 3);
+            var quickSwingAnim = new LinearFrameAnimation(9, 3);
+            var longSwingAnim = new LinearFrameAnimation(11, 5);
+            var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
+
+            linkin.GetComponent<SpriteRenderer>().SetAnimation(finalSwingAnim);
+
             gameScene.AddActor(ballActor);
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
             new KeyboardMovement(ballActor);

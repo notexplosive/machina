@@ -9,6 +9,13 @@ namespace Machina.Data
     abstract class SpriteSheet
     {
         protected Texture2D texture;
+        public LinearFrameAnimation DefaultAnimation
+        {
+            get
+            {
+                return new LinearFrameAnimation(this.FrameCount);
+            }
+        }
 
         public abstract int FrameCount
         {

@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\SpriteRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextureRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Camera.cs" />
+    <Compile Include="..\Machina\Data\LinearFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\SpriteSheet.cs" />
     <Compile Include="..\Machina\Data\GridBasedSpriteSheet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />

@@ -8,38 +8,52 @@ namespace Machina.Components
 {
     class SpriteRenderer : BaseComponent
     {
-        private SpriteSheet spriteSheet;
-        private int currentFrame;
+        public readonly SpriteSheet spriteSheet;
+        private LinearFrameAnimation currentAnimation;
         private float elapsedTime;
-        private int fps;
+        private int framesPerSecond = 15;
 
         public SpriteRenderer(Actor actor, SpriteSheet spriteSheet) : base(actor)
         {
             this.spriteSheet = spriteSheet;
-            this.currentFrame = 0;
-            this.elapsedTime = 0f;
-            this.fps = 15;
+            currentAnimation = spriteSheet.DefaultAnimation;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(currentFrame, spriteBatch, this.actor.position, 6f);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, 6f);
         }
 
         public override void Update(float dt)
         {
-            this.elapsedTime += dt * fps;
-            float totalTime = (int) spriteSheet.FrameCount;
-            while (elapsedTime > totalTime)
-            {
-                elapsedTime -= totalTime;
-            }
+            IncrementTime(dt);
+        }
 
-            while (elapsedTime < 0)
+        public int CurrentFrame
+        {
+            get
             {
-                elapsedTime += totalTime;
+                return this.currentAnimation.GetFrame(elapsedTime);
             }
-            this.currentFrame = (int) elapsedTime;
+        }
+
+        public void SetAnimation(LinearFrameAnimation animation)
+        {
+            if (!this.currentAnimation.Equals(animation))
+            {
+                this.elapsedTime = 0;
+                this.currentAnimation = animation;
+            }
+        }
+
+        private void IncrementTime(float dt)
+        {
+            SetElapsedTime(this.elapsedTime + dt * this.framesPerSecond);
+        }
+
+        private void SetElapsedTime(float newTime)
+        {
+            this.elapsedTime = newTime;
         }
     }
 }
