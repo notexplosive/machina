@@ -16,7 +16,6 @@ namespace HelloGame
 
         Scene gameScene;
         private Camera camera;
-        private int previousScroll;
 
         public GameCore()
         {
@@ -60,7 +59,7 @@ namespace HelloGame
             var longSwingAnim = new LinearFrameAnimation(11, 5);
             var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
 
-            linkin.GetComponent<SpriteRenderer>().SetAnimation(finalSwingAnim);
+            linkin.GetComponent<SpriteRenderer>().SetAnimation(walkAnim);
 
             gameScene.AddActor(ballActor);
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
@@ -72,13 +71,7 @@ namespace HelloGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            var currentScroll = Mouse.GetState().ScrollWheelValue;
-            var scrollDelta = currentScroll - this.previousScroll;
-            this.previousScroll = currentScroll;
-
-
-            camera.AdjustZoom((float) (scrollDelta / 100) / 10);
-
+            // camera.AdjustZoom((float) (scrollDelta / 100) / 10);
             gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);

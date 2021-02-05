@@ -9,7 +9,7 @@ namespace Machina.Components
     class SpriteRenderer : BaseComponent
     {
         public readonly SpriteSheet spriteSheet;
-        private LinearFrameAnimation currentAnimation;
+        private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private int framesPerSecond = 15;
 
@@ -29,6 +29,18 @@ namespace Machina.Components
             IncrementTime(dt);
         }
 
+        public override void OnScroll(int scrollDelta)
+        {
+            if (scrollDelta > 0)
+            {
+                this.framesPerSecond++;
+            }
+            else
+            {
+                this.framesPerSecond--;
+            }
+        }
+
         public int CurrentFrame
         {
             get
@@ -37,7 +49,7 @@ namespace Machina.Components
             }
         }
 
-        public void SetAnimation(LinearFrameAnimation animation)
+        public void SetAnimation(IFrameAnimation animation)
         {
             if (!this.currentAnimation.Equals(animation))
             {

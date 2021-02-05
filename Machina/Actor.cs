@@ -31,6 +31,14 @@ namespace Machina
             }
         }
 
+        internal void OnScroll(int scrollDelta)
+        {
+            foreach (var component in this.components)
+            {
+                component.OnScroll(scrollDelta);
+            }
+        }
+
         /// <summary>
         /// SHOULD NOT BE CALLED DIRECTLY UNLESS YOU'RE IN A UNIT TEST
         /// If you want to add a component call `new YourComponentName(actor);`

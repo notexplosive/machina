@@ -6,31 +6,17 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public enum LoopType
-    {
-        HoldLastFrame,
-        Loop
-    }
-
     /// <summary>
     /// Specify the start point and length of the animation, animation starts at firstFrame, and ends on firstFrame + length
     /// </summary>
-    struct LinearFrameAnimation : IEquatable<LinearFrameAnimation>
+    struct LinearFrameAnimation : IFrameAnimation
     {
         public readonly int length;
         public readonly LoopType loopType;
         public readonly int firstFrame;
 
-        public int LastFrame
-        {
-            get
-            {
-                return this.firstFrame + length;
-            }
-        }
-
         public LinearFrameAnimation(LinearFrameAnimation copy) : this(copy.firstFrame, copy.length, copy.loopType) { }
-        public LinearFrameAnimation(int firstFrame, int length = 0, LoopType isLooping = LoopType.Loop)
+        public LinearFrameAnimation(int firstFrame = 0, int length = 0, LoopType isLooping = LoopType.Loop)
         {
             Debug.Assert(length >= 0, "Length of an animation cannot be zero");
             this.firstFrame = firstFrame;
@@ -41,6 +27,12 @@ namespace Machina.Data
         {
             return other.firstFrame == this.firstFrame && other.length == this.length && other.loopType == this.loopType;
         }
+
+        public int LastFrame => this.firstFrame + length;
+
+        public int Length => this.length;
+
+        public LoopType LoopType => this.loopType;
 
         public int GetFrame(float elapsedTime)
         {

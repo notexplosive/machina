@@ -13,6 +13,9 @@ namespace Machina
         protected Actor actor;
         public abstract void Update(float dt);
         public abstract void Draw(SpriteBatch spriteBatch);
+        public virtual void OnScroll(int scrollDelta)
+        {
+        }
 
         public BaseComponent(Actor actor)
         {
@@ -29,8 +32,12 @@ namespace Machina
     {
         public DataComponent(Actor actor) : base(actor) { }
 
-        public override void Update(float dt) { }
-        public override void Draw(SpriteBatch spriteBatch) { }
+        public override void Update(float dt)
+        {
+        }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+        }
     }
 
     /// <summary>
@@ -40,7 +47,9 @@ namespace Machina
     {
         public DrawOnlyComponent(Actor actor) : base(actor) { }
 
-        public override void Update(float dt) { }
+        public override void Update(float dt)
+        {
+        }
     }
 
     /// <summary>
@@ -50,6 +59,8 @@ namespace Machina
     {
         public UpdateOnlyComponent(Actor actor) : base(actor) { }
 
-        public override void Draw(SpriteBatch spriteBatch) { }
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+        }
     }
 }

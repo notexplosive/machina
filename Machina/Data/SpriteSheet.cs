@@ -8,8 +8,8 @@ namespace Machina.Data
 {
     abstract class SpriteSheet
     {
-        protected Texture2D texture;
-        public LinearFrameAnimation DefaultAnimation
+        protected readonly Texture2D texture;
+        public IFrameAnimation DefaultAnimation
         {
             get
             {
