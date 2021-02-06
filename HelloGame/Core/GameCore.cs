@@ -52,7 +52,7 @@ namespace HelloGame
 
             assets.LoadAllTextures();
 
-            Actor ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+
             Actor linkin = gameScene.AddActor(new Vector2(200, 200));
 
             var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
@@ -74,9 +74,9 @@ namespace HelloGame
             var cameraScroller = gameScene.AddActor();
             new ZoomCameraOnScroll(cameraScroller);
 
-            var box = gameScene.AddActor(new Vector2(50, 350));
+            var box = gameScene.AddActor(new Vector2(200, 350));
 
-            new BoundingRect(box, new Point(160, 90), new Vector2(16, 16));
+            new BoundingRect(box, new Point(160, 150));
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();
@@ -84,8 +84,11 @@ namespace HelloGame
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
 
             new Canvas(box, GraphicsDevice);
+            new BoundingRectRenderer(box);
             new SceneRenderer(box, otherScene);
 
+            var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+            new SpriteRenderer(ballActor, linkinSpriteSheet);
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
             new KeyboardMovement(ballActor);
         }
@@ -124,11 +127,9 @@ namespace HelloGame
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             gameScene.PreDraw(spriteBatch);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
             gameScene.Draw(spriteBatch);
-
 
             base.Draw(gameTime);
         }

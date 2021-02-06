@@ -40,7 +40,7 @@ namespace Machina.Data
 
         public override void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            Debug.Assert(index >= 0 && index < this.frameCount, "Index out of range");
+            Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 
             int x = index % this.columnCount;
             int y = index / this.columnCount;

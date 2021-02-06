@@ -18,8 +18,9 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(this.boundingRect.Rect, Color.Pink);
-            spriteBatch.DrawCircle(this.actor.position, 3, 5, Color.Pink);
+            Rectangle rect = this.boundingRect.Rect;
+            spriteBatch.DrawRectangle(rect, Color.Red);
+            spriteBatch.DrawCircle(this.actor.position, Math.Min(rect.Width, rect.Height) / 4, 16, Color.Red);
         }
     }
 }

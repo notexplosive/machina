@@ -13,7 +13,7 @@ namespace Machina.Data
         {
             get
             {
-                return new LinearFrameAnimation(this.FrameCount);
+                return new LinearFrameAnimation(0, FrameCount);
             }
         }
 

@@ -12,13 +12,16 @@ namespace Machina.Components
         private Point size;
         private Vector2 offset;
 
-        public BoundingRect(Actor actor, Point size, Vector2 offset = new Vector2()) : base(actor)
+        public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
             this.size = size;
             this.offset = offset;
         }
+        public BoundingRect(Actor actor, Point size) : this(actor, size, new Vector2(size.X, size.Y) / 2)
+        {
+        }
 
-        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height)) { }
+        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height), new Vector2(width, height) / 2) { }
 
         public int Width
         {

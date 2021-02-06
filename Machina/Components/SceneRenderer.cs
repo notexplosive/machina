@@ -13,14 +13,18 @@ namespace Machina.Components
         public SceneRenderer(Actor actor, Scene targetScene) : base(actor)
         {
             this.canvas = RequireComponent<Canvas>();
-            //this.canvas.DrawAdditionalContent += this.targetScene.Draw;
-            this.canvas.DrawAdditionalContent += (SpriteBatch spriteBatch) => { this.targetScene.Draw(spriteBatch); };
+            this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.targetScene = targetScene;
+        }
+
+        private void DrawInnerScene(SpriteBatch spriteBatch)
+        {
+            this.targetScene.Draw(spriteBatch);
         }
 
         public override void OnRemove()
         {
-            //this.canvas.DrawAdditionalContent -= this.targetScene.Draw;
+            this.canvas.DrawAdditionalContent -= DrawInnerScene;
         }
 
         public override void Update(float dt)

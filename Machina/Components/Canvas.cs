@@ -9,6 +9,7 @@ namespace Machina.Components
 {
     class Canvas : DrawOnlyComponent
     {
+        // Must supply a spriteBatch.Begin/End for each function
         public Action<SpriteBatch> DrawAdditionalContent;
         private BoundingRect boundingRect;
         private GraphicsDevice graphicsDevice;
@@ -21,6 +22,7 @@ namespace Machina.Components
             {
                 spriteBatch.Begin();
                 spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red);
+                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red);
                 spriteBatch.End();
             };
 
@@ -42,9 +44,7 @@ namespace Machina.Components
 
             graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
             graphicsDevice.Clear(backgroundColor);
-            spriteBatch.Begin();
-            spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red);
-            spriteBatch.End();
+
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 
             graphicsDevice.SetRenderTarget(null);
@@ -57,7 +57,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(renderTarget, this.boundingRect.Rect, Color.White);
+            spriteBatch.Draw(renderTarget, this.boundingRect.Rect, Color.White);//, null, Color.White, 0f, new Vector2(), SpriteEffects.None, 0);
         }
     }
 }
