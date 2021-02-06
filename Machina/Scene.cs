@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
+using Machina.Data;
+using Microsoft.Xna.Framework;
 
 namespace Machina
 {
     class Scene
     {
+        public readonly Camera camera = new Camera();
         private readonly List<Actor> actors = new List<Actor>();
-        private int previousScroll;
+        private int previousScroll; // TODO: move this to its own Game-wide Input object... or something?
 
         public void Update(float dt)
         {
@@ -24,12 +27,13 @@ namespace Machina
 
             if (scrollDelta != 0)
             {
-                OnScroll(scrollDelta);
+                OnScroll(scrollDelta / 120);
             }
         }
 
-        public void EarlyDraw(SpriteBatch spriteBatch)
+        public void PreDraw(SpriteBatch spriteBatch)
         {
+            // Does NOT supply a spriteBatch.Begin(), you will need to supply your own when you need it
             foreach (var actor in actors)
             {
                 actor.EarlyDraw(spriteBatch);
@@ -38,10 +42,14 @@ namespace Machina
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, DepthStencilState.Default, null, null, camera.TranslationMatrix);
+
             foreach (var actor in actors)
             {
                 actor.Draw(spriteBatch);
             }
+
+            spriteBatch.End();
         }
 
         public void OnScroll(int scrollDelta)
@@ -52,9 +60,17 @@ namespace Machina
             }
         }
 
-        public void AddActor(Actor actor)
+        public Actor AddActor(Vector2 position = new Vector2())
         {
-            actors.Add(actor);
+            var actor = new Actor(this);
+            actor.position = position;
+            return actor;
+        }
+
+        public Actor AddActor(Actor actor)
+        {
+            this.actors.Add(actor);
+            return actor;
         }
 
         public void RemoveActor(Actor actor)

@@ -10,12 +10,13 @@ namespace Machina
     class Actor
     {
         public Vector2 position;
-        private readonly Scene scene;
+        public readonly Scene scene;
         private readonly List<BaseComponent> components = new List<BaseComponent>();
 
         public Actor(Scene scene)
         {
             this.scene = scene;
+            this.scene.AddActor(this);
         }
 
         public void Draw(SpriteBatch spriteBatch)

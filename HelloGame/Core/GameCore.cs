@@ -14,9 +14,7 @@ namespace HelloGame
         private SpriteBatch spriteBatch;
         static AssetLibrary assets;
         private ResizeStatus resizing;
-
         Scene gameScene;
-        private Camera camera;
 
         public GameCore()
         {
@@ -54,19 +52,9 @@ namespace HelloGame
 
             assets.LoadAllTextures();
 
-            Actor ballActor = new Actor(gameScene)
-            {
-                position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2)
-            };
+            Actor ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+            Actor linkin = gameScene.AddActor(new Vector2(200, 200));
 
-            Actor linkin = new Actor(gameScene)
-            {
-                position = new Vector2(200, 200)
-            };
-
-            this.camera = new Camera();
-
-            gameScene.AddActor(linkin);
             var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
             new SpriteRenderer(linkin, linkinSpriteSheet);
 
@@ -83,22 +71,17 @@ namespace HelloGame
 
             linkin.GetComponent<SpriteRenderer>().SetupBoundingRect();
 
-            var box = new Actor(gameScene)
-            {
-                position = new Vector2(50, 350)
-            };
+            var cameraScroller = gameScene.AddActor();
+            new ZoomCameraOnScroll(cameraScroller);
+
+            var box = gameScene.AddActor(new Vector2(50, 350));
 
             new BoundingRect(box, new Point(160, 90), new Vector2(16, 16));
 
-            gameScene.AddActor(box);
-
-            gameScene.AddActor(ballActor);
-
             var otherScene = new Scene();
-            var microActor = new Actor(otherScene);
+            var microActor = otherScene.AddActor();
             microActor.position = new Vector2(100, 100);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
-            otherScene.AddActor(microActor);
 
             new Canvas(box, GraphicsDevice);
             new SceneRenderer(box, otherScene);
@@ -130,7 +113,7 @@ namespace HelloGame
 
             if (resizing.Pending)
             {
-                camera.NativeScaleFactor = resizing.ScaleFactor;
+                gameScene.camera.NativeScaleFactor = resizing.ScaleFactor;
                 graphics.PreferredBackBufferWidth = resizing.Width;
                 graphics.PreferredBackBufferHeight = resizing.Height;
                 graphics.ApplyChanges();
@@ -143,13 +126,8 @@ namespace HelloGame
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, DepthStencilState.Default, null, null);
-            gameScene.EarlyDraw(spriteBatch);
-            spriteBatch.End();
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, DepthStencilState.Default, null, null, camera.TranslationMatrix);
+            gameScene.PreDraw(spriteBatch);
             gameScene.Draw(spriteBatch);
-            spriteBatch.End();
 
 
             base.Draw(gameTime);
