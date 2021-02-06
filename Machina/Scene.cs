@@ -28,6 +28,14 @@ namespace Machina
             }
         }
 
+        public void EarlyDraw(SpriteBatch spriteBatch)
+        {
+            foreach (var actor in actors)
+            {
+                actor.EarlyDraw(spriteBatch);
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var actor in actors)
@@ -35,6 +43,7 @@ namespace Machina
                 actor.Draw(spriteBatch);
             }
         }
+
         public void OnScroll(int scrollDelta)
         {
             foreach (var actor in actors)
@@ -50,6 +59,7 @@ namespace Machina
 
         public void RemoveActor(Actor actor)
         {
+            actor.OnRemove();
             actors.Remove(actor);
         }
     }

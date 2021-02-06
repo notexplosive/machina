@@ -20,6 +20,12 @@ namespace Machina
         public virtual void OnActorDestroy()
         {
         }
+        public virtual void OnRemove()
+        {
+        }
+        public virtual void EarlyDraw(SpriteBatch spriteBatch)
+        {
+        }
 
         protected T RequireComponent<T>() where T : BaseComponent
         {

@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
+    <Compile Include="..\Machina\Components\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ResizeStatus.cs" />
     <Compile Include="..\Machina\Components\BoundingRect.cs" />
     <Compile Include="..\Machina\Components\BoundingRectRenderer.cs" />

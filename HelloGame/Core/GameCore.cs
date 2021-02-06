@@ -35,8 +35,6 @@ namespace HelloGame
             resizing.Pending = true;
             resizing.Width = Window.ClientBounds.Width;
             resizing.Height = Window.ClientBounds.Height;
-            var rect = resizing.ViewportRect;
-            Console.WriteLine(string.Format("{0} , {1}", resizing.Width, resizing.Height));
         }
 
         protected override void Initialize()
@@ -69,7 +67,8 @@ namespace HelloGame
             this.camera = new Camera();
 
             gameScene.AddActor(linkin);
-            new SpriteRenderer(linkin, new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
+            var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
+            new SpriteRenderer(linkin, linkinSpriteSheet);
 
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
@@ -89,14 +88,21 @@ namespace HelloGame
                 position = new Vector2(50, 350)
             };
 
-            new BoundingRect(box, new Point(32, 32), new Vector2(16, 16));
-            new BoundingRectRenderer(box);
+            new BoundingRect(box, new Point(160, 90), new Vector2(16, 16));
 
             gameScene.AddActor(box);
 
             gameScene.AddActor(ballActor);
 
-            box.Destroy();
+            var otherScene = new Scene();
+            var microActor = new Actor(otherScene);
+            microActor.position = new Vector2(100, 100);
+            new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
+            otherScene.AddActor(microActor);
+
+            new Canvas(box, GraphicsDevice);
+            new SceneRenderer(box, otherScene);
+
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
             new KeyboardMovement(ballActor);
         }
@@ -106,7 +112,7 @@ namespace HelloGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.F4))
+            if (/*Keyboard.GetState().IsKeyDown(Keys.F4)*/ false)
             {
                 if (!graphics.IsFullScreen)
                 {
@@ -118,7 +124,7 @@ namespace HelloGame
             }
 
             // camera.AdjustZoom((float) (scrollDelta / 100) / 10);
-            gameScene.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
 
             base.Update(gameTime);
 
@@ -136,6 +142,10 @@ namespace HelloGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, DepthStencilState.Default, null, null);
+            gameScene.EarlyDraw(spriteBatch);
+            spriteBatch.End();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointClamp, DepthStencilState.Default, null, null, camera.TranslationMatrix);
             gameScene.Draw(spriteBatch);

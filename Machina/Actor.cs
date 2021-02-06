@@ -20,11 +20,17 @@ namespace Machina
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            // Draw texture centered
-
             foreach (var component in this.components)
             {
                 component.Draw(spriteBatch);
+            }
+        }
+
+        public void EarlyDraw(SpriteBatch spriteBatch)
+        {
+            foreach (var component in this.components)
+            {
+                component.EarlyDraw(spriteBatch);
             }
         }
 
@@ -46,12 +52,22 @@ namespace Machina
 
         public void Destroy()
         {
+            OnRemove();
+
             foreach (var component in this.components)
             {
                 component.OnActorDestroy();
             }
 
             this.scene.RemoveActor(this);
+        }
+
+        public void OnRemove()
+        {
+            foreach (var component in this.components)
+            {
+                component.OnRemove();
+            }
         }
 
         /// <summary>
@@ -104,7 +120,9 @@ namespace Machina
 
         public void RemoveComponent<T>() where T : BaseComponent
         {
-            this.components.Remove(GetComponent<T>());
+            var comp = GetComponent<T>();
+            comp.OnRemove();
+            this.components.Remove(comp);
         }
 
         private BaseComponent GetComponentByName(string fullName)

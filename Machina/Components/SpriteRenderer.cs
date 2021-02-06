@@ -49,18 +49,6 @@ namespace Machina.Components
             IncrementTime(dt);
         }
 
-        public override void OnScroll(int scrollDelta)
-        {
-            if (scrollDelta > 0)
-            {
-                this.framesPerSecond++;
-            }
-            else
-            {
-                this.framesPerSecond--;
-            }
-        }
-
         public int CurrentFrame
         {
             get
