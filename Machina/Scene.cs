@@ -42,7 +42,7 @@ namespace Machina
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
 
             foreach (var actor in actors)
             {

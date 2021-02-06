@@ -76,7 +76,7 @@ namespace HelloGame
 
             var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
 
-            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("window-frame"), new Rectangle(0, 0, 96, 96), new Rectangle(32, 32, 32, 32));
+            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
             var ninepatchBox = gameScene.AddActor(new Vector2(400, 400));
             new BoundingRect(ninepatchBox, new Point(400, 300));
             new NinepatchRenderer(ninepatchBox, windowNinepatch);

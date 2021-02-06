@@ -17,7 +17,8 @@ namespace Machina.Data
         public NinepatchSpriteSheet(Texture2D texture, Rectangle outerRect, Rectangle innerRect)
         {
             this.texture = texture;
-
+            Debug.Assert(texture.Width >= outerRect.Width, "Texture is to small");
+            Debug.Assert(texture.Height >= outerRect.Height, "Texture is to small");
 
             this.rects = new NinepatchRects(outerRect, innerRect);
         }
@@ -43,7 +44,7 @@ namespace Machina.Data
             for (int i = 0; i < 9; i++)
             {
                 spriteBatch.Draw(texture, destinationRects.raw[i], this.rects.raw[i], Color.White);
-                spriteBatch.DrawRectangle(destinationRects.raw[i], Color.White);
+                //if debug: spriteBatch.DrawRectangle(destinationRects.raw[i], Color.White);
             }
         }
     }
