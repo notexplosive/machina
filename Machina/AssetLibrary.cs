@@ -56,7 +56,7 @@ namespace Machina
 
         public Texture2D GetTexture(string name)
         {
-            Debug.Assert(textures.ContainsKey(name));
+            Debug.Assert(textures.ContainsKey(name), "No texture called `" + name + "` was found");
             return textures[name];
         }
     }

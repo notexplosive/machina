@@ -10,8 +10,8 @@ namespace Machina.Components
 {
     class NinepatchRenderer : DrawOnlyComponent
     {
-        private BoundingRect boundingRect;
-        private NinepatchSpriteSheet spriteSheet;
+        protected BoundingRect boundingRect;
+        protected NinepatchSpriteSheet spriteSheet;
 
         public NinepatchRenderer(Actor actor, NinepatchSpriteSheet spriteSheet) : base(actor)
         {
@@ -22,15 +22,19 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             var outerDestinationRect = this.boundingRect.Rect;
-            var innerDestinationRect = new Rectangle(
+            var innerDestinationRect = this.GenerateInnerDestinationRect(outerDestinationRect);
+            var destinationRects = new NinepatchRects(outerDestinationRect, innerDestinationRect);
+
+            spriteSheet.DrawFullNinepatch(spriteBatch, destinationRects);
+        }
+
+        protected Rectangle GenerateInnerDestinationRect(Rectangle outerDestinationRect)
+        {
+            return new Rectangle(
                 outerDestinationRect.Left + this.spriteSheet.rects.LeftBuffer,
                 outerDestinationRect.Top + this.spriteSheet.rects.TopBuffer,
                 outerDestinationRect.Width - this.spriteSheet.rects.LeftBuffer - this.spriteSheet.rects.RightBuffer,
                 outerDestinationRect.Height - this.spriteSheet.rects.TopBuffer - this.spriteSheet.rects.BottomBuffer);
-
-            var destinationRects = new NinepatchRects(outerDestinationRect, innerDestinationRect);
-
-            spriteSheet.DrawFull(spriteBatch, destinationRects);
         }
     }
 }

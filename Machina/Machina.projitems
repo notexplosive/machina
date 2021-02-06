@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ThreepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ZoomCameraOnScroll.cs" />
     <Compile Include="..\Machina\Data\NinepatchRects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\NinepatchSpriteSheet.cs" />

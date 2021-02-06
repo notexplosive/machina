@@ -76,12 +76,19 @@ namespace HelloGame
 
             var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
 
-            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
-            var ninepatchBox = gameScene.AddActor(new Vector2(400, 400));
-            new BoundingRect(ninepatchBox, new Point(400, 300));
-            new NinepatchRenderer(ninepatchBox, windowNinepatch);
+            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
+            var ninepatchActor = gameScene.AddActor(new Vector2(400, 400));
+            new BoundingRect(ninepatchActor, new Point(400, 300));
+            new NinepatchRenderer(ninepatchActor, windowNinepatch);
 
             new BoundingRect(sceneRenderBox, new Point(160, 150));
+
+
+            var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
+            var progressBar = gameScene.AddActor();
+            progressBar.position = new Vector2(500, 50);
+            new BoundingRect(progressBar, new Point(500, 24));
+            new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();

@@ -33,11 +33,12 @@ namespace Machina.Data
         public readonly int[] sidePixelBuffers;
         public readonly Rectangle inner;
         public readonly Rectangle outer;
+        public readonly bool isValidNinepatch;
+
 
         public NinepatchRects(Rectangle outer, Rectangle inner)
         {
             Debug.Assert(outer.Contains(inner), "InnerRect is not contained by OuterRect");
-
 
             int topBuffer = inner.Top - outer.Top;
             int rightBuffer = outer.Right - inner.Right;
@@ -64,9 +65,16 @@ namespace Machina.Data
             };
             this.inner = inner;
             this.outer = outer;
+
+            this.isValidNinepatch = true;
+            foreach (var rect in raw)
+            {
+                if (rect.Width * rect.Height == 0)
+                {
+                    this.isValidNinepatch = false;
+                }
+            }
         }
-
-
         public Rectangle TopLeft => this.raw[(int) NinepatchIndex.TopLeft];
         public Rectangle TopCenter => this.raw[(int) NinepatchIndex.TopCenter];
         public Rectangle TopRight => this.raw[(int) NinepatchIndex.TopRight];
@@ -76,10 +84,38 @@ namespace Machina.Data
         public Rectangle BottomLeft => this.raw[(int) NinepatchIndex.BottomLeft];
         public Rectangle BottomCenter => this.raw[(int) NinepatchIndex.BottomCenter];
         public Rectangle BottomRight => this.raw[(int) NinepatchIndex.BottomRight];
-
         public int LeftBuffer => this.sidePixelBuffers[(int) Side.Left];
         public int RightBuffer => this.sidePixelBuffers[(int) Side.Right];
         public int TopBuffer => this.sidePixelBuffers[(int) Side.Top];
         public int BottomBuffer => this.sidePixelBuffers[(int) Side.Bottom];
+
+        public bool IsValidHorizontalThreepatch
+        {
+            get
+            {
+                foreach (var rect in new Rectangle[] { LeftCenter, Center, RightCenter })
+                {
+                    if (rect.Width * rect.Height == 0)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        public bool IsValidVerticalThreepatch
+        {
+            get
+            {
+                foreach (var rect in new Rectangle[] { TopCenter, Center, BottomCenter })
+                {
+                    if (rect.Width * rect.Height == 0)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
     }
 }
