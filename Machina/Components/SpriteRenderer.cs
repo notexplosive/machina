@@ -14,6 +14,14 @@ namespace Machina.Components
         private float elapsedTime;
         private int framesPerSecond = 15;
         private float scale = 6f;
+        public bool FlipX
+        {
+            get; set;
+        }
+        public bool FlipY
+        {
+            get; set;
+        }
 
         public SpriteRenderer(Actor actor, SpriteSheet spriteSheet) : base(actor)
         {
@@ -41,7 +49,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, FlipX, FlipY);
         }
 
         public override void Update(float dt)

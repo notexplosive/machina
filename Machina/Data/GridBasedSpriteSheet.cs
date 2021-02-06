@@ -38,7 +38,7 @@ namespace Machina.Data
             this.frameCount = columnCount * rowCount;
         }
 
-        public override void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale)
+        public override void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, bool flipX, bool flipY)
         {
             Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 
@@ -55,7 +55,8 @@ namespace Machina.Data
             var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
             var destRect = new Rectangle(position.ToPoint() - (adjustedFrameSize / 2).ToPoint(), adjustedFrameSize.ToPoint());
 
-            spriteBatch.Draw(this.texture, destRect, sourceRect, Color.White);
+            spriteBatch.Draw(this.texture, destRect, sourceRect, Color.White, 0f, new Vector2(),
+                (flipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flipY ? SpriteEffects.FlipVertically : SpriteEffects.None), 0);
         }
     }
 }
