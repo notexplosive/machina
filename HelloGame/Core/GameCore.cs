@@ -74,18 +74,23 @@ namespace HelloGame
             var cameraScroller = gameScene.AddActor();
             new ZoomCameraOnScroll(cameraScroller);
 
-            var box = gameScene.AddActor(new Vector2(200, 350));
+            var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
 
-            new BoundingRect(box, new Point(160, 150));
+            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("window-frame"), new Rectangle(0, 0, 96, 96), new Rectangle(32, 32, 32, 32));
+            var ninepatchBox = gameScene.AddActor(new Vector2(400, 400));
+            new BoundingRect(ninepatchBox, new Point(400, 300));
+            new NinepatchRenderer(ninepatchBox, windowNinepatch);
+
+            new BoundingRect(sceneRenderBox, new Point(160, 150));
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();
             microActor.position = new Vector2(100, 100);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
 
-            new Canvas(box, GraphicsDevice);
-            new BoundingRectRenderer(box);
-            new SceneRenderer(box, otherScene);
+            new Canvas(sceneRenderBox, GraphicsDevice);
+            new BoundingRectRenderer(sceneRenderBox);
+            new SceneRenderer(sceneRenderBox, otherScene);
 
             var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
             new SpriteRenderer(ballActor, linkinSpriteSheet);

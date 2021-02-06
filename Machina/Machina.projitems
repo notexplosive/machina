@@ -12,8 +12,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ZoomCameraOnScroll.cs" />
+    <Compile Include="..\Machina\Data\NinepatchRects.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\NinepatchSpriteSheet.cs" />
     <Compile Include="..\Machina\Components\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ResizeStatus.cs" />
     <Compile Include="..\Machina\Components\BoundingRect.cs" />
