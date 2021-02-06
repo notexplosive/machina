@@ -90,6 +90,12 @@ namespace HelloGame
             new BoundingRect(progressBar, new Point(500, 24));
             new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
+            var pillarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch-vertical"), GraphicsDevice, new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16));
+            var pillar = gameScene.AddActor();
+            pillar.position = new Vector2(300, 350);
+            new BoundingRect(pillar, new Point(32, 500));
+            new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
+
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();
             microActor.position = new Vector2(100, 100);
