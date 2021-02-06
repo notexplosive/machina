@@ -13,7 +13,7 @@ namespace Machina.Components
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private int framesPerSecond = 15;
-        private float scale = 6f;
+        private float scale = 3f;
         public bool FlipX
         {
             get; set;
@@ -49,7 +49,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, FlipX, FlipY);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, this.actor.angle, FlipX, FlipY);
         }
 
         public override void Update(float dt)
