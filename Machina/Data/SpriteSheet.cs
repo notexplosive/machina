@@ -27,6 +27,6 @@ namespace Machina.Data
             this.texture = texture;
         }
 
-        public abstract void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY);
+        public abstract void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY, float layerDepth);
     }
 }

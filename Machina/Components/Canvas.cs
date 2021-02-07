@@ -21,8 +21,8 @@ namespace Machina.Components
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
             {
                 spriteBatch.Begin();
-                spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red);
-                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red);
+                spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.depth);
+                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red, 1, this.actor.depth);
                 spriteBatch.End();
             };
 
@@ -57,7 +57,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(renderTarget, this.boundingRect.Rect, Color.White);//, null, Color.White, 0f, new Vector2(), SpriteEffects.None, 0);
+            spriteBatch.Draw(renderTarget, this.boundingRect.Rect, null, Color.White, 0f, new Vector2(), SpriteEffects.None, this.actor.depth);
         }
     }
 }

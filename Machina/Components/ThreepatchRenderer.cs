@@ -26,11 +26,11 @@ namespace Machina.Components
 
             if (this.orientation == Orientation.Horizontal)
             {
-                spriteSheet.DrawHorizontalThreepatch(spriteBatch, destinationRects);
+                spriteSheet.DrawHorizontalThreepatch(spriteBatch, destinationRects, this.actor.depth);
             }
             else
             {
-                spriteSheet.DrawVerticalThreepatch(spriteBatch, destinationRects);
+                spriteSheet.DrawVerticalThreepatch(spriteBatch, destinationRects, this.actor.depth);
             }
         }
     }

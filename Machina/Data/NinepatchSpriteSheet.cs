@@ -46,18 +46,18 @@ namespace Machina.Data
 
             foreach (var frame in this.rects.raw)
             {
-                spriteBatch.DrawRectangle(frame, Color.White);
+                spriteBatch.DrawRectangle(frame, Color.White, 1, 0);
             }
         }
 
-        public void DrawSection(SpriteBatch spriteBatch, NinepatchIndex index, Rectangle destinationRect)
+        public void DrawSection(SpriteBatch spriteBatch, NinepatchIndex index, Rectangle destinationRect, float layerDepth)
         {
             var dest = destinationRect;
             var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
-            spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White);
+            spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)
         {
             Debug.Assert(this.rects.isValidNinepatch, "Attempted to draw an invalid Ninepatch.");
 
@@ -65,27 +65,27 @@ namespace Machina.Data
             {
                 var dest = destinationRects.raw[i];
                 var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
-                spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, Color.White);
+                spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
                 //if debug: spriteBatch.DrawRectangle(dest, Color.White);
             }
         }
 
-        public void DrawHorizontalThreepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects)
+        public void DrawHorizontalThreepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)
         {
             Debug.Assert(this.rects.IsValidHorizontalThreepatch, "Attempted to draw an invalid horizontal Threepatch");
 
-            DrawSection(spriteBatch, NinepatchIndex.LeftCenter, destinationRects.LeftCenter);
-            DrawSection(spriteBatch, NinepatchIndex.Center, destinationRects.Center);
-            DrawSection(spriteBatch, NinepatchIndex.RightCenter, destinationRects.RightCenter);
+            DrawSection(spriteBatch, NinepatchIndex.LeftCenter, destinationRects.LeftCenter, layerDepth);
+            DrawSection(spriteBatch, NinepatchIndex.Center, destinationRects.Center, layerDepth);
+            DrawSection(spriteBatch, NinepatchIndex.RightCenter, destinationRects.RightCenter, layerDepth);
         }
 
-        public void DrawVerticalThreepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects)
+        public void DrawVerticalThreepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)
         {
             Debug.Assert(this.rects.IsValidVerticalThreepatch, "Attempted to draw an invalid vertical Threepatch");
 
-            DrawSection(spriteBatch, NinepatchIndex.TopCenter, destinationRects.TopCenter);
-            DrawSection(spriteBatch, NinepatchIndex.Center, destinationRects.Center);
-            DrawSection(spriteBatch, NinepatchIndex.BottomCenter, destinationRects.BottomCenter);
+            DrawSection(spriteBatch, NinepatchIndex.TopCenter, destinationRects.TopCenter, layerDepth);
+            DrawSection(spriteBatch, NinepatchIndex.Center, destinationRects.Center, layerDepth);
+            DrawSection(spriteBatch, NinepatchIndex.BottomCenter, destinationRects.BottomCenter, layerDepth);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace Machina
     class Actor
     {
         public Vector2 position;
-        public float angle;
+        public float angle = 0f;
+        public float depth = 0.5f;
         public readonly Scene scene;
         private readonly List<BaseComponent> components = new List<BaseComponent>();
 

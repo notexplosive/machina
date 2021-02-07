@@ -25,7 +25,7 @@ namespace Machina.Components
             var innerDestinationRect = this.GenerateInnerDestinationRect(outerDestinationRect);
             var destinationRects = new NinepatchRects(outerDestinationRect, innerDestinationRect);
 
-            spriteSheet.DrawFullNinepatch(spriteBatch, destinationRects);
+            spriteSheet.DrawFullNinepatch(spriteBatch, destinationRects, this.actor.depth);
         }
 
         protected Rectangle GenerateInnerDestinationRect(Rectangle outerDestinationRect)

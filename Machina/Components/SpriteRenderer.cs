@@ -49,7 +49,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, this.actor.angle, FlipX, FlipY);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, this.actor.angle, FlipX, FlipY, this.actor.depth);
         }
 
         public override void Update(float dt)

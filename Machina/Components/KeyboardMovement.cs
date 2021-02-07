@@ -24,6 +24,17 @@ namespace Machina.Components
 
             if (curKeys.IsKeyDown(Keys.Right))
                 this.actor.position.X += 500f * dt;
+
+            if (curKeys.IsKeyDown(Keys.Q))
+            {
+                this.actor.depth += 0.1f;
+            }
+
+            if (curKeys.IsKeyDown(Keys.E))
+            {
+                this.actor.depth -= 0.1f;
+            }
+
         }
     }
 }
