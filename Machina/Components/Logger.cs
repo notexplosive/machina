@@ -42,7 +42,7 @@ namespace Machina.Components
         }
 
 
-        void Log(params object[] objects)
+        public void Log(params object[] objects)
         {
             if (this.DebugLevel == DebugLevel.Off)
             {

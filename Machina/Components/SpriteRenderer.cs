@@ -1,4 +1,5 @@
 ﻿using Machina.Data;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Machina.Components
         private float elapsedTime;
         private int framesPerSecond = 15;
         private float scale = 3f;
+        public Color color;
         public bool FlipX
         {
             get; set;
@@ -27,6 +29,7 @@ namespace Machina.Components
         {
             this.spriteSheet = spriteSheet;
             currentAnimation = spriteSheet.DefaultAnimation;
+            color = Color.White;
         }
 
         public void SetupBoundingRect()
@@ -49,7 +52,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, this.actor.angle, FlipX, FlipY, this.actor.depth);
+            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.position, this.scale, this.actor.angle, FlipX, FlipY, this.actor.depth, color);
         }
 
         public override void Update(float dt)

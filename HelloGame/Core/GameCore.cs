@@ -58,6 +58,9 @@ namespace HelloGame
             var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
             var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
             var pillarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch-vertical"), GraphicsDevice, new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16));
+            var consoleFont = assets.GetSpriteFont("ConsoleFont");
+            var defaultFont = assets.GetSpriteFont("DefaultFont");
+
 
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
@@ -65,15 +68,16 @@ namespace HelloGame
             var longSwingAnim = new LinearFrameAnimation(11, 5);
             var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
 
-            var consoleFont = assets.GetSpriteFont("ConsoleFont");
-
             var debugActor = debugScene.AddActor();
             new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
 
+            //
+
             var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
-            new SpriteRenderer(ballActor, linkinSpriteSheet);
             new TextureRenderer(ballActor, assets.GetTexture("ball"));
+            new SpriteRenderer(ballActor, linkinSpriteSheet);
             new KeyboardMovement(ballActor);
+            new TextRenderer(ballActor, defaultFont, "Hello world and this is a very long string");
 
             Actor linkin = gameScene.AddActor(new Vector2(250, 250));
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);

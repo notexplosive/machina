@@ -31,7 +31,7 @@ namespace Machina.Components
             spriteBatch.FillRectangle(new Rectangle(0, 0, screenWidth, spriteFont.LineSpacing * messages.Count), new Color(Color.Black, opacity / 2));
             foreach (var message in this.messages)
             {
-                spriteBatch.DrawString(spriteFont, message, new Vector2(8, spriteFont.LineSpacing * i), new Color(opacity, opacity, opacity, opacity));
+                spriteBatch.DrawString(spriteFont, message, new Vector2(8, spriteFont.LineSpacing * i), new Color(1, 1, 1, opacity));
                 i++;
             }
         }
