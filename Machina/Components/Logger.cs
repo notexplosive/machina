@@ -15,9 +15,9 @@ namespace Machina.Components
         Active      // Render DebugDraws
     }
 
-    class InGameDebugger : DataComponent
+    class Logger : DataComponent
     {
-        public static InGameDebugger current;
+        public static Logger current;
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
         private IDebugOutputListener listener;
 
@@ -27,7 +27,7 @@ namespace Machina.Components
         }
 
 
-        public InGameDebugger(Actor actor, IDebugOutputListener listener) : base(actor)
+        public Logger(Actor actor, IDebugOutputListener listener) : base(actor)
         {
             Debug.Assert(current == null, "Should only have one InGameDebugger");
             current = this;

@@ -68,7 +68,7 @@ namespace HelloGame
             var consoleFont = assets.GetSpriteFont("ConsoleFont");
 
             var debugActor = debugScene.AddActor();
-            new InGameDebugger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
+            new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
 
             var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
             new SpriteRenderer(ballActor, linkinSpriteSheet);
@@ -153,7 +153,7 @@ namespace HelloGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             gameScene.Draw(spriteBatch);
             debugScene.Draw(spriteBatch);
-            if (InGameDebugger.current.DebugLevel >= DebugLevel.Passive)
+            if (Logger.current.DebugLevel >= DebugLevel.Passive)
             {
                 gameScene.DebugDraw(spriteBatch);
                 debugScene.DebugDraw(spriteBatch);

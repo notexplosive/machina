@@ -12,7 +12,6 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
-            Console.WriteLine(scrollDelta);
             this.actor.scene.camera.AdjustZoom(scrollDelta);
         }
     }
