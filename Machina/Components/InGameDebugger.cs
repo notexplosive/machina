@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,20 +15,23 @@ namespace Machina.Components
         Active      // Render DebugDraws
     }
 
-    class InGameDebugger : BaseComponent
+    class InGameDebugger : DataComponent
     {
         public static InGameDebugger current;
+        // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
+        private IDebugOutputListener listener;
+
         public DebugLevel DebugLevel
         {
             get; private set;
         }
-        private float fadeTimer;
 
-        public InGameDebugger(Actor actor) : base(actor)
+
+        public InGameDebugger(Actor actor, IDebugOutputListener listener) : base(actor)
         {
             Debug.Assert(current == null, "Should only have one InGameDebugger");
             current = this;
-
+            this.listener = listener;
 #if DEBUG
             this.DebugLevel = DebugLevel.Passive;
             this.Log("Debug build detected");
@@ -36,22 +41,6 @@ namespace Machina.Components
             this.Log("DebugLevel set to:", this.DebugLevel);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-
-        }
-
-        public override void Update(float dt)
-        {
-            if (this.fadeTimer > 0)
-            {
-                this.fadeTimer -= dt;
-            }
-            else
-            {
-                this.fadeTimer = 0;
-            }
-        }
 
         void Log(params object[] objects)
         {
@@ -60,15 +49,15 @@ namespace Machina.Components
                 return;
             }
 
-            this.fadeTimer = 5f;
             var strings = new List<string>();
             foreach (var obj in objects)
             {
                 strings.Add(obj.ToString());
             }
 
-            var output = string.Join('\t', strings);
+            var output = string.Join("   ", strings);
 
+            this.listener.OnMessageLog(output);
             Console.WriteLine(output);
         }
     }

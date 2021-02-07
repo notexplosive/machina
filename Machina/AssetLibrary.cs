@@ -12,12 +12,13 @@ namespace Machina
     class AssetLibrary
     {
         private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+        private Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
         private ContentManager content;
         public AssetLibrary(Game game)
         {
             this.content = game.Content;
         }
-        public List<string> GetFilesAtContentDirectory(string contentFolder)
+        public List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
         {
             var result = new List<string>();
 
@@ -27,13 +28,19 @@ namespace Machina
                 throw new DirectoryNotFoundException();
             }
 
-            FileInfo[] files = dir.GetFiles("*.*");
+            FileInfo[] files = dir.GetFiles("*." + extension);
             foreach (FileInfo file in files)
             {
                 result.Add(Path.GetFileNameWithoutExtension(file.FullName));
             }
 
             return result;
+        }
+
+        public void LoadEverything()
+        {
+            LoadAllSpriteFonts();
+            LoadAllTextures();
         }
 
         public void LoadAllTextures()
@@ -44,6 +51,14 @@ namespace Machina
             }
         }
 
+        public void LoadAllSpriteFonts()
+        {
+            foreach (var spriteFont in GetFilesAtContentDirectory("fonts", "xnb"))
+            {
+                LoadSpriteFont("fonts/" + spriteFont);
+            }
+        }
+
         private void LoadTexture(string fullName)
         {
             var splitName = fullName.Split('/');
@@ -51,13 +66,29 @@ namespace Machina
 
             var texture = this.content.Load<Texture2D>(fullName);
             textures.Add(name, texture);
-            Console.WriteLine(string.Format("Loaded asset: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded Texture: {0}", fullName));
+        }
+
+        private void LoadSpriteFont(string fullName)
+        {
+            var splitName = fullName.Split('/');
+            var name = splitName[^1];
+
+            var spriteFont = this.content.Load<SpriteFont>(fullName);
+            spriteFonts.Add(name, spriteFont);
+            Console.WriteLine(string.Format("Loaded SpriteFont: {0}", fullName));
         }
 
         public Texture2D GetTexture(string name)
         {
             Debug.Assert(textures.ContainsKey(name), "No texture called `" + name + "` was found");
             return textures[name];
+        }
+
+        public SpriteFont GetSpriteFont(string name)
+        {
+            Debug.Assert(spriteFonts.ContainsKey(name), "No SpriteFont called `" + name + "` was found");
+            return spriteFonts[name];
         }
     }
 }

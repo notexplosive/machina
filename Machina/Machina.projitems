@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ConsoleOverlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IDebugOutputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ThreepatchRenderer.cs" />

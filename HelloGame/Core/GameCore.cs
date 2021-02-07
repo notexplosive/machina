@@ -45,8 +45,6 @@ namespace HelloGame
             gameScene = new Scene();
             debugScene = new Scene();
 
-            var debugActor = debugScene.AddActor();
-            new InGameDebugger(debugActor);
 
             base.Initialize();
         }
@@ -55,7 +53,7 @@ namespace HelloGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            assets.LoadAllTextures();
+            assets.LoadEverything();
             var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
             var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
             var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
@@ -67,6 +65,10 @@ namespace HelloGame
             var longSwingAnim = new LinearFrameAnimation(11, 5);
             var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
 
+            var consoleFont = assets.GetSpriteFont("ConsoleFont");
+
+            var debugActor = debugScene.AddActor();
+            new InGameDebugger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
 
             var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
             new SpriteRenderer(ballActor, linkinSpriteSheet);
@@ -149,7 +151,6 @@ namespace HelloGame
         {
             gameScene.PreDraw(spriteBatch);
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            GraphicsDevice.Clear(Color.Transparent);
             gameScene.Draw(spriteBatch);
             debugScene.Draw(spriteBatch);
             if (InGameDebugger.current.DebugLevel >= DebugLevel.Passive)
