@@ -4,6 +4,7 @@ using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Machina.ThirdParty;
 using System;
 
 namespace HelloGame
@@ -61,7 +62,6 @@ namespace HelloGame
             var consoleFont = assets.GetSpriteFont("ConsoleFont");
             var defaultFont = assets.GetSpriteFont("DefaultFont");
 
-
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
             var quickSwingAnim = new LinearFrameAnimation(9, 3);
@@ -83,13 +83,15 @@ namespace HelloGame
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
             new BoundingRect(linkin, 32, 32);
             new BoundingRectRenderer(linkin);
+            new MoveTween(linkin)
+                .AddTween(new Vector2(300, 300), 1, ScaleFuncs.QuadraticEaseIn)
+                .AddTween(new Vector2(1300, 0), 1, ScaleFuncs.Linear);
 
             linkinRenderer.SetAnimation(walkAnim);
             linkinRenderer.SetupBoundingRect();
 
             var cameraScroller = gameScene.AddActor();
             new ZoomCameraOnScroll(cameraScroller);
-
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();

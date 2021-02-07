@@ -16,9 +16,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\IDebugOutputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\TweenChain.cs" />
+    <Compile Include="..\Machina\Components\MoveTween.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ThreepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ZoomCameraOnScroll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ThirdParty\TinyTween.cs" />
     <Compile Include="..\Machina\Components\Logger.cs" />
     <Compile Include="..\Machina\Data\NinepatchRects.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\NinepatchSpriteSheet.cs" />
