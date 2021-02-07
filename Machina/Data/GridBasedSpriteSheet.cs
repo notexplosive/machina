@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using MonoGame.Extended;
 using System.Text;
+using Machina.Components;
 
 namespace Machina.Data
 {
@@ -46,17 +47,16 @@ namespace Machina.Data
             int y = index / this.columnCount;
             var sourceRect = new Rectangle(new Point(x * frameSize.X, y * frameSize.Y), frameSize);
 
-            /*
-            spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
-            spriteBatch.DrawRectangle(sourceRect, Color.White);
-            */
-
             var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
             var destRect = new Rectangle(position.ToPoint(), adjustedFrameSize.ToPoint());
 
             spriteBatch.Draw(this.texture, destRect, sourceRect, Color.White, angle, frameSize.ToVector2() / 2,
                 (flipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flipY ? SpriteEffects.FlipVertically : SpriteEffects.None), layerDepth);
+
+            // Possibly useful for debugging:
+            //spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);
+            //spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
+            //spriteBatch.DrawRectangle(sourceRect, Color.White);
         }
     }
 }

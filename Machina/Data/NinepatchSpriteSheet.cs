@@ -66,7 +66,6 @@ namespace Machina.Data
                 var dest = destinationRects.raw[i];
                 var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
                 spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
-                //if debug: spriteBatch.DrawRectangle(dest, Color.White);
             }
         }
 

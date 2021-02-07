@@ -14,6 +14,9 @@ namespace Machina
         protected Actor actor;
         public abstract void Update(float dt);
         public abstract void Draw(SpriteBatch spriteBatch);
+        public virtual void DebugDraw(SpriteBatch spriteBatch)
+        {
+        }
         public virtual void OnScroll(int scrollDelta)
         {
         }

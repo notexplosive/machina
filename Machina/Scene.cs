@@ -42,7 +42,7 @@ namespace Machina
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
 
             foreach (var actor in actors)
             {
@@ -51,7 +51,17 @@ namespace Machina
 
             spriteBatch.End();
         }
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
 
+            foreach (var actor in actors)
+            {
+                actor.DebugDraw(spriteBatch);
+            }
+
+            spriteBatch.End();
+        }
         public void OnScroll(int scrollDelta)
         {
             foreach (var actor in actors)

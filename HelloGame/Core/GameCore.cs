@@ -15,6 +15,7 @@ namespace HelloGame
         static AssetLibrary assets;
         private ResizeStatus resizing;
         Scene gameScene;
+        Scene debugScene;
 
         public GameCore()
         {
@@ -42,6 +43,10 @@ namespace HelloGame
             graphics.ApplyChanges();
 
             gameScene = new Scene();
+            debugScene = new Scene();
+
+            var debugActor = debugScene.AddActor();
+            new InGameDebugger(debugActor);
 
             base.Initialize();
         }
@@ -51,12 +56,10 @@ namespace HelloGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             assets.LoadAllTextures();
-
-
-            Actor linkin = gameScene.AddActor(new Vector2(200, 200));
-
             var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
-            new SpriteRenderer(linkin, linkinSpriteSheet);
+            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
+            var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
+            var pillarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch-vertical"), GraphicsDevice, new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16));
 
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
@@ -64,51 +67,48 @@ namespace HelloGame
             var longSwingAnim = new LinearFrameAnimation(11, 5);
             var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
 
-            linkin.GetComponent<SpriteRenderer>().SetAnimation(walkAnim);
 
+            var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+            new SpriteRenderer(ballActor, linkinSpriteSheet);
+            new TextureRenderer(ballActor, assets.GetTexture("ball"));
+            new KeyboardMovement(ballActor);
+
+            Actor linkin = gameScene.AddActor(new Vector2(250, 250));
+            var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
             new BoundingRect(linkin, 32, 32);
             new BoundingRectRenderer(linkin);
 
-            linkin.GetComponent<SpriteRenderer>().SetupBoundingRect();
+            linkinRenderer.SetAnimation(walkAnim);
+            linkinRenderer.SetupBoundingRect();
 
             var cameraScroller = gameScene.AddActor();
             new ZoomCameraOnScroll(cameraScroller);
 
-            var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
-
-            var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
-            var ninepatchActor = gameScene.AddActor(new Vector2(400, 400));
-            new BoundingRect(ninepatchActor, new Point(400, 300));
-            new NinepatchRenderer(ninepatchActor, windowNinepatch);
-
-            new BoundingRect(sceneRenderBox, new Point(160, 150));
-
-
-            var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
-            var progressBar = gameScene.AddActor();
-            progressBar.position = new Vector2(500, 50);
-            new BoundingRect(progressBar, new Point(500, 24));
-            new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
-
-            var pillarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch-vertical"), GraphicsDevice, new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16));
-            var pillar = gameScene.AddActor();
-            pillar.position = new Vector2(300, 350);
-            new BoundingRect(pillar, new Point(32, 500));
-            new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();
             microActor.position = new Vector2(100, 100);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
 
+            var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
+            new BoundingRect(sceneRenderBox, new Point(160, 150));
             new Canvas(sceneRenderBox, GraphicsDevice);
             new BoundingRectRenderer(sceneRenderBox);
             new SceneRenderer(sceneRenderBox, otherScene);
 
-            var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
-            new SpriteRenderer(ballActor, linkinSpriteSheet);
-            new TextureRenderer(ballActor, assets.GetTexture("ball"));
-            new KeyboardMovement(ballActor);
+            var ninepatchActor = gameScene.AddActor(new Vector2(400, 400));
+            new BoundingRect(ninepatchActor, new Point(400, 300));
+            new NinepatchRenderer(ninepatchActor, windowNinepatch);
+
+            var progressBar = gameScene.AddActor();
+            progressBar.position = new Vector2(500, 50);
+            new BoundingRect(progressBar, new Point(500, 24));
+            new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
+
+            var pillar = gameScene.AddActor();
+            pillar.position = new Vector2(300, 350);
+            new BoundingRect(pillar, new Point(32, 500));
+            new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
         }
 
         protected override void Update(GameTime gameTime)
@@ -128,9 +128,9 @@ namespace HelloGame
             }
 
             // camera.AdjustZoom((float) (scrollDelta / 100) / 10);
-            gameScene.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
-
-            base.Update(gameTime);
+            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            gameScene.Update(dt);
+            debugScene.Update(dt);
 
             if (resizing.Pending)
             {
@@ -141,13 +141,22 @@ namespace HelloGame
                 //camera.UpdateProjection(resizing.Width, resizing.Height);
                 resizing.Pending = false;
             }
+
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             gameScene.PreDraw(spriteBatch);
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Transparent);
             gameScene.Draw(spriteBatch);
+            debugScene.Draw(spriteBatch);
+            if (InGameDebugger.current.DebugLevel >= DebugLevel.Passive)
+            {
+                gameScene.DebugDraw(spriteBatch);
+                debugScene.DebugDraw(spriteBatch);
+            }
 
             base.Draw(gameTime);
         }

@@ -29,6 +29,14 @@ namespace Machina
             }
         }
 
+        public void DebugDraw(SpriteBatch spriteBatch)
+        {
+            foreach (var component in this.components)
+            {
+                component.DebugDraw(spriteBatch);
+            }
+        }
+
         public void EarlyDraw(SpriteBatch spriteBatch)
         {
             foreach (var component in this.components)
