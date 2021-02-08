@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Machina.Data;
 
-namespace Machina
+namespace Machina.Engine
 {
     public class Actor
     {

@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using Machina.Data;
 
-namespace Machina
+namespace Machina.Engine
 {
     public class AssetLibrary
     {

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Machina
+namespace Machina.Engine
 {
     /// <summary>
     /// Base class for all components. Child components are expected to implement their own Update and Draw functions.

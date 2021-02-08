@@ -9,9 +9,9 @@
     <Import_RootNamespace>Machina</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Actor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AssetLibrary.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)BaseComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\Actor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\AssetLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\BaseComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ConsoleOverlay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IDebugOutputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
@@ -42,11 +42,14 @@
     <Compile Include="..\Machina\Data\LinearFrameAnimation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\SpriteSheet.cs" />
     <Compile Include="..\Machina\Data\GridBasedSpriteSheet.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Scene.cs" />
-    <Compile Include="..\Machina\MachinaGame.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\MachinaGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Engine\" />
   </ItemGroup>
 </Project>

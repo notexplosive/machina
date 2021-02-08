@@ -6,6 +6,7 @@ using System.Text;
 using MonoGame.Extended;
 using Microsoft.Xna.Framework.Input;
 using Machina.Data;
+using Machina.Engine;
 
 namespace Machina.Components
 {

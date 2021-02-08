@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Machina.Data;
 using Microsoft.Xna.Framework;
 
-namespace Machina
+namespace Machina.Engine
 {
     public class Scene
     {

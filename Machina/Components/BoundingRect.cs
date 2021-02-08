@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MonoGame.Extended;
+using Machina.Engine;
 
 namespace Machina.Components
 {

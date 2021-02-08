@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 
-namespace Machina
+namespace Machina.Engine
 {
     /// <summary>
     /// Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
