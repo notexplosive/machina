@@ -8,8 +8,7 @@ using System.Collections.Generic;
 
 namespace Machina
 {
-
-    public class MachinaGame : Game
+    public abstract class MachinaGame : Game
     {
         private Point startingWindowSize;
         protected SpriteBatch spriteBatch;
@@ -77,10 +76,7 @@ namespace Machina
             Assets.UnloadAssets();
         }
 
-        protected virtual void PostLoadContent()
-        {
-            // Derived class should put their code here
-        }
+        protected abstract void PostLoadContent();
 
         protected override void Update(GameTime gameTime)
         {
