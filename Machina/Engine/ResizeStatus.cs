@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Engine
 {
     public class ResizeStatus
     {

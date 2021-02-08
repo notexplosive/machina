@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
-using Machina.Data;
 using Microsoft.Xna.Framework;
 
 namespace Machina.Engine
