@@ -123,11 +123,6 @@ namespace Machina
                     scene.OnMouseMove(mouseTracker.CurrentPosition, mouseTracker.PositionDelta);
                 }
 
-                foreach (var key in keyTracker.Pressed)
-                {
-                    scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
-                }
-
                 foreach (var key in keyTracker.Released)
                 {
                     scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
@@ -141,6 +136,11 @@ namespace Machina
                 foreach (var mouseButton in mouseTracker.Released)
                 {
                     scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Released);
+                }
+
+                foreach (var key in keyTracker.Pressed)
+                {
+                    scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
                 }
             }
 
