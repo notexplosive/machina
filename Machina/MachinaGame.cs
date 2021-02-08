@@ -9,15 +9,21 @@ using System.Collections.Generic;
 namespace Machina
 {
 
-    public abstract class MachinaGame : Game
+    public class MachinaGame : Game
     {
         private Point startingWindowSize;
         protected SpriteBatch spriteBatch;
-        protected ResizeStatus resizing;
+        protected readonly ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
-        public static GraphicsDeviceManager graphics;
-        public static AssetLibrary assets;
-        public static MachinaGame current
+        public static GraphicsDeviceManager Graphics
+        {
+            get; private set;
+        }
+        public static AssetLibrary Assets
+        {
+            get; private set;
+        }
+        public static MachinaGame Current
         {
             get; private set;
         }
@@ -26,11 +32,11 @@ namespace Machina
 
         public MachinaGame(int windowWidth, int windowHeight)
         {
-            current = this;
-            assets = new AssetLibrary(this);
+            Current = this;
+            Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
 
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             resizing = new ResizeStatus(windowWidth, windowHeight);
 
             Window.AllowUserResizing = true;
@@ -41,9 +47,9 @@ namespace Machina
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = startingWindowSize.X;
-            graphics.PreferredBackBufferHeight = startingWindowSize.Y;
-            graphics.ApplyChanges();
+            Graphics.PreferredBackBufferWidth = startingWindowSize.X;
+            Graphics.PreferredBackBufferHeight = startingWindowSize.Y;
+            Graphics.ApplyChanges();
             OnResize(null, new EventArgs());
 
             debugScene = new Scene();
@@ -54,12 +60,12 @@ namespace Machina
 
         protected override void LoadContent()
         {
-            assets.LoadAllContent();
+            Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var consoleFont = assets.GetSpriteFont("MachinaDefaultFont");
+            var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
             var debugActor = debugScene.AddActor();
-            new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
+            new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
 
             PostLoadContent();
         }
@@ -68,10 +74,13 @@ namespace Machina
         {
             base.UnloadContent();
             spriteBatch.Dispose();
-            assets.UnloadAssets();
+            Assets.UnloadAssets();
         }
 
-        protected abstract void PostLoadContent();
+        protected virtual void PostLoadContent()
+        {
+            // Derived class should put their code here
+        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -83,9 +92,9 @@ namespace Machina
 
             if (resizing.Pending)
             {
-                graphics.PreferredBackBufferWidth = resizing.Width;
-                graphics.PreferredBackBufferHeight = resizing.Height;
-                graphics.ApplyChanges();
+                Graphics.PreferredBackBufferWidth = resizing.Width;
+                Graphics.PreferredBackBufferHeight = resizing.Height;
+                Graphics.ApplyChanges();
                 resizing.Pending = false;
             }
 

@@ -27,7 +27,7 @@ namespace Machina.Components
 
             this.boundingRect = RequireComponent<BoundingRect>();
 
-            var graphicsDevice = MachinaGame.current.GraphicsDevice;
+            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
 
             renderTarget = new RenderTarget2D(
                 graphicsDevice,
@@ -40,7 +40,7 @@ namespace Machina.Components
 
         public void DrawContent(SpriteBatch spriteBatch)
         {
-            GraphicsDevice graphicsDevice = MachinaGame.current.GraphicsDevice;
+            GraphicsDevice graphicsDevice = MachinaGame.Current.GraphicsDevice;
             graphicsDevice.SetRenderTarget(renderTarget);
 
             graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };

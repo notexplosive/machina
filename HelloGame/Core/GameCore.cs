@@ -29,22 +29,22 @@ namespace HelloGame
         protected override void PostLoadContent()
         {
 
-            assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
-            assets.AddMachinaAsset("test-ninepatch",
+            Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
+            Assets.AddMachinaAsset("test-ninepatch",
                 new NinepatchSheet("test-nine-patch", new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16)));
             var progressBarThreepatch =
-                assets.AddMachinaAsset(
+                Assets.AddMachinaAsset(
                     "progressbar-threepatch",
                     new NinepatchSheet("test-three-patch", new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24)));
             var pillarThreepatch =
-                assets.AddMachinaAsset(
+                Assets.AddMachinaAsset(
                     "pillar-threepatch",
                     new NinepatchSheet("test-three-patch-vertical", new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16)));
-            var defaultFont = assets.GetSpriteFont("DefaultFont");
-            var consoleFont = assets.GetSpriteFont("ConsoleFont");
+            var defaultFont = Assets.GetSpriteFont("DefaultFont");
+            var consoleFont = Assets.GetSpriteFont("ConsoleFont");
 
-            var testNinepatch = assets.GetMachinaAsset<NinepatchSheet>("test-ninepatch");
-            var linkinSpriteSheet = assets.GetMachinaAsset<SpriteSheet>("linkin-sprite-sheet");
+            var testNinepatch = Assets.GetMachinaAsset<NinepatchSheet>("test-ninepatch");
+            var linkinSpriteSheet = Assets.GetMachinaAsset<SpriteSheet>("linkin-sprite-sheet");
 
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
@@ -54,8 +54,8 @@ namespace HelloGame
 
             //
 
-            var ballActor = gameScene.AddActor(new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
-            new TextureRenderer(ballActor, assets.GetTexture("ball"));
+            var ballActor = gameScene.AddActor(new Vector2(Graphics.PreferredBackBufferWidth / 2, Graphics.PreferredBackBufferHeight / 2));
+            new TextureRenderer(ballActor, Assets.GetTexture("ball"));
             new SpriteRenderer(ballActor, linkinSpriteSheet);
             new KeyboardMovement(ballActor);
             new TextRenderer(ballActor, defaultFont, "Hello world and this is a very long string");
@@ -108,12 +108,12 @@ namespace HelloGame
 
             if (/*Keyboard.GetState().IsKeyDown(Keys.F4)*/ false)
             {
-                if (!graphics.IsFullScreen)
+                if (!Graphics.IsFullScreen)
                 {
-                    graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                    graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-                    graphics.IsFullScreen = true;
-                    graphics.ApplyChanges();
+                    Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                    Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                    Graphics.IsFullScreen = true;
+                    Graphics.ApplyChanges();
                 }
             }
 

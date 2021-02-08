@@ -12,7 +12,6 @@ namespace Machina.Data
     class NinepatchSheet : IAsset
     {
         public readonly NinepatchRects rects;
-        // Ninepatch has at least one empty texture, it might be a valid Threepatch
         private readonly Texture2D originalTexture;
         private readonly Texture2D[] textures;
 
@@ -30,7 +29,7 @@ namespace Machina.Data
                 var rect = rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
-                    Texture2D cropTexture = new Texture2D(MachinaGame.current.GraphicsDevice, rect.Width, rect.Height);
+                    Texture2D cropTexture = new Texture2D(MachinaGame.Current.GraphicsDevice, rect.Width, rect.Height);
                     Color[] data = new Color[rect.Width * rect.Height];
                     texture.GetData(0, rect, data, 0, data.Length);
                     cropTexture.SetData(data);
@@ -40,7 +39,7 @@ namespace Machina.Data
         }
 
         public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
-            : this(MachinaGame.assets.GetTexture(textureAssetName), outerRect, innerRect)
+            : this(MachinaGame.Assets.GetTexture(textureAssetName), outerRect, innerRect)
         {
         }
 
