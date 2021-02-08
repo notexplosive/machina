@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Engine
 {
     public enum MouseButton
     {
@@ -71,14 +71,14 @@ namespace Machina.Data
                 }
             }
 
-            this.Released = releasedThisFrame;
-            this.Pressed = pressedThisFrame;
-            this.CurrentPosition = mouseState.Position;
+            Released = releasedThisFrame;
+            Pressed = pressedThisFrame;
+            CurrentPosition = mouseState.Position;
 
             if (!this.firstFrame)
             {
                 // We hide this on the first frame because game will launch with a huge mouse delta otherwise
-                this.PositionDelta = (oldState.Position - mouseState.Position).ToVector2();
+                PositionDelta = (oldState.Position - mouseState.Position).ToVector2();
             }
 
             this.oldState = mouseState;

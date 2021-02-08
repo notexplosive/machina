@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Engine
 {
     public struct ModifierKeys
     {
@@ -99,9 +99,9 @@ namespace Machina.Data
                 alt = true;
             }
 
-            this.Modifiers = new ModifierKeys(control, alt, shift);
-            this.Pressed = keysPressedThisFrame.ToArray();
-            this.Released = keysReleasedThisFrame.ToArray();
+            Modifiers = new ModifierKeys(control, alt, shift);
+            Pressed = keysPressedThisFrame.ToArray();
+            Released = keysReleasedThisFrame.ToArray();
 
             this.oldState = currentState;
         }

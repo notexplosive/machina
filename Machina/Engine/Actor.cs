@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Machina.Data;
 
 namespace Machina.Engine
 {
