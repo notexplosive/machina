@@ -83,9 +83,10 @@ namespace HelloGame
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
             new BoundingRect(linkin, 32, 32);
             new BoundingRectRenderer(linkin);
-            new MoveTween(linkin)
-                .AddTween(new Vector2(300, 300), 1, ScaleFuncs.QuadraticEaseIn)
-                .AddTween(new Vector2(1300, 0), 1, ScaleFuncs.Linear);
+            new TweenChainComponent(linkin)
+                .AddMoveTween(new Vector2(300, 300), 1, EaseFuncs.SineEaseIn)
+                .AddWaitTween(2f)
+                .AddMoveTween(new Vector2(1300, 0), 1, EaseFuncs.Linear);
 
             linkinRenderer.SetAnimation(walkAnim);
             linkinRenderer.SetupBoundingRect();

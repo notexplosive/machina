@@ -21,6 +21,8 @@
 // MODIFICATIONS FROM ORIGINAL FILE:
 // * Removing XNA/Unity prepocessor swapping since we're only concerned with XNA
 // * Wrapped code in the Machina.ThirdParty namespace.
+// * Renamed ScaleFunc/ScaleFuncs to EaseFunc and EaseFuncs respectively
+// * Made LerpFloat public
 
 using System;
 using System.Collections.Generic;
@@ -37,11 +39,11 @@ namespace Machina.ThirdParty
     /// <remarks>
     /// Scale functions are used to define how the tween should occur. Examples would be linear,
     /// easing in quadratic, or easing out circular. You can implement your own scale function
-    /// or use one of the many defined in the ScaleFuncs static class.
+    /// or use one of the many defined in the EaseFuncs static class.
     /// </remarks>
     /// <param name="progress">The percentage of the tween complete in the range [0, 1].</param>
     /// <returns>The scale value used to lerp between the tween's start and end values</returns>
-    public delegate float ScaleFunc(float progress);
+    public delegate float EaseFunc(float progress);
 
     /// <summary>
     /// Standard linear interpolation function: "start + (end - start) * progress"
@@ -158,8 +160,8 @@ namespace Machina.ThirdParty
         /// <param name="start">The start value.</param>
         /// <param name="end">The end value.</param>
         /// <param name="duration">The duration of the tween.</param>
-        /// <param name="scaleFunc">A function used to scale progress over time.</param>
-        void Start(T start, T end, float duration, ScaleFunc scaleFunc);
+        /// <param name="easeFunc">A function used to scale progress over time.</param>
+        void Start(T start, T end, float duration, EaseFunc easeFunc);
     }
 
     /// <summary>
@@ -173,7 +175,7 @@ namespace Machina.ThirdParty
 
         private float currentTime;
         private float duration;
-        private ScaleFunc scaleFunc;
+        private EaseFunc easeFunc;
         private TweenState state;
 
         private T start;
@@ -266,21 +268,21 @@ namespace Machina.ThirdParty
         /// <param name="start">The start value.</param>
         /// <param name="end">The end value.</param>
         /// <param name="duration">The duration of the tween.</param>
-        /// <param name="scaleFunc">A function used to scale progress over time.</param>
-        public void Start(T start, T end, float duration, ScaleFunc scaleFunc)
+        /// <param name="easeFunc">A function used to scale progress over time.</param>
+        public void Start(T start, T end, float duration, EaseFunc easeFunc)
         {
             if (duration <= 0)
             {
                 throw new ArgumentException("duration must be greater than 0");
             }
-            if (scaleFunc == null)
+            if (easeFunc == null)
             {
-                throw new ArgumentNullException("scaleFunc");
+                throw new ArgumentNullException("easeFunc");
             }
 
             currentTime = 0;
             this.duration = duration;
-            this.scaleFunc = scaleFunc;
+            this.easeFunc = easeFunc;
             state = TweenState.Running;
 
             this.start = start;
@@ -352,7 +354,7 @@ namespace Machina.ThirdParty
         /// </summary>
         private void UpdateValue()
         {
-            value = lerpFunc(start, end, scaleFunc(currentTime / duration));
+            value = lerpFunc(start, end, easeFunc(currentTime / duration));
         }
     }
 
@@ -361,7 +363,7 @@ namespace Machina.ThirdParty
     /// </summary>
     public class FloatTween : Tween<float>
     {
-        private static float LerpFloat(float start, float end, float progress)
+        public static float LerpFloat(float start, float end, float progress)
         {
             return start + (end - start) * progress;
         }
@@ -449,93 +451,93 @@ namespace Machina.ThirdParty
     /// Defines a set of premade scale functions for use with tweens.
     /// </summary>
     /// <remarks>
-    /// To avoid excess allocations of delegates, the public members of ScaleFuncs are already
+    /// To avoid excess allocations of delegates, the public members of EaseFuncs are already
     /// delegates that reference private methods.
     ///
     /// Implementations based on http://theinstructionlimit.com/flash-style-tweeneasing-functions-in-c
     /// which are based on http://www.robertpenner.com/easing/
     /// </remarks>
-    public static class ScaleFuncs
+    public static class EaseFuncs
     {
         /// <summary>
         /// A linear progress scale function.
         /// </summary>
-        public static readonly ScaleFunc Linear = LinearImpl;
+        public static readonly EaseFunc Linear = LinearImpl;
 
         /// <summary>
         /// A quadratic (x^2) progress scale function that eases in.
         /// </summary>
-        public static readonly ScaleFunc QuadraticEaseIn = QuadraticEaseInImpl;
+        public static readonly EaseFunc QuadraticEaseIn = QuadraticEaseInImpl;
 
         /// <summary>
         /// A quadratic (x^2) progress scale function that eases out.
         /// </summary>
-        public static readonly ScaleFunc QuadraticEaseOut = QuadraticEaseOutImpl;
+        public static readonly EaseFunc QuadraticEaseOut = QuadraticEaseOutImpl;
 
         /// <summary>
         /// A quadratic (x^2) progress scale function that eases in and out.
         /// </summary>
-        public static readonly ScaleFunc QuadraticEaseInOut = QuadraticEaseInOutImpl;
+        public static readonly EaseFunc QuadraticEaseInOut = QuadraticEaseInOutImpl;
 
         /// <summary>
         /// A cubic (x^3) progress scale function that eases in.
         /// </summary>
-        public static readonly ScaleFunc CubicEaseIn = CubicEaseInImpl;
+        public static readonly EaseFunc CubicEaseIn = CubicEaseInImpl;
 
         /// <summary>
         /// A cubic (x^3) progress scale function that eases out.
         /// </summary>
-        public static readonly ScaleFunc CubicEaseOut = CubicEaseOutImpl;
+        public static readonly EaseFunc CubicEaseOut = CubicEaseOutImpl;
 
         /// <summary>
         /// A cubic (x^3) progress scale function that eases in and out.
         /// </summary>
-        public static readonly ScaleFunc CubicEaseInOut = CubicEaseInOutImpl;
+        public static readonly EaseFunc CubicEaseInOut = CubicEaseInOutImpl;
 
         /// <summary>
         /// A quartic (x^4) progress scale function that eases in.
         /// </summary>
-        public static readonly ScaleFunc QuarticEaseIn = QuarticEaseInImpl;
+        public static readonly EaseFunc QuarticEaseIn = QuarticEaseInImpl;
 
         /// <summary>
         /// A quartic (x^4) progress scale function that eases out.
         /// </summary>
-        public static readonly ScaleFunc QuarticEaseOut = QuarticEaseOutImpl;
+        public static readonly EaseFunc QuarticEaseOut = QuarticEaseOutImpl;
 
         /// <summary>
         /// A quartic (x^4) progress scale function that eases in and out.
         /// </summary>
-        public static readonly ScaleFunc QuarticEaseInOut = QuarticEaseInOutImpl;
+        public static readonly EaseFunc QuarticEaseInOut = QuarticEaseInOutImpl;
 
         /// <summary>
         /// A quintic (x^5) progress scale function that eases in.
         /// </summary>
-        public static readonly ScaleFunc QuinticEaseIn = QuinticEaseInImpl;
+        public static readonly EaseFunc QuinticEaseIn = QuinticEaseInImpl;
 
         /// <summary>
         /// A quintic (x^5) progress scale function that eases out.
         /// </summary>
-        public static readonly ScaleFunc QuinticEaseOut = QuinticEaseOutImpl;
+        public static readonly EaseFunc QuinticEaseOut = QuinticEaseOutImpl;
 
         /// <summary>
         /// A quintic (x^5) progress scale function that eases in and out.
         /// </summary>
-        public static readonly ScaleFunc QuinticEaseInOut = QuinticEaseInOutImpl;
+        public static readonly EaseFunc QuinticEaseInOut = QuinticEaseInOutImpl;
 
         /// <summary>
         /// A sinusoidal progress scale function that eases in.
         /// </summary>
-        public static readonly ScaleFunc SineEaseIn = SineEaseInImpl;
+        public static readonly EaseFunc SineEaseIn = SineEaseInImpl;
 
         /// <summary>
         /// A sinusoidal progress scale function that eases out.
         /// </summary>
-        public static readonly ScaleFunc SineEaseOut = SineEaseOutImpl;
+        public static readonly EaseFunc SineEaseOut = SineEaseOutImpl;
 
         /// <summary>
         /// A sinusoidal progress scale function that eases in and out.
         /// </summary>
-        public static readonly ScaleFunc SineEaseInOut = SineEaseInOutImpl;
+        public static readonly EaseFunc SineEaseInOut = SineEaseInOutImpl;
 
         private const float Pi = (float) Math.PI;
         private const float HalfPi = Pi / 2f;

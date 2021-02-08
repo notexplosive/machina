@@ -6,74 +6,90 @@ using System.Text;
 
 namespace Machina.Data
 {
-    class TweenChain<T> where T : struct
+    class TweenChain
     {
-        private List<TweenChainItem> chain;
-        private LerpFunc<T> lerpFunc;
-        private Func<T> getter;
-        private Action<T> setter;
+        private readonly List<IChainItem> chain;
         private int currentIndex;
-        private Tween<T> currentTween;
+        private IChainItem currentItem;
 
-        public TweenChain(LerpFunc<T> lerpFunc, Func<T> getter, Action<T> setter)
+        public TweenChain()
         {
-            this.chain = new List<TweenChainItem>();
-            this.lerpFunc = lerpFunc;
-            this.getter = getter;
-            this.setter = setter;
+            this.chain = new List<IChainItem>();
             this.currentIndex = 0;
         }
 
-        public void AddTween(T destination, float duration, ScaleFunc scaleFunc)
+        public void Add(IChainItem item)
         {
-            chain.Add(new TweenChainItem(destination, duration, scaleFunc, this.getter));
+            chain.Add(item);
         }
 
-        private Tween<T> StartTween(TweenChainItem item)
+        private IChainItem StartTween(IChainItem item)
         {
-            var tween = item.Build(lerpFunc);
-            tween.Start(item.getCurrent(), item.destination, item.duration, item.scaleFunc);
-            return tween;
+            item.StartTween();
+            return item;
         }
 
         public void Update(float dt)
         {
-            if (this.currentTween == null && this.chain.Count > this.currentIndex)
+            if (this.currentItem == null && this.chain.Count > this.currentIndex)
             {
-                this.currentTween = StartTween(this.chain[this.currentIndex]);
+                this.currentItem = StartTween(this.chain[this.currentIndex]);
                 this.currentIndex++;
             }
 
-            if (this.currentTween != null)
+            if (this.currentItem != null)
             {
-                this.currentTween.Update(dt);
-                this.setter(this.currentTween.CurrentValue);
+                this.currentItem.Update(dt);
 
-                if (this.currentTween.State == TweenState.Stopped)
+                if (this.currentItem.IsComplete)
                 {
-                    this.currentTween = null;
+                    this.currentItem = null;
                 }
             }
         }
 
-        private struct TweenChainItem
+        public interface IChainItem
         {
+            public void StartTween();
+            public void Update(float dt);
+            public bool IsComplete
+            {
+                get;
+            }
+        }
+
+        public class ChainItem<T> : IChainItem where T : struct
+        {
+            private readonly LerpFunc<T> lerpFunc;
+            private readonly Func<T> getter;
+            private readonly Action<T> setter;
             public readonly T destination;
             public readonly float duration;
-            public readonly ScaleFunc scaleFunc;
-            public readonly Func<T> getCurrent;
+            public readonly EaseFunc scaleFunc;
+            public readonly Tween<T> tween;
 
-            public TweenChainItem(T destination, float duration, ScaleFunc scaleFunc, Func<T> getCurrent)
+            public bool IsComplete => this.tween.State == TweenState.Stopped;
+
+            public ChainItem(T destination, float duration, EaseFunc scaleFunc, Func<T> getter, Action<T> setter, LerpFunc<T> lerp)
             {
                 this.destination = destination;
                 this.duration = duration;
                 this.scaleFunc = scaleFunc;
-                this.getCurrent = getCurrent;
+                this.getter = getter;
+                this.setter = setter;
+                this.lerpFunc = lerp;
+                this.tween = new Tween<T>(lerpFunc);
             }
 
-            public Tween<T> Build(LerpFunc<T> lerpFunc)
+            public void StartTween()
             {
-                return new Tween<T>(lerpFunc);
+                this.tween.Start(getter(), destination, duration, scaleFunc);
+            }
+
+            public void Update(float dt)
+            {
+                this.tween.Update(dt);
+                this.setter(this.tween.CurrentValue);
             }
         }
     }

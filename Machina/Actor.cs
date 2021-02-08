@@ -147,5 +147,17 @@ namespace Machina
             }
             return null;
         }
+
+        public Vector2 GetPosition()
+        {
+            return this.position;
+        }
+
+        public void SetPosition(Vector2 value)
+        {
+            this.position = value;
+        }
     }
+
+
 }
