@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    abstract class SpriteSheet
+    abstract class SpriteSheet : IAsset
     {
         protected readonly Texture2D texture;
         public IFrameAnimation DefaultAnimation
@@ -28,5 +28,10 @@ namespace Machina.Data
         }
 
         public abstract void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY, float layerDepth, Color tintColor);
+
+        public void OnCleanup()
+        {
+            // This function is intentionally left blank
+        }
     }
 }

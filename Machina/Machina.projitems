@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\IDebugOutputListener.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\IAsset.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenChain.cs" />
     <Compile Include="..\Machina\Components\TweenChainComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextRenderer.cs" />

@@ -11,16 +11,22 @@ namespace Machina
 
     public abstract class MachinaGame : Game
     {
-        protected SpriteBatch spriteBatch;
-        protected readonly GraphicsDeviceManager graphics;
-        protected ResizeStatus resizing;
         private Point startingWindowSize;
-        protected static AssetLibrary assets;
+        protected SpriteBatch spriteBatch;
+        protected ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
+        public static GraphicsDeviceManager graphics;
+        public static AssetLibrary assets;
+        public static MachinaGame current
+        {
+            get; private set;
+        }
+
         Scene debugScene;
 
         public MachinaGame(int windowWidth, int windowHeight)
         {
+            current = this;
             assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
 
@@ -48,13 +54,21 @@ namespace Machina
 
         protected override void LoadContent()
         {
-            assets.LoadEverything();
+            assets.LoadAllContent();
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var consoleFont = assets.GetSpriteFont("MachinaDefaultFont");
             var debugActor = debugScene.AddActor();
             new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
 
             PostLoadContent();
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+            spriteBatch.Dispose();
+            assets.UnloadAssets();
         }
 
         protected abstract void PostLoadContent();

@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System.IO;
+using Machina.Data;
 
 namespace Machina
 {
@@ -13,6 +14,7 @@ namespace Machina
     {
         private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
+        private Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private ContentManager content;
         public AssetLibrary(Game game)
         {
@@ -37,7 +39,7 @@ namespace Machina
             return result;
         }
 
-        public void LoadEverything()
+        public void LoadAllContent()
         {
             LoadAllSpriteFonts();
             LoadAllTextures();
@@ -79,6 +81,14 @@ namespace Machina
             Console.WriteLine(string.Format("Loaded SpriteFont: {0}", fullName));
         }
 
+        public void UnloadAssets()
+        {
+            foreach (var asset in this.assets.Values)
+            {
+                asset.OnCleanup();
+            }
+        }
+
         public Texture2D GetTexture(string name)
         {
             Debug.Assert(textures.ContainsKey(name), "No texture called `" + name + "` was found");
@@ -89,6 +99,19 @@ namespace Machina
         {
             Debug.Assert(spriteFonts.ContainsKey(name), "No SpriteFont called `" + name + "` was found");
             return spriteFonts[name];
+        }
+
+        public T GetMachinaAsset<T>(string name) where T : class, IAsset
+        {
+            Debug.Assert(assets.ContainsKey(name), "No MachinaAsset called `" + name + "` was found");
+            return assets[name] as T;
+        }
+
+        public T AddMachinaAsset<T>(string name, T asset) where T : IAsset
+        {
+            Debug.Assert(!assets.ContainsKey(name), "Duplicate MachinaAsset: `" + name + "`");
+            assets[name] = asset;
+            return asset;
         }
     }
 }

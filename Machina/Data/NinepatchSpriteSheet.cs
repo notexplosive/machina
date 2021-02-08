@@ -9,14 +9,14 @@ using System.Text;
 namespace Machina.Data
 {
 
-    class NinepatchSpriteSheet
+    class NinepatchSpriteSheet : IAsset
     {
         public readonly NinepatchRects rects;
         // Ninepatch has at least one empty texture, it might be a valid Threepatch
         private readonly Texture2D originalTexture;
         private readonly Texture2D[] textures;
 
-        public NinepatchSpriteSheet(Texture2D texture, GraphicsDevice graphics, Rectangle outerRect, Rectangle innerRect)
+        public NinepatchSpriteSheet(Texture2D texture, Rectangle outerRect, Rectangle innerRect)
         {
             this.originalTexture = texture;
             Debug.Assert(texture.Width >= outerRect.Width, "Texture is to small");
@@ -30,14 +30,29 @@ namespace Machina.Data
                 var rect = rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
-                    Texture2D cropTexture = new Texture2D(graphics, rect.Width, rect.Height);
+                    Texture2D cropTexture = new Texture2D(MachinaGame.current.GraphicsDevice, rect.Width, rect.Height);
                     Color[] data = new Color[rect.Width * rect.Height];
                     texture.GetData(0, rect, data, 0, data.Length);
                     cropTexture.SetData(data);
                     textures[i] = cropTexture;
                 }
             }
+        }
 
+        public NinepatchSpriteSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
+            : this(MachinaGame.assets.GetTexture(textureAssetName), outerRect, innerRect)
+        {
+        }
+
+        public void OnCleanup()
+        {
+            foreach (var texture in textures)
+            {
+                if (texture != null)
+                {
+                    texture.Dispose();
+                }
+            }
         }
 
         public void DrawDebug(SpriteBatch spriteBatch)

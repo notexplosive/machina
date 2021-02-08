@@ -12,11 +12,10 @@ namespace Machina.Components
         // Must supply a spriteBatch.Begin/End for each function
         public Action<SpriteBatch> DrawAdditionalContent;
         private BoundingRect boundingRect;
-        private GraphicsDevice graphicsDevice;
         private RenderTarget2D renderTarget;
         Color backgroundColor = Color.Orange;
 
-        public Canvas(Actor actor, GraphicsDevice graphicsDevice) : base(actor)
+        public Canvas(Actor actor) : base(actor)
         {
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
             {
@@ -27,7 +26,8 @@ namespace Machina.Components
             };
 
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.graphicsDevice = graphicsDevice;
+
+            var graphicsDevice = MachinaGame.current.GraphicsDevice;
 
             renderTarget = new RenderTarget2D(
                 graphicsDevice,
@@ -40,6 +40,7 @@ namespace Machina.Components
 
         public void DrawContent(SpriteBatch spriteBatch)
         {
+            GraphicsDevice graphicsDevice = MachinaGame.current.GraphicsDevice;
             graphicsDevice.SetRenderTarget(renderTarget);
 
             graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
