@@ -8,6 +8,9 @@ using System.Collections.Generic;
 
 namespace Machina
 {
+    /// <summary>
+    /// Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
+    /// </summary>
     public abstract class MachinaGame : Game
     {
         private Point startingWindowSize;
@@ -27,7 +30,8 @@ namespace Machina
             get; private set;
         }
 
-        Scene debugScene;
+        private Scene debugScene;
+        private Logger logger;
 
         public MachinaGame(int windowWidth, int windowHeight)
         {
@@ -64,7 +68,7 @@ namespace Machina
 
             var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
             var debugActor = debugScene.AddActor();
-            new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
+            this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
 
             PostLoadContent();
         }
@@ -111,7 +115,7 @@ namespace Machina
                 scene.Draw(spriteBatch);
             }
 
-            if (Logger.current.DebugLevel >= DebugLevel.Passive)
+            if (this.logger.DebugLevel >= DebugLevel.Passive)
             {
                 foreach (var scene in scenes)
                 {
@@ -127,6 +131,15 @@ namespace Machina
             resizing.Pending = true;
             resizing.Width = Window.ClientBounds.Width;
             resizing.Height = Window.ClientBounds.Height;
+        }
+
+        /// <summary>
+        /// Print to the in-game debug console
+        /// </summary>
+        /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
+        public static void Print(params object[] objects)
+        {
+            Current.logger.Log(objects);
         }
     }
 }

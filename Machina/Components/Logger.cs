@@ -17,7 +17,6 @@ namespace Machina.Components
 
     class Logger : DataComponent
     {
-        public static Logger current;
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
         private IDebugOutputListener listener;
 
@@ -29,8 +28,6 @@ namespace Machina.Components
 
         public Logger(Actor actor, IDebugOutputListener listener) : base(actor)
         {
-            Debug.Assert(current == null, "Should only have one InGameDebugger");
-            current = this;
             this.listener = listener;
 #if DEBUG
             this.DebugLevel = DebugLevel.Passive;
