@@ -7,15 +7,13 @@ namespace Machina.Data
 {
     class ScrollTracker
     {
-        private int scrollDelta;
         private int previousScroll;
-        public void Update()
+        public int CalculateDelta()
         {
             var currentScroll = Mouse.GetState().ScrollWheelValue;
-            this.scrollDelta = currentScroll - this.previousScroll;
+            var scrollDelta = currentScroll - this.previousScroll;
             this.previousScroll = currentScroll;
+            return scrollDelta / 120;
         }
-
-        public int ScrollDelta => this.scrollDelta / 120;
     }
 }

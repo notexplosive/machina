@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MonoGame.Extended;
+using Microsoft.Xna.Framework.Input;
+using Machina.Data;
 
 namespace Machina.Components
 {
@@ -59,6 +61,11 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(renderTarget, this.boundingRect.Rect, null, Color.White, 0f, new Vector2(), SpriteEffects.None, this.actor.depth);
+        }
+
+        public override void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        {
+            MachinaGame.Print(modifiers, key);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Machina
     {
         private Point startingWindowSize;
         private ScrollTracker scrollTracker;
+        private KeyTracker keyTracker;
         protected SpriteBatch spriteBatch;
         protected readonly ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
@@ -55,6 +56,7 @@ namespace Machina
             Graphics = new GraphicsDeviceManager(this);
             resizing = new ResizeStatus(windowWidth, windowHeight);
             scrollTracker = new ScrollTracker();
+            keyTracker = new KeyTracker();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
@@ -106,11 +108,25 @@ namespace Machina
                 scene.Update(dt);
             }
 
-            scrollTracker.Update();
+            var delta = scrollTracker.CalculateDelta();
+            keyTracker.Calculate();
 
             foreach (Scene scene in sceneLayers)
             {
-                scene.OnScroll(scrollTracker.ScrollDelta);
+                scene.OnScroll(delta);
+            }
+
+            foreach (Scene scene in sceneLayers)
+            {
+                foreach (var key in keyTracker.Pressed)
+                {
+                    scene.OnKey(key, PressType.Press, keyTracker.Modifiers);
+                }
+
+                foreach (var key in keyTracker.Released)
+                {
+                    scene.OnKey(key, PressType.Release, keyTracker.Modifiers);
+                }
             }
 
             if (resizing.Pending)

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Machina.Data;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,6 +44,10 @@ namespace Machina
             this.actor = actor;
             // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
             this.actor.AddComponent(this);
+        }
+
+        public virtual void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        {
         }
     }
 

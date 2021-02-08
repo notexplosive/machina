@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Machina.Data;
 
 namespace Machina
 {
@@ -94,6 +95,14 @@ namespace Machina
 
             components.Add(component);
             return component;
+        }
+
+        public void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        {
+            foreach (var component in this.components)
+            {
+                component.OnKey(key, pressType, modifiers);
+            }
         }
 
         /// <summary>

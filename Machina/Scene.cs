@@ -63,13 +63,6 @@ namespace Machina
 
             spriteBatch.End();
         }
-        public void OnScroll(int scrollDelta)
-        {
-            foreach (var actor in actors)
-            {
-                actor.OnScroll(scrollDelta);
-            }
-        }
 
         public Actor AddActor(Vector2 position = new Vector2())
         {
@@ -88,6 +81,22 @@ namespace Machina
         {
             actor.OnRemove();
             actors.Remove(actor);
+        }
+
+        public void OnScroll(int scrollDelta)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnScroll(scrollDelta);
+            }
+        }
+
+        public void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnKey(key, pressType, modifiers);
+            }
         }
     }
 }
