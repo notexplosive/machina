@@ -11,24 +11,21 @@ namespace Machina.Engine
     /// <summary>
     /// Base class for all components. Child components are expected to implement their own Update and Draw functions.
     /// </summary>
-    public abstract class BaseComponent
+    public abstract class BaseComponent : Crane
     {
-        protected Actor actor;
-        public abstract void Update(float dt);
-        public abstract void Draw(SpriteBatch spriteBatch);
-        public virtual void DebugDraw(SpriteBatch spriteBatch)
+        protected readonly Actor actor;
+        public BaseComponent(Actor actor)
         {
+            this.actor = actor;
+            this.doNotUseCraneIterator = true;
+            // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
+            this.actor.AddComponent(this);
         }
-        public virtual void OnScroll(int scrollDelta)
-        {
-        }
+
         public virtual void OnActorDestroy()
         {
         }
         public virtual void OnRemove()
-        {
-        }
-        public virtual void EarlyDraw(SpriteBatch spriteBatch)
         {
         }
 
@@ -37,25 +34,6 @@ namespace Machina.Engine
             var component = this.actor.GetComponent<T>();
             Debug.Assert(component != null, "Missing component " + typeof(T).FullName);
             return component;
-        }
-
-        public BaseComponent(Actor actor)
-        {
-            this.actor = actor;
-            // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
-            this.actor.AddComponent(this);
-        }
-
-        public virtual void OnKey(Keys key, ButtonState pressType, ModifierKeys modifiers)
-        {
-        }
-
-        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
-        {
-        }
-
-        public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
-        {
         }
     }
 

@@ -7,67 +7,27 @@ using System.Collections.Generic;
 
 namespace Machina.Engine
 {
-    public class Actor
+    public class Actor : Crane
     {
         public Vector2 position;
         public float angle = 0f;
         public float depth = 0.5f;
         public readonly Scene scene;
-        private readonly List<BaseComponent> components = new List<BaseComponent>();
 
         public Actor(Scene scene)
         {
             this.scene = scene;
             this.scene.AddActor(this);
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            foreach (var component in this.components)
-            {
-                component.Draw(spriteBatch);
-            }
-        }
-
-        public void DebugDraw(SpriteBatch spriteBatch)
-        {
-            foreach (var component in this.components)
-            {
-                component.DebugDraw(spriteBatch);
-            }
-        }
-
-        public void EarlyDraw(SpriteBatch spriteBatch)
-        {
-            foreach (var component in this.components)
-            {
-                component.EarlyDraw(spriteBatch);
-            }
-        }
-
-        public void Update(float dt)
-        {
-            foreach (var component in this.components)
-            {
-                component.Update(dt);
-            }
-        }
-
-        public void OnScroll(int scrollDelta)
-        {
-            foreach (var component in this.components)
-            {
-                component.OnScroll(scrollDelta);
-            }
+            iterables = new List<Crane>();
         }
 
         public void Destroy()
         {
             OnRemove();
 
-            foreach (var component in this.components)
+            foreach (var component in this.iterables)
             {
-                component.OnActorDestroy();
+                (component as BaseComponent).OnActorDestroy();
             }
 
             this.scene.RemoveActor(this);
@@ -75,9 +35,9 @@ namespace Machina.Engine
 
         public void OnRemove()
         {
-            foreach (var component in this.components)
+            foreach (var component in this.iterables)
             {
-                component.OnRemove();
+                (component as BaseComponent).OnRemove();
             }
         }
 
@@ -92,32 +52,8 @@ namespace Machina.Engine
             Type type = component.GetType();
             Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
 
-            components.Add(component);
+            iterables.Add(component);
             return component;
-        }
-
-        public void OnKey(Keys key, ButtonState pressType, ModifierKeys modifiers)
-        {
-            foreach (var component in this.components)
-            {
-                component.OnKey(key, pressType, modifiers);
-            }
-        }
-
-        public void OnMouseMove(Point currentPosition, Vector2 positionDelta)
-        {
-            foreach (var component in components)
-            {
-                component.OnMouseMove(currentPosition, positionDelta);
-            }
-        }
-
-        public void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
-        {
-            foreach (var component in components)
-            {
-                component.OnMouseButton(mouseButton, currentPosition, buttonState);
-            }
         }
 
         /// <summary>
@@ -127,7 +63,7 @@ namespace Machina.Engine
         /// <returns></returns>
         public T GetComponent<T>() where T : BaseComponent
         {
-            foreach (BaseComponent component in this.components)
+            foreach (var component in this.iterables)
             {
                 T converted = component as T;
                 if (converted != null)
@@ -142,7 +78,7 @@ namespace Machina.Engine
         public IEnumerable<T> GetComponents<T>() where T : BaseComponent
         {
             var result = new List<T>();
-            foreach (BaseComponent component in this.components)
+            foreach (var component in this.iterables)
             {
                 if (component is T converted)
                 {
@@ -157,16 +93,16 @@ namespace Machina.Engine
         {
             var comp = GetComponent<T>();
             comp.OnRemove();
-            this.components.Remove(comp);
+            this.iterables.Remove(comp);
         }
 
         private BaseComponent GetComponentByName(string fullName)
         {
-            foreach (BaseComponent component in this.components)
+            foreach (var component in this.iterables)
             {
                 if (component.GetType().FullName == fullName)
                 {
-                    return component;
+                    return component as BaseComponent;
                 }
             }
             return null;

@@ -17,6 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\IAsset.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\Crane.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\KeyTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\MouseTracker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\ScrollTracker.cs" />
@@ -48,8 +49,5 @@
   <ItemGroup>
     <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
     <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Engine\" />
   </ItemGroup>
 </Project>

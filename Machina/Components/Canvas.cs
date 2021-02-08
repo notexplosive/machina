@@ -54,7 +54,7 @@ namespace Machina.Components
             graphicsDevice.SetRenderTarget(null);
         }
 
-        public override void EarlyDraw(SpriteBatch spriteBatch)
+        public override void PreDraw(SpriteBatch spriteBatch)
         {
             DrawContent(spriteBatch);
         }
