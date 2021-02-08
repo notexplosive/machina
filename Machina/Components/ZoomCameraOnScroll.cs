@@ -12,7 +12,7 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
-            this.actor.scene.camera.AdjustZoom(scrollDelta);
+            this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
         }
     }
 }

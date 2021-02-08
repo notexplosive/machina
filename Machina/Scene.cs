@@ -13,6 +13,12 @@ namespace Machina
         public readonly Camera camera = new Camera();
         private readonly List<Actor> actors = new List<Actor>();
         private int previousScroll; // TODO: move this to its own Game-wide Input object... or something?
+        private ResizeStatus resizer;
+
+        public Scene(ResizeStatus resizer = null)
+        {
+            this.resizer = resizer;
+        }
 
         public void Update(float dt)
         {
@@ -42,6 +48,11 @@ namespace Machina
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (this.resizer != null)
+            {
+                this.camera.NativeScaleFactor = resizer.ScaleFactor;
+            }
+
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
 
             foreach (var actor in actors)

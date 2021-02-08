@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    class ResizeStatus
+    public class ResizeStatus
     {
         public readonly int aspectWidth;
         public readonly int aspectHeight;

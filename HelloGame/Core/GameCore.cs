@@ -9,44 +9,24 @@ using System;
 
 namespace HelloGame
 {
-    public class GameCore : Game
+    public class GameCore : MachinaGame
     {
-        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         static AssetLibrary assets;
-        private ResizeStatus resizing;
         Scene gameScene;
         Scene debugScene;
 
-        public GameCore()
+        public GameCore() : base(1600, 900)
         {
-            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             assets = new AssetLibrary(this);
-            resizing = new ResizeStatus(1600, 900);
-
-            Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
-        }
-
-        private void OnResize(object sender, EventArgs e)
-        {
-            resizing.Pending = true;
-            resizing.Width = Window.ClientBounds.Width;
-            resizing.Height = Window.ClientBounds.Height;
         }
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 900;
-            graphics.ApplyChanges();
-
-            gameScene = new Scene();
+            gameScene = new Scene(this.resizing);
             debugScene = new Scene();
-
-
             base.Initialize();
         }
 
@@ -136,20 +116,9 @@ namespace HelloGame
                 }
             }
 
-            // camera.AdjustZoom((float) (scrollDelta / 100) / 10);
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
             gameScene.Update(dt);
             debugScene.Update(dt);
-
-            if (resizing.Pending)
-            {
-                gameScene.camera.NativeScaleFactor = resizing.ScaleFactor;
-                graphics.PreferredBackBufferWidth = resizing.Width;
-                graphics.PreferredBackBufferHeight = resizing.Height;
-                graphics.ApplyChanges();
-                //camera.UpdateProjection(resizing.Width, resizing.Height);
-                resizing.Pending = false;
-            }
 
             base.Update(gameTime);
         }
