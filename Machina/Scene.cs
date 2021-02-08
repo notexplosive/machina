@@ -12,7 +12,6 @@ namespace Machina
     {
         public readonly Camera camera = new Camera();
         private readonly List<Actor> actors = new List<Actor>();
-        private int previousScroll; // TODO: move this to its own Game-wide Input object... or something?
         private ResizeStatus resizer;
 
         public Scene(ResizeStatus resizer = null)
@@ -25,15 +24,6 @@ namespace Machina
             foreach (var actor in actors)
             {
                 actor.Update(dt);
-            }
-
-            var currentScroll = Mouse.GetState().ScrollWheelValue;
-            var scrollDelta = currentScroll - this.previousScroll;
-            this.previousScroll = currentScroll;
-
-            if (scrollDelta != 0)
-            {
-                OnScroll(scrollDelta / 120);
             }
         }
 

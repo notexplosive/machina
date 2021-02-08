@@ -14,9 +14,11 @@ namespace Machina
     public abstract class MachinaGame : Game
     {
         private Point startingWindowSize;
+        private ScrollTracker scrollTracker;
         protected SpriteBatch spriteBatch;
         protected readonly ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
+
         public static GraphicsDeviceManager Graphics
         {
             get; private set;
@@ -52,6 +54,7 @@ namespace Machina
 
             Graphics = new GraphicsDeviceManager(this);
             resizing = new ResizeStatus(windowWidth, windowHeight);
+            scrollTracker = new ScrollTracker();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
@@ -81,8 +84,6 @@ namespace Machina
             var debugActor = debugScene.AddActor();
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
 
-            MachinaGame.Print("test");
-
             OnGameLoad();
         }
 
@@ -103,6 +104,13 @@ namespace Machina
             foreach (Scene scene in sceneLayers)
             {
                 scene.Update(dt);
+            }
+
+            scrollTracker.Update();
+
+            foreach (Scene scene in sceneLayers)
+            {
+                scene.OnScroll(scrollTracker.ScrollDelta);
             }
 
             if (resizing.Pending)
