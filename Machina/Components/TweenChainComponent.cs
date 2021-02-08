@@ -9,10 +9,7 @@ namespace Machina.Components
 {
     class TweenChainComponent : UpdateOnlyComponent
     {
-        private static float dummyGetter() => 0f;
-        private static void dummySetter(float val)
-        {
-        }
+
         TweenChain chain;
 
         public TweenChainComponent(Actor actor) : base(actor)
@@ -27,7 +24,7 @@ namespace Machina.Components
 
         public TweenChainComponent AddTween<T>(T target, float duration, EaseFunc easeFunc, Func<T> getter, Action<T> setter, LerpFunc<T> lerp) where T : struct
         {
-            chain.Add(new TweenChain.ChainItem<T>(target, duration, easeFunc, getter, setter, lerp));
+            chain.Append(new TweenChain.ChainItem<T>(target, duration, easeFunc, getter, setter, lerp));
             return this;
         }
 
@@ -38,12 +35,20 @@ namespace Machina.Components
 
         public TweenChainComponent AddFloatTween(float targetVal, float duration, EaseFunc easeFunc, Func<float> getter, Action<float> setter)
         {
-            return AddTween(targetVal, duration, easeFunc, getter, setter, FloatTween.LerpFloat);
+            this.chain.AppendFloatTween(targetVal, duration, easeFunc, getter, setter);
+            return this;
         }
 
         public TweenChainComponent AddWaitTween(float duration)
         {
-            return AddTween(0, duration, EaseFuncs.Linear, dummyGetter, dummySetter, FloatTween.LerpFloat);
+            this.chain.AppendWaitTween(duration);
+            return this;
+        }
+
+        internal TweenChainComponent AddCallback(Action callbackFn)
+        {
+            this.chain.AppendCallback(callbackFn);
+            return this;
         }
     }
 }

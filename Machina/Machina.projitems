@@ -17,7 +17,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\NinepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SceneRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenChain.cs" />
-    <Compile Include="..\Machina\Components\MoveTween.cs" />
+    <Compile Include="..\Machina\Components\TweenChainComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\TextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ThreepatchRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ZoomCameraOnScroll.cs" />

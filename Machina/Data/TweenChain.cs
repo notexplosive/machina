@@ -8,32 +8,47 @@ namespace Machina.Data
 {
     class TweenChain
     {
-        private readonly List<IChainItem> chain;
+        private readonly List<IChainItem> chainInernal;
         private int currentIndex;
         private IChainItem currentItem;
 
+        private static float dummyGetter() => 0f;
+        private static void dummySetter(float val)
+        {
+        }
+
         public TweenChain()
         {
-            this.chain = new List<IChainItem>();
+            this.chainInernal = new List<IChainItem>();
             this.currentIndex = 0;
         }
 
-        public void Add(IChainItem item)
+        public TweenChain Append(IChainItem item)
         {
-            chain.Add(item);
+            chainInernal.Add(item);
+            return this;
         }
 
-        private IChainItem StartTween(IChainItem item)
+        public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc, Func<float> getter, Action<float> setter)
         {
-            item.StartTween();
-            return item;
+            return Append(new ChainItem<float>(targetVal, duration, easeFunc, getter, setter, FloatTween.LerpFloat));
+        }
+
+        public TweenChain AppendWaitTween(float duration)
+        {
+            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyGetter, dummySetter, FloatTween.LerpFloat));
+        }
+
+        public TweenChain AppendCallback(Action func)
+        {
+            return Append(new CallbackChainItem(func));
         }
 
         public void Update(float dt)
         {
-            if (this.currentItem == null && this.chain.Count > this.currentIndex)
+            if (this.currentItem == null && this.chainInernal.Count > this.currentIndex)
             {
-                this.currentItem = StartTween(this.chain[this.currentIndex]);
+                this.currentItem = this.chainInernal[this.currentIndex].StartTween();
                 this.currentIndex++;
             }
 
@@ -48,14 +63,28 @@ namespace Machina.Data
             }
         }
 
+        /// <summary>
+        /// Maintains the current chain but puts us back at the beginning
+        /// </summary>
+        public void Refresh()
+        {
+            this.currentIndex = 0;
+            this.currentItem = null;
+            foreach (var item in this.chainInernal)
+            {
+                item.Refresh();
+            }
+        }
+
         public interface IChainItem
         {
-            public void StartTween();
+            public IChainItem StartTween();
             public void Update(float dt);
             public bool IsComplete
             {
                 get;
             }
+            public void Refresh();
         }
 
         public class ChainItem<T> : IChainItem where T : struct
@@ -81,15 +110,53 @@ namespace Machina.Data
                 this.tween = new Tween<T>(lerpFunc);
             }
 
-            public void StartTween()
+            public void Refresh()
+            {
+                this.tween.Stop(StopBehavior.AsIs);
+            }
+
+            public IChainItem StartTween()
             {
                 this.tween.Start(getter(), destination, duration, scaleFunc);
+                return this;
             }
 
             public void Update(float dt)
             {
                 this.tween.Update(dt);
                 this.setter(this.tween.CurrentValue);
+            }
+        }
+
+        public class CallbackChainItem : IChainItem
+        {
+            private Action callbackFn;
+
+            public CallbackChainItem(Action callbackFn)
+            {
+                this.callbackFn = callbackFn;
+            }
+
+            public bool IsComplete
+            {
+                get; private set;
+            }
+
+            public void Refresh()
+            {
+                IsComplete = false;
+            }
+
+            public IChainItem StartTween()
+            {
+                callbackFn();
+                IsComplete = true;
+                return this;
+            }
+
+            public void Update(float dt)
+            {
+                // This function is intentionally left blank
             }
         }
     }

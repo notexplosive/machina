@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Data;
+using Machina.ThirdParty;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
@@ -12,19 +15,22 @@ namespace Machina.Components
         private SpriteFont spriteFont;
         private GraphicsDeviceManager graphics;
         private List<string> messages;
-        private float fadeTimer;
-        private float totalFadeTimer = 5;
+        private float opacity;
+        private TweenChain tweenChain;
 
         public ConsoleOverlay(Actor actor, SpriteFont spriteFont, GraphicsDeviceManager graphics) : base(actor)
         {
             this.spriteFont = spriteFont;
             this.graphics = graphics;
             this.messages = new List<string>();
+            this.opacity = 0f;
+            this.tweenChain = new TweenChain()
+                .AppendWaitTween(3f)
+                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn, () => { return this.opacity; }, (val) => { this.opacity = val; });
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var opacity = this.fadeTimer / this.totalFadeTimer;
             var screenWidth = graphics.PreferredBackBufferWidth;
             int i = 0;
 
@@ -38,25 +44,24 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            if (this.fadeTimer > 0)
-            {
-                this.fadeTimer -= dt;
-            }
-            else
-            {
-                this.fadeTimer = 0;
-            }
+            this.tweenChain.Update(dt);
         }
 
         public void OnMessageLog(string line)
         {
-            this.fadeTimer = this.totalFadeTimer;
+            RestartFade();
             this.messages.Add(line);
 
-            while (this.messages.Count > 32)
+            while (this.messages.Count > 15)
             {
                 this.messages.RemoveAt(0);
             }
+        }
+
+        private void RestartFade()
+        {
+            this.opacity = 1;
+            this.tweenChain.Refresh();
         }
     }
 }
