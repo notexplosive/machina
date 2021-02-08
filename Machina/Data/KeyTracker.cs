@@ -5,12 +5,6 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public enum PressType
-    {
-        Press,
-        Release
-    }
-
     public struct ModifierKeys
     {
         public readonly bool control;

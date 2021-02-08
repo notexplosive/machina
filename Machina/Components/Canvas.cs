@@ -62,10 +62,5 @@ namespace Machina.Components
         {
             spriteBatch.Draw(renderTarget, this.boundingRect.Rect, null, Color.White, 0f, new Vector2(), SpriteEffects.None, this.actor.depth);
         }
-
-        public override void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
-        {
-            MachinaGame.Print(modifiers, key);
-        }
     }
 }

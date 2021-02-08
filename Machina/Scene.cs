@@ -91,11 +91,27 @@ namespace Machina
             }
         }
 
-        public void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        public void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
         {
             foreach (var actor in actors)
             {
-                actor.OnKey(key, pressType, modifiers);
+                actor.OnKey(key, buttonState, modifiers);
+            }
+        }
+
+        public void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnMouseMove(currentPosition, positionDelta);
+            }
+        }
+
+        public void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        {
+            foreach (var actor in actors)
+            {
+                actor.OnMouseButton(mouseButton, currentPosition, buttonState);
             }
         }
     }

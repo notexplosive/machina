@@ -97,11 +97,27 @@ namespace Machina
             return component;
         }
 
-        public void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        public void OnKey(Keys key, ButtonState pressType, ModifierKeys modifiers)
         {
             foreach (var component in this.components)
             {
                 component.OnKey(key, pressType, modifiers);
+            }
+        }
+
+        public void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        {
+            foreach (var component in components)
+            {
+                component.OnMouseMove(currentPosition, positionDelta);
+            }
+        }
+
+        public void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        {
+            foreach (var component in components)
+            {
+                component.OnMouseButton(mouseButton, currentPosition, buttonState);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Machina.Data;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -46,7 +47,15 @@ namespace Machina
             this.actor.AddComponent(this);
         }
 
-        public virtual void OnKey(Keys key, PressType pressType, ModifierKeys modifiers)
+        public virtual void OnKey(Keys key, ButtonState pressType, ModifierKeys modifiers)
+        {
+        }
+
+        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        {
+        }
+
+        public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
         {
         }
     }

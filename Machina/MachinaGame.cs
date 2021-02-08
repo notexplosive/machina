@@ -10,12 +10,14 @@ namespace Machina
 {
     /// <summary>
     /// Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
+    /// Your game should call the base constructor, even though it's abstract.
     /// </summary>
     public abstract class MachinaGame : Game
     {
         private Point startingWindowSize;
         private ScrollTracker scrollTracker;
         private KeyTracker keyTracker;
+        private MouseTracker mouseTracker;
         protected SpriteBatch spriteBatch;
         protected readonly ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
@@ -57,6 +59,7 @@ namespace Machina
             resizing = new ResizeStatus(windowWidth, windowHeight);
             scrollTracker = new ScrollTracker();
             keyTracker = new KeyTracker();
+            mouseTracker = new MouseTracker();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
@@ -101,8 +104,8 @@ namespace Machina
         protected override void Update(GameTime gameTime)
         {
             var sceneLayers = SceneLayers;
-
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+
             foreach (Scene scene in sceneLayers)
             {
                 scene.Update(dt);
@@ -110,22 +113,34 @@ namespace Machina
 
             var delta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
+            mouseTracker.Calculate();
 
             foreach (Scene scene in sceneLayers)
             {
                 scene.OnScroll(delta);
-            }
+                if (mouseTracker.PositionDelta.LengthSquared() > 0)
+                {
+                    scene.OnMouseMove(mouseTracker.CurrentPosition, mouseTracker.PositionDelta);
+                }
 
-            foreach (Scene scene in sceneLayers)
-            {
                 foreach (var key in keyTracker.Pressed)
                 {
-                    scene.OnKey(key, PressType.Press, keyTracker.Modifiers);
+                    scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
                 }
 
                 foreach (var key in keyTracker.Released)
                 {
-                    scene.OnKey(key, PressType.Release, keyTracker.Modifiers);
+                    scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
+                }
+
+                foreach (var mouseButton in mouseTracker.Pressed)
+                {
+                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Pressed);
+                }
+
+                foreach (var mouseButton in mouseTracker.Released)
+                {
+                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Released);
                 }
             }
 
