@@ -53,7 +53,7 @@ namespace Machina
                 this.camera.NativeScaleFactor = resizer.ScaleFactor;
             }
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.TranslationMatrix);
 
             foreach (var actor in actors)
             {

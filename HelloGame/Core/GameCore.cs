@@ -20,14 +20,13 @@ namespace HelloGame
 
         protected override void Initialize()
         {
-            gameScene = new Scene(this.resizing);
-            scenes.Add(gameScene);
-
             base.Initialize();
         }
 
-        protected override void PostLoadContent()
+        protected override void OnGameLoad()
         {
+            gameScene = new Scene(this.resizing);
+            scenes.Add(gameScene);
 
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",

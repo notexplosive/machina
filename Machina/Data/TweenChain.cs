@@ -12,6 +12,24 @@ namespace Machina.Data
         private int currentIndex;
         private IChainItem currentItem;
 
+        public Tween<T> CurrentTween<T>() where T : struct
+        {
+            var current = this.currentItem;
+            if (current == null)
+            {
+                current = this.chainInernal[this.currentIndex];
+            }
+
+            if (current != null)
+            {
+                return (current as ChainItem<T>).tween;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private static float dummyGetter() => 0f;
         private static void dummySetter(float val)
         {
@@ -85,6 +103,14 @@ namespace Machina.Data
                 get;
             }
             public void Refresh();
+
+            /// <summary>
+            /// Risky, you need to know the exact type of tween you're looking for.
+            /// If the Chain is in a callback you'll get null
+            /// </summary>
+            /// <typeparam name="U">Tween subtype</typeparam>
+            /// <returns></returns>
+            public Tween<U> GetTween<U>() where U : struct;
         }
 
         public class ChainItem<T> : IChainItem where T : struct
@@ -126,6 +152,11 @@ namespace Machina.Data
                 this.tween.Update(dt);
                 this.setter(this.tween.CurrentValue);
             }
+
+            public Tween<U> GetTween<U>() where U : struct
+            {
+                return this.tween as Tween<U>;
+            }
         }
 
         public class CallbackChainItem : IChainItem
@@ -140,6 +171,11 @@ namespace Machina.Data
             public bool IsComplete
             {
                 get; private set;
+            }
+
+            public Tween<T> GetTween<T>() where T : struct
+            {
+                return null;
             }
 
             public void Refresh()

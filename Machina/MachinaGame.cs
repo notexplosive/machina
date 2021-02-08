@@ -29,6 +29,17 @@ namespace Machina
         {
             get; private set;
         }
+        private Scene[] SceneLayers
+        {
+            get
+            {
+                Scene[] sceneLayers = new Scene[scenes.Count + 1];
+                scenes.CopyTo(sceneLayers);
+                sceneLayers[scenes.Count] = debugScene;
+                return sceneLayers;
+            }
+        }
+
 
         private Scene debugScene;
         private Logger logger;
@@ -55,8 +66,8 @@ namespace Machina
             Graphics.ApplyChanges();
             OnResize(null, new EventArgs());
 
+            // debugScene does NOT get added to the `scenes` list because it's always on top
             debugScene = new Scene();
-            scenes.Add(debugScene);
 
             base.Initialize();
         }
@@ -70,7 +81,9 @@ namespace Machina
             var debugActor = debugScene.AddActor();
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
 
-            PostLoadContent();
+            MachinaGame.Print("test");
+
+            OnGameLoad();
         }
 
         protected override void UnloadContent()
@@ -80,12 +93,14 @@ namespace Machina
             Assets.UnloadAssets();
         }
 
-        protected abstract void PostLoadContent();
+        protected abstract void OnGameLoad();
 
         protected override void Update(GameTime gameTime)
         {
+            var sceneLayers = SceneLayers;
+
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            foreach (Scene scene in scenes)
+            foreach (Scene scene in sceneLayers)
             {
                 scene.Update(dt);
             }
@@ -103,21 +118,22 @@ namespace Machina
 
         protected override void Draw(GameTime gameTime)
         {
-            foreach (var scene in scenes)
+            var sceneLayers = SceneLayers;
+            foreach (var scene in sceneLayers)
             {
                 scene.PreDraw(spriteBatch);
             }
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (var scene in scenes)
+            foreach (var scene in sceneLayers)
             {
                 scene.Draw(spriteBatch);
             }
 
             if (this.logger.DebugLevel >= DebugLevel.Passive)
             {
-                foreach (var scene in scenes)
+                foreach (var scene in sceneLayers)
                 {
                     scene.DebugDraw(spriteBatch);
                 }
