@@ -8,7 +8,7 @@ using Machina.Engine;
 
 namespace Machina.Components
 {
-    class BoundingRect : DataComponent
+    class BoundingRect : BaseComponent
     {
         private Point size;
         private Vector2 offset;
