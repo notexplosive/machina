@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace Machina
 {
-    class Scene
+    public class Scene
     {
         public readonly Camera camera = new Camera();
         private readonly List<Actor> actors = new List<Actor>();

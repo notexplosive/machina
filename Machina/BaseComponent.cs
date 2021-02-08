@@ -9,7 +9,7 @@ namespace Machina
     /// <summary>
     /// Base class for all components. Child components are expected to implement their own Update and Draw functions.
     /// </summary>
-    abstract class BaseComponent
+    public abstract class BaseComponent
     {
         protected Actor actor;
         public abstract void Update(float dt);

@@ -13,3 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin fonts/MachinaDefault.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/MachinaDefault.spritefont;fonts/MachinaDefaultFont.spritefont
+
+#begin fonts/pointfree.ttf
+/copy:fonts/pointfree.ttf
+

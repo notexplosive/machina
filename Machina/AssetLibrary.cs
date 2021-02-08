@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Machina
 {
-    class AssetLibrary
+    public class AssetLibrary
     {
         private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();

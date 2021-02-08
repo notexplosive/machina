@@ -11,45 +11,37 @@ namespace HelloGame
 {
     public class GameCore : MachinaGame
     {
-        private SpriteBatch spriteBatch;
-        static AssetLibrary assets;
         Scene gameScene;
-        Scene debugScene;
 
         public GameCore() : base(1600, 900)
         {
-            Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            assets = new AssetLibrary(this);
         }
 
         protected override void Initialize()
         {
             gameScene = new Scene(this.resizing);
-            debugScene = new Scene();
+            scenes.Add(gameScene);
+
             base.Initialize();
         }
 
-        protected override void LoadContent()
+        protected override void PostLoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            assets.LoadEverything();
             var linkinSpriteSheet = new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16));
             var windowNinepatch = new NinepatchSpriteSheet(assets.GetTexture("test-nine-patch"), GraphicsDevice, new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16));
             var progressBarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch"), GraphicsDevice, new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24));
             var pillarThreepatch = new NinepatchSpriteSheet(assets.GetTexture("test-three-patch-vertical"), GraphicsDevice, new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16));
-            var consoleFont = assets.GetSpriteFont("ConsoleFont");
             var defaultFont = assets.GetSpriteFont("DefaultFont");
+            var consoleFont = assets.GetSpriteFont("ConsoleFont");
 
             var standAnim = new LinearFrameAnimation(0, 5);
             var walkAnim = new LinearFrameAnimation(6, 3);
             var quickSwingAnim = new LinearFrameAnimation(9, 3);
             var longSwingAnim = new LinearFrameAnimation(11, 5);
             var finalSwingAnim = new LinearFrameAnimation(16, 7, LoopType.HoldLastFrame);
-
-            var debugActor = debugScene.AddActor();
-            new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, graphics));
 
             //
 
@@ -116,25 +108,11 @@ namespace HelloGame
                 }
             }
 
-            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            gameScene.Update(dt);
-            debugScene.Update(dt);
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            gameScene.PreDraw(spriteBatch);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            gameScene.Draw(spriteBatch);
-            debugScene.Draw(spriteBatch);
-            if (Logger.current.DebugLevel >= DebugLevel.Passive)
-            {
-                gameScene.DebugDraw(spriteBatch);
-                debugScene.DebugDraw(spriteBatch);
-            }
-
             base.Draw(gameTime);
         }
     }

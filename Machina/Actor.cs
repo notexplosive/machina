@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Machina
 {
-    class Actor
+    public class Actor
     {
         public Vector2 position;
         public float angle = 0f;
