@@ -13,7 +13,7 @@ namespace Machina.Components
     {
         private Orientation orientation;
 
-        public ThreepatchRenderer(Actor actor, NinepatchSpriteSheet spriteSheet, Orientation orientation) : base(actor, spriteSheet)
+        public ThreepatchRenderer(Actor actor, NinepatchSheet spriteSheet, Orientation orientation) : base(actor, spriteSheet)
         {
             this.orientation = orientation;
         }

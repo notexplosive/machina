@@ -9,14 +9,14 @@ using System.Text;
 namespace Machina.Data
 {
 
-    class NinepatchSpriteSheet : IAsset
+    class NinepatchSheet : IAsset
     {
         public readonly NinepatchRects rects;
         // Ninepatch has at least one empty texture, it might be a valid Threepatch
         private readonly Texture2D originalTexture;
         private readonly Texture2D[] textures;
 
-        public NinepatchSpriteSheet(Texture2D texture, Rectangle outerRect, Rectangle innerRect)
+        public NinepatchSheet(Texture2D texture, Rectangle outerRect, Rectangle innerRect)
         {
             this.originalTexture = texture;
             Debug.Assert(texture.Width >= outerRect.Width, "Texture is to small");
@@ -39,7 +39,7 @@ namespace Machina.Data
             }
         }
 
-        public NinepatchSpriteSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
+        public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
             : this(MachinaGame.assets.GetTexture(textureAssetName), outerRect, innerRect)
         {
         }

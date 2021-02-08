@@ -31,19 +31,19 @@ namespace HelloGame
 
             assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(assets.GetTexture("linkin"), new Point(16, 16)));
             assets.AddMachinaAsset("test-ninepatch",
-                new NinepatchSpriteSheet("test-nine-patch", new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16)));
+                new NinepatchSheet("test-nine-patch", new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16)));
             var progressBarThreepatch =
                 assets.AddMachinaAsset(
                     "progressbar-threepatch",
-                    new NinepatchSpriteSheet("test-three-patch", new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24)));
+                    new NinepatchSheet("test-three-patch", new Rectangle(0, 0, 28, 24), new Rectangle(2, 0, 24, 24)));
             var pillarThreepatch =
                 assets.AddMachinaAsset(
                     "pillar-threepatch",
-                    new NinepatchSpriteSheet("test-three-patch-vertical", new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16)));
+                    new NinepatchSheet("test-three-patch-vertical", new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16)));
             var defaultFont = assets.GetSpriteFont("DefaultFont");
             var consoleFont = assets.GetSpriteFont("ConsoleFont");
 
-            var testNinepatch = assets.GetMachinaAsset<NinepatchSpriteSheet>("test-ninepatch");
+            var testNinepatch = assets.GetMachinaAsset<NinepatchSheet>("test-ninepatch");
             var linkinSpriteSheet = assets.GetMachinaAsset<SpriteSheet>("linkin-sprite-sheet");
 
             var standAnim = new LinearFrameAnimation(0, 5);

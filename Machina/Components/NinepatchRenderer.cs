@@ -11,9 +11,9 @@ namespace Machina.Components
     class NinepatchRenderer : DrawOnlyComponent
     {
         protected BoundingRect boundingRect;
-        protected NinepatchSpriteSheet spriteSheet;
+        protected NinepatchSheet spriteSheet;
 
-        public NinepatchRenderer(Actor actor, NinepatchSpriteSheet spriteSheet) : base(actor)
+        public NinepatchRenderer(Actor actor, NinepatchSheet spriteSheet) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.spriteSheet = spriteSheet;

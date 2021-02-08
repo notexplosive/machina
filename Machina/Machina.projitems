@@ -25,7 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ThirdParty\TinyTween.cs" />
     <Compile Include="..\Machina\Components\Logger.cs" />
     <Compile Include="..\Machina\Data\NinepatchRects.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Data\NinepatchSpriteSheet.cs" />
+    <Compile Include="..\Machina\Data\NinepatchSheet.cs" />
     <Compile Include="..\Machina\Components\Canvas.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\ResizeStatus.cs" />
     <Compile Include="..\Machina\Components\BoundingRect.cs" />
