@@ -40,12 +40,12 @@ namespace Machina.Components
 
             if (curKeys.IsKeyDown(Keys.Z))
             {
-                this.actor.angle += (float) Math.PI / 60;
+                this.actor.Angle += (float) Math.PI / 60;
             }
 
             if (curKeys.IsKeyDown(Keys.X))
             {
-                this.actor.angle -= (float) Math.PI / 60;
+                this.actor.Angle -= (float) Math.PI / 60;
             }
         }
     }

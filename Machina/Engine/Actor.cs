@@ -14,9 +14,66 @@ namespace Machina.Engine
         public readonly Parent parent;
         public readonly Children children;
         public readonly string name;
-        public float angle = 0f;
         private Vector2 position;
         private Vector2 localPosition;
+        private float angle;
+        private float localAngle;
+
+        public Actor(string name, Scene scene)
+        {
+            parent = new Parent(this);
+            children = new Children(this);
+
+            this.scene = scene;
+            this.scene.AddActor(this);
+            this.name = name;
+            iterables = new List<BaseComponent>();
+        }
+
+        public float Angle
+        {
+            get
+            {
+                return this.angle;
+            }
+            set
+            {
+                this.angle = value;
+                for (int i = 0; i < this.children.Count; i++)
+                {
+                    var child = this.children.At(i);
+                    child.Angle = this.angle + child.localAngle;
+                }
+            }
+        }
+
+        public float LocalAngle
+        {
+            get
+            {
+                if (this.parent.Has())
+                {
+                    return this.localAngle;
+                }
+                else
+                {
+                    return Angle;
+                }
+            }
+
+            set
+            {
+                if (this.parent.Has())
+                {
+                    this.localAngle = value;
+                }
+                else
+                {
+                    Angle = value;
+                }
+            }
+        }
+
 
         public Vector2 Position
         {
@@ -29,7 +86,8 @@ namespace Machina.Engine
                 this.position = value;
                 for (int i = 0; i < this.children.Count; i++)
                 {
-                    this.children.At(i).Position = this.children.At(i).LocalToWorldPosition();
+                    var child = this.children.At(i);
+                    child.Position = child.LocalToWorldPosition();
                 }
             }
         }
@@ -67,7 +125,7 @@ namespace Machina.Engine
             {
                 var parent = this.parent.Get();
                 var parentPos = parent.Position;
-                return Matrix.CreateRotationZ(parent.angle)
+                return Matrix.CreateRotationZ(parent.Angle)
                     * Matrix.CreateTranslation(parentPos.X, parentPos.Y, 0);
             }
         }
@@ -80,17 +138,6 @@ namespace Machina.Engine
         public Vector2 WorldToLocalPosition()
         {
             return Vector2.Transform(Position, Matrix.Invert(TransformMatrix));
-        }
-
-        public Actor(string name, Scene scene)
-        {
-            parent = new Parent(this);
-            children = new Children(this);
-
-            this.scene = scene;
-            this.scene.AddActor(this);
-            this.name = name;
-            iterables = new List<BaseComponent>();
         }
 
         public void Destroy()
