@@ -11,13 +11,12 @@ namespace Machina.Engine
     /// <summary>
     /// Base class for all components
     /// </summary>
-    public abstract class BaseComponent : Crane
+    public abstract class BaseComponent : NonIteratingCrane
     {
         protected readonly Actor actor;
         public BaseComponent(Actor actor)
         {
             this.actor = actor;
-            this.doNotUseCraneIterator = true;
             // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
             this.actor.AddComponent(this);
         }

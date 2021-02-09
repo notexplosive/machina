@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Machina.Engine
 {
-    public class Actor : Crane
+    public class Actor : Crane<BaseComponent>
     {
         public Vector2 position;
         public float angle = 0f;
@@ -18,7 +18,7 @@ namespace Machina.Engine
         {
             this.scene = scene;
             this.scene.AddActor(this);
-            iterables = new List<Crane>();
+            iterables = new List<BaseComponent>();
         }
 
         public void Destroy()
@@ -27,7 +27,7 @@ namespace Machina.Engine
 
             foreach (var component in this.iterables)
             {
-                (component as BaseComponent).OnActorDestroy();
+                component.OnActorDestroy();
             }
 
             this.scene.RemoveActor(this);
@@ -37,7 +37,7 @@ namespace Machina.Engine
         {
             foreach (var component in this.iterables)
             {
-                (component as BaseComponent).OnRemove();
+                component.OnRemove();
             }
         }
 
@@ -102,7 +102,7 @@ namespace Machina.Engine
             {
                 if (component.GetType().FullName == fullName)
                 {
-                    return component as BaseComponent;
+                    return component;
                 }
             }
             return null;

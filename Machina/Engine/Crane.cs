@@ -8,18 +8,25 @@ using System.Text;
 namespace Machina.Engine
 {
     // TODO: maybe we can use an interface ICrane and make `class Crane<T> where T : ICrane`
-    public abstract class Crane
+    public interface ICrane
     {
-        protected List<Crane> iterables;
-        protected bool doNotUseCraneIterator = false;
+        public void Update(float dt);
+        public void PreDraw(SpriteBatch spriteBatch);
+        public void Draw(SpriteBatch spriteBatch);
+        public void DebugDraw(SpriteBatch spriteBatch);
+        public void OnScroll(int scrollDelta);
+        public void OnRemove();
+        public void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers);
+        public void OnMouseMove(Point currentPosition, Vector2 positionDelta);
+        public void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState);
+    }
+
+    public abstract class Crane<T> : ICrane where T : ICrane
+    {
+        protected List<T> iterables;
 
         public virtual void Update(float dt)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.Update(dt);
@@ -32,11 +39,6 @@ namespace Machina.Engine
         /// <param name="spriteBatch"></param>
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.PreDraw(spriteBatch);
@@ -44,11 +46,6 @@ namespace Machina.Engine
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.Draw(spriteBatch);
@@ -56,11 +53,6 @@ namespace Machina.Engine
         }
         public virtual void DebugDraw(SpriteBatch spriteBatch)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.DebugDraw(spriteBatch);
@@ -68,11 +60,6 @@ namespace Machina.Engine
         }
         public virtual void OnScroll(int scrollDelta)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.OnScroll(scrollDelta);
@@ -81,11 +68,6 @@ namespace Machina.Engine
 
         public virtual void OnRemove()
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.OnRemove();
@@ -94,11 +76,6 @@ namespace Machina.Engine
 
         public virtual void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.OnKey(key, buttonState, modifiers);
@@ -106,11 +83,6 @@ namespace Machina.Engine
         }
         public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.OnMouseMove(currentPosition, positionDelta);
@@ -118,16 +90,49 @@ namespace Machina.Engine
         }
         public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
         {
-            if (doNotUseCraneIterator)
-            {
-                return;
-            }
-
             foreach (var iterable in iterables)
             {
                 iterable.OnMouseButton(mouseButton, currentPosition, buttonState);
             }
         }
+    }
 
+    public abstract class NonIteratingCrane : ICrane
+    {
+        public virtual void DebugDraw(SpriteBatch spriteBatch)
+        {
+        }
+
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+        }
+
+        public virtual void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
+        {
+        }
+
+        public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        {
+        }
+
+        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        {
+        }
+
+        public virtual void OnRemove()
+        {
+        }
+
+        public virtual void OnScroll(int scrollDelta)
+        {
+        }
+
+        public virtual void PreDraw(SpriteBatch spriteBatch)
+        {
+        }
+
+        public virtual void Update(float dt)
+        {
+        }
     }
 }

@@ -7,13 +7,13 @@ using Microsoft.Xna.Framework;
 
 namespace Machina.Engine
 {
-    public class Scene : Crane
+    public class Scene : Crane<Actor>
     {
         public readonly Camera camera;
 
         public Scene(GameCanvas resizer = null)
         {
-            this.iterables = new List<Crane>();
+            this.iterables = new List<Actor>();
             this.camera = new Camera(resizer);
         }
 
