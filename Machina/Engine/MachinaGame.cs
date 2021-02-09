@@ -202,7 +202,6 @@ namespace Machina.Engine
         private void OnResize(object sender, EventArgs e)
         {
             resizing.Resize(Window.ClientBounds.Width, Window.ClientBounds.Height);
-
         }
 
         /// <summary>
