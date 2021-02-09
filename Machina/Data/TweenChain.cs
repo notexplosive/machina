@@ -11,6 +11,7 @@ namespace Machina.Data
         private readonly List<IChainItem> chainInernal;
         private int currentIndex;
         private IChainItem currentItem;
+        private TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
 
         public Tween<T> CurrentTween<T>() where T : struct
         {
@@ -47,14 +48,14 @@ namespace Machina.Data
             return this;
         }
 
-        public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc, Func<float> getter, Action<float> setter)
+        public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc, TweenAccessors<float> accessors)
         {
-            return Append(new ChainItem<float>(targetVal, duration, easeFunc, getter, setter, FloatTween.LerpFloat));
+            return Append(new ChainItem<float>(targetVal, duration, easeFunc, accessors, FloatTween.LerpFloat));
         }
 
         public TweenChain AppendWaitTween(float duration)
         {
-            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyGetter, dummySetter, FloatTween.LerpFloat));
+            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors, FloatTween.LerpFloat));
         }
 
         public TweenChain AppendCallback(Action func)
@@ -125,13 +126,13 @@ namespace Machina.Data
 
             public bool IsComplete => this.tween.State == TweenState.Stopped;
 
-            public ChainItem(T destination, float duration, EaseFunc scaleFunc, Func<T> getter, Action<T> setter, LerpFunc<T> lerp)
+            public ChainItem(T destination, float duration, EaseFunc scaleFunc, TweenAccessors<T> accessors, LerpFunc<T> lerp)
             {
                 this.destination = destination;
                 this.duration = duration;
                 this.scaleFunc = scaleFunc;
-                this.getter = getter;
-                this.setter = setter;
+                this.getter = accessors.getter;
+                this.setter = accessors.setter;
                 this.lerpFunc = lerp;
                 this.tween = new Tween<T>(lerpFunc);
             }
@@ -161,7 +162,7 @@ namespace Machina.Data
 
         public class CallbackChainItem : IChainItem
         {
-            private Action callbackFn;
+            private readonly Action callbackFn;
 
             public CallbackChainItem(Action callbackFn)
             {

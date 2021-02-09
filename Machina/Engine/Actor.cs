@@ -227,24 +227,6 @@ namespace Machina.Engine
             return null;
         }
 
-        /// <summary>
-        /// This only exists to make tweening easier, you should use the property
-        /// </summary>
-        /// <returns></returns>
-        public Vector2 GetPosition()
-        {
-            return this.Position;
-        }
-
-        /// <summary>
-        /// This only exists to make tweening easier, you should use the property
-        /// </summary>
-        /// <returns></returns>
-        public void SetPosition(Vector2 value)
-        {
-            this.Position = value;
-        }
-
         public override string ToString()
         {
             return this.name;

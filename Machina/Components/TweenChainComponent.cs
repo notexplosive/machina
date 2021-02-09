@@ -23,20 +23,20 @@ namespace Machina.Components
             chain.Update(dt);
         }
 
-        public TweenChainComponent AddTween<T>(T target, float duration, EaseFunc easeFunc, Func<T> getter, Action<T> setter, LerpFunc<T> lerp) where T : struct
+        public TweenChainComponent AddTween<T>(T target, float duration, EaseFunc easeFunc, TweenAccessors<T> accessors, LerpFunc<T> lerp) where T : struct
         {
-            chain.Append(new TweenChain.ChainItem<T>(target, duration, easeFunc, getter, setter, lerp));
+            chain.Append(new TweenChain.ChainItem<T>(target, duration, easeFunc, accessors, lerp));
             return this;
         }
 
         public TweenChainComponent AddMoveTween(Vector2 targetPos, float duration, EaseFunc easeFunc)
         {
-            return AddTween(targetPos, duration, easeFunc, this.actor.GetPosition, this.actor.SetPosition, Vector2.Lerp);
+            return AddTween(targetPos, duration, easeFunc, this.actor.PositionTweenAccessors(), Vector2.Lerp);
         }
 
-        public TweenChainComponent AddFloatTween(float targetVal, float duration, EaseFunc easeFunc, Func<float> getter, Action<float> setter)
+        public TweenChainComponent AddFloatTween(float targetVal, float duration, EaseFunc easeFunc, TweenAccessors<float> accessors)
         {
-            this.chain.AppendFloatTween(targetVal, duration, easeFunc, getter, setter);
+            this.chain.AppendFloatTween(targetVal, duration, easeFunc, accessors);
             return this;
         }
 

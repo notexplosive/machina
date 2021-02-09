@@ -27,7 +27,7 @@ namespace Machina.Components
             this.opacity = 0f;
             this.tweenChain = new TweenChain()
                 .AppendWaitTween(3f)
-                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn, () => { return this.opacity; }, (val) => { this.opacity = val; });
+                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn, new TweenAccessors<float>(() => { return this.opacity; }, (val) => { this.opacity = val; }));
         }
 
         public override void Draw(SpriteBatch spriteBatch)
