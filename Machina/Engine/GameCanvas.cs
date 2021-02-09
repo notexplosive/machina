@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Machina.Engine
     public class GameCanvas
     {
         private readonly Point idealSize;
+        private RenderTarget2D screenRenderTarget;
 
         public GameCanvas(int idealWidth, int idealHeight)
         {
@@ -53,6 +55,35 @@ namespace Machina.Engine
         public void FinishResize()
         {
             this.PendingResize = false;
+        }
+
+        public void BuildCanvas(GraphicsDevice graphicsDevice)
+        {
+            this.screenRenderTarget = new RenderTarget2D(
+                graphicsDevice,
+                WindowWidth,
+                WindowHeight,
+                false,
+                graphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+        }
+
+        public void PrepareDraw(GraphicsDevice graphicsDevice)
+        {
+            graphicsDevice.SetRenderTarget(screenRenderTarget);
+            graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+        }
+
+        public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        {
+            graphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.Begin();
+            var canvasSize = CanvasSize;
+            spriteBatch.Draw(screenRenderTarget,
+                new Rectangle((WindowWidth - canvasSize.X) / 2, (WindowHeight - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
+                null, Color.White);
+            spriteBatch.End();
         }
     }
 }

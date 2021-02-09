@@ -29,7 +29,6 @@ namespace Machina.Engine
         protected readonly List<Scene> scenes = new List<Scene>();
         private Scene debugScene;
         private ILogger logger;
-        private RenderTarget2D screenRenderTarget;
 
         public static DebugLevel DebugLevel
         {
@@ -108,13 +107,7 @@ namespace Machina.Engine
 #endif
             Print("DebugLevel set to:", DebugLevel);
 
-            screenRenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                gameCanvas.WindowWidth,
-                gameCanvas.WindowHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
+            gameCanvas.BuildCanvas(GraphicsDevice);
 
             OnGameLoad();
         }
@@ -191,8 +184,8 @@ namespace Machina.Engine
                 scene.PreDraw(spriteBatch);
             }
 
-            GraphicsDevice.SetRenderTarget(screenRenderTarget);
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+            gameCanvas.PrepareDraw(GraphicsDevice);
+
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             foreach (var scene in sceneLayers)
@@ -208,15 +201,7 @@ namespace Machina.Engine
                 }
             }
 
-            GraphicsDevice.SetRenderTarget(null);
-
-
-            spriteBatch.Begin();
-            var canvasSize = gameCanvas.CanvasSize;
-            spriteBatch.Draw(screenRenderTarget,
-                new Rectangle((gameCanvas.WindowWidth - canvasSize.X) / 2, (gameCanvas.WindowHeight - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
-                null, Color.White);
-            spriteBatch.End();
+            gameCanvas.DrawCanvas(GraphicsDevice, spriteBatch);
 
             base.Draw(gameTime);
         }

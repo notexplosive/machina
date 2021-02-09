@@ -33,7 +33,7 @@ namespace Machina.Engine
             this.scene.RemoveActor(this);
         }
 
-        public void OnRemove()
+        public override void OnRemove()
         {
             foreach (var component in this.iterables)
             {
