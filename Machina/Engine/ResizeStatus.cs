@@ -7,48 +7,52 @@ namespace Machina.Engine
 {
     public class ResizeStatus
     {
-        public readonly int aspectWidth;
-        public readonly int aspectHeight;
+        public readonly int idealWidth;
+        public readonly int idealHeight;
 
-        public ResizeStatus(int aspectWidth, int aspectHeight)
+        public ResizeStatus(int idealWidth, int idealHeight)
         {
-            this.aspectWidth = aspectWidth;
-            this.aspectHeight = aspectHeight;
+            this.idealWidth = idealWidth;
+            this.idealHeight = idealHeight;
         }
 
         public float ScaleFactor
         {
             get
             {
-                var normalizedWidth = (float) Width / this.aspectWidth;
-                var normalizedHeight = (float) Height / this.aspectHeight;
+                var normalizedWidth = (float) Width / this.idealWidth;
+                var normalizedHeight = (float) Height / this.idealHeight;
 
                 return Math.Min(normalizedWidth, normalizedHeight);
-            }
-        }
-
-        public Rectangle ViewportRect
-        {
-            get
-            {
-                return new Rectangle();
             }
         }
 
         public bool Pending
         {
             get;
-            internal set;
+            private set;
         }
         public int Width
         {
             get;
-            internal set;
+            private set;
         }
         public int Height
         {
             get;
-            internal set;
+            private set;
+        }
+
+        public void Resize(int width, int height)
+        {
+            this.Pending = true;
+            this.Width = width;
+            this.Height = height;
+        }
+
+        public void FinishResize()
+        {
+            this.Pending = false;
         }
     }
 }

@@ -50,6 +50,8 @@ namespace Machina.Engine
             if (this.resizer != null)
             {
                 this.camera.NativeScaleFactor = resizer.ScaleFactor;
+                this.camera.ViewportWidth = this.resizer.Width;
+                this.camera.ViewportHeight = this.resizer.Height;
             }
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.TranslationMatrix);

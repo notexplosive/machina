@@ -148,7 +148,7 @@ namespace Machina.Engine
                 Graphics.PreferredBackBufferWidth = resizing.Width;
                 Graphics.PreferredBackBufferHeight = resizing.Height;
                 Graphics.ApplyChanges();
-                resizing.Pending = false;
+                resizing.FinishResize();
             }
 
             base.Update(gameTime);
@@ -182,9 +182,8 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            resizing.Pending = true;
-            resizing.Width = Window.ClientBounds.Width;
-            resizing.Height = Window.ClientBounds.Height;
+            resizing.Resize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+
         }
 
         /// <summary>

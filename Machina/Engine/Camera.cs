@@ -52,6 +52,7 @@ namespace Machina.Engine
             {
                 return
                     Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+                    * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
                     * Matrix.CreateRotationZ(Rotation)
                     * Matrix.CreateScale(new Vector3(Scale, Scale, 1))
                     * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
