@@ -16,7 +16,7 @@ namespace Machina.Engine
 
         public Vector2 Position
         {
-            get; private set;
+            get; set;
         }
 
         public float Zoom
@@ -26,7 +26,7 @@ namespace Machina.Engine
 
         public float Rotation
         {
-            get; private set;
+            get; set;
         }
 
         public int ViewportWidth
@@ -53,10 +53,12 @@ namespace Machina.Engine
                 return
                     Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
                     * Matrix.CreateRotationZ(Rotation)
-                    * Matrix.CreateScale(new Vector3(Zoom * NativeScaleFactor, Zoom * NativeScaleFactor, 1))
+                    * Matrix.CreateScale(new Vector3(Scale, Scale, 1))
                     * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
             }
         }
+
+        public float Scale => Zoom * NativeScaleFactor;
 
         public float NativeScaleFactor
         {

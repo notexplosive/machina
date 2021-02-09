@@ -72,7 +72,7 @@ namespace HelloGame
             linkinRenderer.SetupBoundingRect();
 
             var cameraScroller = gameScene.AddActor();
-            new ZoomCameraOnScroll(cameraScroller);
+            new ControlCamera(cameraScroller);
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor();
