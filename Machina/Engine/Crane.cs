@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Machina.Engine
 {
-    // TODO: maybe we can use an interface ICrane and make `class Crane<T> where T : ICrane`
     public interface ICrane
     {
         public void Update(float dt);

@@ -99,7 +99,7 @@ namespace Machina.Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
-            var debugActor = debugScene.AddActor();
+            var debugActor = debugScene.AddActor("DebugLogger");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
 
 #if DEBUG

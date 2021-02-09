@@ -9,15 +9,87 @@ namespace Machina.Engine
 {
     public class Actor : Crane<BaseComponent>
     {
-        public Vector2 position;
-        public float angle = 0f;
         public float depth = 0.5f;
         public readonly Scene scene;
+        public readonly Parent parent;
+        public readonly Children children;
+        public readonly string name;
+        public float angle = 0f;
+        private Vector2 position;
+        private Vector2 localPosition;
 
-        public Actor(Scene scene)
+        public Vector2 Position
         {
+            get
+            {
+                return this.position;
+            }
+            set
+            {
+                this.position = value;
+                for (int i = 0; i < this.children.Count; i++)
+                {
+                    this.children.At(i).Position = this.children.At(i).LocalToWorldPosition();
+                }
+            }
+        }
+
+        public Vector2 LocalPosition
+        {
+            get
+            {
+                if (this.parent.Has())
+                {
+                    return this.localPosition;
+                }
+                else
+                {
+                    return Position;
+                }
+            }
+
+            set
+            {
+                if (this.parent.Has())
+                {
+                    this.localPosition = value;
+                }
+                else
+                {
+                    Position = value;
+                }
+            }
+        }
+
+        public Matrix TransformMatrix
+        {
+            get
+            {
+                var parent = this.parent.Get();
+                var parentPos = parent.Position;
+                return Matrix.CreateRotationZ(parent.angle)
+                    * Matrix.CreateTranslation(parentPos.X, parentPos.Y, 0);
+            }
+        }
+
+        public Vector2 LocalToWorldPosition()
+        {
+            return Vector2.Transform(localPosition, TransformMatrix);
+        }
+
+        public Vector2 WorldToLocalPosition()
+        {
+            return Vector2.Transform(Position, Matrix.Invert(TransformMatrix));
+        }
+
+        public Actor(string name, Scene scene)
+        {
+            parent = new Parent(this);
+            children = new Children(this);
+
             this.scene = scene;
             this.scene.AddActor(this);
+            this.name = name;
             iterables = new List<BaseComponent>();
         }
 
@@ -108,14 +180,27 @@ namespace Machina.Engine
             return null;
         }
 
+        /// <summary>
+        /// This only exists to make tweening easier, you should use the property
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetPosition()
         {
-            return this.position;
+            return this.Position;
         }
 
+        /// <summary>
+        /// This only exists to make tweening easier, you should use the property
+        /// </summary>
+        /// <returns></returns>
         public void SetPosition(Vector2 value)
         {
-            this.position = value;
+            this.Position = value;
+        }
+
+        public override string ToString()
+        {
+            return this.name;
         }
     }
 

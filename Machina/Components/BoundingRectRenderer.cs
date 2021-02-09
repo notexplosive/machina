@@ -21,7 +21,7 @@ namespace Machina.Components
         {
             Rectangle rect = this.boundingRect.Rect;
             spriteBatch.DrawRectangle(rect, Color.Red, 1, this.actor.depth);
-            spriteBatch.DrawCircle(this.actor.position, Math.Min(rect.Width, rect.Height) / 4, 16, Color.Red, 1, this.actor.depth);
+            spriteBatch.DrawCircle(this.actor.Position, Math.Min(rect.Width, rect.Height) / 4, 16, Color.Red, 1, this.actor.depth);
         }
     }
 }

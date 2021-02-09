@@ -13,19 +13,21 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             var curKeys = Keyboard.GetState();
+            var localPos = this.actor.LocalPosition;
 
             if (curKeys.IsKeyDown(Keys.Up))
-                this.actor.position.Y -= 500f * dt;
+                localPos.Y -= 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Down))
-                this.actor.position.Y += 500f * dt;
+                localPos.Y += 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Left))
-                this.actor.position.X -= 500f * dt;
+                localPos.X -= 500f * dt;
 
             if (curKeys.IsKeyDown(Keys.Right))
-                this.actor.position.X += 500f * dt;
+                localPos.X += 500f * dt;
 
+            this.actor.LocalPosition = localPos;
             if (curKeys.IsKeyDown(Keys.Q))
             {
                 this.actor.depth += 0.1f;
@@ -36,6 +38,15 @@ namespace Machina.Components
                 this.actor.depth -= 0.1f;
             }
 
+            if (curKeys.IsKeyDown(Keys.Z))
+            {
+                this.actor.angle += (float) Math.PI / 60;
+            }
+
+            if (curKeys.IsKeyDown(Keys.X))
+            {
+                this.actor.angle -= (float) Math.PI / 60;
+            }
         }
     }
 }

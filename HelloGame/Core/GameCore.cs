@@ -53,13 +53,13 @@ namespace HelloGame
 
             //
 
-            var ballActor = gameScene.AddActor(new Vector2(Graphics.PreferredBackBufferWidth / 2, Graphics.PreferredBackBufferHeight / 2));
+            var ballActor = gameScene.AddActor("Ball", new Vector2(Graphics.PreferredBackBufferWidth / 2, Graphics.PreferredBackBufferHeight / 2));
             new TextureRenderer(ballActor, Assets.GetTexture("ball"));
             new SpriteRenderer(ballActor, linkinSpriteSheet);
             new KeyboardMovement(ballActor);
             new TextRenderer(ballActor, defaultFont, "Hello world and this is a very long string");
 
-            Actor linkin = gameScene.AddActor(new Vector2(250, 250));
+            Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
             new BoundingRect(linkin, 32, 32);
             new BoundingRectRenderer(linkin);
@@ -71,31 +71,35 @@ namespace HelloGame
             linkinRenderer.SetAnimation(walkAnim);
             linkinRenderer.SetupBoundingRect();
 
-            var cameraScroller = gameScene.AddActor();
+            var cameraScroller = gameScene.AddActor("CameraScroller");
             new ControlCamera(cameraScroller);
 
             var otherScene = new Scene();
-            var microActor = otherScene.AddActor();
-            microActor.position = new Vector2(100, 100);
+            var microActor = otherScene.AddActor("MicroActor");
+            microActor.Position = new Vector2(100, 100);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
 
-            var sceneRenderBox = gameScene.AddActor(new Vector2(200, 350));
+            var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 150));
             new Canvas(sceneRenderBox);
             new BoundingRectRenderer(sceneRenderBox);
             new SceneRenderer(sceneRenderBox, otherScene);
 
-            var ninepatchActor = gameScene.AddActor(new Vector2(400, 400));
+            sceneRenderBox.parent.Set(linkin);
+
+            ballActor.children.Add(sceneRenderBox);
+
+            var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
             new BoundingRect(ninepatchActor, new Point(400, 300));
             new NinepatchRenderer(ninepatchActor, testNinepatch);
 
-            var progressBar = gameScene.AddActor();
-            progressBar.position = new Vector2(500, 50);
+            var progressBar = gameScene.AddActor("ProgressBar");
+            progressBar.Position = new Vector2(500, 50);
             new BoundingRect(progressBar, new Point(500, 24));
             new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
-            var pillar = gameScene.AddActor();
-            pillar.position = new Vector2(300, 350);
+            var pillar = gameScene.AddActor("Pillar");
+            pillar.Position = new Vector2(300, 350);
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
         }

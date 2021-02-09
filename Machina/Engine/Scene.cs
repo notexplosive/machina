@@ -17,10 +17,10 @@ namespace Machina.Engine
             this.camera = new Camera(resizer);
         }
 
-        public Actor AddActor(Vector2 position = new Vector2())
+        public Actor AddActor(string name, Vector2 position = new Vector2())
         {
-            var actor = new Actor(this);
-            actor.position = position;
+            var actor = new Actor(name, this);
+            actor.Position = position;
             return actor;
         }
 

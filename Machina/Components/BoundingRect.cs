@@ -46,7 +46,7 @@ namespace Machina.Components
                 this.size.Y = value;
             }
         }
-        public Rectangle Rect => new Rectangle((this.actor.position - offset).ToPoint(), this.size);
+        public Rectangle Rect => new Rectangle((this.actor.Position - offset).ToPoint(), this.size);
 
         public void SetOffsetToCenter()
         {
