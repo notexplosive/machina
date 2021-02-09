@@ -32,7 +32,7 @@
     <Compile Include="..\Machina\Data\NinepatchRects.cs" />
     <Compile Include="..\Machina\Data\NinepatchSheet.cs" />
     <Compile Include="..\Machina\Components\Canvas.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Engine\ResizeStatus.cs" />
+    <Compile Include="..\Machina\Engine\GameCanvas.cs" />
     <Compile Include="..\Machina\Components\BoundingRect.cs" />
     <Compile Include="..\Machina\Components\BoundingRectRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\KeyboardMovement.cs" />

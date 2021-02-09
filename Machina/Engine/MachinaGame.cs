@@ -25,10 +25,11 @@ namespace Machina.Engine
         private KeyTracker keyTracker;
         private MouseTracker mouseTracker;
         protected SpriteBatch spriteBatch;
-        protected readonly ResizeStatus resizing;
+        protected readonly GameCanvas gameCanvas;
         protected readonly List<Scene> scenes = new List<Scene>();
         private Scene debugScene;
         private ILogger logger;
+        private RenderTarget2D screenRenderTarget;
 
         public static DebugLevel DebugLevel
         {
@@ -66,7 +67,7 @@ namespace Machina.Engine
             Content.RootDirectory = "Content";
 
             Graphics = new GraphicsDeviceManager(this);
-            resizing = new ResizeStatus(windowWidth, windowHeight);
+            gameCanvas = new GameCanvas(windowWidth, windowHeight);
             scrollTracker = new ScrollTracker();
             keyTracker = new KeyTracker();
             mouseTracker = new MouseTracker();
@@ -106,6 +107,14 @@ namespace Machina.Engine
             this.debugLevel = DebugLevel.Off;
 #endif
             Print("DebugLevel set to:", DebugLevel);
+
+            screenRenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                gameCanvas.WindowWidth,
+                gameCanvas.WindowHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
 
             OnGameLoad();
         }
@@ -162,12 +171,13 @@ namespace Machina.Engine
                 }
             }
 
-            if (resizing.Pending)
+            if (gameCanvas.PendingResize)
             {
-                Graphics.PreferredBackBufferWidth = resizing.Width;
-                Graphics.PreferredBackBufferHeight = resizing.Height;
+                Graphics.PreferredBackBufferWidth = gameCanvas.WindowWidth;
+                Graphics.PreferredBackBufferHeight = gameCanvas.WindowHeight;
                 Graphics.ApplyChanges();
-                resizing.FinishResize();
+
+                gameCanvas.FinishResize();
             }
 
             base.Update(gameTime);
@@ -181,6 +191,8 @@ namespace Machina.Engine
                 scene.PreDraw(spriteBatch);
             }
 
+            GraphicsDevice.SetRenderTarget(screenRenderTarget);
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             foreach (var scene in sceneLayers)
@@ -196,12 +208,30 @@ namespace Machina.Engine
                 }
             }
 
+            GraphicsDevice.SetRenderTarget(null);
+
+
+            spriteBatch.Begin();
+            var canvasSize = gameCanvas.CanvasSize;
+            spriteBatch.Draw(screenRenderTarget,
+                new Rectangle((gameCanvas.WindowWidth - canvasSize.X) / 2, (gameCanvas.WindowHeight - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
+                null, Color.White);
+            spriteBatch.End();
+
             base.Draw(gameTime);
         }
 
         private void OnResize(object sender, EventArgs e)
         {
-            resizing.Resize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            gameCanvas.Resize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+        }
+
+        protected override void OnExiting(Object sender, EventArgs args)
+        {
+            foreach (var scene in scenes)
+            {
+                scene.OnRemove();
+            }
         }
 
         /// <summary>

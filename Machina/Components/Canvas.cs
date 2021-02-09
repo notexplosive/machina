@@ -41,6 +41,11 @@ namespace Machina.Components
                 DepthFormat.Depth24);
         }
 
+        public override void OnRemove()
+        {
+            renderTarget.Dispose();
+        }
+
         public void DrawContent(SpriteBatch spriteBatch)
         {
             GraphicsDevice graphicsDevice = MachinaGame.Current.GraphicsDevice;

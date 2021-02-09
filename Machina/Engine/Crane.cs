@@ -78,6 +78,20 @@ namespace Machina.Engine
                 iterable.OnScroll(scrollDelta);
             }
         }
+
+        public virtual void OnRemove()
+        {
+            if (doNotUseCraneIterator)
+            {
+                return;
+            }
+
+            foreach (var iterable in iterables)
+            {
+                iterable.OnRemove();
+            }
+        }
+
         public virtual void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
         {
             if (doNotUseCraneIterator)

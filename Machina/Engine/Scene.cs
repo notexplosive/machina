@@ -11,7 +11,7 @@ namespace Machina.Engine
     {
         public readonly Camera camera;
 
-        public Scene(ResizeStatus resizer = null)
+        public Scene(GameCanvas resizer = null)
         {
             this.iterables = new List<Crane>();
             this.camera = new Camera(resizer);
@@ -65,6 +65,17 @@ namespace Machina.Engine
             }
 
             spriteBatch.End();
+        }
+
+        /// <summary>
+        /// Same as Scene.OnRemove
+        /// </summary>
+        public void RemoveAllActors()
+        {
+            foreach (var actor in iterables)
+            {
+                actor.OnRemove();
+            }
         }
     }
 }

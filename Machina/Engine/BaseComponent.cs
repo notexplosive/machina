@@ -25,9 +25,6 @@ namespace Machina.Engine
         public virtual void OnActorDestroy()
         {
         }
-        public virtual void OnRemove()
-        {
-        }
 
         protected T RequireComponent<T>() where T : BaseComponent
         {

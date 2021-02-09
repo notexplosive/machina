@@ -25,7 +25,7 @@ namespace HelloGame
 
         protected override void OnGameLoad()
         {
-            gameScene = new Scene(this.resizing);
+            gameScene = new Scene(this.gameCanvas);
             scenes.Add(gameScene);
 
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));

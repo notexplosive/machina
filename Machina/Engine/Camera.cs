@@ -8,9 +8,9 @@ namespace Machina.Engine
     // Initial implementation of this camera comes from https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/
     public class Camera
     {
-        private ResizeStatus resizer;
+        private GameCanvas resizer;
 
-        public Camera(ResizeStatus resizer = null)
+        public Camera(GameCanvas resizer = null)
         {
             Zoom = 1.0f;
 
@@ -37,11 +37,11 @@ namespace Machina.Engine
 
         public int ViewportWidth
         {
-            get => resizer != null ? resizer.Width : 0;
+            get => resizer != null ? resizer.WindowWidth : 0;
         }
         public int ViewportHeight
         {
-            get => resizer != null ? resizer.Height : 0;
+            get => resizer != null ? resizer.WindowHeight : 0;
         }
 
         public Vector2 ViewportCenter
@@ -58,12 +58,6 @@ namespace Machina.Engine
             {
                 return
                     Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
-
-                    // Change zoom level based on window size (maybe remove this at some point)
-                    * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
-                    * Matrix.CreateScale(new Vector3(NativeScaleFactor, NativeScaleFactor, 1))
-                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
-                    //
 
                     // Zoom, and rotate
                     * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
@@ -103,18 +97,6 @@ namespace Machina.Engine
             {
                 Position = newPosition;
             }
-        }
-
-        public Rectangle ViewportWorldBoundry()
-        {
-            Vector2 viewPortCorner = ScreenToWorld(new Vector2(0, 0));
-            Vector2 viewPortBottomCorner =
-               ScreenToWorld(new Vector2(ViewportWidth, ViewportHeight));
-
-            return new Rectangle((int) viewPortCorner.X,
-               (int) viewPortCorner.Y,
-               (int) (viewPortBottomCorner.X - viewPortCorner.X),
-               (int) (viewPortBottomCorner.Y - viewPortCorner.Y));
         }
 
         // Center the camera on specific pixel coordinates
