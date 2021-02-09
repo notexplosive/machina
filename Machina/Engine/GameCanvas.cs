@@ -60,6 +60,8 @@ namespace Machina.Engine
             }
         }
 
+        public Point WorldSize => this.idealSize;
+
         public void OnResize(int windowWidth, int windowHeight)
         {
             this.PendingResize = true;
