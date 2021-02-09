@@ -68,7 +68,7 @@ namespace Machina.Engine
                 DepthFormat.Depth24);
         }
 
-        public void PrepareDraw(GraphicsDevice graphicsDevice)
+        public void PrepareCanvas(GraphicsDevice graphicsDevice)
         {
             graphicsDevice.SetRenderTarget(screenRenderTarget);
             graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };

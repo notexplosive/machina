@@ -67,6 +67,7 @@ namespace Machina.Engine
 
             Graphics = new GraphicsDeviceManager(this);
             gameCanvas = new GameCanvas(windowWidth, windowHeight);
+
             scrollTracker = new ScrollTracker();
             keyTracker = new KeyTracker();
             mouseTracker = new MouseTracker();
@@ -86,6 +87,8 @@ namespace Machina.Engine
 
             // debugScene does NOT get added to the `scenes` list because it's always on top
             debugScene = new Scene();
+
+            gameCanvas.BuildCanvas(GraphicsDevice);
 
             base.Initialize();
         }
@@ -107,7 +110,6 @@ namespace Machina.Engine
 #endif
             Print("DebugLevel set to:", DebugLevel);
 
-            gameCanvas.BuildCanvas(GraphicsDevice);
 
             OnGameLoad();
         }
@@ -184,7 +186,7 @@ namespace Machina.Engine
                 scene.PreDraw(spriteBatch);
             }
 
-            gameCanvas.PrepareDraw(GraphicsDevice);
+            gameCanvas.PrepareCanvas(GraphicsDevice);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
