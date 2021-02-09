@@ -55,7 +55,7 @@ namespace Machina.Components
         {
             get
             {
-                return this.size.ToVector2() / 2;
+                return this.Offset;
             }
         }
 
