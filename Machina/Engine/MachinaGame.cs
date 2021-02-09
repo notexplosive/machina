@@ -20,7 +20,7 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
-        private Point startingWindowSize;
+        private readonly Point startingWindowSize;
         private readonly ScrollTracker scrollTracker;
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
@@ -58,7 +58,7 @@ namespace Machina.Engine
             }
         }
 
-        public MachinaGame(int windowWidth, int windowHeight)
+        public MachinaGame(Point startingResolution, ResizeBehavior resizeBehavior)
         {
             Current = this;
             this.logger = new ConsoleLogger();
@@ -66,7 +66,7 @@ namespace Machina.Engine
             Content.RootDirectory = "Content";
 
             Graphics = new GraphicsDeviceManager(this);
-            gameCanvas = new GameCanvas(windowWidth, windowHeight, ResizeBehavior.FillContent);
+            gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
 
             scrollTracker = new ScrollTracker();
             keyTracker = new KeyTracker();
@@ -75,7 +75,7 @@ namespace Machina.Engine
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
-            this.startingWindowSize = new Point(windowWidth, windowHeight);
+            this.startingWindowSize = startingResolution;
         }
 
         protected override void Initialize()
@@ -83,7 +83,7 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferWidth = startingWindowSize.X;
             Graphics.PreferredBackBufferHeight = startingWindowSize.Y;
             Graphics.ApplyChanges();
-            OnResize(null, new EventArgs());
+            gameCanvas.OnResize(startingWindowSize.X, startingWindowSize.Y);
 
             // debugScene does NOT get added to the `scenes` list because it's always on top
             debugScene = new Scene();

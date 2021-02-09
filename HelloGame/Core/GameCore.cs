@@ -13,7 +13,7 @@ namespace HelloGame
     {
         Scene gameScene;
 
-        public GameCore() : base(1600, 900)
+        public GameCore() : base(new Point(1600, 900), ResizeBehavior.MaintainDesiredResolution)
         {
             IsMouseVisible = true;
         }
