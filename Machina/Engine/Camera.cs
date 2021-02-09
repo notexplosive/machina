@@ -8,10 +8,16 @@ namespace Machina.Engine
     // Initial implementation of this camera comes from https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/
     public class Camera
     {
-        public Camera()
+        private ResizeStatus resizer;
+
+        public Camera(ResizeStatus resizer = null)
         {
             Zoom = 1.0f;
-            NativeScaleFactor = 1.0f;
+
+            if (resizer != null)
+            {
+                this.resizer = resizer;
+            }
         }
 
         public Vector2 Position
@@ -31,11 +37,11 @@ namespace Machina.Engine
 
         public int ViewportWidth
         {
-            get; set;
+            get => resizer != null ? resizer.Width : 0;
         }
         public int ViewportHeight
         {
-            get; set;
+            get => resizer != null ? resizer.Height : 0;
         }
 
         public Vector2 ViewportCenter
@@ -52,10 +58,20 @@ namespace Machina.Engine
             {
                 return
                     Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+
+                    // Change zoom level based on window size (maybe remove this at some point)
+                    * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
+                    * Matrix.CreateScale(new Vector3(NativeScaleFactor, NativeScaleFactor, 1))
+                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
+                    //
+
+                    // Zoom, and rotate
                     * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
                     * Matrix.CreateRotationZ(Rotation)
-                    * Matrix.CreateScale(new Vector3(Scale, Scale, 1))
-                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0));
+                    * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
+                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
+                    //
+                    ;
             }
         }
 
@@ -63,8 +79,7 @@ namespace Machina.Engine
 
         public float NativeScaleFactor
         {
-            get;
-            set;
+            get => resizer != null ? resizer.ScaleFactor : 1.0f;
         }
 
         public void AdjustZoom(float amount)

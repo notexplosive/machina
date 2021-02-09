@@ -9,40 +9,23 @@ using System.Text;
 
 namespace Machina.Components
 {
-    enum DebugLevel
-    {
-        Off,        // Completely disabled, can be enabled with hotkey
-        Passive,    // Show Console Output
-        Active      // Render DebugDraws
-    }
 
-    class Logger : BaseComponent
+    class Logger : BaseComponent, ILogger
     {
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
-        private IDebugOutputListener listener;
+        private IDebugOutputRenderer renderer;
 
-        public DebugLevel DebugLevel
+
+        public Logger(Actor actor, IDebugOutputRenderer renderer) : base(actor)
         {
-            get; private set;
-        }
+            this.renderer = renderer;
 
-
-        public Logger(Actor actor, IDebugOutputListener listener) : base(actor)
-        {
-            this.listener = listener;
-#if DEBUG
-            this.DebugLevel = DebugLevel.Passive;
-            this.Log("Debug build detected");
-#else
-            this.debugLevel = DebugLevel.Off;
-#endif
-            this.Log("DebugLevel set to:", this.DebugLevel);
         }
 
 
         public void Log(params object[] objects)
         {
-            if (this.DebugLevel == DebugLevel.Off)
+            if (MachinaGame.DebugLevel == DebugLevel.Off)
             {
                 return;
             }
@@ -55,8 +38,9 @@ namespace Machina.Components
 
             var output = string.Join("   ", strings);
 
-            this.listener.OnMessageLog(output);
             Console.WriteLine(output);
+
+            this.renderer.OnMessageLog(output);
         }
     }
 }

@@ -9,13 +9,12 @@ namespace Machina.Engine
 {
     public class Scene : Crane
     {
-        public readonly Camera camera = new Camera();
-        private ResizeStatus resizer;
+        public readonly Camera camera;
 
         public Scene(ResizeStatus resizer = null)
         {
             this.iterables = new List<Crane>();
-            this.resizer = resizer;
+            this.camera = new Camera(resizer);
         }
 
         public Actor AddActor(Vector2 position = new Vector2())
@@ -47,13 +46,6 @@ namespace Machina.Engine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (this.resizer != null)
-            {
-                this.camera.NativeScaleFactor = resizer.ScaleFactor;
-                this.camera.ViewportWidth = this.resizer.Width;
-                this.camera.ViewportHeight = this.resizer.Height;
-            }
-
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.TranslationMatrix);
 
             foreach (var actor in iterables)

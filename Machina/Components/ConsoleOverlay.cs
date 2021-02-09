@@ -11,7 +11,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class ConsoleOverlay : BaseComponent, IDebugOutputListener
+    class ConsoleOverlay : BaseComponent, IDebugOutputRenderer
     {
         private SpriteFont spriteFont;
         private GraphicsDeviceManager graphics;

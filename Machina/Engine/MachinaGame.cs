@@ -7,6 +7,13 @@ using System.Collections.Generic;
 
 namespace Machina.Engine
 {
+    public enum DebugLevel
+    {
+        Off,        // Completely disabled, can be enabled with hotkey
+        Passive,    // Show Console Output
+        Active      // Render DebugDraws
+    }
+
     /// <summary>
     /// Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
     /// Your game should call the base constructor, even though it's abstract.
@@ -20,6 +27,13 @@ namespace Machina.Engine
         protected SpriteBatch spriteBatch;
         protected readonly ResizeStatus resizing;
         protected readonly List<Scene> scenes = new List<Scene>();
+        private Scene debugScene;
+        private ILogger logger;
+
+        public static DebugLevel DebugLevel
+        {
+            get; private set;
+        }
 
         public static GraphicsDeviceManager Graphics
         {
@@ -44,13 +58,10 @@ namespace Machina.Engine
             }
         }
 
-
-        private Scene debugScene;
-        private Logger logger;
-
         public MachinaGame(int windowWidth, int windowHeight)
         {
             Current = this;
+            this.logger = new ConsoleLogger();
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
 
@@ -87,6 +98,14 @@ namespace Machina.Engine
             var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
             var debugActor = debugScene.AddActor();
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
+
+#if DEBUG
+            DebugLevel = DebugLevel.Passive;
+            Print("Debug build detected");
+#else
+            this.debugLevel = DebugLevel.Off;
+#endif
+            Print("DebugLevel set to:", DebugLevel);
 
             OnGameLoad();
         }
@@ -169,7 +188,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (this.logger.DebugLevel >= DebugLevel.Passive)
+            if (DebugLevel >= DebugLevel.Passive)
             {
                 foreach (var scene in sceneLayers)
                 {
