@@ -29,6 +29,7 @@ namespace Machina.Components
             };
 
             this.boundingRect = RequireComponent<BoundingRect>();
+            this.boundingRect.SetOffsetToCenter();
 
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
 
@@ -66,7 +67,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(renderTarget, this.boundingRect.Rect, null, Color.White, this.actor.Angle, new Vector2(), SpriteEffects.None, this.actor.depth);
+            spriteBatch.Draw(renderTarget, this.actor.Position, null, Color.White, this.actor.Angle, this.boundingRect.NormalizedCenter, 1f, SpriteEffects.None, this.actor.depth);
         }
     }
 }

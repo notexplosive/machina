@@ -11,18 +11,21 @@ namespace Machina.Components
     class BoundingRect : BaseComponent
     {
         private Point size;
-        private Vector2 offset;
+        public Vector2 Offset
+        {
+            get; private set;
+        }
 
         public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
             this.size = size;
-            this.offset = offset;
+            this.Offset = offset;
         }
-        public BoundingRect(Actor actor, Point size) : this(actor, size, new Vector2(size.X, size.Y) / 2)
+        public BoundingRect(Actor actor, Point size) : this(actor, size, new Vector2(0, 0))
         {
         }
 
-        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height), new Vector2(width, height) / 2) { }
+        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height), new Vector2(0, 0)) { }
 
         public int Width
         {
@@ -46,12 +49,19 @@ namespace Machina.Components
                 this.size.Y = value;
             }
         }
-        public Rectangle Rect => new Rectangle((this.actor.Position - offset).ToPoint(), this.size);
+        public Rectangle Rect => new Rectangle((this.actor.Position - Offset).ToPoint(), this.size);
+
+        public Vector2 NormalizedCenter
+        {
+            get
+            {
+                return this.size.ToVector2() / 2;
+            }
+        }
 
         public void SetOffsetToCenter()
         {
-            this.offset.X = Width / 2;
-            this.offset.Y = Height / 2;
+            Offset = new Vector2(Width / 2, Height / 2);
         }
 
         /*

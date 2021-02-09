@@ -10,7 +10,7 @@ namespace Machina.Components
 {
     class BoundingRectRenderer : BaseComponent
     {
-        private BoundingRect boundingRect;
+        private readonly BoundingRect boundingRect;
 
         public BoundingRectRenderer(Actor actor) : base(actor)
         {
