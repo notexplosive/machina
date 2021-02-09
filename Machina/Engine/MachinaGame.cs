@@ -168,8 +168,8 @@ namespace Machina.Engine
 
             if (gameCanvas.PendingResize)
             {
-                Graphics.PreferredBackBufferWidth = gameCanvas.WindowWidth;
-                Graphics.PreferredBackBufferHeight = gameCanvas.WindowHeight;
+                Graphics.PreferredBackBufferWidth = gameCanvas.WindowSize.X;
+                Graphics.PreferredBackBufferHeight = gameCanvas.WindowSize.Y;
                 Graphics.ApplyChanges();
 
                 gameCanvas.FinishResize();
@@ -210,7 +210,7 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            gameCanvas.Resize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            gameCanvas.OnResize(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
         protected override void OnExiting(Object sender, EventArgs args)

@@ -37,11 +37,11 @@ namespace Machina.Engine
 
         public int ViewportWidth
         {
-            get => resizer != null ? resizer.WindowWidth : 0;
+            get => resizer != null ? resizer.WindowSize.X : 0;
         }
         public int ViewportHeight
         {
-            get => resizer != null ? resizer.WindowHeight : 0;
+            get => resizer != null ? resizer.WindowSize.Y : 0;
         }
 
         public Vector2 ViewportCenter

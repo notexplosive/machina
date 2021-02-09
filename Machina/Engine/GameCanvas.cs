@@ -20,8 +20,8 @@ namespace Machina.Engine
         {
             get
             {
-                var normalizedWidth = (float) WindowWidth / this.idealSize.X;
-                var normalizedHeight = (float) WindowHeight / this.idealSize.Y;
+                var normalizedWidth = (float) WindowSize.X / this.idealSize.X;
+                var normalizedHeight = (float) WindowSize.Y / this.idealSize.Y;
 
                 return Math.Min(normalizedWidth, normalizedHeight);
             }
@@ -32,12 +32,7 @@ namespace Machina.Engine
             get;
             private set;
         }
-        public int WindowWidth
-        {
-            get;
-            private set;
-        }
-        public int WindowHeight
+        public Point WindowSize
         {
             get;
             private set;
@@ -45,11 +40,10 @@ namespace Machina.Engine
 
         public Point CanvasSize => (new Vector2(this.idealSize.X, this.idealSize.Y) * ScaleFactor).ToPoint();
 
-        public void Resize(int windowWidth, int windowHeight)
+        public void OnResize(int windowWidth, int windowHeight)
         {
             this.PendingResize = true;
-            this.WindowWidth = windowWidth;
-            this.WindowHeight = windowHeight;
+            this.WindowSize = new Point(windowWidth, windowHeight);
         }
 
         public void FinishResize()
@@ -61,8 +55,8 @@ namespace Machina.Engine
         {
             this.screenRenderTarget = new RenderTarget2D(
                 graphicsDevice,
-                WindowWidth,
-                WindowHeight,
+                WindowSize.X,
+                WindowSize.Y,
                 false,
                 graphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
@@ -81,7 +75,7 @@ namespace Machina.Engine
             spriteBatch.Begin();
             var canvasSize = CanvasSize;
             spriteBatch.Draw(screenRenderTarget,
-                new Rectangle((WindowWidth - canvasSize.X) / 2, (WindowHeight - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
+                new Rectangle((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
                 null, Color.White);
             spriteBatch.End();
         }
