@@ -16,7 +16,7 @@ namespace Machina.Components
         Active      // Render DebugDraws
     }
 
-    class Logger : DataComponent
+    class Logger : BaseComponent
     {
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
         private IDebugOutputListener listener;

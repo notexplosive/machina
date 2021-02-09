@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class KeyboardMovement : UpdateOnlyComponent
+    class KeyboardMovement : BaseComponent
     {
         public KeyboardMovement(Actor actor) : base(actor) { }
 

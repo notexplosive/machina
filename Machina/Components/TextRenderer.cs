@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class TextRenderer : DrawOnlyComponent
+    class TextRenderer : BaseComponent
     {
         public Color FontColor
         {

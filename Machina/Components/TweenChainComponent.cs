@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class TweenChainComponent : UpdateOnlyComponent
+    class TweenChainComponent : BaseComponent
     {
 
         TweenChain chain;

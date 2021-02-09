@@ -9,7 +9,7 @@ using System.Text;
 namespace Machina.Engine
 {
     /// <summary>
-    /// Base class for all components. Child components are expected to implement their own Update and Draw functions.
+    /// Base class for all components
     /// </summary>
     public abstract class BaseComponent : Crane
     {

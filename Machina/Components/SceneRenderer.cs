@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SceneRenderer : UpdateOnlyComponent
+    class SceneRenderer : BaseComponent
     {
         private Canvas canvas;
         private Scene targetScene;

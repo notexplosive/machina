@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class ZoomCameraOnScroll : DataComponent
+    class ZoomCameraOnScroll : BaseComponent
     {
         public ZoomCameraOnScroll(Actor actor) : base(actor)
         {

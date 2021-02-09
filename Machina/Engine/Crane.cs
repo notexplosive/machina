@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Machina.Engine
 {
+    // TODO: maybe we can use an interface ICrane and make `class Crane<T> where T : ICrane`
     public abstract class Crane
     {
         protected List<Crane> iterables;

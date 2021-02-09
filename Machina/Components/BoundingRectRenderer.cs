@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class BoundingRectRenderer : DrawOnlyComponent
+    class BoundingRectRenderer : BaseComponent
     {
         private BoundingRect boundingRect;
 
