@@ -21,12 +21,12 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         private Point startingWindowSize;
-        private ScrollTracker scrollTracker;
-        private KeyTracker keyTracker;
-        private MouseTracker mouseTracker;
+        private readonly ScrollTracker scrollTracker;
+        private readonly KeyTracker keyTracker;
+        private readonly MouseTracker mouseTracker;
         protected SpriteBatch spriteBatch;
-        protected readonly GameCanvas gameCanvas;
         protected readonly List<Scene> scenes = new List<Scene>();
+        public readonly GameCanvas gameCanvas;
         private Scene debugScene;
         private ILogger logger;
 
@@ -66,7 +66,7 @@ namespace Machina.Engine
             Content.RootDirectory = "Content";
 
             Graphics = new GraphicsDeviceManager(this);
-            gameCanvas = new GameCanvas(windowWidth, windowHeight);
+            gameCanvas = new GameCanvas(windowWidth, windowHeight, ResizeBehavior.FillContent);
 
             scrollTracker = new ScrollTracker();
             keyTracker = new KeyTracker();
