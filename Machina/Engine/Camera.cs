@@ -27,7 +27,7 @@ namespace Machina.Engine
 
         public float Zoom
         {
-            get; private set;
+            get; set;
         }
 
         public float Rotation
@@ -83,34 +83,6 @@ namespace Machina.Engine
             {
                 Zoom = 0.25f;
             }
-        }
-
-        public void MoveCamera(Vector2 cameraMovement, Vector2 cameraMax = new Vector2())
-        {
-            Vector2 newPosition = Position + cameraMovement;
-
-            if (cameraMax.Length() > 0)
-            {
-                Position = MapClampedPosition(newPosition, cameraMax);
-            }
-            else
-            {
-                Position = newPosition;
-            }
-        }
-
-        // Center the camera on specific pixel coordinates
-        public void CenterOn(Vector2 position)
-        {
-            Position = position;
-        }
-
-        // Clamp the camera so it never leaves the visible area of the map.
-        private Vector2 MapClampedPosition(Vector2 position, Vector2 cameraMax)
-        {
-            return Vector2.Clamp(position,
-               new Vector2(ViewportWidth / Zoom / 2, ViewportHeight / Zoom / 2),
-               cameraMax);
         }
 
         public Vector2 WorldToScreen(Vector2 worldPosition)

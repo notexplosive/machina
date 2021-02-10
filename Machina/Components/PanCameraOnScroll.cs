@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class VerticalCameraPanOnScroll : BaseComponent
+    class PanCameraOnScroll : BaseComponent
     {
-        public readonly MinMax<int> scrollRange;
+        public readonly MinMax<int> bounds;
         private readonly int scrollIncrement;
 
         public int CurrentScroll
@@ -17,10 +17,10 @@ namespace Machina.Components
             get; private set;
         }
 
-        public VerticalCameraPanOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 24) : base(actor)
+        public PanCameraOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 24) : base(actor)
         {
             CurrentScroll = 0;
-            this.scrollRange = scrollRange;
+            this.bounds = scrollRange;
             this.scrollIncrement = scrollIncrement;
         }
 
@@ -31,8 +31,8 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
-            CurrentScroll -= scrollDelta * this.scrollIncrement;
-            CurrentScroll = Math.Clamp(CurrentScroll, this.scrollRange.min, this.scrollRange.max);
+            CurrentScroll -= (int) (scrollDelta * this.scrollIncrement * this.actor.scene.camera.Zoom);
+            CurrentScroll = Math.Clamp(CurrentScroll, this.bounds.min, this.bounds.max);
         }
     }
 }

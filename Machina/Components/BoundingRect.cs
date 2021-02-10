@@ -59,6 +59,11 @@ namespace Machina.Components
             }
         }
 
+        public void SetOffsetToTopLeft()
+        {
+            Offset = new Vector2(0, 0);
+        }
+
         public void SetOffsetToCenter()
         {
             Offset = new Vector2(Width / 2, Height / 2);

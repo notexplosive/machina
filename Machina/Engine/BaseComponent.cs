@@ -16,7 +16,7 @@ namespace Machina.Components
     /// </summary>
     public abstract class BaseComponent : NonIteratingCrane
     {
-        protected readonly Actor actor;
+        public readonly Actor actor;
         public BaseComponent(Actor actor)
         {
             this.actor = actor;

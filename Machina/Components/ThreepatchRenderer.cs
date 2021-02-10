@@ -21,15 +21,13 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var destinationRects = this.spriteSheet.GenerateDestinationRects(this.boundingRect.Rect);
-
             if (this.orientation == Orientation.Horizontal)
             {
-                spriteSheet.DrawHorizontalThreepatch(spriteBatch, destinationRects, this.actor.depth);
+                spriteSheet.DrawHorizontalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.depth);
             }
             else
             {
-                spriteSheet.DrawVerticalThreepatch(spriteBatch, destinationRects, this.actor.depth);
+                spriteSheet.DrawVerticalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.depth);
             }
         }
     }

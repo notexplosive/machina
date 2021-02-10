@@ -87,6 +87,11 @@ namespace Machina.Data
             spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
         }
 
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle outerDestinationRect, float layerDepth)
+        {
+            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(outerDestinationRect), layerDepth);
+        }
+
         public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)
         {
             Debug.Assert(this.rects.isValidNinepatch, "Attempted to draw an invalid Ninepatch.");
@@ -97,6 +102,16 @@ namespace Machina.Data
                 var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
                 spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
             }
+        }
+
+        public void DrawHorizontalThreepatch(SpriteBatch spriteBatch, Rectangle outer, float layerDepth)
+        {
+            DrawHorizontalThreepatch(spriteBatch, GenerateDestinationRects(outer), layerDepth);
+        }
+
+        public void DrawVerticalThreepatch(SpriteBatch spriteBatch, Rectangle outer, float layerDepth)
+        {
+            DrawVerticalThreepatch(spriteBatch, GenerateDestinationRects(outer), layerDepth);
         }
 
         public void DrawHorizontalThreepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)

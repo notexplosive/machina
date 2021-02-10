@@ -76,7 +76,7 @@ namespace HelloGame
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor("MicroActor");
-            microActor.Position = new Vector2(100, 100);
+            microActor.Position = new Vector2(100, 500);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
 
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
@@ -84,6 +84,7 @@ namespace HelloGame
             new Canvas(sceneRenderBox);
             new BoundingRectRenderer(sceneRenderBox);
             new SceneRenderer(sceneRenderBox, otherScene);
+            otherScene.camera.Zoom = 1.5f;
 
             sceneRenderBox.parent.Set(linkin);
 
@@ -108,7 +109,12 @@ namespace HelloGame
 
             var miniMouse = otherScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15);
-            new VerticalCameraPanOnScroll(miniMouse, new MinMax<int>(0, 100));
+            var cameraPanner = new PanCameraOnScroll(miniMouse, new MinMax<int>(0, 500));
+
+            var scrollbar = gameScene.AddActor("Scrollbar");
+            new BoundingRect(scrollbar, new Point(20, 20));
+            new ScrollbarRenderer(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), cameraPanner);
+            new BoundingRectRenderer(scrollbar);
         }
 
         protected override void Update(GameTime gameTime)

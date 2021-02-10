@@ -22,8 +22,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var destinationRects = this.spriteSheet.GenerateDestinationRects(this.boundingRect.Rect);
-            spriteSheet.DrawFullNinepatch(spriteBatch, destinationRects, this.actor.depth);
+            spriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.actor.depth);
         }
     }
 }
