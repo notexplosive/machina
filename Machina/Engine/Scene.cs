@@ -38,20 +38,14 @@ namespace Machina.Engine
 
         public override void Update(float dt)
         {
-            foreach (var actor in iterables)
-            {
-                actor.Update(dt);
-            }
+            base.Update(dt);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.TranslationMatrix);
 
-            foreach (var actor in iterables)
-            {
-                actor.Draw(spriteBatch);
-            }
+            base.Draw(spriteBatch);
 
             spriteBatch.End();
         }
@@ -59,12 +53,19 @@ namespace Machina.Engine
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.TranslationMatrix);
 
-            foreach (var actor in iterables)
-            {
-                actor.DebugDraw(spriteBatch);
-            }
+            base.DebugDraw(spriteBatch);
 
             spriteBatch.End();
+        }
+
+        public override void OnMouseButton(MouseButton mouseButton, Point screenPosition, ButtonState buttonState)
+        {
+            base.OnMouseButton(mouseButton, camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), buttonState);
+        }
+
+        public override void OnMouseMove(Point screenPosition, Vector2 positionDelta)
+        {
+            base.OnMouseMove(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), positionDelta);
         }
 
         /// <summary>

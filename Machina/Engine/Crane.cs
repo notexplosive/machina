@@ -63,6 +63,8 @@ namespace Machina.Engine
             {
                 iterable.OnScroll(scrollDelta);
             }
+
+            this.OnMouseMove(Mouse.GetState().Position, new Vector2(0, 0));
         }
 
         public virtual void OnRemove()
