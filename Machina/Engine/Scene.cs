@@ -33,6 +33,8 @@ namespace Machina.Engine
         public void RemoveActor(Actor actor)
         {
             actor.OnRemove();
+
+            // Delete from iterables list
             iterables.Remove(actor);
         }
 

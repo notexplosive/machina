@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -6,10 +7,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Machina.Engine
+namespace Machina.Components
 {
     /// <summary>
-    /// Base class for all components
+    /// Base class for all components. This lives in Machina.Components even though it's in the engine folder
+    /// because it's referenced by more Components than it is Engine things. It lives in the Engine folder to
+    /// make it clear this is not a normal component.
     /// </summary>
     public abstract class BaseComponent : NonIteratingCrane
     {
@@ -21,6 +24,9 @@ namespace Machina.Engine
             this.actor.AddComponent(this);
         }
 
+        /// <summary>
+        /// Called when an actor is Destroyed
+        /// </summary>
         public virtual void OnActorDestroy()
         {
         }

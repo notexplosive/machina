@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Machina.Components;
 
 namespace Machina.Engine
 {
@@ -152,14 +153,6 @@ namespace Machina.Engine
             this.scene.RemoveActor(this);
         }
 
-        public override void OnRemove()
-        {
-            foreach (var component in this.iterables)
-            {
-                component.OnRemove();
-            }
-        }
-
         /// <summary>
         /// SHOULD NOT BE CALLED DIRECTLY UNLESS YOU'RE IN A UNIT TEST
         /// If you want to add a component call `new YourComponentName(actor);`
@@ -184,8 +177,7 @@ namespace Machina.Engine
         {
             foreach (var component in this.iterables)
             {
-                T converted = component as T;
-                if (converted != null)
+                if (component is T converted)
                 {
                     return converted;
                 }
