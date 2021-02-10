@@ -1,6 +1,7 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace Machina.Components
         private readonly BoundingRect containerBoundingRect;
         private readonly PanCameraOnScroll cameraPanner;
         private readonly Camera targetCamera;
+        private bool isGrabbed;
+        private int mouseYOnGrab;
+        private float scrollPercentOnGrab;
 
         public Scrollbar(Actor actor, BoundingRect containerBoundingRect, PanCameraOnScroll cameraPanner) : base(actor)
         {
@@ -32,20 +36,42 @@ namespace Machina.Components
             this.actor.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
         }
 
+        private float TotalWorldDistance => this.cameraPanner.bounds.max - this.cameraPanner.bounds.min;
+        private float TotalScrollbarDistance => this.containerBoundingRect.Height * this.targetCamera.Zoom;
+        private float OnScreenPercent => TotalScrollbarDistance / TotalWorldDistance;
+        private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            float scrollPercent = this.targetCamera.Position.Y / this.cameraPanner.bounds.max;
-            float viewBounds = this.containerBoundingRect.Height * this.targetCamera.Zoom;
-            float fullBounds = this.cameraPanner.bounds.max - this.cameraPanner.bounds.min;
-            float percentThatRepresentsAreaOnScreen = viewBounds / fullBounds;
+            float scrollPercent = this.cameraPanner.CurrentScrollPercent;
+            int thumbYPosition = (int) ((this.containerBoundingRect.Height - ThumbHeight) * scrollPercent);
 
-            int thumbHeight = (int) (this.containerBoundingRect.Height * percentThatRepresentsAreaOnScreen);
-            int thumbYPosition = (int) ((this.containerBoundingRect.Height - thumbHeight) * scrollPercent);
-
-            spriteBatch.DrawRectangle(new Rectangle(
+            spriteBatch.FillRectangle(new Rectangle(
                 this.myBoundingRect.Rect.Location + new Point(0, thumbYPosition),
-                new Point(this.myBoundingRect.Width, thumbHeight)),
-                Color.Orange, 1, this.actor.depth);
+                new Point(this.myBoundingRect.Width, ThumbHeight)),
+                Color.Orange, this.actor.depth);
+        }
+
+        public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
+        {
+            if (button == MouseButton.Left)
+            {
+                this.isGrabbed = buttonState == ButtonState.Pressed;
+                this.mouseYOnGrab = currentPosition.Y;
+                this.scrollPercentOnGrab = this.cameraPanner.CurrentScrollPercent;
+            }
+        }
+
+        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        {
+            var totalDelta = currentPosition.Y - this.mouseYOnGrab;
+            var totalScrollDeltaPercent = (float) totalDelta / (this.containerBoundingRect.Height - ThumbHeight);
+
+            if (this.isGrabbed)
+            {
+                this.cameraPanner.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
+            }
+
         }
     }
 }

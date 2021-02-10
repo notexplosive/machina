@@ -52,11 +52,19 @@ namespace Machina.Engine
             }
         }
 
+        /// <summary>
+        /// The rotation and scale transforms applied to the camera
+        /// </summary>
         public Matrix TransformMatrix =>
             Matrix.CreateRotationZ(Rotation)
             * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
             ;
 
+        /// <summary>
+        /// All transforms needed to convert from World to Screen,
+        /// although you should probably use WorldToScreen or ScreenToWorld if
+        /// that's all you're looking for.
+        /// </summary>
         public Matrix TranslationMatrix =>
             Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))

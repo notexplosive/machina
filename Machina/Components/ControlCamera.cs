@@ -55,7 +55,7 @@ namespace Machina.Components
 
             if (this.isRotating)
             {
-                this.actor.scene.camera.Rotation += (float) rawDelta.X / 100;
+                this.actor.scene.camera.Rotation += rawDelta.X / 100;
             }
         }
     }

@@ -49,6 +49,7 @@ namespace Machina.Components
         public override void OnScroll(int scrollDelta)
         {
             this.targetScene.OnScroll(scrollDelta);
+            this.targetScene.OnMouseMove(GetTransformedMousePosition(Mouse.GetState().Position), Vector2.Zero, Vector2.Zero);
         }
 
         public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)

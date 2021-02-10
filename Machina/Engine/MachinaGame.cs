@@ -139,7 +139,11 @@ namespace Machina.Engine
 
             foreach (Scene scene in sceneLayers)
             {
-                scene.OnScroll(delta);
+                if (delta != 0)
+                {
+                    scene.OnScroll(delta);
+                }
+
                 if (mouseTracker.PositionDelta.LengthSquared() > 0)
                 {
                     // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
