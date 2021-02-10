@@ -52,22 +52,17 @@ namespace Machina.Engine
             }
         }
 
-        public Matrix TranslationMatrix
-        {
-            get
-            {
-                return
-                    Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+        public Matrix TransformMatrix =>
+            Matrix.CreateRotationZ(Rotation)
+            * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
+            ;
 
-                    // Zoom, and rotate
-                    * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
-                    * Matrix.CreateRotationZ(Rotation)
-                    * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
-                    * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
-                    //
-                    ;
-            }
-        }
+        public Matrix TranslationMatrix =>
+            Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+            * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
+            * TransformMatrix
+            * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
+            ;
 
         public float Scale => Zoom * NativeScaleFactor;
 

@@ -65,9 +65,9 @@ namespace Machina.Engine
             base.OnMouseButton(mouseButton, camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), buttonState);
         }
 
-        public override void OnMouseMove(Point screenPosition, Vector2 positionDelta)
+        public override void OnMouseMove(Point screenPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            base.OnMouseMove(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), positionDelta);
+            base.OnMouseMove(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), Vector2.Transform(positionDelta, Matrix.Invert(camera.TransformMatrix)), rawDelta);
         }
 
         /// <summary>

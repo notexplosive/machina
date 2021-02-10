@@ -42,22 +42,23 @@ namespace Machina.Engine
         /// Called when user presses or releases a key
         /// </summary>
         /// <param name="key">Key pressed or released</param>
-        /// <param name="buttonState">Enum for if the button was pressed or released</param>
+        /// <param name="state">Enum for if the button was pressed or released</param>
         /// <param name="modifiers">Modifiers that are currently pressed (ctrl, alt, shift)</param>
-        public void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers);
+        public void OnKey(Keys key, ButtonState state, ModifierKeys modifiers);
         /// <summary>
         /// Called every time mouse moves.
         /// </summary>
-        /// <param name="currentPosition"></param>
-        /// <param name="positionDelta"></param>
-        public void OnMouseMove(Point currentPosition, Vector2 positionDelta);
+        /// <param name="currentPosition">Mouse position transformed into your context</param>
+        /// <param name="transformedPositionDelta">Mouse movement transformed to your context</param>
+        /// <param name="rawDelta">Mouse movement delta as a raw value</param>
+        public void OnMouseMove(Point currentPosition, Vector2 transformedPositionDelta, Vector2 rawDelta);
         /// <summary>
         /// Called when user presses or releases the mouse
         /// </summary>
-        /// <param name="mouseButton">Mouse button pressed or released</param>
-        /// <param name="currentPosition"></param>
-        /// <param name="buttonState"></param>
-        public void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState);
+        /// <param name="button">Mouse button pressed or released</param>
+        /// <param name="currentPosition">Mouse position transformed to your context</param>
+        /// <param name="state">Button state reflecting if the mouse was pressed or released</param>
+        public void OnMouseButton(MouseButton button, Point currentPosition, ButtonState state);
     }
 
     public abstract class Crane<T> : ICrane where T : ICrane
@@ -104,7 +105,7 @@ namespace Machina.Engine
                 iterable.OnScroll(scrollDelta);
             }
 
-            this.OnMouseMove(Mouse.GetState().Position, Vector2.Zero);
+            this.OnMouseMove(Mouse.GetState().Position, Vector2.Zero, Vector2.Zero);
         }
 
         public virtual void OnRemove()
@@ -122,11 +123,11 @@ namespace Machina.Engine
                 iterable.OnKey(key, buttonState, modifiers);
             }
         }
-        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             foreach (var iterable in iterables)
             {
-                iterable.OnMouseMove(currentPosition, positionDelta);
+                iterable.OnMouseMove(currentPosition, positionDelta, rawDelta);
             }
         }
         public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
@@ -156,7 +157,7 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        public virtual void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
         }
 

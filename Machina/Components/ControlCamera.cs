@@ -46,16 +46,16 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             if (this.isPanning)
             {
-                this.actor.scene.camera.Position += positionDelta / this.actor.scene.camera.Scale;
+                this.actor.scene.camera.Position += positionDelta;
             }
 
             if (this.isRotating)
             {
-                this.actor.scene.camera.Rotation += (float) positionDelta.X / 100;
+                this.actor.scene.camera.Rotation += (float) rawDelta.X / 100;
             }
         }
     }

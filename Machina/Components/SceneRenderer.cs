@@ -36,9 +36,9 @@ namespace Machina.Components
         }
 
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta)
+        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            this.targetScene.OnMouseMove(GetTransformedMousePosition(currentPosition), positionDelta);
+            this.targetScene.OnMouseMove(GetTransformedMousePosition(currentPosition), positionDelta, rawDelta);
         }
 
         public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)

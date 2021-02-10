@@ -142,7 +142,8 @@ namespace Machina.Engine
                 scene.OnScroll(delta);
                 if (mouseTracker.PositionDelta.LengthSquared() > 0)
                 {
-                    scene.OnMouseMove(mouseTracker.CurrentPosition, mouseTracker.PositionDelta);
+                    // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
+                    scene.OnMouseMove(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
                 }
 
                 foreach (var key in keyTracker.Released)
