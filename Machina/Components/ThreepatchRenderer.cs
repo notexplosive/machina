@@ -21,9 +21,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var outerDestinationRect = this.boundingRect.Rect;
-            var innerDestinationRect = this.GenerateInnerDestinationRect(outerDestinationRect);
-            var destinationRects = new NinepatchRects(outerDestinationRect, innerDestinationRect);
+            var destinationRects = this.spriteSheet.GenerateDestinationRects(this.boundingRect.Rect);
 
             if (this.orientation == Orientation.Horizontal)
             {

@@ -39,6 +39,21 @@ namespace Machina.Data
             }
         }
 
+        private Rectangle GenerateInnerDestinationRect(Rectangle outerDestinationRect)
+        {
+            return new Rectangle(
+                outerDestinationRect.Left + this.rects.LeftBuffer,
+                outerDestinationRect.Top + this.rects.TopBuffer,
+                outerDestinationRect.Width - this.rects.LeftBuffer - this.rects.RightBuffer,
+                outerDestinationRect.Height - this.rects.TopBuffer - this.rects.BottomBuffer);
+        }
+
+        public NinepatchRects GenerateDestinationRects(Rectangle outer)
+        {
+            var inner = GenerateInnerDestinationRect(outer);
+            return new NinepatchRects(outer, inner);
+        }
+
         public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
             : this(MachinaGame.Assets.GetTexture(textureAssetName), outerRect, innerRect)
         {

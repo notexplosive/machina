@@ -22,20 +22,8 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var outerDestinationRect = this.boundingRect.Rect;
-            var innerDestinationRect = this.GenerateInnerDestinationRect(outerDestinationRect);
-            var destinationRects = new NinepatchRects(outerDestinationRect, innerDestinationRect);
-
+            var destinationRects = this.spriteSheet.GenerateDestinationRects(this.boundingRect.Rect);
             spriteSheet.DrawFullNinepatch(spriteBatch, destinationRects, this.actor.depth);
-        }
-
-        protected Rectangle GenerateInnerDestinationRect(Rectangle outerDestinationRect)
-        {
-            return new Rectangle(
-                outerDestinationRect.Left + this.spriteSheet.rects.LeftBuffer,
-                outerDestinationRect.Top + this.spriteSheet.rects.TopBuffer,
-                outerDestinationRect.Width - this.spriteSheet.rects.LeftBuffer - this.spriteSheet.rects.RightBuffer,
-                outerDestinationRect.Height - this.spriteSheet.rects.TopBuffer - this.spriteSheet.rects.BottomBuffer);
         }
     }
 }
