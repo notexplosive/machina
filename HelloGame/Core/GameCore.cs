@@ -102,6 +102,12 @@ namespace HelloGame
             pillar.Position = new Vector2(300, 350);
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
+
+            var mouse = gameScene.AddActor("gameCursor");
+            new MouseCircle(mouse, 10);
+
+            var miniMouse = otherScene.AddActor("miniCursor");
+            new MouseCircle(miniMouse, 15);
         }
 
         protected override void Update(GameTime gameTime)

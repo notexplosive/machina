@@ -195,7 +195,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (DebugLevel >= DebugLevel.Passive)
+            if (DebugLevel > DebugLevel.Passive)
             {
                 foreach (var scene in sceneLayers)
                 {

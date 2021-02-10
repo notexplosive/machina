@@ -18,6 +18,14 @@ namespace Machina.Components
         private RenderTarget2D renderTarget;
         Color backgroundColor = Color.Orange;
 
+        /// <summary>
+        /// Top left corner of the Canvas, assuming no rotation
+        /// </summary>
+        public Point TopLeftCorner
+        {
+            get => this.boundingRect.Rect.Location;
+        }
+
         public Canvas(Actor actor) : base(actor)
         {
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
