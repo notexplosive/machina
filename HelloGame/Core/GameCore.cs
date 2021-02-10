@@ -113,7 +113,7 @@ namespace HelloGame
 
             var scrollbar = gameScene.AddActor("Scrollbar");
             new BoundingRect(scrollbar, new Point(20, 20));
-            new ScrollbarRenderer(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), cameraPanner);
+            new Scrollbar(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), cameraPanner);
             new BoundingRectRenderer(scrollbar);
         }
 

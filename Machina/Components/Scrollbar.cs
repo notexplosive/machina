@@ -8,14 +8,14 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class ScrollbarRenderer : BaseComponent
+    class Scrollbar : BaseComponent
     {
         private readonly BoundingRect myBoundingRect;
         private readonly BoundingRect containerBoundingRect;
         private readonly PanCameraOnScroll cameraPanner;
         private readonly Camera targetCamera;
 
-        public ScrollbarRenderer(Actor actor, BoundingRect containerBoundingRect, PanCameraOnScroll cameraPanner) : base(actor)
+        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, PanCameraOnScroll cameraPanner) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.containerBoundingRect = containerBoundingRect;
