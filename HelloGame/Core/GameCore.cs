@@ -108,6 +108,7 @@ namespace HelloGame
 
             var miniMouse = otherScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15);
+            new VerticalCameraPanOnScroll(miniMouse, new MinMax<int>(0, 100));
         }
 
         protected override void Update(GameTime gameTime)

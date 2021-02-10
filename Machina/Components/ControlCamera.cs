@@ -11,6 +11,7 @@ namespace Machina.Components
     {
         private bool isPanning;
         private bool isRotating;
+        private bool controlIsPressed;
 
         public ControlCamera(Actor actor) : base(actor)
         {
@@ -18,7 +19,18 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
-            this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
+            if (this.controlIsPressed)
+            {
+                this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
+            }
+        }
+
+        public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
+        {
+            if (key == Keys.LeftControl)
+            {
+                this.controlIsPressed = buttonState == ButtonState.Pressed;
+            }
         }
 
         public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)

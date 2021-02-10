@@ -10,6 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\MouseCircle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\VerticalCameraPanOnScroll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\MinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenAccessors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenDataFunctions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\Children.cs" />
