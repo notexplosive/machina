@@ -97,9 +97,10 @@ namespace Machina.Engine
         /// </summary>
         public Matrix GameCanvasScaleFactorMatrix =>
 
-            Matrix.Invert(Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0)))
-            * Matrix.Invert(Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1))
-            * Matrix.Invert(TranslationMatrix)
+            Matrix.Invert(
+                 TranslationMatrix
+                * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
+                * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0)))
             ;
 
         public void AdjustZoom(float amount)
