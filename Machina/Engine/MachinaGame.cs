@@ -139,19 +139,16 @@ namespace Machina.Engine
             // Input Processing
             var delta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
-            mouseTracker.Calculate();
+            mouseTracker.Calculate(gameCanvas.CanvasRect.Location, gameCanvas.ScaleFactor);
 
             foreach (Scene scene in sceneLayers)
             {
+                // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
+                scene.OnMouseUpdate(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
+
                 if (delta != 0)
                 {
                     scene.OnScroll(delta);
-                }
-
-                if (mouseTracker.PositionDelta.LengthSquared() > 0)
-                {
-                    // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                    scene.OnMouseMove(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
                 }
 
                 foreach (var key in keyTracker.Released)

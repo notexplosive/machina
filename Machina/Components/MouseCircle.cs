@@ -27,7 +27,7 @@ namespace Machina.Components
             spriteBatch.DrawCircle(new CircleF(this.actor.Position, this.radius), 20, new Color(1, 0, 0, 1f), 1, this.actor.depth - 000000.1f);
         }
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             this.actor.Position = currentPosition.ToVector2();
         }

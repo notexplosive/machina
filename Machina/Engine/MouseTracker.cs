@@ -37,7 +37,7 @@ namespace Machina.Engine
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public void Calculate()
+        public void Calculate(Point screenTopLeftCorner, float screenScaleFactor = 1f)
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,
@@ -45,6 +45,7 @@ namespace Machina.Engine
                 this.oldState.RightButton,
             };
 
+            // This is the one place where it's OK to use Mouse.GetState(), should be avoided everywhere else
             var mouseState = Mouse.GetState();
             var currentButtons = new ButtonState[3] {
                 mouseState.LeftButton,
@@ -73,7 +74,7 @@ namespace Machina.Engine
 
             Released = releasedThisFrame;
             Pressed = pressedThisFrame;
-            CurrentPosition = mouseState.Position;
+            CurrentPosition = ((mouseState.Position.ToVector2() - screenTopLeftCorner.ToVector2()) / screenScaleFactor).ToPoint();
 
             if (!this.firstFrame)
             {

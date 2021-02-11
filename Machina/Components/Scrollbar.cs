@@ -62,7 +62,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             var totalDelta = currentPosition.Y - this.mouseYOnGrab;
             var totalScrollDeltaPercent = (float) totalDelta / (this.containerBoundingRect.Height - ThumbHeight);

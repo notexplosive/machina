@@ -37,9 +37,9 @@ namespace Machina.Components
         }
 
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            this.targetScene.OnMouseMove(GetTransformedMousePosition(currentPosition), positionDelta, rawDelta);
+            this.targetScene.OnMouseUpdate(GetTransformedMousePosition(currentPosition), positionDelta, rawDelta);
         }
 
         public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
@@ -50,7 +50,7 @@ namespace Machina.Components
         public override void OnScroll(int scrollDelta)
         {
             this.targetScene.OnScroll(scrollDelta);
-            this.targetScene.OnMouseMove(GetTransformedMousePosition(Mouse.GetState().Position), Vector2.Zero, Vector2.Zero);
+            // this.targetScene.OnMouseMove(GetTransformedMousePosition(this.cachedMousePosition), Vector2.Zero, Vector2.Zero);
         }
 
         public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)

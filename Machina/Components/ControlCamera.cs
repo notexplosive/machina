@@ -46,7 +46,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseMove(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             if (this.isPanning)
             {

@@ -24,6 +24,15 @@ namespace Machina.Engine
             this.resizeBehavior = resizeBehavior;
         }
 
+        public Rectangle CanvasRect
+        {
+            get
+            {
+                var canvasRect = CanvasSize;
+                return new Rectangle((WindowSize.X - canvasRect.X) / 2, (WindowSize.Y - canvasRect.Y) / 2, canvasRect.X, canvasRect.Y);
+            }
+        }
+
         public float ScaleFactor
         {
             get
@@ -103,10 +112,8 @@ namespace Machina.Engine
                 graphicsDevice.SetRenderTarget(null);
 
                 spriteBatch.Begin();
-
-                var canvasSize = CanvasSize;
                 spriteBatch.Draw(screenRenderTarget,
-                    new Rectangle((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y),
+                    CanvasRect,
                     null, Color.White);
 
                 spriteBatch.End();
