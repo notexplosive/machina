@@ -60,13 +60,13 @@ namespace Machina.Engine
         /// </summary>
         public Matrix MouseDeltaMatrix =>
             Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
-            * TransformMatrix
+            * RotationAndZoomMatrix
             ;
 
         /// <summary>
         /// The rotation and scale transforms applied to the camera
         /// </summary>
-        public Matrix TransformMatrix =>
+        public Matrix RotationAndZoomMatrix =>
             Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
             * Matrix.CreateRotationZ(Rotation)
             ;
@@ -75,12 +75,11 @@ namespace Machina.Engine
         /// This is the matrix passed to SpriteBatch to render the scene, if you're using a GameCanvas
         /// this isn't quite enough.
         /// </summary>
-        public Matrix TranslationMatrix =>
+        public Matrix GraphicsTransformMatrix =>
             Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
-            * TransformMatrix
+            * RotationAndZoomMatrix
             * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
-
             ;
 
         public float NativeScaleFactor
@@ -91,8 +90,8 @@ namespace Machina.Engine
         /// <summary>
         /// All of the transforms needed to convert screen to world and world to screen.
         /// </summary>
-        public Matrix GameCanvasScaleFactorMatrix =>
-                 TranslationMatrix
+        public Matrix GameCanvasMatrix =>
+                 GraphicsTransformMatrix
                 * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
                 * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0))
             ;
@@ -106,18 +105,28 @@ namespace Machina.Engine
             }
         }
 
+        /// <summary>
+        /// CAUTION: You'll almost definitely not want to use this, the SpriteBatch is already doing this transform for you
+        /// </summary>
+        /// <param name="worldPosition"></param>
+        /// <returns></returns>
         public Vector2 WorldToScreen(Vector2 worldPosition)
         {
             return Vector2.Transform(worldPosition,
-                    GameCanvasScaleFactorMatrix
+                    GameCanvasMatrix
                     );
         }
 
+        /// <summary>
+        /// Used to translate screen-based concepts (like mouse position) to the world
+        /// </summary>
+        /// <param name="screenPosition"></param>
+        /// <returns></returns>
         public Vector2 ScreenToWorld(Vector2 screenPosition)
         {
             return Vector2.Transform(screenPosition,
                 Matrix.Invert(
-                    GameCanvasScaleFactorMatrix
+                    GameCanvasMatrix
                     ));
         }
     }
