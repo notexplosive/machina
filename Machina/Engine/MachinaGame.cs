@@ -21,7 +21,6 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         private readonly Point startingWindowSize;
-
         protected readonly SceneLayers sceneLayers;
         protected SpriteBatch spriteBatch;
         public readonly GameCanvas gameCanvas;
@@ -124,28 +123,13 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            var scenes = sceneLayers.AllScenes();
-            foreach (var scene in scenes)
-            {
-                scene.PreDraw(spriteBatch);
-            }
+            sceneLayers.PreDraw(spriteBatch);
 
             gameCanvas.PrepareCanvas(GraphicsDevice);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (var scene in scenes)
-            {
-                scene.Draw(spriteBatch);
-            }
-
-            if (DebugLevel > DebugLevel.Passive)
-            {
-                foreach (var scene in scenes)
-                {
-                    scene.DebugDraw(spriteBatch);
-                }
-            }
+            sceneLayers.Draw(spriteBatch);
 
             gameCanvas.DrawCanvas(GraphicsDevice, spriteBatch);
 

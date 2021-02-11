@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace Machina.Engine
             return array;
         }
 
-        internal void Update(float dt, Point canvasTopLeft, float canvasScaleFactor)
+        public void Update(float dt, Point canvasTopLeft, float canvasScaleFactor)
         {
             var scenes = AllScenes();
 
@@ -89,6 +90,33 @@ namespace Machina.Engine
                 {
                     candidate.approvalCallback?.Invoke(willApproveCandidate);
                     willApproveCandidate = false;
+                }
+            }
+        }
+
+        public void PreDraw(SpriteBatch spriteBatch)
+        {
+            var scenes = AllScenes();
+            foreach (var scene in scenes)
+            {
+                scene.PreDraw(spriteBatch);
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            var scenes = AllScenes();
+
+            foreach (var scene in scenes)
+            {
+                scene.Draw(spriteBatch);
+            }
+
+            if (MachinaGame.DebugLevel > DebugLevel.Passive)
+            {
+                foreach (var scene in scenes)
+                {
+                    scene.DebugDraw(spriteBatch);
                 }
             }
         }
