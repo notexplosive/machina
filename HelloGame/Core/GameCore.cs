@@ -11,7 +11,8 @@ namespace HelloGame
 {
     public class GameCore : MachinaGame
     {
-        Scene gameScene;
+        private Scene gameScene;
+        private Scene uiScene;
 
         public GameCore() : base(new Point(1600, 900), ResizeBehavior.MaintainDesiredResolution)
         {
@@ -27,6 +28,9 @@ namespace HelloGame
         {
             gameScene = new Scene(this.gameCanvas);
             scenes.Add(gameScene);
+
+            uiScene = new Scene(this.gameCanvas);
+            scenes.Add(uiScene);
 
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
@@ -55,9 +59,12 @@ namespace HelloGame
 
             var ballActor = gameScene.AddActor("Ball", new Vector2(Graphics.PreferredBackBufferWidth / 2, Graphics.PreferredBackBufferHeight / 2));
             new TextureRenderer(ballActor, Assets.GetTexture("ball"));
-            new SpriteRenderer(ballActor, linkinSpriteSheet);
+            new BoundingRect(ballActor, Point.Zero);
+            new SpriteRenderer(ballActor, linkinSpriteSheet).SetupBoundingRect();
             new KeyboardMovement(ballActor);
-            new TextRenderer(ballActor, defaultFont, "Hello world and this is a very long string");
+            new Hoverable(ballActor);
+            new HoverableRenderer(ballActor);
+            ballActor.depth = 0.2f;
 
             Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
@@ -77,7 +84,10 @@ namespace HelloGame
             var otherScene = new Scene();
             var microActor = otherScene.AddActor("MicroActor");
             microActor.Position = new Vector2(100, 500);
-            new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim);
+            new BoundingRect(microActor, Point.Zero);
+            new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
+            new Hoverable(microActor);
+            new HoverableRenderer(microActor);
 
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 150));
@@ -93,16 +103,22 @@ namespace HelloGame
             var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
             new BoundingRect(ninepatchActor, new Point(400, 300));
             new NinepatchRenderer(ninepatchActor, testNinepatch);
+            new Hoverable(ninepatchActor);
+            new HoverableRenderer(ninepatchActor);
 
             var progressBar = gameScene.AddActor("ProgressBar");
             progressBar.Position = new Vector2(500, 50);
             new BoundingRect(progressBar, new Point(500, 24));
             new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
-            var pillar = gameScene.AddActor("Pillar");
+            var pillar = uiScene.AddActor("Pillar");
             pillar.Position = new Vector2(300, 350);
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
+            new Hoverable(pillar);
+            new HoverableRenderer(pillar);
+            new TextRenderer(pillar, consoleFont, "Hello from the UI Scene!");
+            pillar.depth = 1f;
 
             var mouse = gameScene.AddActor("gameCursor");
             new MouseCircle(mouse, 10);

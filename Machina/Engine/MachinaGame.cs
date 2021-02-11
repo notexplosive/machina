@@ -128,11 +128,15 @@ namespace Machina.Engine
             var sceneLayers = SceneLayers;
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
+            // Update happens BEFORE input processing, this way we can set initial state for input processing during Update()
+            // and then modify that state in input processing.
             foreach (Scene scene in sceneLayers)
             {
                 scene.Update(dt);
             }
 
+
+            // Input Processing
             var delta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
             mouseTracker.Calculate();
@@ -168,6 +172,19 @@ namespace Machina.Engine
                 foreach (var key in keyTracker.Pressed)
                 {
                     scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
+                }
+            }
+
+            var willApproveCandidate = true;
+            // Traverse scenes in draw order (top to bottom)
+            for (int i = sceneLayers.Length - 1; i >= 0; i--)
+            {
+                var scene = sceneLayers[i];
+                var candidate = scene.hitTester.Candidate;
+                if (!candidate.IsEmpty())
+                {
+                    candidate.approvalCallback?.Invoke(willApproveCandidate);
+                    willApproveCandidate = false;
                 }
             }
 

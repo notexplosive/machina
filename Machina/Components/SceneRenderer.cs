@@ -33,6 +33,7 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.targetScene.Update(dt);
+            this.targetScene.hitTester.Candidate.approvalCallback?.Invoke(true);
         }
 
 

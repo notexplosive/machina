@@ -33,7 +33,7 @@ namespace Machina.Components
             color = Color.White;
         }
 
-        public void SetupBoundingRect()
+        public SpriteRenderer SetupBoundingRect()
         {
             var boundingRect = this.actor.GetComponent<BoundingRect>();
             var gridBasedSpriteSheet = this.spriteSheet as GridBasedSpriteSheet;
@@ -49,6 +49,8 @@ namespace Machina.Components
             boundingRect.Height = (int) (gridBasedSpriteSheet.frameSize.Y * this.scale);
 
             boundingRect.SetOffsetToCenter();
+
+            return this;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -69,13 +71,15 @@ namespace Machina.Components
             }
         }
 
-        public void SetAnimation(IFrameAnimation animation)
+        public SpriteRenderer SetAnimation(IFrameAnimation animation)
         {
             if (!this.currentAnimation.Equals(animation))
             {
                 this.elapsedTime = 0;
                 this.currentAnimation = animation;
             }
+
+            return this;
         }
 
         private void IncrementTime(float dt)

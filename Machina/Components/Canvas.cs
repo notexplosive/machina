@@ -16,7 +16,7 @@ namespace Machina.Components
         public Action<SpriteBatch> DrawAdditionalContent;
         private BoundingRect boundingRect;
         private RenderTarget2D renderTarget;
-        Color backgroundColor = Color.Orange;
+        Color backgroundColor = Color.Black;
 
         /// <summary>
         /// Top left corner of the Canvas, assuming no rotation

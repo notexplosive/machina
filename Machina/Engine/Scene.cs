@@ -10,11 +10,13 @@ namespace Machina.Engine
     public class Scene : Crane<Actor>
     {
         public readonly Camera camera;
+        public readonly HitTester hitTester;
 
         public Scene(GameCanvas resizer = null)
         {
             this.iterables = new List<Actor>();
             this.camera = new Camera(resizer);
+            this.hitTester = new HitTester();
         }
 
         public Actor AddActor(string name, Vector2 position = new Vector2())
@@ -40,6 +42,7 @@ namespace Machina.Engine
 
         public override void Update(float dt)
         {
+            this.hitTester.Clear();
             base.Update(dt);
         }
 
