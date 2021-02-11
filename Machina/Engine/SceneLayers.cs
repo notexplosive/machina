@@ -33,7 +33,7 @@ namespace Machina.Engine
             return array;
         }
 
-        public void Update(float dt, Point canvasTopLeft, float canvasScaleFactor)
+        public void Update(float dt)
         {
             var scenes = AllScenes();
 
@@ -47,7 +47,7 @@ namespace Machina.Engine
             // Input Processing
             var delta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
-            mouseTracker.Calculate(canvasTopLeft, canvasScaleFactor);
+            mouseTracker.Calculate();
 
             foreach (Scene scene in scenes)
             {
@@ -61,14 +61,14 @@ namespace Machina.Engine
                     scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
                 }
 
-                foreach (var mouseButton in mouseTracker.Pressed)
+                foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
                 {
-                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Pressed);
+                    scene.OnMouseButton(mouseButton, mouseTracker.RawWindowPosition, ButtonState.Pressed);
                 }
 
-                foreach (var mouseButton in mouseTracker.Released)
+                foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
                 {
-                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Released);
+                    scene.OnMouseButton(mouseButton, mouseTracker.RawWindowPosition, ButtonState.Released);
                 }
 
                 foreach (var key in keyTracker.Pressed)
@@ -77,7 +77,7 @@ namespace Machina.Engine
                 }
 
                 // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                scene.OnMouseUpdate(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
+                scene.OnMouseUpdate(mouseTracker.RawWindowPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
             }
 
             var willApproveCandidate = true;

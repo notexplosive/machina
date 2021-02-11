@@ -103,7 +103,7 @@ namespace Machina.Engine
         {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            sceneLayers.Update(dt, gameCanvas.CanvasRect.Location, gameCanvas.ScaleFactor);
+            sceneLayers.Update(dt);
 
             if (gameCanvas.PendingResize)
             {

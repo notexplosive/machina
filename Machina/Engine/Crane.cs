@@ -135,6 +135,11 @@ namespace Machina.Engine
                 iterable.OnMouseButton(mouseButton, currentPosition, buttonState);
             }
         }
+
+        internal void OnMouseUpdate(object p, Vector2 vector2, Vector2 rawDelta)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public abstract class NonIteratingCrane : ICrane

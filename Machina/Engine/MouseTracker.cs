@@ -15,12 +15,12 @@ namespace Machina.Engine
 
     class MouseTracker
     {
-        public List<MouseButton> Released
+        public List<MouseButton> ButtonsReleasedThisFrame
         {
             get;
             private set;
         }
-        public List<MouseButton> Pressed
+        public List<MouseButton> ButtonsPressedThisFrame
         {
             get;
             private set;
@@ -30,14 +30,14 @@ namespace Machina.Engine
         {
             get; private set;
         }
-        public Point CurrentPosition
+        public Point RawWindowPosition
         {
             get; private set;
         }
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public void Calculate(Point screenTopLeftCorner, float screenScaleFactor = 1f)
+        public void Calculate()
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,
@@ -72,9 +72,9 @@ namespace Machina.Engine
                 }
             }
 
-            Released = releasedThisFrame;
-            Pressed = pressedThisFrame;
-            CurrentPosition = ((mouseState.Position.ToVector2() - screenTopLeftCorner.ToVector2()) / screenScaleFactor).ToPoint();
+            ButtonsReleasedThisFrame = releasedThisFrame;
+            ButtonsPressedThisFrame = pressedThisFrame;
+            RawWindowPosition = mouseState.Position;
 
             if (!this.firstFrame)
             {
