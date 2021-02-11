@@ -48,18 +48,15 @@ namespace Machina.Engine
         {
             Current = this;
             this.logger = new StdOutConsoleLogger();
+            this.startingWindowSize = startingResolution;
+            this.sceneLayers = new SceneLayers(new Scene());
+
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
-
             Graphics = new GraphicsDeviceManager(this);
             gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
-
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
-
-            this.startingWindowSize = startingResolution;
-
-            this.sceneLayers = new SceneLayers(new Scene());
         }
 
         protected override void Initialize()
@@ -68,7 +65,6 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferHeight = startingWindowSize.Y;
             Graphics.ApplyChanges();
             gameCanvas.OnResize(startingWindowSize.X, startingWindowSize.Y);
-
             gameCanvas.BuildCanvas(GraphicsDevice);
 
             base.Initialize();
@@ -114,7 +110,6 @@ namespace Machina.Engine
                 Graphics.PreferredBackBufferWidth = gameCanvas.WindowSize.X;
                 Graphics.PreferredBackBufferHeight = gameCanvas.WindowSize.Y;
                 Graphics.ApplyChanges();
-
                 gameCanvas.FinishResize();
             }
 
@@ -124,15 +119,10 @@ namespace Machina.Engine
         protected override void Draw(GameTime gameTime)
         {
             sceneLayers.PreDraw(spriteBatch);
-
             gameCanvas.PrepareCanvas(GraphicsDevice);
-
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.CornflowerBlue); // Draw main background color
             sceneLayers.Draw(spriteBatch);
-
             gameCanvas.DrawCanvas(GraphicsDevice, spriteBatch);
-
             base.Draw(gameTime);
         }
 
