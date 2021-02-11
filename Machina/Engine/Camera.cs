@@ -76,10 +76,6 @@ namespace Machina.Engine
         /// this isn't quite enough.
         /// </summary>
         public Matrix TranslationMatrix =>
-
-            // Matrix.CreateTranslation(new Vector3(CanvasTopLeft.ToVector2(), 0))
-            // * Matrix.CreateScale(NativeScaleFactor)
-
             Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
             * TransformMatrix
@@ -96,11 +92,9 @@ namespace Machina.Engine
         /// All of the transforms needed to convert screen to world and world to screen.
         /// </summary>
         public Matrix GameCanvasScaleFactorMatrix =>
-
-            Matrix.Invert(
                  TranslationMatrix
                 * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
-                * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0)))
+                * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0))
             ;
 
         public void AdjustZoom(float amount)
