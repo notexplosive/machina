@@ -22,9 +22,6 @@ namespace Machina.Engine
     {
         private readonly Point startingWindowSize;
 
-        private readonly ScrollTracker scrollTracker;
-        private readonly KeyTracker keyTracker;
-        private readonly MouseTracker mouseTracker;
         protected readonly SceneLayers sceneLayers;
         protected SpriteBatch spriteBatch;
         public readonly GameCanvas gameCanvas;
@@ -57,10 +54,6 @@ namespace Machina.Engine
 
             Graphics = new GraphicsDeviceManager(this);
             gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
-
-            scrollTracker = new ScrollTracker();
-            keyTracker = new KeyTracker();
-            mouseTracker = new MouseTracker();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
@@ -113,64 +106,9 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
-            var scenes = sceneLayers.AllScenes();
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            // Update happens BEFORE input processing, this way we can set initial state for input processing during Update()
-            // and then modify that state in input processing.
-            foreach (Scene scene in scenes)
-            {
-                scene.Update(dt);
-            }
-
-            // Input Processing
-            var delta = scrollTracker.CalculateDelta();
-            keyTracker.Calculate();
-            mouseTracker.Calculate(gameCanvas.CanvasRect.Location, gameCanvas.ScaleFactor);
-
-            foreach (Scene scene in scenes)
-            {
-                // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                scene.OnMouseUpdate(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
-
-                if (delta != 0)
-                {
-                    scene.OnScroll(delta);
-                }
-
-                foreach (var key in keyTracker.Released)
-                {
-                    scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
-                }
-
-                foreach (var mouseButton in mouseTracker.Pressed)
-                {
-                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Pressed);
-                }
-
-                foreach (var mouseButton in mouseTracker.Released)
-                {
-                    scene.OnMouseButton(mouseButton, mouseTracker.CurrentPosition, ButtonState.Released);
-                }
-
-                foreach (var key in keyTracker.Pressed)
-                {
-                    scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
-                }
-            }
-
-            var willApproveCandidate = true;
-            // Traverse scenes in reverse draw order (top to bottom)
-            for (int i = scenes.Length - 1; i >= 0; i--)
-            {
-                var scene = scenes[i];
-                var candidate = scene.hitTester.Candidate;
-                if (!candidate.IsEmpty())
-                {
-                    candidate.approvalCallback?.Invoke(willApproveCandidate);
-                    willApproveCandidate = false;
-                }
-            }
+            sceneLayers.Update(dt, gameCanvas.CanvasRect.Location, gameCanvas.ScaleFactor);
 
             if (gameCanvas.PendingResize)
             {

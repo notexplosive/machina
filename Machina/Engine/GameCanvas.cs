@@ -37,6 +37,11 @@ namespace Machina.Engine
         {
             get
             {
+                if (this.resizeBehavior == ResizeBehavior.FillContent)
+                {
+                    return 1.0f;
+                }
+
                 var normalizedWidth = (float) WindowSize.X / this.idealSize.X;
                 var normalizedHeight = (float) WindowSize.Y / this.idealSize.Y;
                 return Math.Min(normalizedWidth, normalizedHeight);

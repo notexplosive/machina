@@ -70,7 +70,7 @@ namespace Machina.Engine
 
         public override void OnMouseUpdate(Point screenPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            base.OnMouseUpdate(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), Vector2.Transform(positionDelta, Matrix.Invert(camera.TransformMatrix)), rawDelta);
+            base.OnMouseUpdate(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaHackMatrix)), rawDelta);
         }
 
         /// <summary>
