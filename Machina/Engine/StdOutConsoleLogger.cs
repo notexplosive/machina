@@ -12,7 +12,7 @@ namespace Machina.Engine
     /// <summary>
     /// A logger that just prints to standard out
     /// </summary>
-    class ConsoleLogger : ILogger
+    class StdOutConsoleLogger : ILogger
     {
         public void Log(params object[] objects)
         {

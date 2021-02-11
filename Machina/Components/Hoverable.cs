@@ -39,6 +39,8 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.IsSoftHovered = false;
+            // It kind of sucks that we have to call this in two places to make sure it "works"
+            // Maybe we can remove this if we provide SceneRenderer with a full SceneLayers
             HitTest(this.mousePos);
 
             if (IsHovered && !this.wasHovered)

@@ -32,7 +32,7 @@ namespace Machina.Engine
 
         public static DebugLevel DebugLevel
         {
-            get; private set;
+            get; set;
         }
 
         public static GraphicsDeviceManager Graphics
@@ -61,7 +61,7 @@ namespace Machina.Engine
         public MachinaGame(Point startingResolution, ResizeBehavior resizeBehavior)
         {
             Current = this;
-            this.logger = new ConsoleLogger();
+            this.logger = new StdOutConsoleLogger();
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
 
@@ -101,6 +101,7 @@ namespace Machina.Engine
             var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
             var debugActor = debugScene.AddActor("DebugLogger");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
+            new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
@@ -108,8 +109,6 @@ namespace Machina.Engine
 #else
             this.debugLevel = DebugLevel.Off;
 #endif
-            Print("DebugLevel set to:", DebugLevel);
-
 
             OnGameLoad();
         }

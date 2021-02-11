@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Machina.Engine
@@ -16,6 +17,16 @@ namespace Machina.Engine
             this.control = control;
             this.alt = alt;
             this.shift = shift;
+        }
+
+        public static bool operator ==(ModifierKeys a, ModifierKeys b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ModifierKeys a, ModifierKeys b)
+        {
+            return !a.Equals(b);
         }
 
         public override string ToString()
@@ -34,6 +45,25 @@ namespace Machina.Engine
                 sb.Append('~');
             }
             return sb.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ModifierKeys other)
+            {
+                return this.GetHashCode() == obj.GetHashCode();
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            var shift = this.shift ? 1 << 0 : 0;
+            var ctrl = this.control ? 1 << 1 : 0;
+            var alt = this.alt ? 1 << 2 : 0;
+
+            return ctrl | alt | shift;
         }
     }
 
