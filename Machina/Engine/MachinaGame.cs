@@ -21,13 +21,13 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         private readonly Point startingWindowSize;
+
         private readonly ScrollTracker scrollTracker;
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
+        protected readonly SceneLayers sceneLayers;
         protected SpriteBatch spriteBatch;
-        protected readonly List<Scene> scenes = new List<Scene>();
         public readonly GameCanvas gameCanvas;
-        private Scene debugScene;
         private ILogger logger;
 
         public static DebugLevel DebugLevel
@@ -46,16 +46,6 @@ namespace Machina.Engine
         public static MachinaGame Current
         {
             get; private set;
-        }
-        private Scene[] SceneLayers
-        {
-            get
-            {
-                Scene[] sceneLayers = new Scene[scenes.Count + 1];
-                scenes.CopyTo(sceneLayers);
-                sceneLayers[scenes.Count] = debugScene;
-                return sceneLayers;
-            }
         }
 
         public MachinaGame(Point startingResolution, ResizeBehavior resizeBehavior)
@@ -76,6 +66,8 @@ namespace Machina.Engine
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
             this.startingWindowSize = startingResolution;
+
+            this.sceneLayers = new SceneLayers(new Scene());
         }
 
         protected override void Initialize()
@@ -84,9 +76,6 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferHeight = startingWindowSize.Y;
             Graphics.ApplyChanges();
             gameCanvas.OnResize(startingWindowSize.X, startingWindowSize.Y);
-
-            // debugScene does NOT get added to the `scenes` list because it's always on top
-            debugScene = new Scene();
 
             gameCanvas.BuildCanvas(GraphicsDevice);
 
@@ -99,7 +88,7 @@ namespace Machina.Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
-            var debugActor = debugScene.AddActor("DebugLogger");
+            var debugActor = sceneLayers.debugScene.AddActor("DebugLogger");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
@@ -124,23 +113,22 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
-            var sceneLayers = SceneLayers;
+            var scenes = sceneLayers.AllScenes();
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             // Update happens BEFORE input processing, this way we can set initial state for input processing during Update()
             // and then modify that state in input processing.
-            foreach (Scene scene in sceneLayers)
+            foreach (Scene scene in scenes)
             {
                 scene.Update(dt);
             }
-
 
             // Input Processing
             var delta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
             mouseTracker.Calculate(gameCanvas.CanvasRect.Location, gameCanvas.ScaleFactor);
 
-            foreach (Scene scene in sceneLayers)
+            foreach (Scene scene in scenes)
             {
                 // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
                 scene.OnMouseUpdate(mouseTracker.CurrentPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
@@ -172,10 +160,10 @@ namespace Machina.Engine
             }
 
             var willApproveCandidate = true;
-            // Traverse scenes in draw order (top to bottom)
-            for (int i = sceneLayers.Length - 1; i >= 0; i--)
+            // Traverse scenes in reverse draw order (top to bottom)
+            for (int i = scenes.Length - 1; i >= 0; i--)
             {
-                var scene = sceneLayers[i];
+                var scene = scenes[i];
                 var candidate = scene.hitTester.Candidate;
                 if (!candidate.IsEmpty())
                 {
@@ -198,8 +186,8 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            var sceneLayers = SceneLayers;
-            foreach (var scene in sceneLayers)
+            var scenes = sceneLayers.AllScenes();
+            foreach (var scene in scenes)
             {
                 scene.PreDraw(spriteBatch);
             }
@@ -208,14 +196,14 @@ namespace Machina.Engine
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            foreach (var scene in sceneLayers)
+            foreach (var scene in scenes)
             {
                 scene.Draw(spriteBatch);
             }
 
             if (DebugLevel > DebugLevel.Passive)
             {
-                foreach (var scene in sceneLayers)
+                foreach (var scene in scenes)
                 {
                     scene.DebugDraw(spriteBatch);
                 }
@@ -233,7 +221,7 @@ namespace Machina.Engine
 
         protected override void OnExiting(Object sender, EventArgs args)
         {
-            foreach (var scene in scenes)
+            foreach (var scene in sceneLayers.AllScenes())
             {
                 scene.OnRemove();
             }

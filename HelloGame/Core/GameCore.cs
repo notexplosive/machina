@@ -27,10 +27,10 @@ namespace HelloGame
         protected override void OnGameLoad()
         {
             gameScene = new Scene(this.gameCanvas);
-            scenes.Add(gameScene);
+            sceneLayers.Add(gameScene);
 
             uiScene = new Scene(this.gameCanvas);
-            scenes.Add(uiScene);
+            sceneLayers.Add(uiScene);
 
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
