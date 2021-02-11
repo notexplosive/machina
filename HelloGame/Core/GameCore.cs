@@ -63,7 +63,6 @@ namespace HelloGame
             new SpriteRenderer(ballActor, linkinSpriteSheet).SetupBoundingRect();
             new KeyboardMovement(ballActor);
             new Hoverable(ballActor);
-            new HoverableRenderer(ballActor);
             ballActor.depth = 0.2f;
 
             Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
@@ -87,7 +86,6 @@ namespace HelloGame
             new BoundingRect(microActor, Point.Zero);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor);
-            new HoverableRenderer(microActor);
 
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 150));
@@ -104,7 +102,6 @@ namespace HelloGame
             new BoundingRect(ninepatchActor, new Point(400, 300));
             new NinepatchRenderer(ninepatchActor, testNinepatch);
             new Hoverable(ninepatchActor);
-            new HoverableRenderer(ninepatchActor);
 
             var progressBar = gameScene.AddActor("ProgressBar");
             progressBar.Position = new Vector2(500, 50);
@@ -116,12 +113,14 @@ namespace HelloGame
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
             new Hoverable(pillar);
-            new HoverableRenderer(pillar);
             new TextRenderer(pillar, consoleFont, "Hello from the UI Scene!");
             pillar.depth = 1f;
 
             var mouse = gameScene.AddActor("gameCursor");
             new MouseCircle(mouse, 10);
+
+            var uiMouse = uiScene.AddActor("gameCursor");
+            new MouseCircle(uiMouse, 20);
 
             var miniMouse = otherScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15);

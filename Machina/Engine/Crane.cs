@@ -64,7 +64,6 @@ namespace Machina.Engine
     public abstract class Crane<T> : ICrane where T : ICrane
     {
         protected List<T> iterables;
-        private Point cachedMousePos;
 
         public virtual void Update(float dt)
         {

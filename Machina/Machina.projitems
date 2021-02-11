@@ -11,7 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\EnableDebugOnHotkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Hoverable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\HoverableRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\MouseCircle.cs" />
     <Compile Include="..\Machina\Engine\HitTester.cs" />
     <Compile Include="..\Machina\Components\Scrollbar.cs" />
