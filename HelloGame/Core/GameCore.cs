@@ -78,7 +78,7 @@ namespace HelloGame
             linkinRenderer.SetupBoundingRect();
 
             var cameraScroller = gameScene.AddActor("CameraScroller");
-            new ControlCamera(cameraScroller);
+            new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor("MicroActor");
@@ -88,7 +88,7 @@ namespace HelloGame
             new Hoverable(microActor);
 
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
-            new BoundingRect(sceneRenderBox, new Point(160, 150));
+            new BoundingRect(sceneRenderBox, new Point(160, 450));
             new Canvas(sceneRenderBox);
             new BoundingRectRenderer(sceneRenderBox);
             new Hoverable(sceneRenderBox);
@@ -125,6 +125,7 @@ namespace HelloGame
 
             var miniMouse = otherScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15, Color.LightBlue);
+            new PanAndZoomCamera(miniMouse, Keys.LeftShift);
             var cameraPanner = new PanCameraOnScroll(miniMouse, new MinMax<int>(0, 500));
 
             var scrollbar = gameScene.AddActor("Scrollbar");

@@ -40,7 +40,10 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.depth);
+            if (IsScrollbarNeeded)
+            {
+                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.depth);
+            }
         }
 
         public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
@@ -80,11 +83,18 @@ namespace Machina.Components
             }
         }
 
+        public override void OnScroll(int scrollDelta)
+        {
+            if (this.hoverable.IsHovered)
+            {
+                this.cameraPanner.OnScroll(scrollDelta);
+            }
+        }
+
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             var totalDelta = currentPosition.Y - this.mouseYOnGrab;
             var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
-
             if (this.isGrabbed)
             {
                 this.cameraPanner.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
@@ -96,9 +106,10 @@ namespace Machina.Components
             return deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
         }
 
-        private float TotalWorldDistance => this.cameraPanner.bounds.max - this.cameraPanner.bounds.min;
-        private float TotalScrollbarDistance => this.containerBoundingRect.Height * this.targetCamera.Zoom;
-        private float OnScreenPercent => TotalScrollbarDistance / TotalWorldDistance;
+        private bool IsScrollbarNeeded => OnScreenPercent < 1f;
+        private float TotalWorldUnits => this.cameraPanner.worldBounds.max - this.cameraPanner.worldBounds.min;
+        private float OnScreenUnits => this.containerBoundingRect.Height / this.targetCamera.Zoom;
+        private float OnScreenPercent => OnScreenUnits / TotalWorldUnits;
         private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);
         private Rectangle ThumbRect
         {

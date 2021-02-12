@@ -9,7 +9,7 @@ namespace Machina.Components
 {
     class PanCameraOnScroll : BaseComponent
     {
-        public readonly MinMax<int> bounds;
+        public readonly MinMax<int> worldBounds;
         private readonly int scrollIncrement;
         private float currentScroll;
 
@@ -18,25 +18,25 @@ namespace Machina.Components
             get => this.currentScroll;
             set
             {
-                this.currentScroll = Math.Clamp(value, this.bounds.min, this.bounds.max);
+                this.currentScroll = Math.Clamp(value, this.worldBounds.min, this.worldBounds.max);
             }
         }
 
         public float CurrentScrollPercent
         {
-            get => (this.currentScroll - this.bounds.min) / this.TotalDistance;
+            get => (this.currentScroll - this.worldBounds.min) / this.TotalDistanceUnits;
             set
             {
-                CurrentScroll = value * this.TotalDistance;
+                CurrentScroll = value * this.TotalDistanceUnits;
             }
         }
 
-        public int TotalDistance => this.bounds.max - this.bounds.min;
+        public int TotalDistanceUnits => this.worldBounds.max - this.worldBounds.min;
 
         public PanCameraOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 24) : base(actor)
         {
             CurrentScroll = 0;
-            this.bounds = scrollRange;
+            this.worldBounds = scrollRange;
             this.scrollIncrement = scrollIncrement;
         }
 

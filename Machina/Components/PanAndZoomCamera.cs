@@ -7,19 +7,21 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class ControlCamera : BaseComponent
+    class PanAndZoomCamera : BaseComponent
     {
         private bool isPanning;
         private bool isRotating;
-        private bool controlIsPressed;
+        private bool zoomModifierIsDown;
+        private Keys zoomModifier;
 
-        public ControlCamera(Actor actor) : base(actor)
+        public PanAndZoomCamera(Actor actor, Keys zoomModifier) : base(actor)
         {
+            this.zoomModifier = zoomModifier;
         }
 
         public override void OnScroll(int scrollDelta)
         {
-            if (this.controlIsPressed)
+            if (this.zoomModifierIsDown)
             {
                 this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
             }
@@ -27,9 +29,9 @@ namespace Machina.Components
 
         public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
         {
-            if (key == Keys.LeftControl)
+            if (key == this.zoomModifier)
             {
-                this.controlIsPressed = buttonState == ButtonState.Pressed;
+                this.zoomModifierIsDown = buttonState == ButtonState.Pressed;
             }
         }
 
