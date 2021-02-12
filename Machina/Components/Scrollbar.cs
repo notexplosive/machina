@@ -107,7 +107,7 @@ namespace Machina.Components
         }
 
         private bool IsScrollbarNeeded => OnScreenPercent < 1f;
-        private float TotalWorldUnits => this.cameraPanner.worldBounds.max - this.cameraPanner.worldBounds.min;
+        private float TotalWorldUnits => this.cameraPanner.worldBounds.max - this.cameraPanner.worldBounds.min /*+ OnScreenUnits*/;
         private float OnScreenUnits => this.containerBoundingRect.Height / this.targetCamera.Zoom;
         private float OnScreenPercent => OnScreenUnits / TotalWorldUnits;
         private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);

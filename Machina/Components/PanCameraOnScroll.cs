@@ -33,7 +33,7 @@ namespace Machina.Components
 
         public int TotalDistanceUnits => this.worldBounds.max - this.worldBounds.min;
 
-        public PanCameraOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 24) : base(actor)
+        public PanCameraOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
         {
             CurrentScroll = 0;
             this.worldBounds = scrollRange;
@@ -47,7 +47,7 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
-            CurrentScroll -= (int) (scrollDelta * this.scrollIncrement * this.actor.scene.camera.Zoom);
+            CurrentScroll -= (int) (scrollDelta * this.scrollIncrement / this.actor.scene.camera.Zoom);
         }
     }
 }

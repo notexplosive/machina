@@ -82,7 +82,7 @@ namespace HelloGame
 
             var otherScene = new Scene();
             var microActor = otherScene.AddActor("MicroActor");
-            microActor.Position = new Vector2(100, 500);
+            microActor.Position = new Vector2(10, 500);
             new BoundingRect(microActor, Point.Zero);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor);
