@@ -36,19 +36,11 @@ namespace Machina.Engine
             return array;
         }
 
-        public void Update(float dt, Matrix mouseTransformMatrix)
+        public void Update(float dt, Matrix mouseTransformMatrix, bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
         {
             var scenes = AllScenes();
 
-            // Update happens BEFORE input processing, this way we can set initial state for input processing during Update()
-            // and then modify that state in input processing.
-            foreach (Scene scene in scenes)
-            {
-                scene.Update(dt);
-            }
-
-            // Input Processing
-            var delta = scrollTracker.CalculateDelta();
+            var scrollDelta = scrollTracker.CalculateDelta();
             keyTracker.Calculate();
             mouseTracker.Calculate();
 
@@ -56,47 +48,52 @@ namespace Machina.Engine
 
             foreach (Scene scene in scenes)
             {
-                if (delta != 0)
+                if (allowKeyboardEvents)
                 {
-                    scene.OnScroll(delta);
+                    foreach (var key in keyTracker.Released)
+                    {
+                        scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
+                    }
+
+                    foreach (var key in keyTracker.Pressed)
+                    {
+                        scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
+                    }
                 }
 
-                foreach (var key in keyTracker.Released)
+                if (allowMouseUpdate)
                 {
-                    scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
-                }
+                    if (scrollDelta != 0)
+                    {
+                        scene.OnScroll(scrollDelta);
+                    }
 
-                foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
-                {
-                    scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Pressed);
-                }
+                    foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
+                    {
+                        scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Pressed);
+                    }
 
-                foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
-                {
-                    scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Released);
-                }
+                    foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
+                    {
+                        scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Released);
+                    }
 
-                foreach (var key in keyTracker.Pressed)
-                {
-                    scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
+                    // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
+                    scene.OnMouseUpdate(rawMousePos, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
                 }
-
-                // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                scene.OnMouseUpdate(rawMousePos, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
             }
 
-            var willApproveCandidate = true;
-            // Traverse scenes in reverse draw order (top to bottom)
-            for (int i = scenes.Length - 1; i >= 0; i--)
+            foreach (Scene scene in scenes)
             {
-                var scene = scenes[i];
-                var candidate = scene.hitTester.Candidate;
-                if (!candidate.IsEmpty())
-                {
-                    candidate.approvalCallback?.Invoke(willApproveCandidate);
-                    willApproveCandidate = false;
-                }
+                scene.Update(dt);
             }
+
+            foreach (Scene scene in scenes)
+            {
+                scene.PostUpdate();
+            }
+
+            HitTestResult.ApproveTopCandidate(scenes);
         }
 
         public void PreDraw(SpriteBatch spriteBatch)

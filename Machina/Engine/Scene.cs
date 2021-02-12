@@ -38,7 +38,6 @@ namespace Machina.Engine
 
         public override void Update(float dt)
         {
-            this.hitTester.Clear();
             base.Update(dt);
         }
 
@@ -61,12 +60,20 @@ namespace Machina.Engine
 
         public override void OnMouseButton(MouseButton mouseButton, Point screenPosition, ButtonState buttonState)
         {
+            // Convert position to account for camera
             base.OnMouseButton(mouseButton, camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), buttonState);
         }
 
         public override void OnMouseUpdate(Point screenPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
+            ClearHitTester();
+            // Convert position to account for camera
             base.OnMouseUpdate(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
+        }
+
+        public void ClearHitTester()
+        {
+            this.hitTester.Clear();
         }
 
         public int CountActors()

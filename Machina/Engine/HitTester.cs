@@ -49,7 +49,36 @@ namespace Machina.Engine
             return Equals(Empty);
         }
 
+        public override string ToString()
+        {
+            if (IsEmpty())
+            {
+                return "Empty";
+            }
 
+            if (this.actor != null)
+            {
+                return this.actor.ToString() + " depth=" + depth;
+            }
+
+            return id.ToString() + " depth=" + depth;
+        }
+
+        internal static void ApproveTopCandidate(Scene[] scenes)
+        {
+            var willApproveCandidate = true;
+            // Traverse scenes in reverse draw order (top to bottom)
+            for (int i = scenes.Length - 1; i >= 0; i--)
+            {
+                var scene = scenes[i];
+                var candidate = scene.hitTester.Candidate;
+                if (!candidate.IsEmpty())
+                {
+                    candidate.approvalCallback?.Invoke(willApproveCandidate);
+                    willApproveCandidate = false;
+                }
+            }
+        }
     }
 
     public class HitTester

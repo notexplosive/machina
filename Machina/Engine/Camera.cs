@@ -54,10 +54,6 @@ namespace Machina.Engine
             }
         }
 
-        /// <summary>
-        /// I think this should also include a translation that's currently in
-        /// away by MouseTracker.Calculate(), then its purpose would become more clear
-        /// </summary>
         public Matrix MouseDeltaMatrix =>
             Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
             * RotationAndZoomMatrix

@@ -29,7 +29,6 @@ namespace Machina.Components
         public Action OnHoverStart;
         public Action OnHoverEnd;
         private bool wasHovered;
-        private Point mousePos;
         private bool debug_isHoveredFromCallbacks;
         private readonly BoundingRect boundingRect;
 
@@ -44,9 +43,6 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.IsSoftHovered = false;
-            // It kind of sucks that we have to call this in two places to make sure it "works"
-            // Maybe we can remove this if we provide SceneRenderer with a full SceneLayers
-            HitTest(this.mousePos);
 
             if (IsHovered && !this.wasHovered)
             {
@@ -59,13 +55,16 @@ namespace Machina.Components
             }
 
             this.wasHovered = IsHovered;
+        }
+
+        public override void PostUpdate()
+        {
             IsHovered = false;
         }
 
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             HitTest(currentPosition);
-            this.mousePos = currentPosition;
         }
 
         private void OnHitTestApproval(bool approval)

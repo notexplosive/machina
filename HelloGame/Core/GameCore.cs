@@ -91,7 +91,8 @@ namespace HelloGame
             new BoundingRect(sceneRenderBox, new Point(160, 150));
             new Canvas(sceneRenderBox);
             new BoundingRectRenderer(sceneRenderBox);
-            new SceneRenderer(sceneRenderBox, otherScene);
+            new Hoverable(sceneRenderBox);
+            new SceneRenderer(sceneRenderBox, otherScene, () => { return true; });
             otherScene.camera.Zoom = 1.5f;
 
             sceneRenderBox.parent.Set(linkin);
@@ -128,6 +129,7 @@ namespace HelloGame
 
             var scrollbar = gameScene.AddActor("Scrollbar");
             new BoundingRect(scrollbar, new Point(20, 20));
+            new Hoverable(scrollbar);
             new Scrollbar(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), cameraPanner);
             new BoundingRectRenderer(scrollbar);
         }

@@ -10,14 +10,23 @@ namespace Machina.Components
 {
     class SceneRenderer : BaseComponent
     {
-        private Canvas canvas;
-        private SceneLayers sceneLayers = new SceneLayers(null);
+        private readonly Canvas canvas;
+        private readonly Hoverable hoverable;
+        private readonly SceneLayers sceneLayers = new SceneLayers(null);
+        private readonly Func<bool> shouldAllowKeyboardEvents;
+        // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
+        public Func<bool> bypassHoverConstraint;
 
-        public SceneRenderer(Actor actor, Scene targetScene) : base(actor)
+        public SceneRenderer(Actor actor, Scene targetScene, Func<bool> shouldAllowKeyboardEvents) : base(actor)
         {
             this.canvas = RequireComponent<Canvas>();
             this.canvas.DrawAdditionalContent += DrawInnerScene;
+            this.hoverable = RequireComponent<Hoverable>();
+            this.hoverable.OnHoverEnd += ClearHitTesters;
+
             this.sceneLayers.Add(targetScene);
+            this.shouldAllowKeyboardEvents = shouldAllowKeyboardEvents;
+            this.bypassHoverConstraint = () => { return false; };
         }
 
         private void DrawInnerScene(SpriteBatch spriteBatch)
@@ -28,41 +37,30 @@ namespace Machina.Components
         public override void OnDelete()
         {
             this.canvas.DrawAdditionalContent -= DrawInnerScene;
+            this.hoverable.OnHoverEnd -= ClearHitTesters;
+        }
+
+        private void ClearHitTesters()
+        {
+            foreach (var scene in this.sceneLayers.AllScenes())
+            {
+                scene.ClearHitTester();
+            }
         }
 
         public override void Update(float dt)
         {
             var camera = this.actor.scene.camera;
-            this.sceneLayers.Update(dt, Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix));
+            var bypassHover = this.bypassHoverConstraint.Invoke();
+            this.sceneLayers.Update(
+                dt,
+                Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix),
+                this.hoverable.IsHovered || bypassHover, this.shouldAllowKeyboardEvents());
         }
-
-        /*
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
-        {
-            this.targetScene.OnMouseUpdate(GetTransformedMousePosition(currentPosition), positionDelta, rawDelta);
-        }
-
-        public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
-        {
-            this.targetScene.OnMouseButton(mouseButton, GetTransformedMousePosition(currentPosition), buttonState);
-        }
-
-        public override void OnScroll(int scrollDelta)
-        {
-            this.targetScene.OnScroll(scrollDelta);
-            // this.targetScene.OnMouseMove(GetTransformedMousePosition(this.cachedMousePosition), Vector2.Zero, Vector2.Zero);
-        }
-
-        public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
-        {
-            this.targetScene.OnKey(key, buttonState, modifiers);
-        }
-        */
 
         /// <summary>
         /// Gets the position of the mouse within the scene, assuming the scene is not rotated.
         /// </summary>
-
         private Matrix MouseTransformMatrix
         {
             get

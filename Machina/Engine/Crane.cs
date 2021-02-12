@@ -16,6 +16,10 @@ namespace Machina.Engine
         /// <param name="dt">Delta time since last frame</param>
         public void Update(float dt);
         /// <summary>
+        /// Runs after all updates have completed.
+        /// </summary>
+        public void PostUpdate();
+        /// <summary>
         /// Called just before Updates() are issued on any iterables that were just added.
         /// </summary>
         public void Start();
@@ -135,6 +139,14 @@ namespace Machina.Engine
             iterablesGentlyRemovedThisFrame.Clear();
         }
 
+        public virtual void PostUpdate()
+        {
+            foreach (var iterable in iterables)
+            {
+                iterable.PostUpdate();
+            }
+        }
+
         public virtual void Start()
         {
             foreach (var iterable in iterables)
@@ -245,6 +257,9 @@ namespace Machina.Engine
         {
         }
         public virtual void Update(float dt)
+        {
+        }
+        public virtual void PostUpdate()
         {
         }
     }
