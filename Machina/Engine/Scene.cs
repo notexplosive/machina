@@ -33,7 +33,7 @@ namespace Machina.Engine
 
         public void RemoveActor(Actor actor)
         {
-            RemoveIterable(actor);
+            DeleteIterable(actor);
         }
 
         public override void Update(float dt)

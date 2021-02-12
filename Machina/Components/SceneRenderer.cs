@@ -25,7 +25,7 @@ namespace Machina.Components
             this.targetScene.Draw(spriteBatch);
         }
 
-        public override void OnRemove()
+        public override void OnDelete()
         {
             this.canvas.DrawAdditionalContent -= DrawInnerScene;
         }

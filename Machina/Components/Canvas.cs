@@ -50,7 +50,7 @@ namespace Machina.Components
                 DepthFormat.Depth24);
         }
 
-        public override void OnRemove()
+        public override void OnDelete()
         {
             renderTarget.Dispose();
         }

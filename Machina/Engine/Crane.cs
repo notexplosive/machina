@@ -43,7 +43,7 @@ namespace Machina.Engine
         /// <summary>
         /// Called when the object is removed from its iterable set
         /// </summary>
-        public void OnRemove();
+        public void OnDelete();
         /// <summary>
         /// Called when user presses or releases a key
         /// </summary>
@@ -78,7 +78,8 @@ namespace Machina.Engine
     public abstract class Crane<T> : ICrane where T : ICrane
     {
         private readonly List<T> iterablesCreatedThisFrame = new List<T>();
-        private readonly List<T> iterablesRemovedThisFrame = new List<T>();
+        private readonly List<T> iterablesDestroyedThisFrame = new List<T>();
+        private readonly List<T> iterablesGentlyRemovedThisFrame = new List<T>();
         protected readonly List<T> iterables = new List<T>();
 
         protected void AddIterable(T newIterable)
@@ -86,9 +87,21 @@ namespace Machina.Engine
             iterablesCreatedThisFrame.Add(newIterable);
         }
 
-        protected void RemoveIterable(T removedIterable)
+        /// <summary>
+        /// Remove this iterable, assume it's being deleted (ie: dispose any resources)
+        /// </summary>
+        /// <param name="removedIterable"></param>
+        protected void DeleteIterable(T removedIterable)
         {
-            iterablesRemovedThisFrame.Add(removedIterable);
+            iterablesDestroyedThisFrame.Add(removedIterable);
+        }
+
+        /// <summary>
+        /// Remove this iterable, but don't assume it's being deleted
+        /// </summary>
+        protected void GentlyRemoveIterable(T removedIterable)
+        {
+            iterablesGentlyRemovedThisFrame.Add(removedIterable);
         }
 
         public virtual void Update(float dt)
@@ -106,13 +119,20 @@ namespace Machina.Engine
                 iterable.Update(dt);
             }
 
-            foreach (var iterable in iterablesRemovedThisFrame)
+            foreach (var iterable in iterablesDestroyedThisFrame)
             {
                 iterables.Remove(iterable);
-                iterable.OnRemove();
+                iterable.OnDelete();
             }
 
-            iterablesRemovedThisFrame.Clear();
+            iterablesDestroyedThisFrame.Clear();
+
+            foreach (var iterable in iterablesGentlyRemovedThisFrame)
+            {
+                iterables.Remove(iterable);
+            }
+
+            iterablesGentlyRemovedThisFrame.Clear();
         }
 
         public virtual void Start()
@@ -152,11 +172,11 @@ namespace Machina.Engine
             }
         }
 
-        public virtual void OnRemove()
+        public virtual void OnDelete()
         {
             foreach (var iterable in iterables)
             {
-                iterable.OnRemove();
+                iterable.OnDelete();
             }
         }
 
@@ -213,7 +233,7 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnRemove()
+        public virtual void OnDelete()
         {
         }
 
