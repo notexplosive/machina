@@ -48,13 +48,34 @@ namespace Machina.Components
             if (button == MouseButton.Left)
             {
                 var wasPressed = buttonState == ButtonState.Pressed;
-                var isCursorWithinThumb = ThumbRect.Contains(currentPosition) && this.hoverable.IsHovered;
+                var thumbRect = ThumbRect;
+                var isCursorWithinThumb = thumbRect.Contains(currentPosition) && this.hoverable.IsHovered;
 
-                if ((wasPressed && isCursorWithinThumb) || !wasPressed)
+                // Grab the thumb and drag (or release)
+                if ((wasPressed && isCursorWithinThumb))
                 {
-                    this.isGrabbed = wasPressed;
+                    this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;
                     this.scrollPercentOnGrab = this.cameraPanner.CurrentScrollPercent;
+                }
+                // Click along the bar
+                else if (wasPressed && !isCursorWithinThumb && this.hoverable.IsHovered)
+                {
+                    this.isGrabbed = true;
+                    this.mouseYOnGrab = currentPosition.Y;
+
+
+                    var thumbCenterY = thumbRect.Y + thumbRect.Height / 2;
+                    var deltaFromThumb = currentPosition.Y - thumbCenterY;
+                    var scrollDeltaPercent = CalculateDeltaPercent(deltaFromThumb);
+
+                    this.cameraPanner.CurrentScrollPercent += scrollDeltaPercent;
+
+                    this.scrollPercentOnGrab = this.cameraPanner.CurrentScrollPercent;
+                }
+                else if (!wasPressed)
+                {
+                    this.isGrabbed = false;
                 }
             }
         }
@@ -62,12 +83,17 @@ namespace Machina.Components
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             var totalDelta = currentPosition.Y - this.mouseYOnGrab;
-            var totalScrollDeltaPercent = (float) totalDelta / (this.containerBoundingRect.Height - ThumbHeight);
+            var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
 
             if (this.isGrabbed)
             {
                 this.cameraPanner.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
             }
+        }
+
+        private float CalculateDeltaPercent(float deltaWorldUnits)
+        {
+            return deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
         }
 
         private float TotalWorldDistance => this.cameraPanner.bounds.max - this.cameraPanner.bounds.min;
