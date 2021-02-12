@@ -14,13 +14,13 @@ namespace Machina.Components
         private readonly BoundingRect myBoundingRect;
         private readonly Hoverable hoverable;
         private readonly BoundingRect containerBoundingRect;
-        private readonly PanCameraOnScroll cameraPanner;
+        private readonly PanCameraFromSceneScrollbar cameraPanner;
         private readonly Camera targetCamera;
         private bool isGrabbed;
         private int mouseYOnGrab;
         private float scrollPercentOnGrab;
 
-        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, PanCameraOnScroll cameraPanner) : base(actor)
+        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, PanCameraFromSceneScrollbar cameraPanner) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();

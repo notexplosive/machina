@@ -126,7 +126,7 @@ namespace HelloGame
             var miniMouse = otherScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15, Color.LightBlue);
             new PanAndZoomCamera(miniMouse, Keys.LeftShift);
-            var cameraPanner = new PanCameraOnScroll(miniMouse, new MinMax<int>(0, 500));
+            var cameraPanner = new PanCameraFromSceneScrollbar(miniMouse, new MinMax<int>(0, 500));
 
             var scrollbar = gameScene.AddActor("Scrollbar");
             new BoundingRect(scrollbar, new Point(20, 20));

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class PanCameraOnScroll : BaseComponent
+    class PanCameraFromSceneScrollbar : BaseComponent
     {
         public readonly MinMax<int> worldBounds;
         private readonly int scrollIncrement;
@@ -33,7 +33,7 @@ namespace Machina.Components
 
         public int TotalDistanceUnits => this.worldBounds.max - this.worldBounds.min;
 
-        public PanCameraOnScroll(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
+        public PanCameraFromSceneScrollbar(Actor actor, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
         {
             CurrentScroll = 0;
             this.worldBounds = scrollRange;
