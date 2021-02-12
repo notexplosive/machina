@@ -17,10 +17,10 @@ namespace Machina.Components
         private readonly BoundingRect containerBoundingRect;
         private readonly Camera targetCamera;
         private readonly int scrollIncrement;
+        public readonly MinMax<int> worldBounds;
         private bool isGrabbed;
         private int mouseYOnGrab;
         private float scrollPercentOnGrab;
-        public readonly MinMax<int> worldBounds;
 
         public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
         {
@@ -111,8 +111,13 @@ namespace Machina.Components
         {
             if (this.hoverable.IsHovered)
             {
-                CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.actor.scene.camera.Zoom);
+                ApplyScrollDelta(scrollDelta);
             }
+        }
+
+        public void ApplyScrollDelta(int scrollDelta)
+        {
+            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.actor.scene.camera.Zoom);
         }
 
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)

@@ -123,16 +123,16 @@ namespace HelloGame
             var uiMouse = uiScene.AddActor("gameCursor");
             new MouseCircle(uiMouse, 20, Color.CadetBlue);
 
+            var scrollbarActor = gameScene.AddActor("Scrollbar");
+            new BoundingRect(scrollbarActor, new Point(20, 20));
+            new Hoverable(scrollbarActor);
+            var scrollbar = new Scrollbar(scrollbarActor, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500));
+            new BoundingRectRenderer(scrollbarActor);
+
             var miniMouse = innerScene.AddActor("miniCursor");
+            new ScrollbarListener(miniMouse, scrollbar);
             new MouseCircle(miniMouse, 15, Color.LightBlue);
             new PanAndZoomCamera(miniMouse, Keys.LeftShift);
-            // new PanCameraFromSceneScrollbar(miniMouse);
-
-            var scrollbar = gameScene.AddActor("Scrollbar");
-            new BoundingRect(scrollbar, new Point(20, 20));
-            new Hoverable(scrollbar);
-            new Scrollbar(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500));
-            new BoundingRectRenderer(scrollbar);
         }
 
         protected override void Update(GameTime gameTime)
