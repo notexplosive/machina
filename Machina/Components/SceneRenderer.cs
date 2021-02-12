@@ -11,18 +11,18 @@ namespace Machina.Components
     class SceneRenderer : BaseComponent
     {
         private Canvas canvas;
-        private Scene targetScene;
+        private SceneLayers sceneLayers = new SceneLayers(null);
 
         public SceneRenderer(Actor actor, Scene targetScene) : base(actor)
         {
             this.canvas = RequireComponent<Canvas>();
             this.canvas.DrawAdditionalContent += DrawInnerScene;
-            this.targetScene = targetScene;
+            this.sceneLayers.Add(targetScene);
         }
 
         private void DrawInnerScene(SpriteBatch spriteBatch)
         {
-            this.targetScene.Draw(spriteBatch);
+            this.sceneLayers.Draw(spriteBatch);
         }
 
         public override void OnDelete()
@@ -32,11 +32,11 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            this.targetScene.Update(dt);
-            this.targetScene.hitTester.Candidate.approvalCallback?.Invoke(true);
+            var camera = this.actor.scene.camera;
+            this.sceneLayers.Update(dt, Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix));
         }
 
-
+        /*
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             this.targetScene.OnMouseUpdate(GetTransformedMousePosition(currentPosition), positionDelta, rawDelta);
@@ -57,16 +57,19 @@ namespace Machina.Components
         {
             this.targetScene.OnKey(key, buttonState, modifiers);
         }
+        */
 
         /// <summary>
         /// Gets the position of the mouse within the scene, assuming the scene is not rotated.
         /// </summary>
-        private Point GetTransformedMousePosition(Point currentPosition)
+
+        private Matrix MouseTransformMatrix
         {
-            var topLeft = this.canvas.TopLeftCorner;
-            var transform = Matrix.CreateTranslation(topLeft.X, topLeft.Y, 0);
-            var transformedPosition = Vector2.Transform(currentPosition.ToVector2(), Matrix.Invert(transform));
-            return transformedPosition.ToPoint();
+            get
+            {
+                var topLeft = this.canvas.TopLeftCorner;
+                return Matrix.CreateTranslation(topLeft.X, topLeft.Y, 0);
+            }
         }
     }
 }

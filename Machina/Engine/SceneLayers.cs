@@ -29,11 +29,14 @@ namespace Machina.Engine
         {
             Scene[] array = new Scene[sceneList.Count + (debugScene != null ? 1 : 0)];
             sceneList.CopyTo(array);
-            array[sceneList.Count] = debugScene;
+            if (debugScene != null)
+            {
+                array[sceneList.Count] = debugScene;
+            }
             return array;
         }
 
-        public void Update(float dt)
+        public void Update(float dt, Matrix mouseTransformMatrix)
         {
             var scenes = AllScenes();
 
@@ -49,6 +52,8 @@ namespace Machina.Engine
             keyTracker.Calculate();
             mouseTracker.Calculate();
 
+            var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix).ToPoint();
+
             foreach (Scene scene in scenes)
             {
                 if (delta != 0)
@@ -63,12 +68,12 @@ namespace Machina.Engine
 
                 foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
                 {
-                    scene.OnMouseButton(mouseButton, mouseTracker.RawWindowPosition, ButtonState.Pressed);
+                    scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Pressed);
                 }
 
                 foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
                 {
-                    scene.OnMouseButton(mouseButton, mouseTracker.RawWindowPosition, ButtonState.Released);
+                    scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Released);
                 }
 
                 foreach (var key in keyTracker.Pressed)
@@ -77,7 +82,7 @@ namespace Machina.Engine
                 }
 
                 // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                scene.OnMouseUpdate(mouseTracker.RawWindowPosition, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
+                scene.OnMouseUpdate(rawMousePos, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
             }
 
             var willApproveCandidate = true;

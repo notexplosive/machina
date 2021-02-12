@@ -117,13 +117,13 @@ namespace HelloGame
             pillar.depth = 1f;
 
             var mouse = gameScene.AddActor("gameCursor");
-            new MouseCircle(mouse, 10);
+            new MouseCircle(mouse, 10, Color.BlueViolet);
 
             var uiMouse = uiScene.AddActor("gameCursor");
-            new MouseCircle(uiMouse, 20);
+            new MouseCircle(uiMouse, 20, Color.CadetBlue);
 
             var miniMouse = otherScene.AddActor("miniCursor");
-            new MouseCircle(miniMouse, 15);
+            new MouseCircle(miniMouse, 15, Color.LightBlue);
             var cameraPanner = new PanCameraOnScroll(miniMouse, new MinMax<int>(0, 500));
 
             var scrollbar = gameScene.AddActor("Scrollbar");
