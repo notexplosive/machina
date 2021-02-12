@@ -10,10 +10,16 @@ namespace Machina.Engine
     public interface ICrane
     {
         /// <summary>
-        /// Called every frame with the delta time since last frame.
+        /// Called every frame with the delta time since last frame. Might call Start() if the
+        /// iterable is being added from the temporary buffer
         /// </summary>
         /// <param name="dt">Delta time since last frame</param>
         public void Update(float dt);
+        /// <summary>
+        /// Called just before Updates() are issued on any iterables that were just added.
+        /// </summary>
+        public void Start();
+
         /// <summary>
         /// Called on every scene BEFORE any real drawing happens, does not imply spriteBatch.Start
         /// </summary>
@@ -61,22 +67,62 @@ namespace Machina.Engine
         public void OnMouseButton(MouseButton button, Point currentPosition, ButtonState state);
     }
 
+    /// <summary>
+    /// Parent class for Scene and Actor that describes how each entry-point method iterates over the iterables and runs
+    /// the same entry-point method.
+    /// 
+    /// Why is it called a Crane? Couldn't tell you, sometimes you just need a name for things.
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class Crane<T> : ICrane where T : ICrane
     {
-        protected List<T> iterables;
+        private readonly List<T> iterablesCreatedThisFrame = new List<T>();
+        private readonly List<T> iterablesRemovedThisFrame = new List<T>();
+        protected readonly List<T> iterables = new List<T>();
+
+        protected void AddIterable(T newIterable)
+        {
+            iterablesCreatedThisFrame.Add(newIterable);
+        }
+
+        protected void RemoveIterable(T removedIterable)
+        {
+            iterablesRemovedThisFrame.Add(removedIterable);
+        }
 
         public virtual void Update(float dt)
         {
+            foreach (var iterable in iterablesCreatedThisFrame)
+            {
+                this.iterables.Add(iterable);
+                iterable.Start();
+            }
+
+            iterablesCreatedThisFrame.Clear();
+
             foreach (var iterable in iterables)
             {
                 iterable.Update(dt);
             }
+
+            foreach (var iterable in iterablesRemovedThisFrame)
+            {
+                iterables.Remove(iterable);
+                iterable.OnRemove();
+            }
+
+            iterablesRemovedThisFrame.Clear();
         }
 
-        /// <summary>
-        /// Does NOT supply spriteBatch.Start()
-        /// </summary>
-        /// <param name="spriteBatch"></param>
+        public virtual void Start()
+        {
+            foreach (var iterable in iterables)
+            {
+                iterable.Start();
+            }
+        }
+
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
             foreach (var iterable in iterables)
@@ -144,6 +190,9 @@ namespace Machina.Engine
 
     public abstract class NonIteratingCrane : ICrane
     {
+        public virtual void Start()
+        {
+        }
         public virtual void DebugDraw(SpriteBatch spriteBatch)
         {
         }
@@ -175,7 +224,6 @@ namespace Machina.Engine
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
         }
-
         public virtual void Update(float dt)
         {
         }

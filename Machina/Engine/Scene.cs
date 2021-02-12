@@ -14,7 +14,6 @@ namespace Machina.Engine
 
         public Scene(GameCanvas resizer = null)
         {
-            this.iterables = new List<Actor>();
             this.camera = new Camera(resizer);
             this.hitTester = new HitTester();
         }
@@ -28,16 +27,13 @@ namespace Machina.Engine
 
         public Actor AddActor(Actor actor)
         {
-            this.iterables.Add(actor);
+            AddIterable(actor);
             return actor;
         }
 
         public void RemoveActor(Actor actor)
         {
-            actor.OnRemove();
-
-            // Delete from iterables list
-            iterables.Remove(actor);
+            RemoveIterable(actor);
         }
 
         public override void Update(float dt)
@@ -73,15 +69,9 @@ namespace Machina.Engine
             base.OnMouseUpdate(camera.ScreenToWorld(screenPosition.ToVector2()).ToPoint(), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
         }
 
-        /// <summary>
-        /// Same as Scene.OnRemove
-        /// </summary>
-        public void RemoveAllActors()
+        public int CountActors()
         {
-            foreach (var actor in iterables)
-            {
-                actor.OnRemove();
-            }
+            return this.iterables.Count;
         }
     }
 }

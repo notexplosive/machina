@@ -28,7 +28,6 @@ namespace Machina.Engine
             this.scene = scene;
             this.scene.AddActor(this);
             this.name = name;
-            iterables = new List<BaseComponent>();
         }
 
         public float Angle
@@ -143,8 +142,6 @@ namespace Machina.Engine
 
         public void Destroy()
         {
-            OnRemove();
-
             foreach (var component in this.iterables)
             {
                 component.OnActorDestroy();

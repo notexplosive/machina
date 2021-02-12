@@ -1,6 +1,7 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,15 @@ namespace Machina.Components
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             this.actor.Position = currentPosition.ToVector2();
+        }
+
+        public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        {
+            if (mouseButton == MouseButton.Left && buttonState == ButtonState.Pressed && MachinaGame.DebugLevel >= DebugLevel.Active)
+            {
+                var spawnedActor = this.actor.scene.AddActor("Spawned circle", currentPosition.ToVector2());
+                new DestroyTimer(spawnedActor, 1);
+            }
         }
     }
 }

@@ -9,6 +9,7 @@
     <Import_RootNamespace>Machina</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Machina\Components\DestroyTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\EnableDebugOnHotkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Hoverable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\MouseCircle.cs" />
