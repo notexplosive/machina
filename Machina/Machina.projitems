@@ -9,6 +9,7 @@
     <Import_RootNamespace>Machina</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\PanCameraFromSceneScrollbar.cs" />
     <Compile Include="..\Machina\Components\DestroyTimer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\EnableDebugOnHotkey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Hoverable.cs" />
@@ -16,7 +17,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Engine\SceneLayers.cs" />
     <Compile Include="..\Machina\Engine\HitTester.cs" />
     <Compile Include="..\Machina\Components\Scrollbar.cs" />
-    <Compile Include="..\Machina\Components\PanCameraOnScroll.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\MinMax.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenAccessors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\TweenDataFunctions.cs" />
