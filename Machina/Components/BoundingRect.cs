@@ -16,6 +16,8 @@ namespace Machina.Components
             get; private set;
         }
 
+        public Point Location => Rect.Location;
+
         public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
             this.size = size;

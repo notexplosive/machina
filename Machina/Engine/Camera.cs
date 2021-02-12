@@ -25,9 +25,18 @@ namespace Machina.Engine
             get; set;
         }
 
+        private float zoom;
         public float Zoom
         {
-            get; set;
+            get
+            {
+                return zoom;
+            }
+            set
+            {
+                zoom = value;
+                OnChangeZoom?.Invoke(zoom, value);
+            }
         }
 
         public float Rotation
@@ -91,6 +100,8 @@ namespace Machina.Engine
                 * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
                 * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0))
             ;
+
+        public Action<float, float> OnChangeZoom;
 
         public void AdjustZoom(float amount)
         {

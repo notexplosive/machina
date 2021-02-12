@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,28 +15,40 @@ namespace Machina.Components
         private readonly BoundingRect myBoundingRect;
         private readonly Hoverable hoverable;
         private readonly BoundingRect containerBoundingRect;
-        private readonly PanCameraFromSceneScrollbar cameraPanner;
         private readonly Camera targetCamera;
+        private readonly int scrollIncrement;
         private bool isGrabbed;
         private int mouseYOnGrab;
         private float scrollPercentOnGrab;
+        public readonly MinMax<int> worldBounds;
 
-        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, PanCameraFromSceneScrollbar cameraPanner) : base(actor)
+        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
             this.containerBoundingRect = containerBoundingRect;
-            this.cameraPanner = cameraPanner;
-            this.targetCamera = cameraPanner.actor.scene.camera;
+            this.targetCamera = targetCamera;
 
             this.myBoundingRect.SetOffsetToTopLeft();
             this.actor.parent.Set(containerBoundingRect.actor);
+
+            this.worldBounds = scrollRange;
+            this.scrollIncrement = scrollIncrement;
+            CurrentScrollUnits = 0;
+
+            this.targetCamera.OnChangeZoom += UpdateScrollReflexive;
+        }
+
+        public override void OnDelete()
+        {
+            this.targetCamera.OnChangeZoom -= UpdateScrollReflexive;
         }
 
         public override void Update(float dt)
         {
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
             this.actor.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
+            this.targetCamera.Position = new Vector2(this.targetCamera.Position.X, CurrentScrollUnits);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -44,6 +57,17 @@ namespace Machina.Components
             {
                 spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.depth);
             }
+        }
+
+        public override void DebugDraw(SpriteBatch spriteBatch)
+        {
+            Point containerLocation = this.containerBoundingRect.Location;
+            spriteBatch.DrawRectangle(new Rectangle(
+                containerLocation,
+                new Point(this.containerBoundingRect.Width, (int) TotalWorldUnits)), Color.Orange, 2);
+            spriteBatch.DrawRectangle(new Rectangle(
+                new Point(containerLocation.X, containerLocation.Y + (int) CurrentScrollUnits),
+                new Point(this.containerBoundingRect.Width, (int) OnScreenUnits)), Color.Blue, 2);
         }
 
         public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
@@ -59,7 +83,7 @@ namespace Machina.Components
                 {
                     this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;
-                    this.scrollPercentOnGrab = this.cameraPanner.CurrentScrollPercent;
+                    this.scrollPercentOnGrab = CurrentScrollPercent;
                 }
                 // Click along the bar
                 else if (wasPressed && !isCursorWithinThumb && this.hoverable.IsHovered)
@@ -72,9 +96,9 @@ namespace Machina.Components
                     var deltaFromThumb = currentPosition.Y - thumbCenterY;
                     var scrollDeltaPercent = CalculateDeltaPercent(deltaFromThumb);
 
-                    this.cameraPanner.CurrentScrollPercent += scrollDeltaPercent;
+                    CurrentScrollPercent += scrollDeltaPercent;
 
-                    this.scrollPercentOnGrab = this.cameraPanner.CurrentScrollPercent;
+                    this.scrollPercentOnGrab = CurrentScrollPercent;
                 }
                 else if (!wasPressed)
                 {
@@ -87,7 +111,7 @@ namespace Machina.Components
         {
             if (this.hoverable.IsHovered)
             {
-                this.cameraPanner.OnScroll(scrollDelta);
+                CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.actor.scene.camera.Zoom);
             }
         }
 
@@ -97,8 +121,13 @@ namespace Machina.Components
             var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
             if (this.isGrabbed)
             {
-                this.cameraPanner.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
+                this.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
             }
+        }
+
+        private void UpdateScrollReflexive(float oldZoom, float newZoom)
+        {
+            SetClampedScrollUnits(CurrentScrollUnits);
         }
 
         private float CalculateDeltaPercent(float deltaWorldUnits)
@@ -107,18 +136,49 @@ namespace Machina.Components
         }
 
         private bool IsScrollbarNeeded => OnScreenPercent < 1f;
-        private float TotalWorldUnits => this.cameraPanner.worldBounds.max - this.cameraPanner.worldBounds.min /*+ OnScreenUnits*/;
+        private float TotalWorldUnits => (this.worldBounds.max - OnScreenUnits) - this.worldBounds.min;
         private float OnScreenUnits => this.containerBoundingRect.Height / this.targetCamera.Zoom;
-        private float OnScreenPercent => OnScreenUnits / TotalWorldUnits;
+        private float OnScreenPercent => OnScreenUnits / (this.worldBounds.max - this.worldBounds.min);
         private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);
         private Rectangle ThumbRect
         {
             get
             {
-                float scrollPercent = this.cameraPanner.CurrentScrollPercent;
+                float scrollPercent = CurrentScrollPercent;
                 int thumbYPosition = (int) ((this.containerBoundingRect.Height - ThumbHeight) * scrollPercent);
                 return new Rectangle(this.myBoundingRect.Rect.Location + new Point(0, thumbYPosition),
                             new Point(this.myBoundingRect.Width, ThumbHeight));
+            }
+        }
+
+        private float currentScrollUnits;
+        public float CurrentScrollUnits
+        {
+            get => this.currentScrollUnits;
+            set
+            {
+                SetClampedScrollUnits(value);
+            }
+        }
+
+        private void SetClampedScrollUnits(float value)
+        {
+            if (this.IsScrollbarNeeded)
+            {
+                this.currentScrollUnits = Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits);
+            }
+            else
+            {
+                this.currentScrollUnits = 0;
+            }
+        }
+
+        public float CurrentScrollPercent
+        {
+            get => (this.currentScrollUnits - this.worldBounds.min) / this.TotalWorldUnits;
+            set
+            {
+                CurrentScrollUnits = value * this.TotalWorldUnits;
             }
         }
     }

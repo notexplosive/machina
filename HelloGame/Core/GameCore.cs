@@ -80,8 +80,8 @@ namespace HelloGame
             var cameraScroller = gameScene.AddActor("CameraScroller");
             new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
 
-            var otherScene = new Scene();
-            var microActor = otherScene.AddActor("MicroActor");
+            var innerScene = new Scene();
+            var microActor = innerScene.AddActor("MicroActor");
             microActor.Position = new Vector2(10, 500);
             new BoundingRect(microActor, Point.Zero);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
@@ -92,8 +92,8 @@ namespace HelloGame
             new Canvas(sceneRenderBox);
             new BoundingRectRenderer(sceneRenderBox);
             new Hoverable(sceneRenderBox);
-            new SceneRenderer(sceneRenderBox, otherScene, () => { return true; });
-            otherScene.camera.Zoom = 1.5f;
+            new SceneRenderer(sceneRenderBox, innerScene, () => { return true; });
+            innerScene.camera.Zoom = 1.5f;
 
             sceneRenderBox.parent.Set(linkin);
 
@@ -123,15 +123,15 @@ namespace HelloGame
             var uiMouse = uiScene.AddActor("gameCursor");
             new MouseCircle(uiMouse, 20, Color.CadetBlue);
 
-            var miniMouse = otherScene.AddActor("miniCursor");
+            var miniMouse = innerScene.AddActor("miniCursor");
             new MouseCircle(miniMouse, 15, Color.LightBlue);
             new PanAndZoomCamera(miniMouse, Keys.LeftShift);
-            var cameraPanner = new PanCameraFromSceneScrollbar(miniMouse, new MinMax<int>(0, 500));
+            // new PanCameraFromSceneScrollbar(miniMouse);
 
             var scrollbar = gameScene.AddActor("Scrollbar");
             new BoundingRect(scrollbar, new Point(20, 20));
             new Hoverable(scrollbar);
-            new Scrollbar(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), cameraPanner);
+            new Scrollbar(scrollbar, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500));
             new BoundingRectRenderer(scrollbar);
         }
 
