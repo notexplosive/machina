@@ -133,6 +133,12 @@ namespace HelloGame
             new ScrollbarListener(miniMouse, scrollbar);
             new MouseCircle(miniMouse, 15, Color.LightBlue);
             new PanAndZoomCamera(miniMouse, Keys.LeftShift);
+
+            var button = gameScene.AddActor("button");
+            new BoundingRect(button, new Point(50, 50));
+            new Hoverable(button);
+            new Clickable(button);
+            new SimpleButtonRenderer(button);
         }
 
         protected override void Update(GameTime gameTime)

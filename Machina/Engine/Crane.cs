@@ -192,11 +192,11 @@ namespace Machina.Engine
             }
         }
 
-        public virtual void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
+        public virtual void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
             foreach (var iterable in iterables)
             {
-                iterable.OnKey(key, buttonState, modifiers);
+                iterable.OnKey(key, state, modifiers);
             }
         }
         public virtual void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -206,11 +206,11 @@ namespace Machina.Engine
                 iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta);
             }
         }
-        public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        public virtual void OnMouseButton(MouseButton button, Point currentPosition, ButtonState state)
         {
             foreach (var iterable in iterables)
             {
-                iterable.OnMouseButton(mouseButton, currentPosition, buttonState);
+                iterable.OnMouseButton(button, currentPosition, state);
             }
         }
 
@@ -233,11 +233,11 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
+        public virtual void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
         }
 
-        public virtual void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        public virtual void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
         {
         }
 

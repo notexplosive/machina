@@ -22,6 +22,7 @@ namespace Machina.Components
 
         public override void OnScroll(int scrollDelta)
         {
+            // todo: if(this.actor.scene.NothingHovered)
             this.scrollbar.ApplyScrollDelta(scrollDelta);
         }
     }
