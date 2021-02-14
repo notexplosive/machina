@@ -76,7 +76,7 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var consoleFont = Assets.GetSpriteFont("MachinaDefaultFont");
+            var consoleFont = Assets.DefaultFont;
             var debugActor = sceneLayers.debugScene.AddActor("DebugLogger");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));

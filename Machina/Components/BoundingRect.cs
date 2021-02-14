@@ -71,11 +71,9 @@ namespace Machina.Components
             Offset = new Vector2(Width / 2, Height / 2);
         }
 
-        /*
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawRectangle(Rect, Color.Pink);
         }
-        */
     }
 }

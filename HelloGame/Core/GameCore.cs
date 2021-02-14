@@ -142,6 +142,26 @@ namespace HelloGame
             new Draggable(button);
             new MoveOnDrag(button);
 
+            var selectorActor = gameScene.AddActor("selector", new Vector2(100, 0));
+            var selector = new SingleSelector(selectorActor);
+
+            var selectable = gameScene.AddActor("selectable", new Vector2(80, 50));
+            new BoundingRect(selectable, new Point(50, 50));
+            new Hoverable(selectable);
+            new Clickable(selectable);
+            selector.BuildSelectable(selectable);
+
+            var selectable2 = gameScene.AddActor("selectable2", new Vector2(130, 50));
+            new BoundingRect(selectable2, new Point(50, 50));
+            new Hoverable(selectable2);
+            new Clickable(selectable2);
+            selector.BuildSelectable(selectable2);
+
+            var selectable3 = gameScene.AddActor("selectable3", new Vector2(180, 50));
+            new BoundingRect(selectable3, new Point(50, 50));
+            new Hoverable(selectable3);
+            new Clickable(selectable3);
+            selector.BuildSelectable(selectable3);
 
         }
 
