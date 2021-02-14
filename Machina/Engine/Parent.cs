@@ -24,7 +24,6 @@ namespace Machina.Engine
                 Clear();
             }
 
-            MachinaGame.Print(this.actor.name, "is now parented by", targetActor.name);
             this.parentActor = targetActor;
             if (!this.parentActor.children.Has(this.actor))
             {
@@ -34,7 +33,6 @@ namespace Machina.Engine
 
         public void Clear()
         {
-            MachinaGame.Print(this.actor.name, "Deleted its parent");
             var children = parentActor.children;
             this.parentActor = null;
             children.Remove(this.actor);

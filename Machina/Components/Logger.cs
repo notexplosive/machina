@@ -40,7 +40,12 @@ namespace Machina.Components
 
             Console.WriteLine(output);
 
-            this.renderer.OnMessageLog(output);
+            var splitOnNewlines = output.Split("\n");
+
+            foreach (var split in splitOnNewlines)
+            {
+                this.renderer.OnMessageLog(split);
+            }
         }
     }
 }

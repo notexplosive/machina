@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -84,6 +85,9 @@ namespace Machina.Engine
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
+
+            ActorTests.Run();
+
 #else
             this.debugLevel = DebugLevel.Off;
 #endif

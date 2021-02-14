@@ -37,7 +37,6 @@ namespace Machina.Engine
             Debug.Assert(addedActor.scene == this.actor.scene, "Cannot unite two actors from different scenes");
             Debug.Assert(addedActor != this.actor, "Cannot parent the same actor to itself");
 
-            MachinaGame.Print(this.actor.name, " now has child: ", addedActor.name);
             content.Add(addedActor);
 
             if (addedActor.parent.Get() != this.actor)
