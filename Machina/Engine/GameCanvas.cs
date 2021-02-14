@@ -22,6 +22,7 @@ namespace Machina.Engine
         {
             this.idealSize = new Point(idealWidth, idealHeight);
             this.resizeBehavior = resizeBehavior;
+            OnResize(idealWidth, idealHeight);
         }
 
         public Rectangle CanvasRect

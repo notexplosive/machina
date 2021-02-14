@@ -12,9 +12,9 @@ namespace Machina.Engine
         public readonly Camera camera;
         public readonly HitTester hitTester;
 
-        public Scene(GameCanvas resizer = null)
+        public Scene(GameCanvas gameCanvas = null)
         {
-            this.camera = new Camera(resizer);
+            this.camera = new Camera(gameCanvas);
             this.hitTester = new HitTester();
         }
 

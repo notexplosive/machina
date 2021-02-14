@@ -149,6 +149,19 @@ namespace Machina.Tests
             }
         }
 
+        public void Expect(float expected, float actual, string message)
+        {
+            bool isEqual = Math.Abs(expected - actual) < 0.00001f;
+            if (!isEqual)
+            {
+                AddResult(new Failure<float>(expected, actual, message));
+            }
+            else
+            {
+                AddResult(new Pass());
+            }
+        }
+
         public void ExpectNot<T>(T expected, T actual, string message = "")
         {
             if (CheckEqual(expected, actual))
@@ -201,7 +214,7 @@ namespace Machina.Tests
         {
             var expectedString = expected != null ? expected.ToString() : "null";
             var actualString = actual != null ? actual.ToString() : "null";
-            this.message = preamble + ": " + "Expected `" + expectedString + "`, got " + actualString;
+            this.message = preamble + (preamble != "" ? ": " : "") + "Expected `" + expectedString + "`, got " + actualString;
         }
 
         public string GetMessage()
