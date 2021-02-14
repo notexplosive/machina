@@ -11,6 +11,8 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnClick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\Draggable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\MoveOnDrag.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SimpleButtonRenderer.cs" />
     <Compile Include="..\Machina\Components\ScrollbarListener.cs" />
     <Compile Include="..\Machina\Components\DestroyTimer.cs" />

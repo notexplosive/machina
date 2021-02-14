@@ -139,7 +139,10 @@ namespace HelloGame
             new Hoverable(button);
             new Clickable(button);
             new SimpleButtonRenderer(button);
-            new CallbackOnClick(button, MouseButton.Left, () => { MachinaGame.Print("The button was clicked"); });
+            new Draggable(button);
+            new MoveOnDrag(button);
+
+
         }
 
         protected override void Update(GameTime gameTime)

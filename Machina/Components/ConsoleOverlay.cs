@@ -13,11 +13,11 @@ namespace Machina.Components
 {
     class ConsoleOverlay : BaseComponent, IDebugOutputRenderer
     {
-        private SpriteFont spriteFont;
-        private GraphicsDeviceManager graphics;
-        private List<string> messages;
+        private readonly SpriteFont spriteFont;
+        private readonly GraphicsDeviceManager graphics;
+        private readonly TweenChain tweenChain;
+        private readonly List<string> messages;
         private float opacity;
-        private TweenChain tweenChain;
 
         public ConsoleOverlay(Actor actor, SpriteFont spriteFont, GraphicsDeviceManager graphics) : base(actor)
         {
@@ -27,7 +27,8 @@ namespace Machina.Components
             this.opacity = 0f;
             this.tweenChain = new TweenChain()
                 .AppendWaitTween(3f)
-                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn, new TweenAccessors<float>(() => { return this.opacity; }, (val) => { this.opacity = val; }));
+                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn, new TweenAccessors<float>(() => { return this.opacity; }, (val) => { this.opacity = val; }))
+                .AppendCallback(() => { this.messages.Clear(); });
         }
 
         public override void Draw(SpriteBatch spriteBatch)

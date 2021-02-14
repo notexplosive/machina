@@ -79,7 +79,7 @@ namespace Machina.Engine
             if (!this.firstFrame)
             {
                 // We hide this on the first frame because game will launch with a huge mouse delta otherwise
-                PositionDelta = (oldState.Position - mouseState.Position).ToVector2();
+                PositionDelta = (mouseState.Position - oldState.Position).ToVector2();
             }
 
             this.oldState = mouseState;

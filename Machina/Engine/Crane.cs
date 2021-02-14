@@ -59,9 +59,9 @@ namespace Machina.Engine
         /// Called every time mouse moves.
         /// </summary>
         /// <param name="currentPosition">Mouse position transformed into your context</param>
-        /// <param name="transformedPositionDelta">Mouse movement transformed to your context</param>
-        /// <param name="rawDelta">Mouse movement delta as a raw value</param>
-        public void OnMouseUpdate(Point currentPosition, Vector2 transformedPositionDelta, Vector2 rawDelta);
+        /// <param name="positionDelta">Mouse movement transformed to your context</param>
+        /// <param name="rawDelta">Mouse movement delta in real-world screen pixels</param>
+        public void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta);
         /// <summary>
         /// Called when user presses or releases the mouse
         /// </summary>

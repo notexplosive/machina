@@ -121,7 +121,7 @@ namespace Machina.Engine
         {
             sceneLayers.PreDraw(spriteBatch);
             gameCanvas.PrepareCanvas(GraphicsDevice);
-            GraphicsDevice.Clear(Color.CornflowerBlue); // Draw main background color
+            GraphicsDevice.Clear(Color.DarkSlateGray); // Draw main background color
             sceneLayers.Draw(spriteBatch);
 
             gameCanvas.DrawCanvas(GraphicsDevice, spriteBatch);
