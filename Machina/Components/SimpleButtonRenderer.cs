@@ -17,20 +17,11 @@ namespace Machina.Components
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.clickable = RequireComponent<Clickable>();
-            this.clickable.onClick += OnClick;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawRectangle(this.boundingRect.Rect, this.clickable.IsHovered ? Color.Blue : Color.Red, this.clickable.IsHeldDown ? 5 : 1);
-        }
-
-        public void OnClick(MouseButton button)
-        {
-            if (button == MouseButton.Left)
-            {
-                MachinaGame.Print("Button Clicked!");
-            }
         }
     }
 }
