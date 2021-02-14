@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Tests
 {
-    internal class ActorTests
+    internal class ActorTests : TestGroup
     {
         private class FakeComponent : BaseComponent
         {
@@ -23,89 +23,37 @@ namespace Machina.Tests
             }
         }
 
-        private readonly static List<TestResult> results = new List<TestResult>();
-
-        public static void Run()
+        public ActorTests() : base("Actor Tests")
         {
-            var scene = new Scene();
-            var actor = scene.AddActor("Terry Triangle");
-            var deleteCount = 0;
-            new FakeComponent(actor, () => { deleteCount++; });
-            actor.Destroy();
-
-            // Scene needs to update to flush the destroyed actors
-            scene.Update(0f);
-
-            Expect(1, deleteCount, "Component is deleted once, when Actor is deleted.");
-
-            Finish();
-        }
-
-        private static void Finish()
-        {
-            foreach (var result in results)
+            AddTest(new Test("Component deletes when actor is deleted", test =>
             {
-                if (!result.IsPassing())
-                {
-                    MachinaGame.Print("TEST FAILURE: " + result.GetMessage());
-                }
-            }
-        }
+                var scene = new Scene();
+                var actor = scene.AddActor("Terry Triangle");
+                var deleteCount = 0;
+                new FakeComponent(actor, () => { deleteCount++; });
+                actor.Destroy();
+                // Scene needs to update to flush the destroyed actors
+                scene.Update(0f);
 
-        public static void Expect<T>(T expected, T actual, string message) where T : struct
-        {
-            if (!actual.Equals(expected))
+                test.Expect(1, deleteCount, "Deleted wrong number of times");
+            }));
+
+            AddTest(new Test("Test Add and remove Components", test =>
             {
-                AddResult(new Failure<T>(expected, actual, message));
-            }
-            else
-            {
-                AddResult(new Pass());
-            }
-        }
+                var actor = new Actor("Sally Sceneless", null);
+                var deleteCount = 0;
+                var createdComponent = new FakeComponent(actor, () => { deleteCount++; });
+                FakeComponent actual = actor.GetComponent<FakeComponent>();
+                actor.RemoveComponent<FakeComponent>();
+                var actualAfterRemove_BeforeUpdate = actor.GetComponent<FakeComponent>();
+                actor.Update(0);
+                var actualAfterRemove_AfterUpdate = actor.GetComponent<FakeComponent>();
 
-        private static void AddResult(TestResult result)
-        {
-            results.Add(result);
-        }
-
-        public interface TestResult
-        {
-            bool IsPassing();
-            string GetMessage();
-        }
-
-        public class Failure<T> : TestResult where T : struct
-        {
-            private readonly string message;
-
-            public Failure(T expected, T actual, string preamble)
-            {
-                this.message = preamble + "\nExpected `" + expected.ToString() + "`, got " + actual.ToString();
-            }
-
-            public string GetMessage()
-            {
-                return this.message;
-            }
-
-            public bool IsPassing()
-            {
-                return false;
-            }
-        }
-
-        public class Pass : TestResult
-        {
-            public string GetMessage()
-            {
-                return "Passed!";
-            }
-
-            public bool IsPassing()
-            {
-                return true;
-            }
+                test.ExpectNotNull(actual);
+                test.Expect(createdComponent, actual);
+                test.ExpectNotNull(actualAfterRemove_BeforeUpdate, "Removed component, before update");
+                test.ExpectNull(actualAfterRemove_AfterUpdate, "Removed component, after update");
+            }));
         }
     }
 }

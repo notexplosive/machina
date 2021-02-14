@@ -86,7 +86,9 @@ namespace Machina.Engine
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
-            ActorTests.Run();
+            TestGroup.Register(new ActorTests());
+            TestGroup.Register(new HitTestTests());
+            Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
 #else
             this.debugLevel = DebugLevel.Off;

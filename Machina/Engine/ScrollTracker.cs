@@ -5,15 +5,19 @@ using System.Text;
 
 namespace Machina.Engine
 {
-    class ScrollTracker
+    public class ScrollTracker
     {
+        public int ScrollDelta
+        {
+            get; private set;
+        }
         private int previousScroll;
-        public int CalculateDelta()
+        public void Calculate()
         {
             var currentScroll = Mouse.GetState().ScrollWheelValue;
-            var scrollDelta = currentScroll - this.previousScroll;
+            this.ScrollDelta = currentScroll - this.previousScroll;
             this.previousScroll = currentScroll;
-            return scrollDelta / 120;
+
         }
     }
 }

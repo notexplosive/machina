@@ -20,6 +20,19 @@ namespace Machina.Engine
             this.debugScene = debugScene;
         }
 
+        /// <summary>
+        /// Creates a SceneLayers with provided trackers, only useful for testing.
+        /// </summary>
+        /// <param name="keyTracker"></param>
+        /// <param name="mouseTracker"></param>
+        /// <param name="scrollTracker"></param>
+        public SceneLayers(KeyTracker keyTracker, MouseTracker mouseTracker, ScrollTracker scrollTracker)
+        {
+            this.keyTracker = keyTracker;
+            this.mouseTracker = mouseTracker;
+            this.scrollTracker = scrollTracker;
+        }
+
         public void Add(Scene scene)
         {
             this.sceneList.Add(scene);
@@ -40,7 +53,7 @@ namespace Machina.Engine
         {
             var scenes = AllScenes();
 
-            var scrollDelta = scrollTracker.CalculateDelta();
+            scrollTracker.Calculate();
             keyTracker.Calculate();
             mouseTracker.Calculate();
 
@@ -63,9 +76,9 @@ namespace Machina.Engine
 
                 if (allowMouseUpdate)
                 {
-                    if (scrollDelta != 0)
+                    if (scrollTracker.ScrollDelta != 0)
                     {
-                        scene.OnScroll(scrollDelta);
+                        scene.OnScroll(scrollTracker.ScrollDelta);
                     }
 
                     foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)

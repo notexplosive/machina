@@ -20,13 +20,18 @@ namespace Machina.Engine
         private float angle;
         private float localAngle;
 
+        /// <summary>
+        /// Create an actor and add them to the given scene.
+        /// </summary>
+        /// <param name="name">Human readable name (for debugging)</param>
+        /// <param name="scene">Scene that the ctor will add the actor to. Should not be null unless you're a test.</param>
         public Actor(string name, Scene scene)
         {
             parent = new Parent(this);
             children = new Children(this);
 
             this.scene = scene;
-            this.scene.AddActor(this);
+            this.scene?.AddActor(this);
             this.name = name;
         }
 
