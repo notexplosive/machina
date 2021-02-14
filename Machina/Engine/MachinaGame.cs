@@ -86,8 +86,10 @@ namespace Machina.Engine
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
-            TestGroup.Register(new ActorTests());
-            TestGroup.Register(new HitTestTests());
+            new ActorTests();
+            new HitTestTests();
+            new CameraTransformsTests();
+
             Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
 #else
@@ -110,7 +112,7 @@ namespace Machina.Engine
         {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            sceneLayers.Update(dt, Matrix.Identity);
+            sceneLayers.Update(dt, Matrix.Identity, InputState.Raw);
 
             if (gameCanvas.PendingResize)
             {

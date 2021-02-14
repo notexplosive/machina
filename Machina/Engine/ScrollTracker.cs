@@ -12,12 +12,11 @@ namespace Machina.Engine
             get; private set;
         }
         private int previousScroll;
-        public void Calculate()
+        public void Calculate(MouseState currentState)
         {
-            var currentScroll = Mouse.GetState().ScrollWheelValue;
-            this.ScrollDelta = currentScroll - this.previousScroll;
+            var currentScroll = currentState.ScrollWheelValue;
+            this.ScrollDelta = (currentScroll - this.previousScroll) / 120;
             this.previousScroll = currentScroll;
-
         }
     }
 }

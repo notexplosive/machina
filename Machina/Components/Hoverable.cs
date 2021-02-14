@@ -42,8 +42,6 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            this.IsSoftHovered = false;
-
             if (IsHovered && !this.wasHovered)
             {
                 OnHoverStart?.Invoke();
@@ -64,23 +62,19 @@ namespace Machina.Components
 
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            HitTest(currentPosition);
-        }
+            this.IsSoftHovered = false;
 
-        private void OnHitTestApproval(bool approval)
-        {
-            IsHovered = approval;
-        }
-
-        private void HitTest(Point mousePos)
-        {
-            if (this.boundingRect.Rect.Contains(mousePos))
+            if (this.boundingRect.Rect.Contains(currentPosition))
             {
                 this.IsSoftHovered = true;
                 this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, OnHitTestApproval));
             }
         }
 
+        private void OnHitTestApproval(bool approval)
+        {
+            IsHovered = approval;
+        }
 
         // Debugging //
 

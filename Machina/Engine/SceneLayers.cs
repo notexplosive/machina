@@ -20,19 +20,6 @@ namespace Machina.Engine
             this.debugScene = debugScene;
         }
 
-        /// <summary>
-        /// Creates a SceneLayers with provided trackers, only useful for testing.
-        /// </summary>
-        /// <param name="keyTracker"></param>
-        /// <param name="mouseTracker"></param>
-        /// <param name="scrollTracker"></param>
-        public SceneLayers(KeyTracker keyTracker, MouseTracker mouseTracker, ScrollTracker scrollTracker)
-        {
-            this.keyTracker = keyTracker;
-            this.mouseTracker = mouseTracker;
-            this.scrollTracker = scrollTracker;
-        }
-
         public void Add(Scene scene)
         {
             this.sceneList.Add(scene);
@@ -49,13 +36,23 @@ namespace Machina.Engine
             return array;
         }
 
-        public void Update(float dt, Matrix mouseTransformMatrix, bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
+        public void UpdateWithNoInput(float dt)
+        {
+            Update(dt, Matrix.Identity, InputState.Empty);
+        }
+
+        public void Update(float dt, InputState input)
+        {
+            Update(dt, Matrix.Identity, input);
+        }
+
+        public void Update(float dt, Matrix mouseTransformMatrix, InputState inputState, bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
         {
             var scenes = AllScenes();
 
-            scrollTracker.Calculate();
-            keyTracker.Calculate();
-            mouseTracker.Calculate();
+            scrollTracker.Calculate(inputState.mouseState);
+            keyTracker.Calculate(inputState.keyboardState);
+            mouseTracker.Calculate(inputState.mouseState);
 
             var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix).ToPoint();
 
@@ -107,6 +104,11 @@ namespace Machina.Engine
             }
 
             HitTestResult.ApproveTopCandidate(scenes);
+        }
+
+        internal void Update(float dt, Matrix matrix, object raw, bool v1, bool v2)
+        {
+            throw new NotImplementedException();
         }
 
         public void PreDraw(SpriteBatch spriteBatch)

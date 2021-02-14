@@ -117,7 +117,7 @@ namespace Machina.Components
 
         public void ApplyScrollDelta(int scrollDelta)
         {
-            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.actor.scene.camera.Zoom);
+            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
         }
 
         public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)

@@ -24,6 +24,7 @@ namespace Machina.Tests
         public TestGroup(string name)
         {
             this.groupName = name;
+            registry.Add(this);
         }
 
         public void AddTest(Test test)
@@ -173,6 +174,16 @@ namespace Machina.Tests
         internal void ExpectNull(object probablyNull, string message = "")
         {
             Expect(null, probablyNull, message);
+        }
+
+        internal void ExpectFalse(bool condition, string message)
+        {
+            Expect(false, condition, message);
+        }
+
+        internal void ExpectTrue(bool condition, string message)
+        {
+            Expect(true, condition, message);
         }
     }
 

@@ -37,7 +37,7 @@ namespace Machina.Engine
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public void Calculate()
+        public void Calculate(MouseState currentState)
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,
@@ -45,12 +45,10 @@ namespace Machina.Engine
                 this.oldState.RightButton,
             };
 
-            // This is the one place where it's OK to use Mouse.GetState(), should be avoided everywhere else
-            var mouseState = Mouse.GetState();
             var currentButtons = new ButtonState[3] {
-                mouseState.LeftButton,
-                mouseState.MiddleButton,
-                mouseState.RightButton,
+                currentState.LeftButton,
+                currentState.MiddleButton,
+                currentState.RightButton,
             };
 
             var pressedThisFrame = new List<MouseButton>();
@@ -74,15 +72,15 @@ namespace Machina.Engine
 
             ButtonsReleasedThisFrame = releasedThisFrame;
             ButtonsPressedThisFrame = pressedThisFrame;
-            RawWindowPosition = mouseState.Position;
+            RawWindowPosition = currentState.Position;
 
             if (!this.firstFrame)
             {
                 // We hide this on the first frame because game will launch with a huge mouse delta otherwise
-                PositionDelta = (mouseState.Position - oldState.Position).ToVector2();
+                PositionDelta = (currentState.Position - oldState.Position).ToVector2();
             }
 
-            this.oldState = mouseState;
+            this.oldState = currentState;
             this.firstFrame = false;
         }
     }

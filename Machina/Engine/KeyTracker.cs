@@ -86,9 +86,8 @@ namespace Machina.Engine
             private set;
         }
 
-        public void Calculate()
+        public void Calculate(KeyboardState currentState)
         {
-            var currentState = Keyboard.GetState();
             var currentPressed = currentState.GetPressedKeys();
             var oldPressed = this.oldState.GetPressedKeys();
             var keysPressedThisFrame = new List<Keys>();
