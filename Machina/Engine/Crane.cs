@@ -82,7 +82,7 @@ namespace Machina.Engine
     public abstract class Crane<T> : ICrane where T : ICrane
     {
         private readonly List<T> iterablesCreatedThisFrame = new List<T>();
-        private readonly List<T> iterablesDestroyedThisFrame = new List<T>();
+        private readonly List<T> iterablesDeletedThisFrame = new List<T>();
         private readonly List<T> iterablesGentlyRemovedThisFrame = new List<T>();
         protected readonly List<T> iterables = new List<T>();
 
@@ -97,7 +97,7 @@ namespace Machina.Engine
         /// <param name="removedIterable"></param>
         protected void DeleteIterable(T removedIterable)
         {
-            iterablesDestroyedThisFrame.Add(removedIterable);
+            iterablesDeletedThisFrame.Add(removedIterable);
         }
 
         /// <summary>
@@ -123,13 +123,15 @@ namespace Machina.Engine
                 iterable.Update(dt);
             }
 
-            foreach (var iterable in iterablesDestroyedThisFrame)
+            foreach (var iterable in iterablesDeletedThisFrame)
             {
-                iterables.Remove(iterable);
-                iterable.OnDelete();
+                if (iterables.Remove(iterable))
+                {
+                    iterable.OnDelete();
+                }
             }
 
-            iterablesDestroyedThisFrame.Clear();
+            iterablesDeletedThisFrame.Clear();
 
             foreach (var iterable in iterablesGentlyRemovedThisFrame)
             {

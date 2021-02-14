@@ -200,8 +200,7 @@ namespace Machina.Engine
         public void RemoveComponent<T>() where T : BaseComponent
         {
             var comp = GetComponent<T>();
-            comp.OnDelete();
-            this.iterables.Remove(comp);
+            DeleteIterable(comp);
         }
 
         private BaseComponent GetComponentByName(string fullName)
