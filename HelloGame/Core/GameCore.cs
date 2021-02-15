@@ -64,6 +64,8 @@ namespace HelloGame
             new SpriteRenderer(ballActor, linkinSpriteSheet).SetupBoundingRect();
             new KeyboardMovement(ballActor);
             new Hoverable(ballActor);
+            new Draggable(ballActor);
+            new MoveOnDrag(ballActor);
             ballActor.Depth = 0.2f;
             ballActor.Angle = MathF.PI / 2;
 

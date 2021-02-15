@@ -179,6 +179,19 @@ namespace Machina.Tests
                 test.Expect(0, parent.ChildCount, "First parent has zero children after update");
                 test.Expect(1, parent2.ChildCount, "Second parent has 1 child after update");
             }));
+
+            AddTest("Set position on parented object", test =>
+            {
+                var scene = new Scene();
+                var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0));
+
+                child.SetParent(parent);
+                scene.FlushBuffers();
+                child.Position = new Vector2(-50, -50);
+
+                test.Expect(new Vector2(-50, -50), child.Position, "Child gets set to assigned world position");
+            });
         }
     }
 }
