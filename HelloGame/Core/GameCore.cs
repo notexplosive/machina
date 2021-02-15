@@ -26,7 +26,7 @@ namespace HelloGame
 
         protected override void OnGameLoad()
         {
-            gameScene = new Scene(this.gameCanvas);
+            gameScene = new Scene(this.gameCanvas, new FrameStep());
             sceneLayers.Add(gameScene);
 
             uiScene = new Scene(this.gameCanvas);

@@ -10,12 +10,16 @@ namespace Machina.Engine
     public class Scene : Crane<Actor>
     {
         public readonly Camera camera;
-        public readonly HitTester hitTester;
+        public readonly IFrameStep frameStep = new EmptyFrameStep();
+        public readonly HitTester hitTester = new HitTester();
 
-        public Scene(GameCanvas gameCanvas = null)
+        public Scene(GameCanvas gameCanvas = null, FrameStep frameStep = null)
         {
             this.camera = new Camera(gameCanvas);
-            this.hitTester = new HitTester();
+            if (frameStep != null)
+            {
+                this.frameStep = frameStep;
+            }
         }
 
         public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, float depth = 0.5f)
@@ -97,6 +101,26 @@ namespace Machina.Engine
             ClearHitTester();
             // Convert position to account for camera
             base.OnMouseUpdate(camera.ScreenToWorld(screenPosition), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
+        }
+
+        public override void OnScroll(int scrollDelta)
+        {
+            if (this.frameStep.IsPaused)
+            {
+                this.frameStep.Step(this);
+            }
+
+            base.OnScroll(scrollDelta);
+        }
+
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            if (key == Keys.Space && state == ButtonState.Pressed && modifiers.control)
+            {
+                this.frameStep.IsPaused = !this.frameStep.IsPaused;
+            }
+
+            base.OnKey(key, state, modifiers);
         }
 
         public void ClearHitTester()

@@ -97,7 +97,10 @@ namespace Machina.Engine
 
             foreach (Scene scene in scenes)
             {
-                scene.Update(dt);
+                if (!scene.frameStep.IsPaused)
+                {
+                    scene.Update(dt);
+                }
             }
 
             HitTestResult.ApproveTopCandidate(scenes);
