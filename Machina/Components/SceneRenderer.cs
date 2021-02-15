@@ -12,7 +12,7 @@ namespace Machina.Components
     {
         private readonly Canvas canvas;
         private readonly Hoverable hoverable;
-        private readonly SceneLayers sceneLayers = new SceneLayers(null);
+        private readonly SceneLayers sceneLayers = new SceneLayers(null, new EmptyFrameStep());
         private readonly Func<bool> shouldAllowKeyboardEvents;
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         public Func<bool> bypassHoverConstraint;

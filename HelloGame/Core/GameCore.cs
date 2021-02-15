@@ -26,10 +26,8 @@ namespace HelloGame
 
         protected override void OnGameLoad()
         {
-            gameScene = new Scene(this.gameCanvas, new FrameStep());
-            sceneLayers.Add(gameScene);
-
-            uiScene = new Scene(this.gameCanvas);
+            gameScene = sceneLayers.AddNewScene(this.gameCanvas);
+            uiScene = sceneLayers.AddNewScene(this.gameCanvas);
             sceneLayers.Add(uiScene);
 
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));

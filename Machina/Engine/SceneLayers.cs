@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Machina.Engine
@@ -14,10 +15,19 @@ namespace Machina.Engine
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
+        private readonly IFrameStep frameStep;
 
-        public SceneLayers(Scene debugScene)
+        public SceneLayers(Scene debugScene, IFrameStep frameStep)
         {
             this.debugScene = debugScene;
+            this.frameStep = frameStep;
+        }
+
+        internal Scene AddNewScene(GameCanvas canvas)
+        {
+            var scene = new Scene(canvas, this.frameStep);
+            Add(scene);
+            return scene;
         }
 
         public void Add(Scene scene)
@@ -55,6 +65,17 @@ namespace Machina.Engine
             mouseTracker.Calculate(inputState.mouseState);
 
             var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix);
+
+
+            if (keyTracker.Pressed.Contains(Keys.Space) && keyTracker.Modifiers.control)
+            {
+                this.frameStep.IsPaused = !this.frameStep.IsPaused;
+            }
+
+            if (this.frameStep.IsPaused && scrollTracker.ScrollDelta < 0)
+            {
+                this.frameStep.Step(scenes);
+            }
 
             foreach (Scene scene in scenes)
             {
@@ -106,11 +127,6 @@ namespace Machina.Engine
             HitTestResult.ApproveTopCandidate(scenes);
         }
 
-        internal void Update(float dt, Matrix matrix, object raw, bool v1, bool v2)
-        {
-            throw new NotImplementedException();
-        }
-
         public void PreDraw(SpriteBatch spriteBatch)
         {
             var scenes = AllScenes();
@@ -135,6 +151,13 @@ namespace Machina.Engine
                 {
                     scene.DebugDraw(spriteBatch);
                 }
+            }
+
+            if (this.frameStep.IsPaused)
+            {
+                spriteBatch.Begin();
+                this.frameStep.Draw(spriteBatch);
+                spriteBatch.End();
             }
         }
     }

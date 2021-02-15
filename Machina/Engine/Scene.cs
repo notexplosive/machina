@@ -13,7 +13,7 @@ namespace Machina.Engine
         public readonly IFrameStep frameStep = new EmptyFrameStep();
         public readonly HitTester hitTester = new HitTester();
 
-        public Scene(GameCanvas gameCanvas = null, FrameStep frameStep = null)
+        public Scene(GameCanvas gameCanvas = null, IFrameStep frameStep = null)
         {
             this.camera = new Camera(gameCanvas);
             if (frameStep != null)
@@ -103,23 +103,8 @@ namespace Machina.Engine
             base.OnMouseUpdate(camera.ScreenToWorld(screenPosition), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
         }
 
-        public override void OnScroll(int scrollDelta)
-        {
-            if (this.frameStep.IsPaused)
-            {
-                this.frameStep.Step(this);
-            }
-
-            base.OnScroll(scrollDelta);
-        }
-
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            if (key == Keys.Space && state == ButtonState.Pressed && modifiers.control)
-            {
-                this.frameStep.IsPaused = !this.frameStep.IsPaused;
-            }
-
             base.OnKey(key, state, modifiers);
         }
 
