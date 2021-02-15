@@ -176,6 +176,18 @@ namespace Machina.Tests
             }
         }
 
+        public void Expect<T>(T[] expectedArray, T[] actualArray, string message = "")
+        {
+            Expect(expectedArray.Length, actualArray.Length, message + "(array length)");
+
+            if (expectedArray.Length == actualArray.Length)
+            {
+                for (int i = 0; i < expectedArray.Length; i++)
+                {
+                    Expect(expectedArray[i], actualArray[i], "(element " + i + ")");
+                }
+            }
+        }
 
         public void ExpectNot<T>(T expected, T actual, string message = "")
         {

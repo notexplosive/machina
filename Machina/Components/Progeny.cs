@@ -58,13 +58,19 @@ namespace Machina.Components
             }
 
             this.parent = newParent;
-            newParent.progeny.AddChild(this.actor);
-            this.actor.LocalPosition = this.actor.WorldToLocalPosition(this.actor.Position);
-            this.actor.LocalAngle = this.actor.Angle - newParent.Angle;
-            this.actor.LocalDepth = this.actor.Depth - newParent.Depth;
-
+            if (newParent != null)
+            {
+                newParent.progeny.AddChild(this.actor);
+                this.actor.LocalPosition = this.actor.WorldToLocalPosition(this.actor.Position);
+                this.actor.LocalAngle = this.actor.Angle - newParent.Angle;
+                this.actor.LocalDepth = this.actor.Depth - newParent.Depth;
+            }
         }
 
+        /// <summary>
+        /// Remove from scene and add to hierarchy
+        /// </summary>
+        /// <param name="child"></param>
         private void AddChild(Actor child)
         {
             // If the actor is in a scene, remove them
@@ -72,6 +78,10 @@ namespace Machina.Components
             AddIterable(child);
         }
 
+        /// <summary>
+        /// Remove from hierarchy and re-add to scene
+        /// </summary>
+        /// <param name="child"></param>
         private void RemoveChild(Actor child)
         {
             GentlyRemoveIterable(child);

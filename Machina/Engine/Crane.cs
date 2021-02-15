@@ -96,6 +96,11 @@ namespace Machina.Engine
             iterablesCreatedThisFrame.Add(newIterable);
         }
 
+        protected bool IsIterablePendingDeletion(T iterable)
+        {
+            return iterablesDeletedThisFrame.Contains(iterable) || iterablesGentlyRemovedThisFrame.Contains(iterable);
+        }
+
         /// <summary>
         /// Remove this iterable, assume it's being deleted (ie: dispose any resources)
         /// </summary>
@@ -146,8 +151,6 @@ namespace Machina.Engine
 
         public virtual void Update(float dt)
         {
-            FlushBuffers();
-
             foreach (var iterable in iterables)
             {
                 iterable.Update(dt);

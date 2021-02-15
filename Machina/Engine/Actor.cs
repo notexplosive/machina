@@ -215,7 +215,10 @@ namespace Machina.Engine
 
         internal void SetParent(Actor parent)
         {
-            this.progeny.SetParent(parent);
+            if (parent != this)
+            {
+                this.progeny.SetParent(parent);
+            }
         }
 
         /// <summary>

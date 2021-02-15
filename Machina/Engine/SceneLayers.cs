@@ -58,6 +58,8 @@ namespace Machina.Engine
 
             foreach (Scene scene in scenes)
             {
+                scene.FlushBuffers();
+
                 if (allowKeyboardEvents)
                 {
                     foreach (var key in keyTracker.Released)

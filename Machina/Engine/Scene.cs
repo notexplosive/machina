@@ -27,6 +27,32 @@ namespace Machina.Engine
             return actor;
         }
 
+        public List<Actor> GetAllActors()
+        {
+            void extractChild(List<Actor> accumulator, Actor actor)
+            {
+                if (IsIterablePendingDeletion(actor))
+                {
+                    return;
+                }
+                accumulator.Add(actor);
+
+                for (int i = 0; i < actor.ChildCount; i++)
+                {
+                    var child = actor.GetChildAt(i);
+                    extractChild(accumulator, child);
+                }
+            }
+
+            var result = new List<Actor>();
+            foreach (var actor in iterables)
+            {
+                extractChild(result, actor);
+            }
+
+            return result;
+        }
+
         public Actor AddActor(Actor actor)
         {
             AddIterable(actor);

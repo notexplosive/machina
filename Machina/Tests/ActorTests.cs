@@ -180,6 +180,34 @@ namespace Machina.Tests
                 test.Expect(1, parent2.ChildCount, "Second parent has 1 child after update");
             }));
 
+            AddTest(new Test("Setting parent to null will set it to have no parent", test =>
+            {
+                var scene = new Scene();
+                var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0));
+
+                child.SetParent(parent);
+                scene.FlushBuffers();
+
+                child.Position = new Vector2(300, 300);
+                child.SetParent(null);
+                scene.FlushBuffers();
+
+                test.Expect(new Vector2(300, 300), child.Position, "Child is not moved by unsetting its parent");
+                test.ExpectNull(child.Parent, "Child's parent is null");
+                test.Expect(2, scene.GetAllActors().Count, "Scene is aware of both actors");
+            }));
+
+            AddTest("Setting parent to yourself should be a no-op", test =>
+            {
+                var scene = new Scene();
+                var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+
+                parent.SetParent(parent);
+
+                test.ExpectNull(parent.Parent, "Setting non-parented object's parent to null should still have null parent");
+            });
+
             AddTest("Set position on parented object", test =>
             {
                 var scene = new Scene();
