@@ -10,14 +10,17 @@ namespace Machina.Components
 {
     public class Progeny : Crane<Actor>, IComponent
     {
-        private float depth = 0.5f;
-        private float localDepth;
-        private Vector2 position;
-        private Vector2 localPosition;
-        private float angle;
-        private float localAngle;
-        private Actor parent;
+        private float depth_impl = 0.5f;
+        private float localDepth_impl;
+        private Vector2 position_impl;
+        private Vector2 localPosition_impl;
+        private float angle_impl;
+        private float localAngle_impl;
         private Actor actor;
+        public Actor Parent
+        {
+            get; private set;
+        }
 
         public Progeny(Actor actor)
         {
@@ -57,15 +60,15 @@ namespace Machina.Components
         {
             get
             {
-                return this.depth;
+                return this.depth_impl;
             }
             set
             {
-                this.depth = value;
+                this.depth_impl = value;
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Depth = this.depth + child.progeny.localDepth;
+                    child.progeny.Depth = this.depth_impl + child.progeny.localDepth_impl;
                 }
             }
         }
@@ -76,11 +79,11 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    return this.localDepth;
+                    return this.localDepth_impl;
                 }
                 else
                 {
-                    return depth;
+                    return depth_impl;
                 }
             }
 
@@ -88,7 +91,7 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    this.localDepth = value;
+                    this.localDepth_impl = value;
                 }
                 else
                 {
@@ -102,15 +105,15 @@ namespace Machina.Components
         {
             get
             {
-                return this.angle;
+                return this.angle_impl;
             }
             set
             {
-                this.angle = value;
+                this.angle_impl = value;
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Angle = this.angle + child.progeny.localAngle;
+                    child.progeny.Angle = this.angle_impl + child.progeny.localAngle_impl;
                     child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.LocalPosition);
                 }
             }
@@ -122,7 +125,7 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    return this.localAngle;
+                    return this.localAngle_impl;
                 }
                 else
                 {
@@ -134,7 +137,7 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    this.localAngle = value;
+                    this.localAngle_impl = value;
                 }
                 else
                 {
@@ -148,16 +151,16 @@ namespace Machina.Components
         {
             get
             {
-                return this.position;
+                return this.position_impl;
             }
             set
             {
-                this.position = value;
-                this.localPosition = WorldToLocalPosition(this.position);
+                this.position_impl = value;
+                this.localPosition_impl = WorldToLocalPosition(this.position_impl);
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.localPosition);
+                    child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.localPosition_impl);
                 }
             }
         }
@@ -168,7 +171,7 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    return this.localPosition;
+                    return this.localPosition_impl;
                 }
                 else
                 {
@@ -180,7 +183,7 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    this.localPosition = value;
+                    this.localPosition_impl = value;
                 }
                 else
                 {
@@ -189,7 +192,6 @@ namespace Machina.Components
             }
         }
 
-        public Actor Parent => this.parent;
         public int ChildCount => iterables.Count;
 
         public void SetParent(Actor newParent)
@@ -199,7 +201,7 @@ namespace Machina.Components
                 this.actor.Parent.progeny.RemoveChild(this.actor);
             }
 
-            this.parent = newParent;
+            this.Parent = newParent;
             if (newParent != null)
             {
                 newParent.progeny.AddChild(this.actor);
@@ -227,7 +229,7 @@ namespace Machina.Components
         private void RemoveChild(Actor child)
         {
             GentlyRemoveIterable(child);
-            this.parent = null;
+            this.Parent = null;
             child.scene.AddActor(child);
         }
 
@@ -240,11 +242,16 @@ namespace Machina.Components
         {
             get
             {
-                var parent = Parent;
-                var parentPos = parent != null ? parent.progeny.Position : Vector2.Zero;
-                var parentAngle = parent != null ? parent.progeny.Angle : 0f;
-                return Matrix.CreateRotationZ(parentAngle)
-                    * Matrix.CreateTranslation(parentPos.X, parentPos.Y, 0);
+                if (HasParent)
+                {
+                    var pos = Parent.progeny.Position;
+                    return Matrix.CreateRotationZ(Parent.progeny.angle_impl)
+                        * Matrix.CreateTranslation(pos.X, pos.Y, 0);
+                }
+                else
+                {
+                    return Matrix.Identity;
+                }
             }
         }
 
