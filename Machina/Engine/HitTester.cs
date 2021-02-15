@@ -15,7 +15,7 @@ namespace Machina.Engine
         // Has an impossibly high depth of 2.0f
         public readonly static HitTestResult Empty = new HitTestResult(2.0f, null);
 
-        public HitTestResult(Actor actor, Action<bool> callback) : this(actor.progeny.Depth, callback)
+        public HitTestResult(Actor actor, Action<bool> callback) : this(actor.transform.Depth, callback)
         {
             this.actor = actor;
         }

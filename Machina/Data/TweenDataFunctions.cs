@@ -13,12 +13,12 @@ namespace Machina.Data
     {
         public static Vector2 GetPosition(this Actor actor)
         {
-            return actor.progeny.Position;
+            return actor.transform.Position;
         }
 
         public static void SetPosition(this Actor actor, Vector2 value)
         {
-            actor.progeny.Position = value;
+            actor.transform.Position = value;
         }
 
         public static TweenAccessors<Vector2> PositionTweenAccessors(this Actor actor)

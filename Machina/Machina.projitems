@@ -13,7 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Draggable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\LayoutGroup.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\Progeny.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\SceneTests.cs" />
     <Compile Include="..\Machina\Components\LayoutElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\MoveOnDrag.cs" />

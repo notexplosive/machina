@@ -47,7 +47,7 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
-            this.actor.progeny.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
+            this.actor.transform.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
             this.targetCamera.Position = new Vector2(this.targetCamera.Position.X, CurrentScrollUnits);
         }
 
@@ -55,7 +55,7 @@ namespace Machina.Components
         {
             if (IsScrollbarNeeded)
             {
-                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.progeny.Depth);
+                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.transform.Depth);
             }
         }
 

@@ -51,7 +51,7 @@ namespace Machina.Components
                 this.size.Y = value;
             }
         }
-        public Rectangle Rect => new Rectangle((this.actor.progeny.Position - Offset).ToPoint(), this.size);
+        public Rectangle Rect => new Rectangle((this.actor.transform.Position - Offset).ToPoint(), this.size);
 
         public Vector2 NormalizedCenter
         {

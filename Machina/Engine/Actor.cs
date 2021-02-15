@@ -12,7 +12,7 @@ namespace Machina.Engine
     {
         public readonly Scene scene;
         public readonly string name;
-        public readonly Progeny progeny;
+        public readonly Transform transform;
 
         /// <summary>
         /// Create an actor and add them to the given scene.
@@ -25,13 +25,13 @@ namespace Machina.Engine
             this.scene?.AddActor(this);
             this.name = name;
 
-            this.progeny = new Progeny(this);
+            this.transform = new Transform(this);
             // Niche scenario, AddComponent is OK here.
-            AddComponent(progeny);
+            AddComponent(transform);
         }
 
-        public int ChildCount => this.progeny.ChildCount;
-        public Actor Parent => this.progeny.Parent;
+        public int ChildCount => this.transform.ChildCount;
+        public Actor Parent => this.transform.Parent;
 
 
         public void Destroy()
@@ -48,7 +48,7 @@ namespace Machina.Engine
         {
             if (parent != this)
             {
-                this.progeny.SetParent(parent);
+                this.transform.SetParent(parent);
             }
         }
 

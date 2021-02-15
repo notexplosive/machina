@@ -18,7 +18,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, this.actor.progeny.Position, null, Color.White, this.actor.progeny.Angle, new Vector2(texture.Width / 2, texture.Height / 2), Vector2.One, SpriteEffects.None, this.actor.progeny.Depth);
+            spriteBatch.Draw(texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, new Vector2(texture.Width / 2, texture.Height / 2), Vector2.One, SpriteEffects.None, this.actor.transform.Depth);
         }
 
         public override void Update(float dt)

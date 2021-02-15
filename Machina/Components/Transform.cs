@@ -8,30 +8,29 @@ using System.Text;
 
 namespace Machina.Components
 {
-    public class Progeny : Crane<Actor>, IComponent
+    public class Transform : Crane<Actor>, IComponent
     {
+        private readonly Actor actor;
+
         private float depth_impl = 0.5f;
         private float localDepth_impl;
         private Vector2 position_impl;
         private Vector2 localPosition_impl;
         private float angle_impl;
         private float localAngle_impl;
-        private Actor actor;
         public Actor Parent
         {
             get; private set;
         }
 
-        public Progeny(Actor actor)
+        public Transform(Actor actor)
         {
             this.actor = actor;
         }
 
         public override void Update(float dt)
         {
-            // Code goes here?
-
-            // Progeny needs to call base
+            // Transform needs to call base if we insert any code into Update()
             base.Update(dt);
         }
 
@@ -41,7 +40,7 @@ namespace Machina.Components
             spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2);
             spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2);
 
-            // Progeny needs to call base
+            // Transform needs to call base
             base.DebugDraw(spriteBatch);
         }
 
@@ -65,7 +64,7 @@ namespace Machina.Components
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Depth = this.depth_impl + child.progeny.localDepth_impl;
+                    child.transform.Depth = this.depth_impl + child.transform.localDepth_impl;
                 }
             }
         }
@@ -110,8 +109,8 @@ namespace Machina.Components
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Angle = this.angle_impl + child.progeny.localAngle_impl;
-                    child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.LocalPosition);
+                    child.transform.Angle = this.angle_impl + child.transform.localAngle_impl;
+                    child.transform.Position = child.transform.LocalToWorldPosition(child.transform.LocalPosition);
                 }
             }
         }
@@ -157,7 +156,7 @@ namespace Machina.Components
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = ChildAt(i);
-                    child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.localPosition_impl);
+                    child.transform.Position = child.transform.LocalToWorldPosition(child.transform.localPosition_impl);
                 }
             }
         }
@@ -195,16 +194,16 @@ namespace Machina.Components
         {
             if (this.HasParent)
             {
-                this.actor.Parent.progeny.RemoveChild(this.actor);
+                this.actor.Parent.transform.RemoveChild(this.actor);
             }
 
             this.Parent = newParent;
             if (newParent != null)
             {
-                newParent.progeny.AddChild(this.actor);
+                newParent.transform.AddChild(this.actor);
                 this.LocalPosition = this.WorldToLocalPosition(this.Position);
-                this.LocalAngle = this.Angle - newParent.progeny.Angle;
-                this.LocalDepth = this.Depth - newParent.progeny.Depth;
+                this.LocalAngle = this.Angle - newParent.transform.Angle;
+                this.LocalDepth = this.Depth - newParent.transform.Depth;
             }
         }
 
@@ -241,8 +240,8 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    var pos = Parent.progeny.Position;
-                    return Matrix.CreateRotationZ(Parent.progeny.angle_impl)
+                    var pos = Parent.transform.Position;
+                    return Matrix.CreateRotationZ(Parent.transform.angle_impl)
                         * Matrix.CreateTranslation(pos.X, pos.Y, 0);
                 }
                 else

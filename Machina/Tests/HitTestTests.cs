@@ -61,7 +61,7 @@ namespace Machina.Tests
         private Hoverable BuildHoverable(Scene scene, Point startingPosition, string name, float depth)
         {
             var actor = scene.AddActor(name, startingPosition.ToVector2());
-            actor.progeny.Depth = depth;
+            actor.transform.Depth = depth;
             new BoundingRect(actor, new Point(20, 20)).SetOffsetToCenter();
             return new Hoverable(actor);
         }

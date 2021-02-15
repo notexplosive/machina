@@ -74,7 +74,7 @@ namespace Machina.Components
             var nextElementLocation = groupRect.Location;
             foreach (var element in elements)
             {
-                element.actor.progeny.Position = nextElementLocation.ToVector2();
+                element.actor.transform.Position = nextElementLocation.ToVector2();
                 nextElementLocation += new Point(0, element.Rect.Height) + new Point(0, this.VerticalPadding);
             }
         }

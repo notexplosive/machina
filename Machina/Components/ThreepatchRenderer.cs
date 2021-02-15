@@ -23,11 +23,11 @@ namespace Machina.Components
         {
             if (this.orientation == Orientation.Horizontal)
             {
-                spriteSheet.DrawHorizontalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.progeny.Depth);
+                spriteSheet.DrawHorizontalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.transform.Depth);
             }
             else
             {
-                spriteSheet.DrawVerticalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.progeny.Depth);
+                spriteSheet.DrawVerticalThreepatch(spriteBatch, this.boundingRect.Rect, this.actor.transform.Depth);
             }
         }
     }

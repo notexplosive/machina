@@ -70,7 +70,7 @@ namespace Machina.Components
         {
             if (this.IsDragging)
             {
-                spriteBatch.DrawLine(this.actor.progeny.Position, this.actor.progeny.Position + accumulatedDragDelta, Color.Orange, 4, 0.2f);
+                spriteBatch.DrawLine(this.actor.transform.Position, this.actor.transform.Position + accumulatedDragDelta, Color.Orange, 4, 0.2f);
             }
         }
     }

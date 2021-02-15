@@ -21,9 +21,9 @@ namespace Machina.Engine
         public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, float depth = 0.5f)
         {
             var actor = new Actor(name, this);
-            actor.progeny.Position = position;
-            actor.progeny.Angle = angle;
-            actor.progeny.Depth = depth;
+            actor.transform.Position = position;
+            actor.transform.Angle = angle;
+            actor.transform.Depth = depth;
             return actor;
         }
 
@@ -39,7 +39,7 @@ namespace Machina.Engine
 
                 for (int i = 0; i < actor.ChildCount; i++)
                 {
-                    var child = actor.progeny.ChildAt(i);
+                    var child = actor.transform.ChildAt(i);
                     extractChild(accumulator, child);
                 }
             }

@@ -66,17 +66,17 @@ namespace HelloGame
             new Hoverable(ballActor);
             new Draggable(ballActor);
             new MoveOnDrag(ballActor);
-            ballActor.progeny.Depth = 0.2f;
-            ballActor.progeny.Angle = MathF.PI / 2;
+            ballActor.transform.Depth = 0.2f;
+            ballActor.transform.Angle = MathF.PI / 2;
 
-            Actor other = gameScene.AddActor("other", ballActor.progeny.Position + new Vector2(100, 0), 0.5f, 0.3f);
+            Actor other = gameScene.AddActor("other", ballActor.transform.Position + new Vector2(100, 0), 0.5f, 0.3f);
             new SpriteRenderer(other, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
             new Hoverable(other);
             new Draggable(other);
             new MoveOnDrag(other);
             other.SetParent(ballActor);
 
-            Actor other2 = gameScene.AddActor("other2", ballActor.progeny.Position + new Vector2(25, 200), 1f, 0.4f);
+            Actor other2 = gameScene.AddActor("other2", ballActor.transform.Position + new Vector2(25, 200), 1f, 0.4f);
             new SpriteRenderer(other2, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
             new Hoverable(other2);
             new Draggable(other2);
@@ -100,13 +100,13 @@ namespace HelloGame
 
             var innerScene = new Scene();
             var microActor = innerScene.AddActor("MicroActor");
-            microActor.progeny.Position = new Vector2(10, 500);
+            microActor.transform.Position = new Vector2(10, 500);
             new BoundingRect(microActor, Point.Zero);
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor);
 
             var microActor2 = innerScene.AddActor("MicroActor");
-            microActor2.progeny.Position = new Vector2(10, 50);
+            microActor2.transform.Position = new Vector2(10, 50);
             new BoundingRect(microActor2, Point.Zero);
             new SpriteRenderer(microActor2, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor2);
@@ -127,17 +127,17 @@ namespace HelloGame
             new Hoverable(ninepatchActor);
 
             var progressBar = gameScene.AddActor("ProgressBar");
-            progressBar.progeny.Position = new Vector2(500, 50);
+            progressBar.transform.Position = new Vector2(500, 50);
             new BoundingRect(progressBar, new Point(500, 24));
             new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
             var pillar = uiScene.AddActor("Pillar");
-            pillar.progeny.Position = new Vector2(300, 350);
+            pillar.transform.Position = new Vector2(300, 350);
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
             new Hoverable(pillar);
             new TextRenderer(pillar, consoleFont, "Hello from the UI Scene!");
-            pillar.progeny.Depth = 1f;
+            pillar.transform.Depth = 1f;
 
             var mouse = gameScene.AddActor("gameCursor");
             new MouseCircle(mouse, 10, Color.BlueViolet);
