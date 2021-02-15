@@ -89,6 +89,7 @@ namespace Machina.Engine
             new ActorTests();
             new HitTestTests();
             new CameraTransformsTests();
+            new LayoutTests();
 
             Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
