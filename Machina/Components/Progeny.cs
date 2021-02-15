@@ -37,9 +37,9 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawLine(this.actor.progeny.Position, this.actor.progeny.Position + new Angle(-this.actor.progeny.Angle).ToUnitVector() * 15, Color.LawnGreen, 2);
-            spriteBatch.DrawLine(this.actor.progeny.Position, this.actor.progeny.LocalToWorldPosition(this.actor.progeny.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2);
-            spriteBatch.DrawLine(this.actor.progeny.Position, this.actor.progeny.LocalToWorldPosition(this.actor.progeny.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2);
+            spriteBatch.DrawLine(this.Position, this.Position + new Angle(-this.Angle).ToUnitVector() * 15, Color.LawnGreen, 2);
+            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2);
+            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2);
 
             // Progeny needs to call base
             base.DebugDraw(spriteBatch);
@@ -194,7 +194,7 @@ namespace Machina.Components
 
         public void SetParent(Actor newParent)
         {
-            if (this.actor.progeny.HasParent)
+            if (this.HasParent)
             {
                 this.actor.Parent.progeny.RemoveChild(this.actor);
             }
@@ -203,9 +203,9 @@ namespace Machina.Components
             if (newParent != null)
             {
                 newParent.progeny.AddChild(this.actor);
-                this.actor.progeny.LocalPosition = this.actor.progeny.WorldToLocalPosition(this.actor.progeny.Position);
-                this.actor.progeny.LocalAngle = this.actor.progeny.Angle - newParent.progeny.Angle;
-                this.actor.progeny.LocalDepth = this.actor.progeny.Depth - newParent.progeny.Depth;
+                this.LocalPosition = this.WorldToLocalPosition(this.Position);
+                this.LocalAngle = this.Angle - newParent.progeny.Angle;
+                this.LocalDepth = this.Depth - newParent.progeny.Depth;
             }
         }
 
