@@ -16,7 +16,7 @@ namespace Machina.Engine
     {
         private readonly Point idealSize;
         private RenderTarget2D screenRenderTarget;
-        private Strategy strategy;
+        private IStrategy strategy;
 
         public GameCanvas(int idealWidth, int idealHeight, ResizeBehavior resizeBehavior)
         {
@@ -72,8 +72,8 @@ namespace Machina.Engine
 
         public void OnResize(int windowWidth, int windowHeight)
         {
-            this.PendingResize = true;
-            this.WindowSize = new Point(windowWidth, windowHeight);
+            PendingResize = true;
+            WindowSize = new Point(windowWidth, windowHeight);
         }
 
         public void FinishResize()
@@ -86,26 +86,26 @@ namespace Machina.Engine
             this.screenRenderTarget = strategy.BuildCanvas(graphicsDevice, WindowSize);
         }
 
-        public void PrepareCanvas(GraphicsDevice graphicsDevice)
+        public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice)
         {
-            strategy.PrepareCanvas(graphicsDevice, this.screenRenderTarget);
+            strategy.PrepareToDrawOnCanvas(graphicsDevice, this.screenRenderTarget);
         }
 
-        public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
-            strategy.DrawCanvas(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
+            strategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
         }
 
-        private interface Strategy
+        private interface IStrategy
         {
-            void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
-            void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
+            void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
+            void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
             RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize);
             Point GetCanvasSize(Point windowSize, Point idealSize);
             float GetScaleFactor(Point windowSize, Point idealSize);
         }
 
-        private class MaintainDesiredResolutionStrategy : Strategy
+        private class MaintainDesiredResolutionStrategy : IStrategy
         {
             public float GetScaleFactor(Point windowSize, Point idealSize)
             {
@@ -125,7 +125,7 @@ namespace Machina.Engine
                     DepthFormat.Depth24);
             }
 
-            public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
 
@@ -142,14 +142,14 @@ namespace Machina.Engine
                 return (new Vector2(idealSize.X, idealSize.Y) * GetScaleFactor(windowSize, idealSize)).ToPoint();
             }
 
-            public void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
+            public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 graphicsDevice.SetRenderTarget(screenRenderTarget);
                 graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
             }
         }
 
-        private class FillStrategy : Strategy
+        private class FillStrategy : IStrategy
         {
             public Point GetCanvasSize(Point windowSize, Point idealSize)
             {
@@ -171,11 +171,11 @@ namespace Machina.Engine
                 return 1f;
             }
 
-            public void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
+            public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
             }
 
-            public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
             {
             }
         }

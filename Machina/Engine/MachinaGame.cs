@@ -130,11 +130,11 @@ namespace Machina.Engine
         protected override void Draw(GameTime gameTime)
         {
             sceneLayers.PreDraw(spriteBatch);
-            gameCanvas.PrepareCanvas(GraphicsDevice);
+            gameCanvas.PrepareToDrawOnCanvas(GraphicsDevice);
             GraphicsDevice.Clear(Color.DarkSlateGray); // Draw main background color
             sceneLayers.Draw(spriteBatch);
 
-            gameCanvas.DrawCanvas(GraphicsDevice, spriteBatch);
+            gameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
             base.Draw(gameTime);
         }
 
