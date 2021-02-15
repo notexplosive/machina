@@ -9,12 +9,20 @@ using System.Text;
 
 namespace Machina.Components
 {
+    public interface IComponent : ICrane
+    {
+        /// <summary>
+        /// Called when an actor is Destroyed
+        /// </summary>
+        public void OnActorDestroy();
+    }
+
     /// <summary>
     /// Base class for all components. This lives in Machina.Components even though it's in the engine folder
     /// because it's referenced by more Components than it is Engine things. It lives in the Engine folder to
     /// make it clear this is not a normal component.
     /// </summary>
-    public abstract class BaseComponent : NonIteratingCrane
+    public abstract class BaseComponent : NonIteratingCrane, IComponent
     {
         public readonly Actor actor;
         public BaseComponent(Actor actor)
@@ -24,9 +32,6 @@ namespace Machina.Components
             this.actor.AddComponent(this);
         }
 
-        /// <summary>
-        /// Called when an actor is Destroyed
-        /// </summary>
         public virtual void OnActorDestroy()
         {
         }

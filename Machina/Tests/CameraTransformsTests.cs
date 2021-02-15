@@ -69,7 +69,7 @@ namespace Machina.Tests
                 sceneLayers.Update(0, Matrix.Identity, new InputState(prevMouseState, new KeyboardState()));
                 sceneLayers.Update(0, Matrix.Identity, new InputState(currentMouseState, new KeyboardState()));
 
-                test.Expect(new Vector2(361, 478), savedPosition, "Mouse Postion");
+                test.Expect(new Vector2(361.88037f, 478.03424f), savedPosition, "Mouse Postion");
                 test.Expect(new Vector2(4.2735047f, 10.683762f), savedPositionDelta, "Mouse Position Delta");
                 test.Expect(new Vector2(20, 50), savedRawDelta, "Mouse raw delta");
             });

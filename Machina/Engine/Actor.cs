@@ -8,13 +8,14 @@ using Machina.Components;
 
 namespace Machina.Engine
 {
-    public class Actor : Crane<BaseComponent>
+    public class Actor : Crane<IComponent>
     {
         public float depth = 0.5f;
         public readonly Scene scene;
         public readonly Parent parent;
         public readonly Children children;
         public readonly string name;
+        private readonly Progeny progeny;
         private Vector2 position;
         private Vector2 localPosition;
         private float angle;
@@ -33,6 +34,10 @@ namespace Machina.Engine
             this.scene = scene;
             this.scene?.AddActor(this);
             this.name = name;
+
+            this.progeny = new Progeny(this);
+            // Niche scenario, AddComponent is OK here.
+            AddComponent(progeny);
         }
 
         public float Angle
@@ -44,9 +49,9 @@ namespace Machina.Engine
             set
             {
                 this.angle = value;
-                for (int i = 0; i < this.children.Count; i++)
+                for (int i = 0; i < ChildCount; i++)
                 {
-                    var child = this.children.At(i);
+                    var child = GetChildAt(i);
                     child.Angle = this.angle + child.localAngle;
                 }
             }
@@ -56,7 +61,7 @@ namespace Machina.Engine
         {
             get
             {
-                if (this.parent.Has())
+                if (HasParent)
                 {
                     return this.localAngle;
                 }
@@ -68,7 +73,7 @@ namespace Machina.Engine
 
             set
             {
-                if (this.parent.Has())
+                if (HasParent)
                 {
                     this.localAngle = value;
                 }
@@ -89,9 +94,9 @@ namespace Machina.Engine
             set
             {
                 this.position = value;
-                for (int i = 0; i < this.children.Count; i++)
+                for (int i = 0; i < ChildCount; i++)
                 {
-                    var child = this.children.At(i);
+                    var child = GetChildAt(i);
                     child.Position = child.LocalToWorldPosition();
                 }
             }
@@ -101,7 +106,7 @@ namespace Machina.Engine
         {
             get
             {
-                if (this.parent.Has())
+                if (HasParent)
                 {
                     return this.localPosition;
                 }
@@ -113,7 +118,7 @@ namespace Machina.Engine
 
             set
             {
-                if (this.parent.Has())
+                if (HasParent)
                 {
                     this.localPosition = value;
                 }
@@ -124,11 +129,20 @@ namespace Machina.Engine
             }
         }
 
+        public int ChildCount => this.children.Count;
+        public bool HasParent => this.parent.Has();
+        public Actor Parent => this.parent.Get();
+
+        public Actor GetChildAt(int index)
+        {
+            return this.children.At(index);
+        }
+
         public Matrix TransformMatrix
         {
             get
             {
-                var parent = this.parent.Get();
+                var parent = Parent;
                 var parentPos = parent.Position;
                 return Matrix.CreateRotationZ(parent.Angle)
                     * Matrix.CreateTranslation(parentPos.X, parentPos.Y, 0);
@@ -161,7 +175,7 @@ namespace Machina.Engine
         /// </summary>
         /// <param name="component">The component who is being constructed</param>
         /// <returns></returns>
-        public BaseComponent AddComponent(BaseComponent component)
+        public IComponent AddComponent(IComponent component)
         {
             Type type = component.GetType();
             Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
@@ -173,7 +187,7 @@ namespace Machina.Engine
         /// <summary>
         /// Acquire a component of type T if it exists. Otherwise get null.
         /// </summary>
-        /// <typeparam name="T">Component that inherits from BaseComponent</typeparam>
+        /// <typeparam name="T">Component that inherits from IComponent</typeparam>
         /// <returns></returns>
         public T GetComponent<T>() where T : BaseComponent
         {
@@ -208,7 +222,7 @@ namespace Machina.Engine
             DeleteIterable(comp);
         }
 
-        private BaseComponent GetComponentByName(string fullName)
+        private IComponent GetComponentByName(string fullName)
         {
             foreach (var component in this.iterables)
             {
