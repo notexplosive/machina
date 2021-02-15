@@ -55,7 +55,7 @@ namespace Machina.Components
             this.wasHovered = IsHovered;
         }
 
-        public override void PostUpdate()
+        public override void OnPostUpdate()
         {
             IsHovered = false;
         }

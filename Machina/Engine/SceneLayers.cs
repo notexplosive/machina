@@ -98,11 +98,6 @@ namespace Machina.Engine
                 scene.Update(dt);
             }
 
-            foreach (Scene scene in scenes)
-            {
-                scene.PostUpdate();
-            }
-
             HitTestResult.ApproveTopCandidate(scenes);
         }
 

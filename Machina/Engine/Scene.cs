@@ -43,11 +43,6 @@ namespace Machina.Engine
             GentlyRemoveIterable(actor);
         }
 
-        public override void Update(float dt)
-        {
-            base.Update(dt);
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);

@@ -1,6 +1,8 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,6 +63,14 @@ namespace Machina.Components
             {
                 this.accumulatedDragDelta += positionDelta;
                 this.onDrag?.Invoke(this.accumulatedDragDelta);
+            }
+        }
+
+        public override void DebugDraw(SpriteBatch spriteBatch)
+        {
+            if (this.IsDragging)
+            {
+                spriteBatch.DrawLine(this.actor.Position, this.actor.Position + accumulatedDragDelta, Color.Orange, 4, 0.2f);
             }
         }
     }

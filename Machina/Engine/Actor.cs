@@ -94,6 +94,7 @@ namespace Machina.Engine
                 {
                     var child = GetChildAt(i);
                     child.Angle = this.angle + child.localAngle;
+                    child.Position = child.LocalToWorldPosition(child.LocalPosition);
                 }
             }
         }
@@ -138,7 +139,7 @@ namespace Machina.Engine
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = GetChildAt(i);
-                    child.Position = child.LocalToWorldPosition();
+                    child.Position = child.LocalToWorldPosition(child.localPosition);
                 }
             }
         }
@@ -184,20 +185,21 @@ namespace Machina.Engine
             get
             {
                 var parent = Parent;
-                var parentPos = parent.Position;
-                return Matrix.CreateRotationZ(parent.Angle)
+                var parentPos = parent != null ? parent.Position : Vector2.Zero;
+                var parentAngle = parent != null ? parent.Angle : 0f;
+                return Matrix.CreateRotationZ(parentAngle)
                     * Matrix.CreateTranslation(parentPos.X, parentPos.Y, 0);
             }
         }
 
-        public Vector2 LocalToWorldPosition()
+        public Vector2 LocalToWorldPosition(Vector2 localPos)
         {
-            return Vector2.Transform(localPosition, TransformMatrix);
+            return Vector2.Transform(localPos, TransformMatrix);
         }
 
-        public Vector2 WorldToLocalPosition()
+        public Vector2 WorldToLocalPosition(Vector2 worldPos)
         {
-            return Vector2.Transform(Position, Matrix.Invert(TransformMatrix));
+            return Vector2.Transform(worldPos, Matrix.Invert(TransformMatrix));
         }
 
         public void Destroy()

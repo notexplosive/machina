@@ -18,7 +18,7 @@ namespace Machina.Engine
         /// <summary>
         /// Runs after all updates have completed.
         /// </summary>
-        public void PostUpdate();
+        public void OnPostUpdate();
         /// <summary>
         /// Called just before Updates() are issued on any iterables that were just added.
         /// </summary>
@@ -69,6 +69,11 @@ namespace Machina.Engine
         /// <param name="currentPosition">Mouse position transformed to your context</param>
         /// <param name="state">Button state reflecting if the mouse was pressed or released</param>
         public void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state);
+        /// <summary>
+        /// TEST ONLY: Effectively this is a zero second update that doesn't call Update.
+        /// It will flush the newIterable and deletedIterable buffers.
+        /// </summary>
+        public void FlushBuffers();
     }
 
     /// <summary>
@@ -108,7 +113,7 @@ namespace Machina.Engine
             iterablesGentlyRemovedThisFrame.Add(removedIterable);
         }
 
-        public virtual void Update(float dt)
+        private void FlushCreatedIterables()
         {
             foreach (var iterable in iterablesCreatedThisFrame)
             {
@@ -117,12 +122,10 @@ namespace Machina.Engine
             }
 
             iterablesCreatedThisFrame.Clear();
+        }
 
-            foreach (var iterable in iterables)
-            {
-                iterable.Update(dt);
-            }
-
+        private void FlushRemovedAndDeletedIterables()
+        {
             foreach (var iterable in iterablesDeletedThisFrame)
             {
                 if (iterables.Remove(iterable))
@@ -141,11 +144,37 @@ namespace Machina.Engine
             iterablesGentlyRemovedThisFrame.Clear();
         }
 
-        public virtual void PostUpdate()
+        public virtual void Update(float dt)
+        {
+            FlushCreatedIterables();
+
+            foreach (var iterable in iterables)
+            {
+                iterable.Update(dt);
+            }
+
+            FlushRemovedAndDeletedIterables();
+
+            OnPostUpdate();
+        }
+
+        public void FlushBuffers()
+        {
+            FlushCreatedIterables();
+
+            foreach (var iterable in iterables)
+            {
+                iterable.FlushBuffers();
+            }
+
+            FlushRemovedAndDeletedIterables();
+        }
+
+        public virtual void OnPostUpdate()
         {
             foreach (var iterable in iterables)
             {
-                iterable.PostUpdate();
+                iterable.OnPostUpdate();
             }
         }
 
@@ -261,7 +290,10 @@ namespace Machina.Engine
         public virtual void Update(float dt)
         {
         }
-        public virtual void PostUpdate()
+        public virtual void OnPostUpdate()
+        {
+        }
+        public void FlushBuffers()
         {
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Machina.Engine;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -151,7 +152,7 @@ namespace Machina.Tests
 
         public void Expect(float expected, float actual, string message)
         {
-            bool isEqual = Math.Abs(expected - actual) < 0.00001f;
+            bool isEqual = Math.Abs(expected - actual) < 0.0001f;
             if (!isEqual)
             {
                 AddResult(new Failure<float>(expected, actual, message));
@@ -161,6 +162,20 @@ namespace Machina.Tests
                 AddResult(new Pass());
             }
         }
+
+        public void Expect(Vector2 expected, Vector2 actual, string message)
+        {
+            bool isEqual = Math.Abs(expected.X - actual.X) < 0.0001f && Math.Abs(expected.Y - actual.Y) < 0.0001f;
+            if (!isEqual)
+            {
+                AddResult(new Failure<Vector2>(expected, actual, message));
+            }
+            else
+            {
+                AddResult(new Pass());
+            }
+        }
+
 
         public void ExpectNot<T>(T expected, T actual, string message = "")
         {
@@ -214,7 +229,7 @@ namespace Machina.Tests
         {
             var expectedString = expected != null ? expected.ToString() : "null";
             var actualString = actual != null ? actual.ToString() : "null";
-            this.message = preamble + (preamble != "" ? ": " : "") + "Expected `" + expectedString + "`, got " + actualString;
+            this.message = preamble + (preamble != "" ? ": " : "") + "Expected `" + expectedString + "`, got " + "`" + actualString + "`";
         }
 
         public string GetMessage()

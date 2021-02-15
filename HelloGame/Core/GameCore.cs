@@ -65,8 +65,9 @@ namespace HelloGame
             new KeyboardMovement(ballActor);
             new Hoverable(ballActor);
             ballActor.Depth = 0.2f;
+            ballActor.Angle = MathF.PI / 2;
 
-            Actor other = gameScene.AddActor("other", ballActor.Position + new Vector2(50, 50), 0.5f, 0.3f);
+            Actor other = gameScene.AddActor("other", ballActor.Position + new Vector2(100, 0), 0.5f, 0.3f);
             new SpriteRenderer(other, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
             new Hoverable(other);
             new Draggable(other);
@@ -116,8 +117,7 @@ namespace HelloGame
             new SceneRenderer(sceneRenderBox, innerScene, () => { return true; });
             innerScene.camera.Zoom = 1.5f;
 
-            sceneRenderBox.SetParent(linkin);
-            sceneRenderBox.SetParent(ballActor);
+            //sceneRenderBox.SetParent(linkin);
 
             var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
             new BoundingRect(ninepatchActor, new Point(400, 300));
