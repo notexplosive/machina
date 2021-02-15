@@ -173,8 +173,11 @@ namespace Machina.Tests
                 child.SetParent(parent2);
                 scene.FlushBuffers();
 
-                test.Expect(0, parent.ChildCount, "First parent has zero children");
-                test.Expect(1, parent2.ChildCount, "Second parent has 1 child");
+                test.Expect(0, parent.ChildCount, "First parent has zero children during update");
+                test.Expect(1, parent2.ChildCount, "Second parent has 1 child during update");
+
+                test.Expect(0, parent.ChildCount, "First parent has zero children after update");
+                test.Expect(1, parent2.ChildCount, "Second parent has 1 child after update");
             }));
         }
     }

@@ -146,14 +146,12 @@ namespace Machina.Engine
 
         public virtual void Update(float dt)
         {
-            FlushCreatedIterables();
+            FlushBuffers();
 
             foreach (var iterable in iterables)
             {
                 iterable.Update(dt);
             }
-
-            FlushRemovedAndDeletedIterables();
 
             OnPostUpdate();
         }
