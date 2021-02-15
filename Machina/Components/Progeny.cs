@@ -64,7 +64,7 @@ namespace Machina.Components
                 this.depth = value;
                 for (int i = 0; i < ChildCount; i++)
                 {
-                    var child = GetChildAt(i);
+                    var child = ChildAt(i);
                     child.progeny.Depth = this.depth + child.progeny.localDepth;
                 }
             }
@@ -109,7 +109,7 @@ namespace Machina.Components
                 this.angle = value;
                 for (int i = 0; i < ChildCount; i++)
                 {
-                    var child = GetChildAt(i);
+                    var child = ChildAt(i);
                     child.progeny.Angle = this.angle + child.progeny.localAngle;
                     child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.LocalPosition);
                 }
@@ -156,7 +156,7 @@ namespace Machina.Components
                 this.localPosition = WorldToLocalPosition(this.position);
                 for (int i = 0; i < ChildCount; i++)
                 {
-                    var child = GetChildAt(i);
+                    var child = ChildAt(i);
                     child.progeny.Position = child.progeny.LocalToWorldPosition(child.progeny.localPosition);
                 }
             }
@@ -234,12 +234,6 @@ namespace Machina.Components
         public Actor ChildAt(int index)
         {
             return iterables[index];
-        }
-
-
-        public Actor GetChildAt(int index) // todo: delete this
-        {
-            return this.ChildAt(index);
         }
 
         public Matrix TransformMatrix

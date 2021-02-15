@@ -39,7 +39,7 @@ namespace Machina.Engine
 
                 for (int i = 0; i < actor.ChildCount; i++)
                 {
-                    var child = actor.progeny.GetChildAt(i);
+                    var child = actor.progeny.ChildAt(i);
                     extractChild(accumulator, child);
                 }
             }
