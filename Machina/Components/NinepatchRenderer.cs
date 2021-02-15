@@ -22,7 +22,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.actor.Depth);
+            spriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.actor.progeny.Depth);
         }
     }
 }

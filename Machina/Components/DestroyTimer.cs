@@ -29,7 +29,7 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(new CircleF(this.actor.Position, 5 * this.timer), 15, Color.Red, this.timer);
+            spriteBatch.DrawCircle(new CircleF(this.actor.progeny.Position, 5 * this.timer), 15, Color.Red, this.timer);
         }
     }
 }

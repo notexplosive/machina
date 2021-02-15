@@ -27,12 +27,12 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(new CircleF(this.actor.Position, this.radius), 20, this.color, 1, this.actor.Depth - .0000001f);
+            spriteBatch.DrawCircle(new CircleF(this.actor.progeny.Position, this.radius), 20, this.color, 1, this.actor.progeny.Depth - .0000001f);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            this.actor.Position = currentPosition;
+            this.actor.progeny.Position = currentPosition;
         }
 
         public override void OnMouseButton(MouseButton mouseButton, Vector2 currentPosition, ButtonState buttonState)
