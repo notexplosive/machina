@@ -30,12 +30,12 @@ namespace Machina.Components
             this.actor.LocalPosition = localPos;
             if (curKeys.IsKeyDown(Keys.Q))
             {
-                this.actor.depth += 0.1f;
+                this.actor.Depth += 0.1f;
             }
 
             if (curKeys.IsKeyDown(Keys.E))
             {
-                this.actor.depth -= 0.1f;
+                this.actor.Depth -= 0.1f;
             }
 
             if (curKeys.IsKeyDown(Keys.Z))

@@ -18,10 +18,12 @@ namespace Machina.Engine
             this.hitTester = new HitTester();
         }
 
-        public Actor AddActor(string name, Vector2 position = new Vector2())
+        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, float depth = 0.5f)
         {
             var actor = new Actor(name, this);
             actor.Position = position;
+            actor.Angle = angle;
+            actor.Depth = depth;
             return actor;
         }
 

@@ -32,6 +32,7 @@ namespace HelloGame
             uiScene = new Scene(this.gameCanvas);
             sceneLayers.Add(uiScene);
 
+            Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
                 new NinepatchSheet("test-nine-patch", new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16)));
@@ -63,7 +64,21 @@ namespace HelloGame
             new SpriteRenderer(ballActor, linkinSpriteSheet).SetupBoundingRect();
             new KeyboardMovement(ballActor);
             new Hoverable(ballActor);
-            ballActor.depth = 0.2f;
+            ballActor.Depth = 0.2f;
+
+            Actor other = gameScene.AddActor("other", ballActor.Position + new Vector2(50, 50), 0.5f, 0.3f);
+            new SpriteRenderer(other, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
+            new Hoverable(other);
+            new Draggable(other);
+            new MoveOnDrag(other);
+            other.SetParent(ballActor);
+
+            Actor other2 = gameScene.AddActor("other2", ballActor.Position + new Vector2(25, 200), 1f, 0.4f);
+            new SpriteRenderer(other2, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
+            new Hoverable(other2);
+            new Draggable(other2);
+            new MoveOnDrag(other2);
+            other2.SetParent(other);
 
             Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
@@ -120,7 +135,7 @@ namespace HelloGame
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
             new Hoverable(pillar);
             new TextRenderer(pillar, consoleFont, "Hello from the UI Scene!");
-            pillar.depth = 1f;
+            pillar.Depth = 1f;
 
             var mouse = gameScene.AddActor("gameCursor");
             new MouseCircle(mouse, 10, Color.BlueViolet);
@@ -167,6 +182,8 @@ namespace HelloGame
             new Hoverable(selectable3);
             new Clickable(selectable3);
             selector.BuildSelectable(selectable3);
+
+            var hoop = gameScene.AddActor("hoop", new Vector2(400, 300));
 
         }
 

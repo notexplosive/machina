@@ -42,6 +42,18 @@
 /processorParam:TextureFormat=Color
 /build:images/ball.png
 
+#begin images/hoop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/hoop.png
+
 #begin images/linkin.png
 /importer:TextureImporter
 /processor:TextureProcessor

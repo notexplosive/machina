@@ -55,7 +55,7 @@ namespace Machina.Components
         {
             if (IsScrollbarNeeded)
             {
-                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.depth);
+                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.Depth);
             }
         }
 

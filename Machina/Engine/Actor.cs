@@ -10,10 +10,11 @@ namespace Machina.Engine
 {
     public class Actor : Crane<IComponent>
     {
-        public float depth = 0.5f;
         public readonly Scene scene;
         public readonly string name;
         public readonly Progeny progeny;
+        private float depth = 0.5f;
+        private float localDepth;
         private Vector2 position;
         private Vector2 localPosition;
         private float angle;
@@ -34,6 +35,51 @@ namespace Machina.Engine
             // Niche scenario, AddComponent is OK here.
             AddComponent(progeny);
         }
+
+        public float Depth
+        {
+            get
+            {
+                return this.depth;
+            }
+            set
+            {
+                this.depth = value;
+                for (int i = 0; i < ChildCount; i++)
+                {
+                    var child = GetChildAt(i);
+                    child.Depth = this.depth + child.localDepth;
+                }
+            }
+        }
+
+        public float LocalDepth
+        {
+            get
+            {
+                if (HasParent)
+                {
+                    return this.localDepth;
+                }
+                else
+                {
+                    return depth;
+                }
+            }
+
+            set
+            {
+                if (HasParent)
+                {
+                    this.localDepth = value;
+                }
+                else
+                {
+                    Depth = value;
+                }
+            }
+        }
+
 
         public float Angle
         {

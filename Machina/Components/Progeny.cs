@@ -47,6 +47,8 @@ namespace Machina.Components
             this.parent = newParent;
             newParent.progeny.AddChild(this.actor);
             this.actor.LocalPosition = this.actor.WorldToLocalPosition();
+            this.actor.LocalAngle = this.actor.Angle - newParent.Angle;
+            this.actor.LocalDepth = this.actor.Depth - newParent.Depth;
         }
 
         private void AddChild(Actor child)
