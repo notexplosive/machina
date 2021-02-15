@@ -16,12 +16,19 @@ namespace Machina.Engine
     {
         private readonly Point idealSize;
         private RenderTarget2D screenRenderTarget;
-        private ResizeBehavior resizeBehavior;
+        private Strategy strategy;
 
         public GameCanvas(int idealWidth, int idealHeight, ResizeBehavior resizeBehavior)
         {
             this.idealSize = new Point(idealWidth, idealHeight);
-            this.resizeBehavior = resizeBehavior;
+            if (resizeBehavior == ResizeBehavior.FillContent)
+            {
+                strategy = new FillStrategy();
+            }
+            else
+            {
+                strategy = new MaintainDesiredResolutionStrategy();
+            }
             OnResize(idealWidth, idealHeight);
         }
 
@@ -38,14 +45,7 @@ namespace Machina.Engine
         {
             get
             {
-                if (this.resizeBehavior == ResizeBehavior.FillContent)
-                {
-                    return 1.0f;
-                }
-
-                var normalizedWidth = (float) WindowSize.X / this.idealSize.X;
-                var normalizedHeight = (float) WindowSize.Y / this.idealSize.Y;
-                return Math.Min(normalizedWidth, normalizedHeight);
+                return this.strategy.GetScaleFactor(WindowSize, idealSize);
             }
         }
 
@@ -64,14 +64,7 @@ namespace Machina.Engine
         {
             get
             {
-                if (this.resizeBehavior == ResizeBehavior.MaintainDesiredResolution)
-                {
-                    return (new Vector2(this.idealSize.X, this.idealSize.Y) * ScaleFactor).ToPoint();
-                }
-                else
-                {
-                    return WindowSize;
-                }
+                return strategy.GetCanvasSize(WindowSize, idealSize);
             }
         }
 
@@ -90,39 +83,100 @@ namespace Machina.Engine
 
         public void BuildCanvas(GraphicsDevice graphicsDevice)
         {
-            if (this.resizeBehavior == ResizeBehavior.MaintainDesiredResolution)
-            {
-                this.screenRenderTarget = new RenderTarget2D(
-                    graphicsDevice,
-                    WindowSize.X,
-                    WindowSize.Y,
-                    false,
-                    graphicsDevice.PresentationParameters.BackBufferFormat,
-                    DepthFormat.Depth24);
-            }
+            this.screenRenderTarget = strategy.BuildCanvas(graphicsDevice, WindowSize);
         }
 
         public void PrepareCanvas(GraphicsDevice graphicsDevice)
         {
-            if (this.resizeBehavior == ResizeBehavior.MaintainDesiredResolution)
+            strategy.PrepareCanvas(graphicsDevice, this.screenRenderTarget);
+        }
+
+        public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        {
+            strategy.DrawCanvas(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
+        }
+
+        private interface Strategy
+        {
+            void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
+            void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
+            RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize);
+            Point GetCanvasSize(Point windowSize, Point idealSize);
+            float GetScaleFactor(Point windowSize, Point idealSize);
+        }
+
+        private class MaintainDesiredResolutionStrategy : Strategy
+        {
+            public float GetScaleFactor(Point windowSize, Point idealSize)
+            {
+                var normalizedWidth = (float) windowSize.X / idealSize.X;
+                var normalizedHeight = (float) windowSize.Y / idealSize.Y;
+                return Math.Min(normalizedWidth, normalizedHeight);
+            }
+
+            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize)
+            {
+                return new RenderTarget2D(
+                    graphicsDevice,
+                    windowSize.X,
+                    windowSize.Y,
+                    false,
+                    graphicsDevice.PresentationParameters.BackBufferFormat,
+                    DepthFormat.Depth24);
+            }
+
+            public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            {
+                graphicsDevice.SetRenderTarget(null);
+
+                spriteBatch.Begin();
+                spriteBatch.Draw(screenRenderTarget,
+                    canvasRect,
+                    null, Color.White);
+
+                spriteBatch.End();
+            }
+
+            public Point GetCanvasSize(Point windowSize, Point idealSize)
+            {
+                return (new Vector2(idealSize.X, idealSize.Y) * GetScaleFactor(windowSize, idealSize)).ToPoint();
+            }
+
+            public void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 graphicsDevice.SetRenderTarget(screenRenderTarget);
                 graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
             }
         }
 
-        public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        private class FillStrategy : Strategy
         {
-            if (this.resizeBehavior == ResizeBehavior.MaintainDesiredResolution)
+            public Point GetCanvasSize(Point windowSize, Point idealSize)
             {
-                graphicsDevice.SetRenderTarget(null);
+                return windowSize;
+            }
 
-                spriteBatch.Begin();
-                spriteBatch.Draw(screenRenderTarget,
-                    CanvasRect,
-                    null, Color.White);
+            public void DrawCanvas()
+            {
+                // no-op
+            }
 
-                spriteBatch.End();
+            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize)
+            {
+                return null;
+            }
+
+            public float GetScaleFactor(Point windowSize, Point idealSize)
+            {
+                return 1f;
+            }
+
+            public void PrepareCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
+            {
+            }
+
+            public void DrawCanvas(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            {
             }
         }
     }
