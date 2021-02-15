@@ -12,10 +12,8 @@ namespace Machina.Engine
     {
         public float depth = 0.5f;
         public readonly Scene scene;
-        public readonly Parent parent;
-        public readonly Children children;
         public readonly string name;
-        private readonly Progeny progeny;
+        public readonly Progeny progeny;
         private Vector2 position;
         private Vector2 localPosition;
         private float angle;
@@ -28,9 +26,6 @@ namespace Machina.Engine
         /// <param name="scene">Scene that the ctor will add the actor to. Should not be null unless you're a test.</param>
         public Actor(string name, Scene scene)
         {
-            parent = new Parent(this);
-            children = new Children(this);
-
             this.scene = scene;
             this.scene?.AddActor(this);
             this.name = name;
@@ -129,13 +124,13 @@ namespace Machina.Engine
             }
         }
 
-        public int ChildCount => this.children.Count;
-        public bool HasParent => this.parent.Has();
-        public Actor Parent => this.parent.Get();
+        public int ChildCount => this.progeny.ChildCount;
+        public bool HasParent => this.progeny.Parent != null;
+        public Actor Parent => this.progeny.Parent;
 
         public Actor GetChildAt(int index)
         {
-            return this.children.At(index);
+            return this.progeny.ChildAt(index);
         }
 
         public Matrix TransformMatrix
@@ -166,7 +161,12 @@ namespace Machina.Engine
                 component.OnActorDestroy();
             }
 
-            this.scene.RemoveActor(this);
+            this.scene.DeleteActor(this);
+        }
+
+        internal void SetParent(Actor parent)
+        {
+            this.progeny.SetParent(parent);
         }
 
         /// <summary>

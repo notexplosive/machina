@@ -31,9 +31,14 @@ namespace Machina.Engine
             return actor;
         }
 
-        public void RemoveActor(Actor actor)
+        public void DeleteActor(Actor actor)
         {
             DeleteIterable(actor);
+        }
+
+        public void GentlyRemoveActor(Actor actor)
+        {
+            GentlyRemoveIterable(actor);
         }
 
         public override void Update(float dt)

@@ -87,6 +87,12 @@ namespace HelloGame
             new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor);
 
+            var microActor2 = innerScene.AddActor("MicroActor");
+            microActor2.Position = new Vector2(10, 50);
+            new BoundingRect(microActor2, Point.Zero);
+            new SpriteRenderer(microActor2, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
+            new Hoverable(microActor2);
+
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 450));
             new Canvas(sceneRenderBox);
@@ -95,9 +101,8 @@ namespace HelloGame
             new SceneRenderer(sceneRenderBox, innerScene, () => { return true; });
             innerScene.camera.Zoom = 1.5f;
 
-            sceneRenderBox.parent.Set(linkin);
-
-            ballActor.children.Add(sceneRenderBox);
+            sceneRenderBox.SetParent(linkin);
+            sceneRenderBox.SetParent(ballActor);
 
             var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
             new BoundingRect(ninepatchActor, new Point(400, 300));

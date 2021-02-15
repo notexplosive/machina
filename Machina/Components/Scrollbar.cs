@@ -30,7 +30,7 @@ namespace Machina.Components
             this.targetCamera = targetCamera;
 
             this.myBoundingRect.SetOffsetToTopLeft();
-            this.actor.parent.Set(containerBoundingRect.actor);
+            this.actor.SetParent(containerBoundingRect.actor);
 
             this.worldBounds = scrollRange;
             this.scrollIncrement = scrollIncrement;

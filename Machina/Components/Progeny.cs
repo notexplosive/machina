@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Progeny : Crane<Actor>, IComponent
+    public class Progeny : Crane<Actor>, IComponent
     {
         private Actor parent;
         private Actor actor;
@@ -22,18 +22,8 @@ namespace Machina.Components
             {
                 child.Position = child.LocalToWorldPosition();
             }
-        }
 
-        public void AddChild(Actor child)
-        {
-            child.scene.RemoveActor(child);
-            AddIterable(child);
-        }
-
-        public void RemoveChild(Actor child)
-        {
-            DeleteIterable(child);
-            child.scene.AddActor(child);
+            base.Update(dt);
         }
 
         public void OnActorDestroy()
@@ -42,6 +32,39 @@ namespace Machina.Components
             {
                 DeleteIterable(iterable);
             }
+        }
+
+        public Actor Parent => this.parent;
+        public int ChildCount => iterables.Count;
+
+        public void SetParent(Actor newParent)
+        {
+            if (this.actor.HasParent)
+            {
+                this.actor.Parent.progeny.RemoveChild(this.actor);
+            }
+
+            this.parent = newParent;
+            newParent.progeny.AddChild(this.actor);
+            this.actor.LocalPosition = this.actor.WorldToLocalPosition();
+        }
+
+        private void AddChild(Actor child)
+        {
+            child.scene.GentlyRemoveActor(child);
+            AddIterable(child);
+        }
+
+        private void RemoveChild(Actor child)
+        {
+            GentlyRemoveIterable(child);
+            this.parent = null;
+            child.scene.AddActor(child);
+        }
+
+        public Actor ChildAt(int index)
+        {
+            return iterables[index];
         }
     }
 }
