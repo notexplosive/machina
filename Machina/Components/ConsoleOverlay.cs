@@ -52,6 +52,7 @@ namespace Machina.Components
         public void OnMessageLog(string line)
         {
             RestartFade();
+
             this.messages.Add(line);
 
             while (this.messages.Count > 15)
