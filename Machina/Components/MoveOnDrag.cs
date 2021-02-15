@@ -24,7 +24,7 @@ namespace Machina.Components
             this.draggable.onDragStart -= OnDragStart;
         }
 
-        private void OnDragStart(Point point)
+        private void OnDragStart(Vector2 point)
         {
             this.positionAtStartOfDrag = this.actor.Position; //point.ToVector2();
         }

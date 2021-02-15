@@ -61,14 +61,14 @@ namespace Machina.Engine
         /// <param name="currentPosition">Mouse position transformed into your context</param>
         /// <param name="positionDelta">Mouse movement transformed to your context</param>
         /// <param name="rawDelta">Mouse movement delta in real-world screen pixels</param>
-        public void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta);
+        public void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta);
         /// <summary>
         /// Called when user presses or releases the mouse
         /// </summary>
         /// <param name="button">Mouse button pressed or released</param>
         /// <param name="currentPosition">Mouse position transformed to your context</param>
         /// <param name="state">Button state reflecting if the mouse was pressed or released</param>
-        public void OnMouseButton(MouseButton button, Point currentPosition, ButtonState state);
+        public void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state);
     }
 
     /// <summary>
@@ -201,14 +201,14 @@ namespace Machina.Engine
                 iterable.OnKey(key, state, modifiers);
             }
         }
-        public virtual void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             foreach (var iterable in iterables)
             {
                 iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta);
             }
         }
-        public virtual void OnMouseButton(MouseButton button, Point currentPosition, ButtonState state)
+        public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
             foreach (var iterable in iterables)
             {
@@ -239,11 +239,11 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
+        public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
         }
 
-        public virtual void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
         }
 

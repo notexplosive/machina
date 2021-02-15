@@ -60,7 +60,7 @@ namespace Machina.Components
             IsHovered = false;
         }
 
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             this.IsSoftHovered = false;
 

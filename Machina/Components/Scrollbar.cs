@@ -19,7 +19,7 @@ namespace Machina.Components
         private readonly int scrollIncrement;
         public readonly MinMax<int> worldBounds;
         private bool isGrabbed;
-        private int mouseYOnGrab;
+        private float mouseYOnGrab;
         private float scrollPercentOnGrab;
 
         public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
@@ -70,7 +70,7 @@ namespace Machina.Components
                 new Point(this.containerBoundingRect.Width, (int) OnScreenUnits)), Color.Blue, 2);
         }
 
-        public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
+        public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
             if (button == MouseButton.Left)
             {
@@ -120,7 +120,7 @@ namespace Machina.Components
             CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
         }
 
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             var totalDelta = currentPosition.Y - this.mouseYOnGrab;
             var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);

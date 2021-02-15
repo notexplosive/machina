@@ -12,14 +12,14 @@ namespace Machina.Tests
     {
         private class MouseHarness : BaseComponent
         {
-            private Action<Point, Vector2, Vector2> lambda;
+            private Action<Vector2, Vector2, Vector2> lambda;
 
-            public MouseHarness(Actor actor, Action<Point, Vector2, Vector2> lambda) : base(actor)
+            public MouseHarness(Actor actor, Action<Vector2, Vector2, Vector2> lambda) : base(actor)
             {
                 this.lambda = lambda;
             }
 
-            public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+            public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
             {
                 this.lambda(currentPosition, positionDelta, rawDelta);
             }
@@ -51,7 +51,7 @@ namespace Machina.Tests
                 scene.camera.Zoom = 2.6f;
                 scene.camera.Position = new Vector2(120, 240);
 
-                Point savedPosition = Point.Zero;
+                Vector2 savedPosition = Vector2.Zero;
                 Vector2 savedPositionDelta = Vector2.Zero;
                 Vector2 savedRawDelta = Vector2.Zero;
                 new MouseHarness(scene.AddActor("Mouse Harness"), (currentPosition, positionDelta, rawDelta) =>
@@ -69,7 +69,7 @@ namespace Machina.Tests
                 sceneLayers.Update(0, Matrix.Identity, new InputState(prevMouseState, new KeyboardState()));
                 sceneLayers.Update(0, Matrix.Identity, new InputState(currentMouseState, new KeyboardState()));
 
-                test.Expect(new Point(361, 478), savedPosition, "Mouse Postion");
+                test.Expect(new Vector2(361, 478), savedPosition, "Mouse Postion");
                 test.Expect(new Vector2(4.2735047f, 10.683762f), savedPositionDelta, "Mouse Position Delta");
                 test.Expect(new Vector2(20, 50), savedRawDelta, "Mouse raw delta");
             });

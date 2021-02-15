@@ -30,16 +30,16 @@ namespace Machina.Components
             spriteBatch.DrawCircle(new CircleF(this.actor.Position, this.radius), 20, this.color, 1, this.actor.depth - .0000001f);
         }
 
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            this.actor.Position = currentPosition.ToVector2();
+            this.actor.Position = currentPosition;
         }
 
-        public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        public override void OnMouseButton(MouseButton mouseButton, Vector2 currentPosition, ButtonState buttonState)
         {
             if (mouseButton == MouseButton.Left && buttonState == ButtonState.Pressed && MachinaGame.DebugLevel >= DebugLevel.Active)
             {
-                var spawnedActor = this.actor.scene.AddActor("Spawned circle", currentPosition.ToVector2());
+                var spawnedActor = this.actor.scene.AddActor("Spawned circle", currentPosition);
                 new DestroyTimer(spawnedActor, 1);
             }
         }

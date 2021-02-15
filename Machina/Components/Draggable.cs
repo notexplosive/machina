@@ -16,7 +16,7 @@ namespace Machina.Components
         /// <summary>
         /// Passes the cursor world position on drag start
         /// </summary>
-        public Action<Point> onDragStart;
+        public Action<Vector2> onDragStart;
         public bool IsDragging
         {
             private set; get;
@@ -35,7 +35,7 @@ namespace Machina.Components
 
         }
 
-        public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
+        public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
             if (button == MouseButton.Left)
             {
@@ -55,7 +55,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             if (this.IsDragging)
             {

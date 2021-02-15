@@ -35,7 +35,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseButton(MouseButton mouseButton, Point currentPosition, ButtonState buttonState)
+        public override void OnMouseButton(MouseButton mouseButton, Vector2 currentPosition, ButtonState buttonState)
         {
             if (mouseButton == MouseButton.Middle)
             {
@@ -48,7 +48,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnMouseUpdate(Point currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             if (this.isPanning)
             {

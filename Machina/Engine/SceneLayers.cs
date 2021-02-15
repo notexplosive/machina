@@ -54,7 +54,7 @@ namespace Machina.Engine
             keyTracker.Calculate(inputState.keyboardState);
             mouseTracker.Calculate(inputState.mouseState);
 
-            var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix).ToPoint();
+            var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix);
 
             foreach (Scene scene in scenes)
             {

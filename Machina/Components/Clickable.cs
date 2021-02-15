@@ -30,7 +30,7 @@ namespace Machina.Components
 
         public bool IsHovered => this.hoverable.IsHovered;
 
-        public override void OnMouseButton(MouseButton button, Point currentPosition, ButtonState buttonState)
+        public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
             if (this.hoverable.IsHovered)
             {
