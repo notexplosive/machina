@@ -146,7 +146,7 @@ namespace Machina.Tests
             {
                 var scene = new Scene();
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
-                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0), 0f);
+                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0));
 
                 child.SetParent(parent);
                 scene.FlushBuffers();
@@ -157,6 +157,24 @@ namespace Machina.Tests
 
                 test.Expect(new Vector2(100, 0), child.LocalPosition, "Child local position is same relative position as the start");
                 test.Expect(0f, child.LocalAngle, "Child local rotation is zero");
+            }));
+
+            AddTest(new Test("Set parent multiple times in one frame", test =>
+            {
+                var scene = new Scene();
+                var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+                var parent2 = scene.AddActor("Otto Other Parent", new Vector2(-80, -80));
+                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0));
+
+                child.SetParent(parent);
+                child.SetParent(parent2);
+                child.SetParent(parent2);
+                child.SetParent(parent);
+                child.SetParent(parent2);
+                scene.FlushBuffers();
+
+                test.Expect(0, parent.ChildCount, "First parent has zero children");
+                test.Expect(1, parent2.ChildCount, "Second parent has 1 child");
             }));
         }
     }
