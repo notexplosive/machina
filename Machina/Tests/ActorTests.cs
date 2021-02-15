@@ -192,6 +192,20 @@ namespace Machina.Tests
 
                 test.Expect(new Vector2(-50, -50), child.Position, "Child gets set to assigned world position");
             });
+
+            AddTest("Set position on parented object does not get overridden by setting local position", test =>
+            {
+                var scene = new Scene();
+                var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+                var child = scene.AddActor("Carrie Child", parent.Position + new Vector2(100, 0));
+
+                child.SetParent(parent);
+                scene.FlushBuffers();
+                child.Position = new Vector2(-50, -50);
+                parent.LocalPosition = new Vector2(80, 80);
+
+                test.Expect(new Vector2(-50, -50), child.Position, "Child gets set to assigned world position");
+            });
         }
     }
 }

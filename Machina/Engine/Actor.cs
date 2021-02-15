@@ -136,6 +136,7 @@ namespace Machina.Engine
             set
             {
                 this.position = value;
+                this.localPosition = WorldToLocalPosition(this.position);
                 for (int i = 0; i < ChildCount; i++)
                 {
                     var child = GetChildAt(i);
