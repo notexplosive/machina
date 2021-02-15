@@ -29,10 +29,7 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            foreach (var child in iterables)
-            {
-                //child.Position = child.LocalToWorldPosition(child.LocalPosition);
-            }
+            // Code goes here?
 
             // Progeny needs to call base
             base.Update(dt);
