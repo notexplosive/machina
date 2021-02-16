@@ -103,11 +103,6 @@ namespace Machina.Engine
             base.OnMouseUpdate(camera.ScreenToWorld(screenPosition), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
         }
 
-        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
-        {
-            base.OnKey(key, state, modifiers);
-        }
-
         public void ClearHitTester()
         {
             this.hitTester.Clear();

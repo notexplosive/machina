@@ -69,6 +69,11 @@ namespace Machina.Components
                 this.IsSoftHovered = true;
                 this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, OnHitTestApproval));
             }
+            else
+            {
+                // Only really matters in a Framestep scenario
+                IsHovered = false;
+            }
         }
 
         private void OnHitTestApproval(bool approval)

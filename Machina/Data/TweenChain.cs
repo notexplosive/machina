@@ -1,5 +1,7 @@
 ﻿using Machina.Components;
+using Machina.Engine;
 using Machina.ThirdParty;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,6 +63,16 @@ namespace Machina.Data
         public TweenChain AppendCallback(Action func)
         {
             return Append(new CallbackChainItem(func));
+        }
+
+        public TweenChain AppendPositionTween(Actor actor, Vector2 targetVal, float duration, EaseFunc easeFunc)
+        {
+            return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, TweenDataFunctions.PositionTweenAccessors(actor), Vector2.Lerp));
+        }
+
+        internal TweenChain AppendVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
+        {
+            return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
         public void Update(float dt)

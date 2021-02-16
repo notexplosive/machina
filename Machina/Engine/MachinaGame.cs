@@ -85,10 +85,16 @@ namespace Machina.Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var consoleFont = Assets.DefaultFont;
-            var debugActor = sceneLayers.debugScene.AddActor("DebugLogger");
-            new FrameStepRenderer(debugActor, this.sceneLayers.frameStep, this.sceneLayers);
+            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
+
+            var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
+            var frameStepComponent = new FrameStepRenderer(frameStepActor, this.sceneLayers.frameStep, this.sceneLayers);
+            new BoundingRect(frameStepActor, new Point(64, 64));
+            new Hoverable(frameStepActor);
+            new Draggable(frameStepActor);
+            new MoveOnDrag(frameStepActor);
 
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
