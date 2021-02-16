@@ -17,10 +17,10 @@ namespace Machina.Components
         private readonly BoundingRect containerBoundingRect;
         private readonly Camera targetCamera;
         private readonly int scrollIncrement;
-        public readonly MinMax<int> worldBounds;
         private bool isGrabbed;
         private float mouseYOnGrab;
         private float scrollPercentOnGrab;
+        public MinMax<int> worldBounds;
 
         public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
         {

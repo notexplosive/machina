@@ -15,38 +15,15 @@ namespace Machina.Components
     {
         private readonly IFrameStep frameStep;
         private readonly SceneLayers sceneLayers;
-        private readonly TweenChain enterTweenChain;
-        private readonly TweenChain exitTweenChain;
-        private TweenChain currentTweenChain;
         private int stepCount;
 
-        public FrameStepRenderer(Actor actor, IFrameStep frameStep, SceneLayers sceneLayers) : base(actor)
+        public FrameStepRenderer(Actor actor, IFrameStep frameStep, SceneLayers sceneLayers, InvokableDebugTool tool) : base(actor)
         {
+            tool.onToolToggle += OnToggle;
             this.frameStep = frameStep;
             this.sceneLayers = sceneLayers;
-            this.enterTweenChain = new TweenChain()
-                .AppendCallback(() => { this.actor.transform.Position = new Vector2(-64, 32); })
-                .AppendPositionTween(this.actor, new Vector2(32, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                .AppendCallback(() => { this.currentTweenChain = null; })
-            ;
-
-            this.exitTweenChain = new TweenChain()
-                .AppendPositionTween(this.actor, new Vector2(0, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                .AppendPositionTween(this.actor, new Vector2(-64, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                .AppendCallback(() => { this.currentTweenChain = null; })
-            ;
-
-            this.currentTweenChain = null;
 
             this.actor.transform.Position = new Vector2(-64, 32);
-        }
-
-        public override void Update(float dt)
-        {
-            if (this.currentTweenChain != null)
-            {
-                this.currentTweenChain.Update(dt);
-            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -67,22 +44,10 @@ namespace Machina.Components
             }
         }
 
-        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        public void OnToggle(bool b)
         {
-            if (key == Keys.Space && modifiers.control && state == ButtonState.Pressed)
-            {
-                this.frameStep.IsPaused = !this.frameStep.IsPaused;
-                if (this.frameStep.IsPaused)
-                {
-                    this.currentTweenChain = enterTweenChain;
-                }
-                else
-                {
-                    this.currentTweenChain = exitTweenChain;
-                }
-                this.currentTweenChain.Refresh();
-                this.stepCount = 0;
-            }
+            this.frameStep.IsPaused = b;
+            this.stepCount = 0;
         }
 
         public void Step()

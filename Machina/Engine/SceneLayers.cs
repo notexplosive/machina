@@ -46,6 +46,13 @@ namespace Machina.Engine
             return array;
         }
 
+        public Scene[] AllScenesExceptDebug()
+        {
+            Scene[] array = new Scene[sceneList.Count];
+            sceneList.CopyTo(array);
+            return array;
+        }
+
         public void UpdateWithNoInput(float dt)
         {
             Update(dt, Matrix.Identity, InputState.Empty);

@@ -16,6 +16,11 @@ namespace Machina.Components
             this.key = key;
             this.modifiers = modifiers;
         }
+
+        internal bool Match(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            return key == this.key && state == ButtonState.Pressed && modifiers == this.modifiers;
+        }
     }
 
     class EnableDebugOnHotkey : BaseComponent

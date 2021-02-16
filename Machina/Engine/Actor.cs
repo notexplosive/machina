@@ -44,7 +44,7 @@ namespace Machina.Engine
             this.scene.DeleteActor(this);
         }
 
-        internal void SetParent(Actor parent)
+        public void SetParent(Actor parent)
         {
             if (parent != this)
             {

@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data;
 using Machina.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -58,7 +59,6 @@ namespace Machina.Engine
 #else
             frameStep = new EmptyFrameStep();
 #endif
-            this.sceneLayers = new SceneLayers(new Scene(), frameStep);
 
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
@@ -66,6 +66,8 @@ namespace Machina.Engine
             gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
+
+            this.sceneLayers = new SceneLayers(new Scene(gameCanvas), frameStep);
         }
 
         protected override void Initialize()
@@ -89,12 +91,41 @@ namespace Machina.Engine
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
-            var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
-            var frameStepComponent = new FrameStepRenderer(frameStepActor, this.sceneLayers.frameStep, this.sceneLayers);
-            new BoundingRect(frameStepActor, new Point(64, 64));
-            new Hoverable(frameStepActor);
-            new Draggable(frameStepActor);
-            new MoveOnDrag(frameStepActor);
+            // Framestep
+            {
+                var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
+                var tool = new InvokableDebugTool(frameStepActor, new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
+                new FrameStepRenderer(frameStepActor, this.sceneLayers.frameStep, this.sceneLayers, tool);
+                new BoundingRect(frameStepActor, new Point(64, 64));
+                new Hoverable(frameStepActor);
+                new Draggable(frameStepActor);
+                new MoveOnDrag(frameStepActor);
+            }
+
+            // Scene graph renderer
+            {
+                var sceneGraphContent = new Scene();
+                var sceneGraphPanel = sceneLayers.debugScene.AddActor("SceneGraphRenderer Scene Renderer");
+                var tool = new InvokableDebugTool(sceneGraphPanel, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
+                sceneGraphPanel.transform.Position = new Vector2(-400, 0);
+                new BoundingRect(sceneGraphPanel, new Point(300, 256)).SetOffsetToTopLeft();
+                new Canvas(sceneGraphPanel);
+                new Hoverable(sceneGraphPanel);
+                new SceneRenderer(sceneGraphPanel, sceneGraphContent, () => { return true; });
+                new Draggable(sceneGraphPanel);
+                new MoveOnDrag(sceneGraphPanel);
+
+                var sceneGraphPanelScrollbar = sceneLayers.debugScene.AddActor("SceneGraphRenderer Scrollbar");
+                sceneGraphPanelScrollbar.SetParent(sceneGraphPanel);
+                new BoundingRect(sceneGraphPanelScrollbar, new Point(32, 0));
+                new Hoverable(sceneGraphPanelScrollbar);
+                var scrollbar = new Scrollbar(sceneGraphPanelScrollbar, sceneGraphPanel.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900));
+
+                var sceneGraphActor = sceneGraphContent.AddActor("SceneGraphActor");
+                new SceneGraphRenderer(sceneGraphActor, this.sceneLayers, scrollbar);
+                new ScrollbarListener(sceneGraphActor, scrollbar);
+            }
+
 
 #if DEBUG
             DebugLevel = DebugLevel.Passive;

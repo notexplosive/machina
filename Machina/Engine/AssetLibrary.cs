@@ -19,6 +19,8 @@ namespace Machina.Engine
 
         public SpriteFont DefaultFont => GetSpriteFont("MachinaDefaultFont");
 
+        public SpriteFont DefaultSmallFont => GetSpriteFont("MachinaDefaultSmallFont");
+
         public AssetLibrary(Game game)
         {
             this.content = game.Content;

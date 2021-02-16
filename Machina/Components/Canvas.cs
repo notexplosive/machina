@@ -37,7 +37,6 @@ namespace Machina.Components
             };
 
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.boundingRect.SetOffsetToCenter();
 
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
 

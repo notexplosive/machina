@@ -13,7 +13,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Draggable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FrameStepRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\InvokableDebugTool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\LayoutGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\SceneGraphRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Transform.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\FrameStep.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Tests\SceneTests.cs" />
