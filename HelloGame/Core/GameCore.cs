@@ -28,7 +28,6 @@ namespace HelloGame
         {
             gameScene = sceneLayers.AddNewScene(this.gameCanvas);
             uiScene = sceneLayers.AddNewScene(this.gameCanvas);
-            sceneLayers.Add(uiScene);
 
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
