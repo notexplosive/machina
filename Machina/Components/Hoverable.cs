@@ -67,7 +67,10 @@ namespace Machina.Components
             if (this.boundingRect.Rect.Contains(currentPosition))
             {
                 this.IsSoftHovered = true;
-                this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, OnHitTestApproval));
+                if (this.actor.Visible)
+                {
+                    this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, OnHitTestApproval));
+                }
             }
             else
             {

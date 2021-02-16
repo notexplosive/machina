@@ -119,6 +119,8 @@ namespace HelloGame
             new BoundingRect(ninepatchActor, new Point(400, 300));
             new NinepatchRenderer(ninepatchActor, testNinepatch);
             new Hoverable(ninepatchActor);
+            new Clickable(ninepatchActor);
+            new CallbackOnClick(ninepatchActor, MouseButton.Left, () => { ninepatchActor.Visible = !ninepatchActor.Visible; });
 
             var progressBar = gameScene.AddActor("ProgressBar");
             progressBar.transform.Position = new Vector2(500, 50);

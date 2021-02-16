@@ -13,6 +13,10 @@ namespace Machina.Engine
         public readonly Scene scene;
         public readonly string name;
         public readonly Transform transform;
+        public bool Visible
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Create an actor and add them to the given scene.
@@ -25,9 +29,26 @@ namespace Machina.Engine
             this.scene?.AddActor(this);
             this.name = name;
 
+            this.Visible = true;
             this.transform = new Transform(this);
             // Niche scenario, AddComponent is OK here.
             AddComponent(transform);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (this.Visible)
+            {
+                base.Draw(spriteBatch);
+            }
+        }
+
+        public override void PreDraw(SpriteBatch spriteBatch)
+        {
+            if (this.Visible)
+            {
+                base.PreDraw(spriteBatch);
+            }
         }
 
         public int ChildCount => this.transform.ChildCount;
