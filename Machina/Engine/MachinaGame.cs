@@ -140,7 +140,7 @@ namespace Machina.Engine
             Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
 #else
-            this.debugLevel = DebugLevel.Off;
+            DebugLevel = DebugLevel.Off;
 #endif
 
             OnGameLoad();
