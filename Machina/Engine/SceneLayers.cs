@@ -11,11 +11,11 @@ namespace Machina.Engine
     public class SceneLayers
     {
         public readonly Scene debugScene;
+        public readonly IFrameStep frameStep;
         private readonly List<Scene> sceneList = new List<Scene>();
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
-        private readonly IFrameStep frameStep;
 
         public SceneLayers(Scene debugScene, IFrameStep frameStep)
         {
@@ -65,16 +65,6 @@ namespace Machina.Engine
             mouseTracker.Calculate(inputState.mouseState);
 
             var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix);
-
-            if (keyTracker.Pressed.Contains(Keys.Space) && keyTracker.Modifiers.control)
-            {
-                this.frameStep.IsPaused = !this.frameStep.IsPaused;
-            }
-
-            if (this.frameStep.IsPaused && scrollTracker.ScrollDelta < 0)
-            {
-                this.frameStep.Step(scenes);
-            }
 
             foreach (Scene scene in scenes)
             {
@@ -150,13 +140,6 @@ namespace Machina.Engine
                 {
                     scene.DebugDraw(spriteBatch);
                 }
-            }
-
-            if (this.frameStep.IsPaused)
-            {
-                spriteBatch.Begin();
-                this.frameStep.Draw(spriteBatch);
-                spriteBatch.End();
             }
         }
     }

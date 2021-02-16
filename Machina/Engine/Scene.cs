@@ -117,5 +117,10 @@ namespace Machina.Engine
         {
             return this.iterables.Count;
         }
+
+        public void Step()
+        {
+            this.frameStep.Step(this);
+        }
     }
 }

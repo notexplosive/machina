@@ -36,10 +36,10 @@ namespace Machina.Components
             var screenWidth = graphics.PreferredBackBufferWidth;
             int i = 0;
 
-            spriteBatch.FillRectangle(new Rectangle(0, 0, screenWidth, spriteFont.LineSpacing * messages.Count), new Color(Color.Black, opacity / 2));
+            spriteBatch.FillRectangle(new Rectangle(0, 0, screenWidth, spriteFont.LineSpacing * messages.Count), new Color(Color.Black, opacity / 2), 0.001f);
             foreach (var message in this.messages)
             {
-                spriteBatch.DrawString(spriteFont, message, new Vector2(8, spriteFont.LineSpacing * i), new Color(1, 1, 1, opacity));
+                spriteBatch.DrawString(spriteFont, message, new Vector2(8, spriteFont.LineSpacing * i), new Color(1, 1, 1, opacity), 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
                 i++;
             }
         }
