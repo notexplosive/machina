@@ -180,6 +180,7 @@ namespace Machina.Components
                 if (HasParent)
                 {
                     this.localPosition_impl = value;
+                    Position = LocalToWorldPosition(this.localPosition_impl);
                 }
                 else
                 {

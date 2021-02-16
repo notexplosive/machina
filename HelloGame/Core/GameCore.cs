@@ -112,12 +112,9 @@ namespace HelloGame
             var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 450));
             new Canvas(sceneRenderBox);
-            new BoundingRectRenderer(sceneRenderBox);
             new Hoverable(sceneRenderBox);
             new SceneRenderer(sceneRenderBox, innerScene, () => { return true; });
             innerScene.camera.Zoom = 1.5f;
-
-            //sceneRenderBox.SetParent(linkin);
 
             var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
             new BoundingRect(ninepatchActor, new Point(400, 300));
