@@ -66,7 +66,6 @@ namespace Machina.Engine
 
             var rawMousePos = Vector2.Transform(mouseTracker.RawWindowPosition.ToVector2(), mouseTransformMatrix);
 
-
             if (keyTracker.Pressed.Contains(Keys.Space) && keyTracker.Modifiers.control)
             {
                 this.frameStep.IsPaused = !this.frameStep.IsPaused;

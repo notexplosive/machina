@@ -51,7 +51,14 @@ namespace Machina.Engine
             Current = this;
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingResolution;
-            this.sceneLayers = new SceneLayers(new Scene(), new FrameStep());
+
+            IFrameStep frameStep;
+#if DEBUG
+            frameStep = new FrameStep();
+#else
+            frameStep = new EmptyFrameStep();
+#endif
+            this.sceneLayers = new SceneLayers(new Scene(), frameStep);
 
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
