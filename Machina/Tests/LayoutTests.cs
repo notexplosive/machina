@@ -21,6 +21,7 @@ namespace Machina.Tests
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
                 var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
                 var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
+                group.ExecuteLayout();
 
                 test.Expect(110, e4.actor.transform.Position.Y, "E4 is at expected Y pos");
             });
@@ -36,6 +37,7 @@ namespace Machina.Tests
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
                 var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
                 var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
+                group.ExecuteLayout();
 
                 test.Expect(125, e4.actor.transform.Position.Y, "E4 is at expected Y pos");
             });
@@ -86,7 +88,10 @@ namespace Machina.Tests
         {
             var actor = new Actor(name, null);
             new BoundingRect(actor, size);
-            return group.CreateElement(actor);
+            var e = new LayoutElement(actor);
+            actor.SetParent(group.actor);
+            group.actor.FlushBuffers();
+            return e;
         }
     }
 }

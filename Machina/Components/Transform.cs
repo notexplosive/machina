@@ -10,7 +10,7 @@ namespace Machina.Components
 {
     public class Transform : Crane<Actor>, IComponent
     {
-        private readonly Actor actor;
+        public readonly Actor actor;
 
         private float depth_impl = 0.5f;
         private float localDepth_impl;
@@ -215,7 +215,7 @@ namespace Machina.Components
         private void AddChild(Actor child)
         {
             // If the actor is in a scene, remove them
-            child.scene.GentlyRemoveActor(child);
+            child.scene?.GentlyRemoveActor(child);
             AddIterable(child);
         }
 
@@ -227,7 +227,7 @@ namespace Machina.Components
         {
             GentlyRemoveIterable(child);
             this.Parent = null;
-            child.scene.AddActor(child);
+            child.scene?.AddActor(child);
         }
 
         public Actor ChildAt(int index)

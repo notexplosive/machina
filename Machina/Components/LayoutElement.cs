@@ -10,7 +10,7 @@ namespace Machina.Components
     class LayoutElement : BaseComponent
     {
         public readonly BoundingRect boundingRect;
-        private readonly LayoutGroup group;
+        private LayoutGroup group => this.actor.Parent?.GetComponent<LayoutGroup>();
         private bool stretchHorizontally;
         private bool stretchVertically;
 
@@ -22,7 +22,7 @@ namespace Machina.Components
             set
             {
                 stretchVertically = value;
-                this.group.ExecuteLayout();
+                this.group?.ExecuteLayout();
             }
         }
 
@@ -32,14 +32,14 @@ namespace Machina.Components
             set
             {
                 stretchHorizontally = value;
-                this.group.ExecuteLayout();
+                this.group?.ExecuteLayout();
             }
         }
 
-        public LayoutElement(Actor actor, LayoutGroup group) : base(actor)
+        public LayoutElement(Actor actor) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.group = group;
+            this.group?.ExecuteLayout();
         }
     }
 }

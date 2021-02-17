@@ -44,7 +44,7 @@ namespace Machina.Components
                 }
             }
 
-            spriteBatch.DrawString(this.font, measurer.Build(), this.boundingRect.TopLeft, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, Transform.Depth);
+            spriteBatch.DrawString(this.font, measurer.Build(), this.boundingRect.TopLeft, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, transform.Depth);
         }
     }
 

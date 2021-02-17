@@ -31,6 +31,8 @@ namespace Machina.Engine
 
             this.Visible = true;
             this.transform = new Transform(this);
+
+            // Transform is "Just" a component, it just happens to be the first component and is added to every actor
             // Niche scenario, AddComponent is OK here.
             AddComponent(transform);
         }
@@ -84,7 +86,8 @@ namespace Machina.Engine
             Type type = component.GetType();
             Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
 
-            iterables.Add(component);
+            // TODO: This should be AddIterable so we can AddComponent during an update, but then we can't assemble everything on frame 0
+            this.iterables.Add(component);
             return component;
         }
 

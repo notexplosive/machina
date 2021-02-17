@@ -9,11 +9,11 @@ namespace Machina.Components
 {
     class LayoutGroup : BaseComponent
     {
-        private readonly List<LayoutElement> elements = new List<LayoutElement>();
         private BoundingRect boundingRect;
         private Orientation orientation;
         public int PaddingBetweenElements;
         private int margin;
+        private int prevChildCount;
 
         public LayoutGroup(Actor actor, Orientation orientation = Orientation.Vertical) : base(actor)
         {
@@ -21,9 +21,21 @@ namespace Machina.Components
             this.orientation = orientation;
         }
 
+        public override void OnDelete()
+        {
+        }
+
         public override void Update(float dt)
         {
-            // ExecuteLayout(); // Avoiding doing this every frame, could get quite costly.
+            // We check if number of children changed in this awkward way during update because
+            // if we used a callback when parent is set it would not work because the buffers
+            // aren't flushed.
+            if (transform.ChildCount != this.prevChildCount)
+            {
+                OnNumberOfChildrenChanged();
+            }
+
+            this.prevChildCount = transform.ChildCount;
         }
 
         public void ExecuteLayout()
@@ -33,6 +45,7 @@ namespace Machina.Components
             if (orientation == Orientation.Vertical)
             {
                 // Determine true size of elements
+                var elements = GetAllElements();
                 var groupRect = this.boundingRect.Rect;
                 var remainingSize = groupRect.Size.Y - this.margin * 2;
                 var verticalStretchElements = new List<LayoutElement>();
@@ -84,15 +97,23 @@ namespace Machina.Components
                     element.actor.transform.Position = nextLocation.ToVector2();
                     nextLocation += new Point(0, element.Rect.Height + this.PaddingBetweenElements);
                 }
+
+                // If we have groups within groups, now we layout the subgroups.
+                foreach (var element in elements)
+                {
+                    var subgroup = element.actor.GetComponent<LayoutGroup>();
+                    if (subgroup != null)
+                    {
+                        subgroup.ExecuteLayout();
+                    }
+                }
             }
+
         }
 
-        public LayoutElement CreateElement(Actor actor)
+        public void OnNumberOfChildrenChanged()
         {
-            var element = new LayoutElement(actor, this);
-            elements.Add(element);
             ExecuteLayout();
-            return element;
         }
 
         public LayoutGroup SetMargin(int margin)
@@ -100,6 +121,20 @@ namespace Machina.Components
             this.margin = margin;
             ExecuteLayout();
             return this;
+        }
+
+        public List<LayoutElement> GetAllElements()
+        {
+            var result = new List<LayoutElement>();
+            for (int i = 0; i < this.transform.ChildCount; i++)
+            {
+                var element = this.transform.ChildAt(i).GetComponent<LayoutElement>();
+                if (element != null)
+                {
+                    result.Add(element);
+                }
+            }
+            return result;
         }
     }
 }

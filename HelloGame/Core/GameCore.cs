@@ -186,24 +186,27 @@ namespace HelloGame
             selector.BuildSelectable(selectable3);
 
             var layout = gameScene.AddActor("Layout", new Vector2(400, 300));
-            new BoundingRect(layout, 600, 600);
+            new BoundingRect(layout, 256, 256);
             var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
 
             var uiButton = gameScene.AddActor("Button");
-            var buttonRect = new BoundingRect(uiButton, 32, 32);
+            new BoundingRect(uiButton, 32, 32);
             new NinepatchRenderer(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button"));
             new Hoverable(uiButton);
             new Clickable(uiButton);
             new ButtonNinepatchHandler(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"));
-            uiGroup.CreateElement(uiButton).StretchHorizontally = true;
-            var buttonGroup = new LayoutGroup(uiButton).SetMargin(5);
+            new LayoutElement(uiButton).StretchHorizontally = true;
+            new LayoutGroup(uiButton).SetMargin(5);
             var buttonLabel = gameScene.AddActor("Button Label");
             buttonLabel.transform.LocalDepth = 0.000001f;
             new BoundingRect(buttonLabel, Point.Zero);
-            var buttonLabelElement = buttonGroup.CreateElement(buttonLabel);
+            var buttonLabelElement = new LayoutElement(buttonLabel);
             buttonLabelElement.StretchHorizontally = true;
             buttonLabelElement.StretchVertically = true;
             new BoundedTextRenderer(buttonLabel, "Click me!", Assets.DefaultSmallFont);
+
+            uiButton.SetParent(layout);
+            buttonLabel.SetParent(uiButton);
         }
 
         protected override void Update(GameTime gameTime)
