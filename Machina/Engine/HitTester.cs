@@ -96,7 +96,7 @@ namespace Machina.Engine
             }
             else if (target.depth == Candidate.depth && target.actor != Candidate.actor)
             {
-                MachinaGame.Print("Z-fighting on hover at depth=", target.depth, target.actor, Candidate.actor);
+                // MachinaGame.Print("Z-fighting on hover at depth=", target.depth, target.actor, Candidate.actor);
             }
         }
 
