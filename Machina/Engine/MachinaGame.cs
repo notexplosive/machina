@@ -126,11 +126,17 @@ namespace Machina.Engine
                 new ScrollbarListener(sceneGraphActor, scrollbar);
             }
 
+            // Load initial assets
+            Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
+
 
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
+            // Run tests
             new ActorTests();
             new HitTestTests();
             new CameraTransformsTests();

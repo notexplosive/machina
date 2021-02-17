@@ -72,5 +72,10 @@ namespace Machina.Engine
             buttonPress = pressButtonSheet;
             this.buttonFont = buttonFont;
         }
+
+        /// <summary>
+        /// Should only be used in tests
+        /// </summary>
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null);
     }
 }

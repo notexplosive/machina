@@ -41,5 +41,29 @@ namespace Machina.Components
             this.boundingRect = RequireComponent<BoundingRect>();
             this.group?.ExecuteLayout();
         }
+
+        public bool IsStretchedAlong(Orientation orientation)
+        {
+            if (orientation == Orientation.Vertical)
+            {
+                return this.stretchVertically;
+            }
+            else
+            {
+                return this.stretchHorizontally;
+            }
+        }
+
+        public bool IsStretchPerpendicular(Orientation orientation)
+        {
+            if (orientation == Orientation.Vertical)
+            {
+                return this.stretchHorizontally;
+            }
+            else
+            {
+                return this.stretchVertically;
+            }
+        }
     }
 }

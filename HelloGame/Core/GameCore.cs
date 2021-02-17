@@ -29,10 +29,6 @@ namespace HelloGame
             gameScene = sceneLayers.AddNewScene(this.gameCanvas);
             uiScene = sceneLayers.AddNewScene(this.gameCanvas);
 
-            Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
-
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
@@ -184,9 +180,10 @@ namespace HelloGame
 
             {
                 var layout = gameScene.AddActor("Layout", new Vector2(300, 200));
-                new BoundingRect(layout, 256, 256);
+                new BoundingRect(layout, 128, 256);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
+                uiGroup.SetMargin(15);
 
                 uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
                 uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
@@ -195,9 +192,10 @@ namespace HelloGame
 
             {
                 var horizontalLayout = gameScene.AddActor("Layout", new Vector2(800, 200));
-                new BoundingRect(horizontalLayout, 256, 256);
-                var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Vertical);
+                new BoundingRect(horizontalLayout, 256, 128);
+                var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Horizontal);
                 uiGroup.PaddingBetweenElements = 5;
+                uiGroup.SetMargin(15);
 
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, true);

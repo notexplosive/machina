@@ -40,75 +40,102 @@ namespace Machina.Components
 
         public void ExecuteLayout()
         {
-            // Horizontal layout is not yet supported
-            // TODO: Generalize this to an "along axis" value, maybe do some callback magic?
-            if (orientation == Orientation.Vertical)
+            var isVertical = this.orientation == Orientation.Vertical;
+            var groupRect = this.boundingRect.Rect;
+            var totalAlongSize = isVertical ? groupRect.Size.Y : groupRect.Size.X;
+
+            var elements = GetAllElements();
+            var remainingAlongSize = totalAlongSize - this.margin * 2;
+            var stretchAlong = new List<LayoutElement>();
+            var stretchPerpendicular = new List<LayoutElement>();
+
+            int last = elements.Count - 1;
+            int index = 0;
+
+            // Determine true size of elements, subtract sizes
+            foreach (var element in elements)
             {
-                // Determine true size of elements
-                var elements = GetAllElements();
-                var groupRect = this.boundingRect.Rect;
-                var remainingSize = groupRect.Size.Y - this.margin * 2;
-                var verticalStretchElements = new List<LayoutElement>();
-                var horizontalStretchElements = new List<LayoutElement>();
-                foreach (var element in elements)
+                if (!element.IsStretchedAlong(this.orientation))
                 {
-                    if (!element.StretchVertically)
+                    remainingAlongSize -= element.Rect.Size.Y;
+                }
+                else
+                {
+                    stretchAlong.Add(element);
+                }
+
+                if (element.IsStretchPerpendicular(this.orientation))
+                {
+                    stretchPerpendicular.Add(element);
+                }
+
+                if (index != last)
+                {
+                    remainingAlongSize -= PaddingBetweenElements;
+                }
+
+                index++;
+            }
+
+            // Update size of stretch elements
+            if (stretchAlong.Count > 0)
+            {
+                var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlong.Count;
+
+                Debug.Assert(alongSizeOfEachStretchedElement > 0, "Not enough room to lay out stretch elements");
+
+                foreach (var alongElement in stretchAlong)
+                {
+                    if (isVertical)
                     {
-                        remainingSize -= element.Rect.Size.Y;
+                        alongElement.boundingRect.Height = alongSizeOfEachStretchedElement;
                     }
                     else
                     {
-                        verticalStretchElements.Add(element);
-                    }
-
-                    if (element.StretchHorizontally)
-                    {
-                        horizontalStretchElements.Add(element);
-                    }
-
-                    remainingSize -= PaddingBetweenElements;
-                }
-
-                // Update size of stretch elements
-                if (verticalStretchElements.Count > 0)
-                {
-                    var stretchHeight = remainingSize / verticalStretchElements.Count;
-
-                    Debug.Assert(stretchHeight > 0, "Not enough room to lay out stretch elements");
-
-                    foreach (var verticalElement in verticalStretchElements)
-                    {
-                        verticalElement.boundingRect.Height = stretchHeight;
-                    }
-                }
-
-                if (horizontalStretchElements.Count > 0)
-                {
-                    foreach (var horizontalElement in horizontalStretchElements)
-                    {
-                        horizontalElement.boundingRect.Width = groupRect.Width - margin * 2;
-                    }
-                }
-
-                // Place elements
-                var nextLocation = new Point(groupRect.Location.X + margin, groupRect.Location.Y + margin);
-                foreach (var element in elements)
-                {
-                    element.actor.transform.Position = nextLocation.ToVector2();
-                    nextLocation += new Point(0, element.Rect.Height + this.PaddingBetweenElements);
-                }
-
-                // If we have groups within groups, now we layout the subgroups.
-                foreach (var element in elements)
-                {
-                    var subgroup = element.actor.GetComponent<LayoutGroup>();
-                    if (subgroup != null)
-                    {
-                        subgroup.ExecuteLayout();
+                        alongElement.boundingRect.Width = alongSizeOfEachStretchedElement;
                     }
                 }
             }
 
+            if (stretchPerpendicular.Count > 0)
+            {
+                foreach (var perpElement in stretchPerpendicular)
+                {
+                    if (isVertical)
+                    {
+                        perpElement.boundingRect.Width = groupRect.Width - margin * 2;
+                    }
+                    else
+                    {
+                        perpElement.boundingRect.Height = groupRect.Height - margin * 2;
+                    }
+                }
+            }
+
+            // Place elements
+            var nextLocation = new Point(groupRect.Location.X + margin, groupRect.Location.Y + margin);
+            foreach (var element in elements)
+            {
+                element.actor.transform.Position = nextLocation.ToVector2();
+                if (isVertical)
+                {
+                    nextLocation += new Point(0, element.Rect.Height + this.PaddingBetweenElements);
+                }
+                else
+                {
+                    nextLocation += new Point(element.Rect.Width + this.PaddingBetweenElements, 0);
+                }
+            }
+
+            // If we have groups within groups, now we layout the subgroups.
+            foreach (var element in elements)
+            {
+                var subgroup = element.actor.GetComponent<LayoutGroup>();
+                if (subgroup != null)
+                {
+                    subgroup.ExecuteLayout();
+                }
+            }
         }
 
         public void OnNumberOfChildrenChanged()
