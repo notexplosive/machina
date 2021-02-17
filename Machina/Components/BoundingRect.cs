@@ -61,6 +61,8 @@ namespace Machina.Components
             }
         }
 
+        public Vector2 TopLeft => Rect.Location.ToVector2();
+
         public void SetOffsetToTopLeft()
         {
             Offset = new Vector2(0, 0);

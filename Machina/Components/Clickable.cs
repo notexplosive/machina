@@ -20,13 +20,15 @@ namespace Machina.Components
             this.hoverable = RequireComponent<Hoverable>();
         }
 
-        public bool IsHeldDown
+        public bool IsPrimedForAnyButton
         {
             get
             {
                 return this.hoverable.IsHovered && (leftButtonDown || middleButtonDown || rightButtonDown);
             }
         }
+
+        public bool IsPrimedForLeftMouseButton => IsPrimedForAnyButton && leftButtonDown;
 
         public bool IsHovered => this.hoverable.IsHovered;
 

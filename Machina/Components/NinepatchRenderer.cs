@@ -11,18 +11,21 @@ namespace Machina.Components
 {
     class NinepatchRenderer : BaseComponent
     {
-        protected BoundingRect boundingRect;
-        protected NinepatchSheet spriteSheet;
+        protected readonly BoundingRect boundingRect;
+        public NinepatchSheet SpriteSheet
+        {
+            get; set;
+        }
 
         public NinepatchRenderer(Actor actor, NinepatchSheet spriteSheet) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.spriteSheet = spriteSheet;
+            SpriteSheet = spriteSheet;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.actor.transform.Depth);
+            SpriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.actor.transform.Depth);
         }
     }
 }

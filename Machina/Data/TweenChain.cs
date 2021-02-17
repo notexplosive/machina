@@ -60,6 +60,11 @@ namespace Machina.Data
             return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors, FloatTween.LerpFloat));
         }
 
+        public TweenChain AppendIntTween(int targetVal, int duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
+        {
+            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, LerpInt));
+        }
+
         public TweenChain AppendCallback(Action func)
         {
             return Append(new CallbackChainItem(func));
@@ -207,6 +212,11 @@ namespace Machina.Data
             {
                 // This function is intentionally left blank
             }
+        }
+
+        public static int LerpInt(int start, int end, float progress)
+        {
+            return (int) (start + (end - start) * progress);
         }
     }
 }

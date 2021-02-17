@@ -25,6 +25,7 @@ namespace Machina.Components
     public abstract class BaseComponent : NonIteratingCrane, IComponent
     {
         public readonly Actor actor;
+        public Transform Transform => actor.transform;
         public BaseComponent(Actor actor)
         {
             this.actor = actor;

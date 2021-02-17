@@ -21,7 +21,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(this.boundingRect.Rect, this.clickable.IsHovered ? Color.Blue : Color.Red, this.clickable.IsHeldDown ? 5 : 1);
+            spriteBatch.DrawRectangle(this.boundingRect.Rect, this.clickable.IsHovered ? Color.Blue : Color.Red, this.clickable.IsPrimedForAnyButton ? 5 : 1);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Machina.Tests
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
                 var group = new LayoutGroup(groupActor);
-                group.VerticalPadding = 5;
+                group.PaddingBetweenElements = 5;
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
                 var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
@@ -46,7 +46,7 @@ namespace Machina.Tests
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
                 var group = new LayoutGroup(groupActor);
-                group.VerticalPadding = 7;
+                group.PaddingBetweenElements = 7;
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 e1.StretchVertically = true;
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));

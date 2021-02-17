@@ -29,6 +29,10 @@ namespace HelloGame
             gameScene = sceneLayers.AddNewScene(this.gameCanvas);
             uiScene = sceneLayers.AddNewScene(this.gameCanvas);
 
+            Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
+
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
@@ -181,8 +185,25 @@ namespace HelloGame
             new Clickable(selectable3);
             selector.BuildSelectable(selectable3);
 
-            var hoop = gameScene.AddActor("hoop", new Vector2(400, 300));
+            var layout = gameScene.AddActor("Layout", new Vector2(400, 300));
+            new BoundingRect(layout, 600, 600);
+            var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
 
+            var uiButton = gameScene.AddActor("Button");
+            var buttonRect = new BoundingRect(uiButton, 32, 32);
+            new NinepatchRenderer(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button"));
+            new Hoverable(uiButton);
+            new Clickable(uiButton);
+            new ButtonNinepatchHandler(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"));
+            uiGroup.CreateElement(uiButton).StretchHorizontally = true;
+            var buttonGroup = new LayoutGroup(uiButton).SetMargin(5);
+            var buttonLabel = gameScene.AddActor("Button Label");
+            buttonLabel.transform.LocalDepth = 0.000001f;
+            new BoundingRect(buttonLabel, Point.Zero);
+            var buttonLabelElement = buttonGroup.CreateElement(buttonLabel);
+            buttonLabelElement.StretchHorizontally = true;
+            buttonLabelElement.StretchVertically = true;
+            new BoundedTextRenderer(buttonLabel, "Click me!", Assets.DefaultSmallFont);
         }
 
         protected override void Update(GameTime gameTime)
