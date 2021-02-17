@@ -188,25 +188,12 @@ namespace HelloGame
             var layout = gameScene.AddActor("Layout", new Vector2(400, 300));
             new BoundingRect(layout, 256, 256);
             var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
+            uiGroup.PaddingBetweenElements = 5;
 
-            var uiButton = gameScene.AddActor("Button");
-            new BoundingRect(uiButton, 32, 32);
-            new NinepatchRenderer(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button"));
-            new Hoverable(uiButton);
-            new Clickable(uiButton);
-            new ButtonNinepatchHandler(uiButton, Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"));
-            new LayoutElement(uiButton).StretchHorizontally = true;
-            new LayoutGroup(uiButton).SetMargin(5);
-            var buttonLabel = gameScene.AddActor("Button Label");
-            buttonLabel.transform.LocalDepth = 0.000001f;
-            new BoundingRect(buttonLabel, Point.Zero);
-            var buttonLabelElement = new LayoutElement(buttonLabel);
-            buttonLabelElement.StretchHorizontally = true;
-            buttonLabelElement.StretchVertically = true;
-            new BoundedTextRenderer(buttonLabel, "Click me!", Assets.DefaultSmallFont);
-
-            uiButton.SetParent(layout);
-            buttonLabel.SetParent(uiButton);
+            var uiBuilder = new UIBuilder(new UIStyle(Assets.GetMachinaAsset<NinepatchSheet>("ui-button"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"), defaultFont));
+            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
+            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
+            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
         }
 
         protected override void Update(GameTime gameTime)

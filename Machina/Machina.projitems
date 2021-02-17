@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundedTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnClick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\UIBuilder.cs" />
     <Compile Include="..\Machina\Components\ButtonNinepatchHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Draggable.cs" />
