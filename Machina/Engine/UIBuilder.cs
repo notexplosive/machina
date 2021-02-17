@@ -17,11 +17,11 @@ namespace Machina.Engine
             this.style = style;
         }
 
-        public Actor BuildButton(LayoutGroup uiGroup, string buttonLabelText)
+        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height)
         {
-            var scene = uiGroup.actor.scene;
+            var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
-            new BoundingRect(buttonActor, 32, 32);
+            new BoundingRect(buttonActor, 0, height);
             new NinepatchRenderer(buttonActor, style.buttonDefault);
             new Hoverable(buttonActor);
             new Clickable(buttonActor);
@@ -36,10 +36,24 @@ namespace Machina.Engine
             buttonLabelElement.StretchVertically = true;
             new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.buttonFont);
 
-            buttonActor.SetParent(uiGroup.actor);
+            buttonActor.SetParent(group.actor);
             buttonLabelActor.SetParent(buttonActor);
 
             return buttonActor;
+        }
+
+        public Actor BuildSpacer(LayoutGroup group, Point size, bool stretchHorizontal, bool stretchVertical)
+        {
+            var scene = group.actor.scene;
+            var spacerActor = scene.AddActor("Button");
+            new BoundingRect(spacerActor, size);
+            var e = new LayoutElement(spacerActor);
+            e.StretchHorizontally = stretchHorizontal;
+            e.StretchVertically = stretchVertical;
+
+            spacerActor.SetParent(group.actor);
+
+            return spacerActor;
         }
 
     }

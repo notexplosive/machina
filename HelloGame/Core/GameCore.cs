@@ -156,44 +156,53 @@ namespace HelloGame
             new MouseCircle(miniMouse, 15, Color.LightBlue);
             new PanAndZoomCamera(miniMouse, Keys.LeftShift);
 
-            var button = gameScene.AddActor("button");
-            new BoundingRect(button, new Point(50, 50));
-            new Hoverable(button);
-            new Clickable(button);
-            new SimpleButtonRenderer(button);
-            new Draggable(button);
-            new MoveOnDrag(button);
+            {
+                var selectorActor = gameScene.AddActor("selector", new Vector2(100, 0));
+                var selector = new SingleSelector(selectorActor);
 
-            var selectorActor = gameScene.AddActor("selector", new Vector2(100, 0));
-            var selector = new SingleSelector(selectorActor);
+                var selectable = gameScene.AddActor("selectable", new Vector2(80, 50));
+                new BoundingRect(selectable, new Point(50, 50));
+                new Hoverable(selectable);
+                new Clickable(selectable);
+                selector.BuildSelectable(selectable);
 
-            var selectable = gameScene.AddActor("selectable", new Vector2(80, 50));
-            new BoundingRect(selectable, new Point(50, 50));
-            new Hoverable(selectable);
-            new Clickable(selectable);
-            selector.BuildSelectable(selectable);
+                var selectable2 = gameScene.AddActor("selectable2", new Vector2(130, 50));
+                new BoundingRect(selectable2, new Point(50, 50));
+                new Hoverable(selectable2);
+                new Clickable(selectable2);
+                selector.BuildSelectable(selectable2);
 
-            var selectable2 = gameScene.AddActor("selectable2", new Vector2(130, 50));
-            new BoundingRect(selectable2, new Point(50, 50));
-            new Hoverable(selectable2);
-            new Clickable(selectable2);
-            selector.BuildSelectable(selectable2);
+                var selectable3 = gameScene.AddActor("selectable3", new Vector2(180, 50));
+                new BoundingRect(selectable3, new Point(50, 50));
+                new Hoverable(selectable3);
+                new Clickable(selectable3);
+                selector.BuildSelectable(selectable3);
+            }
 
-            var selectable3 = gameScene.AddActor("selectable3", new Vector2(180, 50));
-            new BoundingRect(selectable3, new Point(50, 50));
-            new Hoverable(selectable3);
-            new Clickable(selectable3);
-            selector.BuildSelectable(selectable3);
-
-            var layout = gameScene.AddActor("Layout", new Vector2(400, 300));
-            new BoundingRect(layout, 256, 256);
-            var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
-            uiGroup.PaddingBetweenElements = 5;
 
             var uiBuilder = new UIBuilder(new UIStyle(Assets.GetMachinaAsset<NinepatchSheet>("ui-button"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"), defaultFont));
-            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
-            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
-            uiBuilder.BuildButton(uiGroup, "I'm a really cool button");
+
+            {
+                var layout = gameScene.AddActor("Layout", new Vector2(300, 200));
+                new BoundingRect(layout, 256, 256);
+                var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
+                uiGroup.PaddingBetweenElements = 5;
+
+                uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
+                uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
+                uiBuilder.BuildButton(uiGroup, "BIG BUTTON", 64);
+            }
+
+            {
+                var horizontalLayout = gameScene.AddActor("Layout", new Vector2(800, 200));
+                new BoundingRect(horizontalLayout, 256, 256);
+                var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Vertical);
+                uiGroup.PaddingBetweenElements = 5;
+
+                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
+                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, true);
+                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
+            }
         }
 
         protected override void Update(GameTime gameTime)
