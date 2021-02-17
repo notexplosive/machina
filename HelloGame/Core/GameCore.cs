@@ -180,7 +180,7 @@ namespace HelloGame
 
             {
                 var layout = gameScene.AddActor("Layout", new Vector2(300, 200));
-                new BoundingRect(layout, 128, 256);
+                new BoundingRect(layout, 256, 128);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
@@ -198,7 +198,7 @@ namespace HelloGame
                 uiGroup.SetMargin(15);
 
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
-                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, true);
+                uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
             }
         }

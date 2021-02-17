@@ -94,18 +94,18 @@ namespace Machina.Tests
                 uiGroup.SetMargin(15);
 
                 var e1 = uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
-                var e2 = uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, true);
+                var e2 = uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
                 var e3 = uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
                 scene.FlushBuffers();
                 uiGroup.ExecuteLayout();
 
                 test.Expect(15, e1.transform.Position.X, "E1 is at expected X position");
                 test.Expect(52, e2.transform.Position.X, "E2 is at expected X position");
-                test.Expect(89, e3.transform.Position.X, "E3 is at expected X position");
+                test.Expect(121, e3.transform.Position.X, "E3 is at expected X position");
 
                 test.Expect(32, e1.GetComponent<BoundingRect>().Width, "E1 is expected width");
-                test.Expect(32, e2.GetComponent<BoundingRect>().Width, "E2 is expected width");
-                test.Expect(152, e3.GetComponent<BoundingRect>().Width, "E3 is expected width");
+                test.Expect(64, e2.GetComponent<BoundingRect>().Width, "E2 is expected width");
+                test.Expect(120, e3.GetComponent<BoundingRect>().Width, "E3 is expected width");
 
                 test.Expect(32, e1.GetComponent<BoundingRect>().Height, "E1 is expected height");
                 test.Expect(98, e2.GetComponent<BoundingRect>().Height, "E2 is expected height");

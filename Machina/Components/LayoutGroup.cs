@@ -57,7 +57,14 @@ namespace Machina.Components
             {
                 if (!element.IsStretchedAlong(this.orientation))
                 {
-                    remainingAlongSize -= element.Rect.Size.Y;
+                    if (isVertical)
+                    {
+                        remainingAlongSize -= element.Rect.Size.Y;
+                    }
+                    else
+                    {
+                        remainingAlongSize -= element.Rect.Size.X;
+                    }
                 }
                 else
                 {
