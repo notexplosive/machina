@@ -43,5 +43,10 @@ namespace Machina.Components
             Debug.Assert(component != null, "Missing component " + typeof(T).FullName);
             return component;
         }
+
+        public override string ToString()
+        {
+            return this.actor.ToString() + "." + this.GetType().Name;
+        }
     }
 }

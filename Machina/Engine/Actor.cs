@@ -131,7 +131,12 @@ namespace Machina.Engine
 
         public override string ToString()
         {
-            return this.name;
+            var parentName = "";
+            if (this.transform.HasParent)
+            {
+                parentName = this.transform.Parent.actor.ToString() + "/";
+            }
+            return parentName + this.name;
         }
     }
 

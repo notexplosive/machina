@@ -193,7 +193,7 @@ namespace Machina.Components
 
         public int ChildCount => iterables.Count;
 
-        public void SetParent(Actor newParent)
+        public void SetParent(Actor newParent) // TODO: this should take a Transform not an Actor
         {
             if (newParent == this.actor)
             {
@@ -289,6 +289,11 @@ namespace Machina.Components
             newActor.transform.SetParent(this.actor);
             newActor.transform.LocalPosition = position;
             return newActor;
+        }
+
+        public override string ToString()
+        {
+            return this.actor.ToString() + ".Transform";
         }
     }
 }
