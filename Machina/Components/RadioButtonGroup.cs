@@ -10,6 +10,18 @@ namespace Machina.Components
         private LayoutGroup layoutGroup;
         private int currentIndex = -1;
 
+        public Actor CurrentSelectedActor
+        {
+            get
+            {
+                if (currentIndex > 0)
+                {
+                    return transform.ChildAt(this.currentIndex);
+                }
+                return null;
+            }
+        }
+
         public RadioButtonGroup(Actor actor) : base(actor)
         {
             this.layoutGroup = RequireComponent<LayoutGroup>();

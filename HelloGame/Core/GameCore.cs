@@ -210,9 +210,10 @@ namespace HelloGame
                 innerGroupElement.StretchHorizontally = true;
                 innerGroupElement.StretchVertically = true;
                 radioLayout.SetParent(layout);
+                uiBuilder.BuildLabel(innerGroup, "Section title:");
                 uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
-                uiBuilder.BuildRadioButton(innerGroup, "Choose me!", true);
-                uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
+                uiBuilder.BuildRadioButton(innerGroup, "Or me!", true);
+                uiBuilder.BuildRadioButton(innerGroup, "What about me!");
 
 
             }

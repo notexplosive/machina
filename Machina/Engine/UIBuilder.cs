@@ -45,7 +45,7 @@ namespace Machina.Engine
         public Actor BuildSpacer(LayoutGroup group, Point size, bool stretchHorizontal, bool stretchVertical)
         {
             var scene = group.actor.scene;
-            var spacerActor = scene.AddActor("Button");
+            var spacerActor = scene.AddActor("Spacer");
             new BoundingRect(spacerActor, size);
             var e = new LayoutElement(spacerActor);
             e.StretchHorizontally = stretchHorizontal;
@@ -109,6 +109,20 @@ namespace Machina.Engine
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
 
             checkboxContainer.SetParent(uiGroup.actor);
+        }
+
+        public Actor BuildLabel(LayoutGroup group, string textLabel)
+        {
+            var scene = group.actor.scene;
+            var spacerActor = scene.AddActor("Label");
+            new BoundingRect(spacerActor, new Point(32, 32));
+            new BoundedTextRenderer(spacerActor, textLabel, style.uiElementFont);
+            var e = new LayoutElement(spacerActor);
+            e.StretchHorizontally = true;
+
+            spacerActor.SetParent(group.actor);
+
+            return spacerActor;
         }
     }
 
