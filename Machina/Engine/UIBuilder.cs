@@ -27,7 +27,7 @@ namespace Machina.Engine
             new Clickable(buttonActor);
             new ButtonNinepatchHandler(buttonActor, style.buttonHover, style.buttonPress);
             new LayoutElement(buttonActor).StretchHorizontally = true;
-            new LayoutGroup(buttonActor).SetMargin(5);
+            new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
             var buttonLabelActor = scene.AddActor("Button Label");
             buttonLabelActor.transform.LocalDepth = 0.000001f;
             new BoundingRect(buttonLabelActor, Point.Zero);

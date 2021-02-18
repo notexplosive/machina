@@ -16,7 +16,7 @@ namespace Machina.Tests
                 var groupActor = new Actor("Group", null);
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
-                var group = new LayoutGroup(groupActor);
+                var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
                 var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
@@ -31,7 +31,7 @@ namespace Machina.Tests
                 var groupActor = new Actor("Group", null);
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
-                var group = new LayoutGroup(groupActor);
+                var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 group.PaddingBetweenElements = 5;
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
@@ -47,7 +47,7 @@ namespace Machina.Tests
                 var groupActor = new Actor("Group", null);
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
-                var group = new LayoutGroup(groupActor);
+                var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 group.PaddingBetweenElements = 7;
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 e1.StretchVertically = true;
@@ -66,7 +66,7 @@ namespace Machina.Tests
                 var groupActor = new Actor("Group", null);
                 groupActor.transform.Position = new Vector2(50, 50);
                 new BoundingRect(groupActor, new Point(200, 300));
-                var group = new LayoutGroup(groupActor);
+                var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
                 e1.StretchVertically = true;
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));

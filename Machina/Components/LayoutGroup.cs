@@ -15,7 +15,7 @@ namespace Machina.Components
         private int margin;
         private int prevChildCount;
 
-        public LayoutGroup(Actor actor, Orientation orientation = Orientation.Vertical) : base(actor)
+        public LayoutGroup(Actor actor, Orientation orientation) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.orientation = orientation;
