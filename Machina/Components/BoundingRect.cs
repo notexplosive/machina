@@ -15,6 +15,7 @@ namespace Machina.Components
         {
             get; private set;
         }
+        public Point Size => this.size;
 
         public Point Location => Rect.Location;
 

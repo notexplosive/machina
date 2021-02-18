@@ -98,9 +98,9 @@ namespace Machina.Engine
             new BoundingRect(checkboxBox, new Point(24, 24));
             new LayoutElement(checkboxBox);
             if (isCheckbox)
-                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.checkboxImage, stateProvider, checkboxClickable, style.checkboxFrames);
+                new CheckboxRenderer(checkboxBox, style.uiSpriteSheet, style.checkboxImage, stateProvider, checkboxClickable, style.checkboxFrames);
             else
-                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.radioImage, stateProvider, checkboxClickable, style.radioFrames);
+                new CheckboxRenderer(checkboxBox, style.uiSpriteSheet, style.radioImage, stateProvider, checkboxClickable, style.radioFrames);
 
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.SetParent(checkboxContainer);
@@ -131,15 +131,16 @@ namespace Machina.Engine
         /// <summary>
         /// Should only be used in tests
         /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
 
         public readonly IFrameAnimation checkboxFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
+        public readonly IFrameAnimation dropdownFrames = new LinearFrameAnimation(0, 3);
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;
         public readonly SpriteFont uiElementFont;
-        public readonly SpriteSheet checkboxAndRadioBackground;
+        public readonly SpriteSheet uiSpriteSheet;
         public readonly Image checkboxImage;
         public readonly Image radioImage;
 
@@ -148,20 +149,22 @@ namespace Machina.Engine
             NinepatchSheet hoverButtonSheet,
             NinepatchSheet pressButtonSheet,
             SpriteFont buttonFont,
-            SpriteSheet checkboxBackground,
+            SpriteSheet uiSpriteSheet,
             Image checkboxImage,
             Image radioImage,
             IFrameAnimation checkboxFrames,
-            IFrameAnimation radioFrames)
+            IFrameAnimation radioFrames,
+            IFrameAnimation dropdownFrames)
         {
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
             buttonPress = pressButtonSheet;
             this.uiElementFont = buttonFont;
-            this.checkboxAndRadioBackground = checkboxBackground;
+            this.uiSpriteSheet = uiSpriteSheet;
             this.checkboxImage = checkboxImage;
             this.radioImage = radioImage;
             this.radioFrames = radioFrames;
+            this.dropdownFrames = dropdownFrames;
             this.checkboxFrames = checkboxFrames;
         }
     }

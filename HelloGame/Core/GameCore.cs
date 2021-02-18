@@ -185,7 +185,8 @@ namespace HelloGame
                     Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
                     Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
                     new LinearFrameAnimation(0, 3),
-                    new LinearFrameAnimation(3, 3)
+                    new LinearFrameAnimation(3, 3),
+                    new LinearFrameAnimation(9, 3)
                     );
             var uiBuilder = new UIBuilder(defaultStyle);
 
@@ -223,14 +224,14 @@ namespace HelloGame
                 var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
                 new BoundingRect(dropdownContent, Point.Zero);
                 new Hoverable(dropdownContent);
-                var content = new DropdownContent(dropdownContent, defaultStyle.uiElementFont)
+                var content = new DropdownContent(dropdownContent, defaultStyle.uiElementFont, defaultStyle.buttonDefault, defaultStyle.buttonHover)
                     .Add("Item 1")
                     .Add("Item 2")
-                    .Add("Item 3")
+                    .Add("Item 3 but this one is actually super long")
                     .Add("Item 4");
 
                 new BoundedTextRenderer(dropdown, "", defaultStyle.uiElementFont);
-                new DropdownTrigger(dropdown, content);
+                new DropdownTrigger(dropdown, content, defaultStyle.uiSpriteSheet, defaultStyle.dropdownFrames, defaultStyle.buttonDefault);
             }
 
             // Horizontal layout example
