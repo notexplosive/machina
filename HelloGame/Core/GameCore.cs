@@ -176,19 +176,26 @@ namespace HelloGame
             }
 
 
-            var uiBuilder = new UIBuilder(new UIStyle(Assets.GetMachinaAsset<NinepatchSheet>("ui-button"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"), defaultFont));
+            var uiBuilder = new UIBuilder(
+                new UIStyle(
+                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                    defaultFont,
+                    Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"),
+                    Assets.GetMachinaAsset<Image>("checkbox-checkmark-image")
+                    ));
 
             // Button layout example
             {
-                var layout = gameScene.AddActor("Layout", new Vector2(300, 200));
-                new BoundingRect(layout, 256, 128);
+                var layout = gameScene.AddActor("Layout", new Vector2(300, 100));
+                new BoundingRect(layout, 256, 400);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
 
-                uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
-                uiBuilder.BuildButton(uiGroup, "I'm a really cool button", 32);
-                uiBuilder.BuildButton(uiGroup, "BIG BUTTON", 64);
+                uiBuilder.BuildButton(uiGroup, "Click me!", 32);
+                uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
             }
 
             // Horizontal layout example
@@ -202,28 +209,6 @@ namespace HelloGame
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
                 uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
-            }
-
-            {
-                var checkboxContainer = gameScene.AddActor("Checkbox", new Vector2(40, 400));
-                new BoundingRect(checkboxContainer, new Point(256, 32));
-                new Hoverable(checkboxContainer);
-                var checkboxClickable = new Clickable(checkboxContainer);
-                var checkboxState = new ToggleStateOnClick(checkboxContainer);
-                new LayoutElement(checkboxContainer).StretchHorizontally = true;
-                new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
-
-                var checkboxBox = gameScene.AddActor("Checkbox-Box");
-                checkboxBox.SetParent(checkboxContainer);
-                new BoundingRect(checkboxBox, new Point(32, 32));
-                new LayoutElement(checkboxBox);
-                new CheckboxRenderer(checkboxBox, Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"), Assets.GetMachinaAsset<Image>("checkbox-checkmark-image"), checkboxState, checkboxClickable);
-
-                var checkboxLabel = gameScene.AddActor("Checkbox-Label");
-                checkboxLabel.SetParent(checkboxContainer);
-                new BoundingRect(checkboxLabel, new Point(0, 32));
-                new LayoutElement(checkboxLabel).StretchHorizontally = true;
-                new BoundedTextRenderer(checkboxLabel, "This is a test", defaultFont);
             }
         }
 

@@ -17,7 +17,7 @@ namespace Machina.Engine
             this.style = style;
         }
 
-        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height)
+        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height = 32)
         {
             var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
@@ -34,7 +34,7 @@ namespace Machina.Engine
             var buttonLabelElement = new LayoutElement(buttonLabelActor);
             buttonLabelElement.StretchHorizontally = true;
             buttonLabelElement.StretchVertically = true;
-            new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.buttonFont);
+            new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont);
 
             buttonActor.SetParent(group.actor);
             buttonLabelActor.SetParent(buttonActor);
@@ -56,6 +56,31 @@ namespace Machina.Engine
             return spacerActor;
         }
 
+        public void BuildCheckbox(LayoutGroup uiGroup, string labelText)
+        {
+            var scene = uiGroup.actor.scene;
+            var checkboxContainer = scene.AddActor("Checkbox", new Vector2(40, 400));
+            new BoundingRect(checkboxContainer, new Point(256, 32));
+            new Hoverable(checkboxContainer);
+            var checkboxClickable = new Clickable(checkboxContainer);
+            var checkboxState = new ToggleStateOnClick(checkboxContainer);
+            new LayoutElement(checkboxContainer).StretchHorizontally = true;
+            new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
+
+            var checkboxBox = scene.AddActor("Checkbox-Box");
+            checkboxBox.SetParent(checkboxContainer);
+            new BoundingRect(checkboxBox, new Point(32, 32));
+            new LayoutElement(checkboxBox);
+            new CheckboxRenderer(checkboxBox, style.checkboxBackground, style.checkboxImage, checkboxState, checkboxClickable);
+
+            var checkboxLabel = scene.AddActor("Checkbox-Label");
+            checkboxLabel.SetParent(checkboxContainer);
+            new BoundingRect(checkboxLabel, new Point(0, 32));
+            new LayoutElement(checkboxLabel).StretchHorizontally = true;
+            new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
+
+            checkboxContainer.SetParent(uiGroup.actor);
+        }
     }
 
     class UIStyle
@@ -63,19 +88,23 @@ namespace Machina.Engine
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;
-        public readonly SpriteFont buttonFont;
+        public readonly SpriteFont uiElementFont;
+        public readonly SpriteSheet checkboxBackground;
+        public readonly Image checkboxImage;
 
-        public UIStyle(NinepatchSheet defaultButtonSheet, NinepatchSheet hoverButtonSheet, NinepatchSheet pressButtonSheet, SpriteFont buttonFont)
+        public UIStyle(NinepatchSheet defaultButtonSheet, NinepatchSheet hoverButtonSheet, NinepatchSheet pressButtonSheet, SpriteFont buttonFont, SpriteSheet checkboxBackground, Image checkboxImage)
         {
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
             buttonPress = pressButtonSheet;
-            this.buttonFont = buttonFont;
+            this.uiElementFont = buttonFont;
+            this.checkboxBackground = checkboxBackground;
+            this.checkboxImage = checkboxImage;
         }
 
         /// <summary>
         /// Should only be used in tests
         /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null);
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null);
     }
 }
