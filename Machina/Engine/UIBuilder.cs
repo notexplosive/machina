@@ -73,7 +73,7 @@ namespace Machina.Engine
             new BoundingRect(checkboxContainer, new Point(256, 32));
             new Hoverable(checkboxContainer);
             var checkboxClickable = new Clickable(checkboxContainer);
-            var checkboxState = new ToggleStateOnClick(checkboxContainer);
+            var checkboxState = new CheckboxState(checkboxContainer);
             new LayoutElement(checkboxContainer).StretchHorizontally = true;
             new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
 

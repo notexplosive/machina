@@ -10,14 +10,14 @@ namespace Machina.Components
 {
     class CheckboxRenderer : BaseComponent
     {
-        private readonly ToggleStateOnClick checkboxState;
+        private readonly CheckboxState checkboxState;
         private readonly Clickable clickable;
         private readonly BoundingRect boundingRect;
         private readonly SpriteSheet checkboxSpriteSheet;
         private readonly Image checkmark;
         private readonly IFrameAnimation animation;
 
-        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark, ToggleStateOnClick checkboxState, Clickable clickable, IFrameAnimation animation) : base(actor)
+        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark, CheckboxState checkboxState, Clickable clickable, IFrameAnimation animation) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.checkboxState = checkboxState;

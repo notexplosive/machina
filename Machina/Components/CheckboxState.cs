@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class ToggleStateOnClick : BaseComponent
+    class CheckboxState : BaseComponent
     {
         private readonly Clickable clickable;
         public bool IsChecked
@@ -13,7 +13,7 @@ namespace Machina.Components
             get; set;
         }
 
-        public ToggleStateOnClick(Actor actor, bool startingValue = false) : base(actor)
+        public CheckboxState(Actor actor, bool startingValue = false) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
             clickable.onClick += OnClick;
