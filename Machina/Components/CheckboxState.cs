@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class CheckboxState : BaseComponent
+    class CheckboxState : BaseComponent, ICheckboxStateProvider
     {
         private readonly Clickable clickable;
         public bool IsChecked
@@ -31,6 +31,11 @@ namespace Machina.Components
             {
                 IsChecked = !IsChecked;
             }
+        }
+
+        public bool GetIsChecked()
+        {
+            return IsChecked;
         }
     }
 }

@@ -192,16 +192,27 @@ namespace HelloGame
             // Button layout example
             {
                 var layout = gameScene.AddActor("Layout", new Vector2(300, 100));
-                new BoundingRect(layout, 256, 400);
+                new BoundingRect(layout, 256, 800);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
 
                 uiBuilder.BuildButton(uiGroup, "Click me!", 32);
+                uiBuilder.BuildCheckbox(uiGroup, "Check me out!", true);
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
 
-
-                uiBuilder.BuildRadioButton(uiGroup, "Choose me!");
+                var radioLayout = gameScene.AddActor("Inner Layout");
+                new BoundingRect(radioLayout, Point.Zero);
+                var innerGroup = new LayoutGroup(radioLayout, Orientation.Vertical);
+                innerGroup.PaddingBetweenElements = 5;
+                innerGroup.SetMargin(0);
+                var innerGroupElement = new LayoutElement(radioLayout);
+                innerGroupElement.StretchHorizontally = true;
+                innerGroupElement.StretchVertically = true;
+                radioLayout.SetParent(layout);
+                uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
+                uiBuilder.BuildRadioButton(innerGroup, "Choose me!", true);
+                uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
 
 
             }

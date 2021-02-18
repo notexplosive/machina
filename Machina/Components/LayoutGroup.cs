@@ -89,7 +89,10 @@ namespace Machina.Components
             {
                 var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlong.Count;
 
-                Debug.Assert(alongSizeOfEachStretchedElement > 0, "Not enough room to lay out stretch elements");
+                if (totalAlongSize != 0)
+                {
+                    Debug.Assert(alongSizeOfEachStretchedElement > 0, "Not enough room to lay out stretch elements");
+                }
 
                 foreach (var alongElement in stretchAlong)
                 {

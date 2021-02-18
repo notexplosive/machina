@@ -56,43 +56,55 @@ namespace Machina.Engine
             return spacerActor;
         }
 
-        public void BuildCheckbox(LayoutGroup uiGroup, string labelText)
+        public void BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)
         {
-            BuildCheckboxOrRadioButton(uiGroup, labelText, true);
+            BuildCheckboxOrRadioButton(uiGroup, labelText, startChecked, true);
         }
 
-        public void BuildRadioButton(LayoutGroup uiGroup, string labelText)
+        public void BuildRadioButton(LayoutGroup uiGroup, string labelText, bool startFilled = false)
         {
-            BuildCheckboxOrRadioButton(uiGroup, labelText, false);
+            BuildCheckboxOrRadioButton(uiGroup, labelText, startFilled, false);
         }
 
-        private void BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool isCheckbox)
+        private void BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool startChecked, bool isCheckbox)
         {
             var scene = uiGroup.actor.scene;
+
+            var radioButtonGroup = uiGroup.actor.GetComponent<RadioButtonGroup>();
+
+            if (!isCheckbox)
+            {
+                if (radioButtonGroup == null)
+                {
+                    radioButtonGroup = new RadioButtonGroup(uiGroup.actor);
+                }
+            }
+
             var checkboxContainer = scene.AddActor("Checkbox", new Vector2(40, 400));
-            new BoundingRect(checkboxContainer, new Point(256, 32));
+            new BoundingRect(checkboxContainer, new Point(256, 24));
             new Hoverable(checkboxContainer);
             var checkboxClickable = new Clickable(checkboxContainer);
-            var checkboxState = new CheckboxState(checkboxContainer);
+            ICheckboxStateProvider stateProvider;
+            if (isCheckbox)
+                stateProvider = new CheckboxState(checkboxContainer, startChecked);
+            else
+                stateProvider = new RadioButtonState(checkboxContainer, radioButtonGroup, startChecked);
+
             new LayoutElement(checkboxContainer).StretchHorizontally = true;
             new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
 
             var checkboxBox = scene.AddActor("Checkbox-Box");
             checkboxBox.SetParent(checkboxContainer);
-            new BoundingRect(checkboxBox, new Point(32, 32));
+            new BoundingRect(checkboxBox, new Point(24, 24));
             new LayoutElement(checkboxBox);
             if (isCheckbox)
-            {
-                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.checkboxImage, checkboxState, checkboxClickable, style.checkboxFrames);
-            }
+                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.checkboxImage, stateProvider, checkboxClickable, style.checkboxFrames);
             else
-            {
-                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.radioImage, checkboxState, checkboxClickable, style.radioFrames);
-            }
+                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.radioImage, stateProvider, checkboxClickable, style.radioFrames);
 
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.SetParent(checkboxContainer);
-            new BoundingRect(checkboxLabel, new Point(0, 32));
+            new BoundingRect(checkboxLabel, new Point(0, 24));
             new LayoutElement(checkboxLabel).StretchHorizontally = true;
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
 

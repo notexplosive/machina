@@ -10,14 +10,14 @@ namespace Machina.Components
 {
     class CheckboxRenderer : BaseComponent
     {
-        private readonly CheckboxState checkboxState;
+        private readonly ICheckboxStateProvider checkboxState;
         private readonly Clickable clickable;
         private readonly BoundingRect boundingRect;
         private readonly SpriteSheet checkboxSpriteSheet;
         private readonly Image checkmark;
         private readonly IFrameAnimation animation;
 
-        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark, CheckboxState checkboxState, Clickable clickable, IFrameAnimation animation) : base(actor)
+        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark, ICheckboxStateProvider checkboxState, Clickable clickable, IFrameAnimation animation) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.checkboxState = checkboxState;
@@ -46,7 +46,7 @@ namespace Machina.Components
 
             this.checkboxSpriteSheet.DrawFrame(this.animation.GetFrame(frameIndex), spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, false, false, transform.Depth, Color.White);
 
-            if (this.checkboxState.IsChecked)
+            if (this.checkboxState.GetIsChecked())
             {
                 this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, false, false, transform.Depth - 000000.1f, Color.White);
             }
