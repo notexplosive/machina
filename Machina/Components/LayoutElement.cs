@@ -16,24 +16,18 @@ namespace Machina.Components
 
         public Rectangle Rect => this.boundingRect.Rect;
 
-        public bool StretchVertically
+        public LayoutElement StretchVertically()
         {
-            get => this.stretchVertically;
-            set
-            {
-                stretchVertically = value;
-                this.group?.ExecuteLayout();
-            }
+            stretchVertically = true;
+            this.group?.ExecuteLayout();
+            return this;
         }
 
-        public bool StretchHorizontally
+        public LayoutElement StretchHorizontally()
         {
-            get => this.stretchHorizontally;
-            set
-            {
-                stretchHorizontally = value;
-                this.group?.ExecuteLayout();
-            }
+            stretchHorizontally = true;
+            this.group?.ExecuteLayout();
+            return this;
         }
 
         public LayoutElement(Actor actor) : base(actor)

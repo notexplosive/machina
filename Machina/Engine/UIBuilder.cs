@@ -26,14 +26,14 @@ namespace Machina.Engine
             new Hoverable(buttonActor);
             new Clickable(buttonActor);
             new ButtonNinepatchHandler(buttonActor, style.buttonHover, style.buttonPress);
-            new LayoutElement(buttonActor).StretchHorizontally = true;
+            new LayoutElement(buttonActor).StretchHorizontally();
             new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
             var buttonLabelActor = scene.AddActor("Button Label");
             buttonLabelActor.transform.LocalDepth = 0.000001f;
             new BoundingRect(buttonLabelActor, Point.Zero);
             var buttonLabelElement = new LayoutElement(buttonLabelActor);
-            buttonLabelElement.StretchHorizontally = true;
-            buttonLabelElement.StretchVertically = true;
+            buttonLabelElement.StretchHorizontally();
+            buttonLabelElement.StretchVertically();
             new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont);
 
             buttonActor.SetParent(group.actor);
@@ -48,8 +48,14 @@ namespace Machina.Engine
             var spacerActor = scene.AddActor("Spacer");
             new BoundingRect(spacerActor, size);
             var e = new LayoutElement(spacerActor);
-            e.StretchHorizontally = stretchHorizontal;
-            e.StretchVertically = stretchVertical;
+            if (stretchHorizontal)
+            {
+                e.StretchHorizontally();
+            }
+            if (stretchVertical)
+            {
+                e.StretchVertically();
+            }
 
             spacerActor.SetParent(group.actor);
 
@@ -90,7 +96,7 @@ namespace Machina.Engine
             else
                 stateProvider = new RadioButtonState(checkboxContainer, radioButtonGroup, startChecked);
 
-            new LayoutElement(checkboxContainer).StretchHorizontally = true;
+            new LayoutElement(checkboxContainer).StretchHorizontally();
             new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
 
             var checkboxBox = scene.AddActor("Checkbox-Box");
@@ -105,7 +111,7 @@ namespace Machina.Engine
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.SetParent(checkboxContainer);
             new BoundingRect(checkboxLabel, new Point(0, 24));
-            new LayoutElement(checkboxLabel).StretchHorizontally = true;
+            new LayoutElement(checkboxLabel).StretchHorizontally();
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
 
             checkboxContainer.SetParent(uiGroup.actor);
@@ -118,7 +124,7 @@ namespace Machina.Engine
             new BoundingRect(spacerActor, new Point(32, 32));
             new BoundedTextRenderer(spacerActor, textLabel, style.uiElementFont);
             var e = new LayoutElement(spacerActor);
-            e.StretchHorizontally = true;
+            e.StretchHorizontally();
 
             spacerActor.SetParent(group.actor);
 
@@ -130,7 +136,7 @@ namespace Machina.Engine
             var actor = group.actor;
             var dropdown = actor.transform.AddActorAsChild("Dropdown");
             new BoundingRect(dropdown, new Point(32, 24));
-            new LayoutElement(dropdown).StretchHorizontally = true;
+            new LayoutElement(dropdown).StretchHorizontally();
             new Hoverable(dropdown);
             new Clickable(dropdown);
             var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");

@@ -50,9 +50,9 @@ namespace Machina.Tests
                 var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 group.PaddingBetweenElements = 7;
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
-                e1.StretchVertically = true;
+                e1.StretchVertically();
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
-                e2.StretchVertically = true;
+                e2.StretchVertically();
                 group.ExecuteLayout();
 
                 test.Expect(50, e1.actor.transform.Position.Y, "E1 is at expected Y pos");
@@ -68,11 +68,11 @@ namespace Machina.Tests
                 new BoundingRect(groupActor, new Point(200, 300));
                 var group = new LayoutGroup(groupActor, Orientation.Vertical);
                 var e1 = CreateLayoutElement(group, "E1", new Point(20, 20));
-                e1.StretchVertically = true;
+                e1.StretchVertically();
                 var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
-                e2.StretchHorizontally = true;
+                e2.StretchHorizontally();
                 var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
-                e3.StretchVertically = true;
+                e3.StretchVertically();
                 group.ExecuteLayout();
 
                 test.Expect(50, e1.actor.transform.Position.Y, "E1 is at expected Y pos");
