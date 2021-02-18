@@ -53,7 +53,7 @@ namespace Machina.Components
         }
         public Rectangle Rect => new Rectangle((this.actor.transform.Position - Offset).ToPoint(), this.size);
 
-        public Vector2 NormalizedCenter
+        public Vector2 NormalizedOffset
         {
             get
             {

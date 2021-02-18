@@ -74,7 +74,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedCenter, 1f, SpriteEffects.None, this.actor.transform.Depth);
+            spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None, this.actor.transform.Depth);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using MonoGame.Extended;
 using System.Text;
 using Machina.Components;
+using Machina.Engine;
 
 namespace Machina.Data
 {
@@ -27,6 +28,8 @@ namespace Machina.Data
                 return this.frameCount;
             }
         }
+
+        public GridBasedSpriteSheet(string textureName, Point frameSize) : this(MachinaGame.Assets.GetTexture(textureName), frameSize) { }
 
         public GridBasedSpriteSheet(Texture2D texture, Point frameSize) : base(texture)
         {

@@ -178,6 +178,7 @@ namespace HelloGame
 
             var uiBuilder = new UIBuilder(new UIStyle(Assets.GetMachinaAsset<NinepatchSheet>("ui-button"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"), Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"), defaultFont));
 
+            // Button layout example
             {
                 var layout = gameScene.AddActor("Layout", new Vector2(300, 200));
                 new BoundingRect(layout, 256, 128);
@@ -190,6 +191,7 @@ namespace HelloGame
                 uiBuilder.BuildButton(uiGroup, "BIG BUTTON", 64);
             }
 
+            // Horizontal layout example
             {
                 var horizontalLayout = gameScene.AddActor("Layout", new Vector2(800, 200));
                 new BoundingRect(horizontalLayout, 256, 128);
@@ -200,6 +202,17 @@ namespace HelloGame
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
                 uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
                 uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
+            }
+
+            {
+                var checkbox = gameScene.AddActor("Checkbox", new Vector2(40, 40));
+                new BoundingRect(checkbox, new Point(32, 32));
+                new Hoverable(checkbox);
+                new Clickable(checkbox);
+                new ToggleStateOnClick(checkbox);
+                // this will eventually go on a child object:
+                new CheckboxRenderer(checkbox, Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"), Assets.GetMachinaAsset<Image>("checkbox-checkmark-image"));
+                // todo checkbox label child
             }
         }
 
