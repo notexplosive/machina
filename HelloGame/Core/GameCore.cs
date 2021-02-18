@@ -216,22 +216,10 @@ namespace HelloGame
                 uiBuilder.BuildRadioButton(innerGroup, "Or me!", true);
                 uiBuilder.BuildRadioButton(innerGroup, "What about me!");
 
-                var dropdown = layout.transform.AddActorAsChild("Dropdown");
-                new BoundingRect(dropdown, new Point(32, 24));
-                new LayoutElement(dropdown).StretchHorizontally = true;
-                new Hoverable(dropdown);
-                new Clickable(dropdown);
-                var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
-                new BoundingRect(dropdownContent, Point.Zero);
-                new Hoverable(dropdownContent);
-                var content = new DropdownContent(dropdownContent, defaultStyle.uiElementFont, defaultStyle.buttonDefault, defaultStyle.buttonHover)
-                    .Add("Item 1")
-                    .Add("Item 2")
-                    .Add("Item 3 but this one is actually super long")
-                    .Add("Item 4");
-
-                new BoundedTextRenderer(dropdown, "", defaultStyle.uiElementFont);
-                new DropdownTrigger(dropdown, content, defaultStyle.uiSpriteSheet, defaultStyle.dropdownFrames, defaultStyle.buttonDefault);
+                uiBuilder.BuildDropdownMenu(uiGroup,
+                    new DropdownContent.DropdownItem("First"),
+                    new DropdownContent.DropdownItem("Second but it's super loooong"),
+                    new DropdownContent.DropdownItem("Third"));
             }
 
             // Horizontal layout example

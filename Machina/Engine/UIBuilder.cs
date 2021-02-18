@@ -124,6 +124,28 @@ namespace Machina.Engine
 
             return spacerActor;
         }
+
+        public void BuildDropdownMenu(LayoutGroup group, params DropdownContent.DropdownItem[] items)
+        {
+            var actor = group.actor;
+            var dropdown = actor.transform.AddActorAsChild("Dropdown");
+            new BoundingRect(dropdown, new Point(32, 24));
+            new LayoutElement(dropdown).StretchHorizontally = true;
+            new Hoverable(dropdown);
+            new Clickable(dropdown);
+            var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
+            new BoundingRect(dropdownContent, Point.Zero);
+            new Hoverable(dropdownContent);
+            var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonDefault, style.buttonHover);
+
+            foreach (var item in items)
+            {
+                content.Add(item);
+            }
+
+            new BoundedTextRenderer(dropdown, "", style.uiElementFont);
+            new DropdownTrigger(dropdown, content, style.uiSpriteSheet, style.dropdownFrames, style.buttonDefault);
+        }
     }
 
     class UIStyle

@@ -104,6 +104,20 @@ namespace Machina.Components
         {
             var item = new DropdownItem();
             item.text = text;
+            return Add(item);
+        }
+
+        public struct DropdownItem
+        {
+            public string text;
+            public DropdownItem(string text)
+            {
+                this.text = text;
+            }
+        }
+
+        public DropdownContent Add(DropdownItem item)
+        {
             this.items.Add(item);
             var textSize = this.font.MeasureString(item.text) + new Vector2(this.margin * 2, 0);
 
@@ -115,11 +129,6 @@ namespace Machina.Components
             this.totalRectSize.Y += (int) textSize.Y;
 
             return this;
-        }
-
-        public struct DropdownItem
-        {
-            public string text;
         }
     }
 }
