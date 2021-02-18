@@ -176,15 +176,18 @@ namespace HelloGame
             }
 
 
-            var uiBuilder = new UIBuilder(
-                new UIStyle(
+            var defaultStyle = new UIStyle(
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
                     defaultFont,
-                    Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"),
-                    Assets.GetMachinaAsset<Image>("checkbox-checkmark-image")
-                    ));
+                    Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                    Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                    Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
+                    new LinearFrameAnimation(0, 3),
+                    new LinearFrameAnimation(3, 3)
+                    );
+            var uiBuilder = new UIBuilder(defaultStyle);
 
             // Button layout example
             {
@@ -196,6 +199,11 @@ namespace HelloGame
 
                 uiBuilder.BuildButton(uiGroup, "Click me!", 32);
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
+
+
+                uiBuilder.BuildRadioButton(uiGroup, "Choose me!");
+
+
             }
 
             // Horizontal layout example

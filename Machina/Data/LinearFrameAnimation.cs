@@ -16,12 +16,12 @@ namespace Machina.Data
         public readonly int firstFrame;
 
         public LinearFrameAnimation(LinearFrameAnimation copy) : this(copy.firstFrame, copy.length, copy.loopType) { }
-        public LinearFrameAnimation(int firstFrame = 0, int length = 0, LoopType isLooping = LoopType.Loop)
+        public LinearFrameAnimation(int firstFrame = 0, int length = 0, LoopType loop = LoopType.Loop)
         {
             Debug.Assert(length >= 0, "Length of an animation cannot be zero");
             this.firstFrame = firstFrame;
             this.length = length;
-            this.loopType = isLooping;
+            this.loopType = loop;
         }
         public bool Equals(LinearFrameAnimation other)
         {

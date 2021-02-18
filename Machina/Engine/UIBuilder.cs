@@ -58,6 +58,16 @@ namespace Machina.Engine
 
         public void BuildCheckbox(LayoutGroup uiGroup, string labelText)
         {
+            BuildCheckboxOrRadioButton(uiGroup, labelText, true);
+        }
+
+        public void BuildRadioButton(LayoutGroup uiGroup, string labelText)
+        {
+            BuildCheckboxOrRadioButton(uiGroup, labelText, false);
+        }
+
+        private void BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool isCheckbox)
+        {
             var scene = uiGroup.actor.scene;
             var checkboxContainer = scene.AddActor("Checkbox", new Vector2(40, 400));
             new BoundingRect(checkboxContainer, new Point(256, 32));
@@ -71,7 +81,14 @@ namespace Machina.Engine
             checkboxBox.SetParent(checkboxContainer);
             new BoundingRect(checkboxBox, new Point(32, 32));
             new LayoutElement(checkboxBox);
-            new CheckboxRenderer(checkboxBox, style.checkboxBackground, style.checkboxImage, checkboxState, checkboxClickable);
+            if (isCheckbox)
+            {
+                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.checkboxImage, checkboxState, checkboxClickable, style.checkboxFrames);
+            }
+            else
+            {
+                new CheckboxRenderer(checkboxBox, style.checkboxAndRadioBackground, style.radioImage, checkboxState, checkboxClickable, style.radioFrames);
+            }
 
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.SetParent(checkboxContainer);
@@ -85,26 +102,41 @@ namespace Machina.Engine
 
     class UIStyle
     {
+        /// <summary>
+        /// Should only be used in tests
+        /// </summary>
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
+
+        public readonly IFrameAnimation checkboxFrames = new LinearFrameAnimation(0, 3);
+        public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;
         public readonly SpriteFont uiElementFont;
-        public readonly SpriteSheet checkboxBackground;
+        public readonly SpriteSheet checkboxAndRadioBackground;
         public readonly Image checkboxImage;
+        public readonly Image radioImage;
 
-        public UIStyle(NinepatchSheet defaultButtonSheet, NinepatchSheet hoverButtonSheet, NinepatchSheet pressButtonSheet, SpriteFont buttonFont, SpriteSheet checkboxBackground, Image checkboxImage)
+        public UIStyle(
+            NinepatchSheet defaultButtonSheet,
+            NinepatchSheet hoverButtonSheet,
+            NinepatchSheet pressButtonSheet,
+            SpriteFont buttonFont,
+            SpriteSheet checkboxBackground,
+            Image checkboxImage,
+            Image radioImage,
+            IFrameAnimation checkboxFrames,
+            IFrameAnimation radioFrames)
         {
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
             buttonPress = pressButtonSheet;
             this.uiElementFont = buttonFont;
-            this.checkboxBackground = checkboxBackground;
+            this.checkboxAndRadioBackground = checkboxBackground;
             this.checkboxImage = checkboxImage;
+            this.radioImage = radioImage;
+            this.radioFrames = radioFrames;
+            this.checkboxFrames = checkboxFrames;
         }
-
-        /// <summary>
-        /// Should only be used in tests
-        /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null);
     }
 }
