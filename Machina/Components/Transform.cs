@@ -263,5 +263,13 @@ namespace Machina.Components
         }
 
         public bool HasParent => this.Parent != null;
+
+        public Actor AddActorAsChild(string name, Vector2 position = default)
+        {
+            var newActor = this.actor.scene.AddActor(name);
+            newActor.SetParent(this.actor);
+            newActor.transform.LocalPosition = position;
+            return newActor;
+        }
     }
 }

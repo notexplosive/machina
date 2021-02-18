@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundedTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnClick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CheckboxRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\DropdownContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\DropdownTrigger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\RadioButtonGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\RadioButtonState.cs" />
     <Compile Include="..\Machina\Components\CheckboxState.cs" />

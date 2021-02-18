@@ -9,20 +9,23 @@ namespace Machina.Components
 {
     class BoundedTextRenderer : BaseComponent
     {
-        private readonly string text;
+        public string Text
+        {
+            get; set;
+        }
         private readonly SpriteFont font;
         private readonly BoundingRect boundingRect;
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : base(actor)
         {
-            this.text = text;
+            this.Text = text;
             this.font = font;
             this.boundingRect = RequireComponent<BoundingRect>();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var measurer = new TextMeasurer(this.text, this.font, this.boundingRect.Rect);
+            var measurer = new TextMeasurer(this.Text, this.font, this.boundingRect.Rect);
 
             while (!measurer.IsAtEnd())
             {

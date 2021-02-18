@@ -108,7 +108,7 @@ namespace HelloGame
             new SpriteRenderer(microActor2, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
             new Hoverable(microActor2);
 
-            var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(200, 350));
+            var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(50, 350));
             new BoundingRect(sceneRenderBox, new Point(160, 450));
             new Canvas(sceneRenderBox);
             new Hoverable(sceneRenderBox);
@@ -191,8 +191,8 @@ namespace HelloGame
 
             // Button layout example
             {
-                var layout = gameScene.AddActor("Layout", new Vector2(300, 100));
-                new BoundingRect(layout, 256, 800);
+                var layout = gameScene.AddActor("Layout", new Vector2(300, 10));
+                new BoundingRect(layout, 256, 300);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
@@ -215,7 +215,22 @@ namespace HelloGame
                 uiBuilder.BuildRadioButton(innerGroup, "Or me!", true);
                 uiBuilder.BuildRadioButton(innerGroup, "What about me!");
 
+                var dropdown = layout.transform.AddActorAsChild("Dropdown");
+                new BoundingRect(dropdown, new Point(32, 24));
+                new LayoutElement(dropdown).StretchHorizontally = true;
+                new Hoverable(dropdown);
+                new Clickable(dropdown);
+                var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
+                new BoundingRect(dropdownContent, Point.Zero);
+                new Hoverable(dropdownContent);
+                var content = new DropdownContent(dropdownContent, defaultStyle.uiElementFont)
+                    .Add("Item 1")
+                    .Add("Item 2")
+                    .Add("Item 3")
+                    .Add("Item 4");
 
+                new BoundedTextRenderer(dropdown, "", defaultStyle.uiElementFont);
+                new DropdownTrigger(dropdown, content);
             }
 
             // Horizontal layout example
