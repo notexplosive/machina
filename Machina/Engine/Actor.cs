@@ -53,10 +53,6 @@ namespace Machina.Engine
             }
         }
 
-        public int ChildCount => this.transform.ChildCount;
-        public Actor Parent => this.transform.Parent?.actor;
-
-
         public void Destroy()
         {
             foreach (var component in this.iterables)
@@ -65,14 +61,6 @@ namespace Machina.Engine
             }
 
             this.scene.DeleteActor(this);
-        }
-
-        public void SetParent(Actor parent)
-        {
-            if (parent != this)
-            {
-                this.transform.SetParent(parent);
-            }
         }
 
         /// <summary>

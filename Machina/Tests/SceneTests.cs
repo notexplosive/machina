@@ -19,8 +19,8 @@ namespace Machina.Tests
                 var grandChild = scene.AddActor("Grandchild");
                 var o3 = scene.AddActor("other3");
 
-                child.SetParent(parent);
-                grandChild.SetParent(child);
+                child.transform.SetParent(parent);
+                grandChild.transform.SetParent(child);
                 scene.FlushBuffers();
 
                 var allActors = scene.GetAllActors();
@@ -37,8 +37,8 @@ namespace Machina.Tests
                 var grandChild = scene.AddActor("Grandchild");
                 var o3 = scene.AddActor("other3");
 
-                child.SetParent(parent);
-                grandChild.SetParent(child);
+                child.transform.SetParent(parent);
+                grandChild.transform.SetParent(child);
                 scene.FlushBuffers();
                 o3.Destroy();
 
@@ -56,8 +56,8 @@ namespace Machina.Tests
                 var grandChild = scene.AddActor("Grandchild");
                 var o3 = scene.AddActor("other3");
 
-                child.SetParent(parent);
-                grandChild.SetParent(child);
+                child.transform.SetParent(parent);
+                grandChild.transform.SetParent(child);
                 scene.FlushBuffers();
                 child.Destroy();
 

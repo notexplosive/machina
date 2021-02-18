@@ -36,8 +36,8 @@ namespace Machina.Engine
             buttonLabelElement.StretchVertically();
             new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont);
 
-            buttonActor.SetParent(group.actor);
-            buttonLabelActor.SetParent(buttonActor);
+            buttonActor.transform.SetParent(group.actor);
+            buttonLabelActor.transform.SetParent(buttonActor);
 
             return buttonActor;
         }
@@ -57,7 +57,7 @@ namespace Machina.Engine
                 e.StretchVertically();
             }
 
-            spacerActor.SetParent(group.actor);
+            spacerActor.transform.SetParent(group.actor);
 
             return spacerActor;
         }
@@ -100,7 +100,7 @@ namespace Machina.Engine
             new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
 
             var checkboxBox = scene.AddActor("Checkbox-Box");
-            checkboxBox.SetParent(checkboxContainer);
+            checkboxBox.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxBox, new Point(24, 24));
             new LayoutElement(checkboxBox);
             if (isCheckbox)
@@ -109,12 +109,12 @@ namespace Machina.Engine
                 new CheckboxRenderer(checkboxBox, style.uiSpriteSheet, style.radioImage, stateProvider, checkboxClickable, style.radioFrames);
 
             var checkboxLabel = scene.AddActor("Checkbox-Label");
-            checkboxLabel.SetParent(checkboxContainer);
+            checkboxLabel.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxLabel, new Point(0, 24));
             new LayoutElement(checkboxLabel).StretchHorizontally();
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
 
-            checkboxContainer.SetParent(uiGroup.actor);
+            checkboxContainer.transform.SetParent(uiGroup.actor);
         }
 
         public Actor BuildLabel(LayoutGroup group, string textLabel)
@@ -126,7 +126,7 @@ namespace Machina.Engine
             var e = new LayoutElement(spacerActor);
             e.StretchHorizontally();
 
-            spacerActor.SetParent(group.actor);
+            spacerActor.transform.SetParent(group.actor);
 
             return spacerActor;
         }

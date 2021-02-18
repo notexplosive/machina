@@ -41,7 +41,7 @@ namespace Machina.Engine
                 }
                 accumulator.Add(actor);
 
-                for (int i = 0; i < actor.ChildCount; i++)
+                for (int i = 0; i < actor.transform.ChildCount; i++)
                 {
                     var child = actor.transform.ChildAt(i);
                     extractChild(accumulator, child);

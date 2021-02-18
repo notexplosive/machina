@@ -71,14 +71,14 @@ namespace HelloGame
             new Hoverable(other);
             new Draggable(other);
             new MoveOnDrag(other);
-            other.SetParent(ballActor);
+            other.transform.SetParent(ballActor);
 
             Actor other2 = gameScene.AddActor("other2", ballActor.transform.Position + new Vector2(25, 200), 1f, 0.4f);
             new SpriteRenderer(other2, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
             new Hoverable(other2);
             new Draggable(other2);
             new MoveOnDrag(other2);
-            other2.SetParent(other);
+            other2.transform.SetParent(other);
 
             Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
             var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
@@ -210,7 +210,7 @@ namespace HelloGame
                 var innerGroupElement = new LayoutElement(radioLayout)
                     .StretchHorizontally()
                     .StretchVertically();
-                radioLayout.SetParent(layout);
+                radioLayout.transform.SetParent(layout);
                 uiBuilder.BuildLabel(innerGroup, "Section title:");
                 uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
                 uiBuilder.BuildRadioButton(innerGroup, "Or me!", true);

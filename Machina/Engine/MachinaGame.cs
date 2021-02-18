@@ -116,7 +116,7 @@ namespace Machina.Engine
                 new MoveOnDrag(sceneGraphPanel);
 
                 var sceneGraphPanelScrollbar = sceneLayers.debugScene.AddActor("SceneGraphRenderer Scrollbar");
-                sceneGraphPanelScrollbar.SetParent(sceneGraphPanel);
+                sceneGraphPanelScrollbar.transform.SetParent(sceneGraphPanel);
                 new BoundingRect(sceneGraphPanelScrollbar, new Point(32, 0));
                 new Hoverable(sceneGraphPanelScrollbar);
                 var scrollbar = new Scrollbar(sceneGraphPanelScrollbar, sceneGraphPanel.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900));

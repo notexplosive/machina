@@ -10,7 +10,7 @@ namespace Machina.Components
     class LayoutElement : BaseComponent
     {
         public readonly BoundingRect boundingRect;
-        private LayoutGroup group => this.actor.Parent?.GetComponent<LayoutGroup>();
+        private LayoutGroup group => this.actor.transform.Parent?.actor.GetComponent<LayoutGroup>();
         private bool stretchHorizontally;
         private bool stretchVertically;
 

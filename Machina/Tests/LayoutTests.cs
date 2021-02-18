@@ -119,7 +119,7 @@ namespace Machina.Tests
             var actor = new Actor(name, null);
             new BoundingRect(actor, size);
             var e = new LayoutElement(actor);
-            actor.SetParent(group.actor);
+            actor.transform.SetParent(group.actor);
             group.actor.FlushBuffers();
             return e;
         }

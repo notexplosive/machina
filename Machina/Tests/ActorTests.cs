@@ -63,12 +63,12 @@ namespace Machina.Tests
                 var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200));
                 var grandChild = scene.AddActor("Garry Grandchild", child1.transform.Position + new Vector2(-20, 40));
 
-                child1.SetParent(parent);
-                child2.SetParent(parent);
-                grandChild.SetParent(child1);
+                child1.transform.SetParent(parent);
+                child2.transform.SetParent(parent);
+                grandChild.transform.SetParent(child1);
                 scene.FlushBuffers();
 
-                test.Expect(2, parent.ChildCount, "ChildCount returns number of immediate children");
+                test.Expect(2, parent.transform.ChildCount, "ChildCount returns number of immediate children");
                 test.Expect(parent.transform.Position + new Vector2(50, 50), child1.transform.Position, "Position is preserved after setting parent (child1)");
                 test.Expect(parent.transform.Position + new Vector2(-30, 200), child2.transform.Position, "Position is preserved after setting parent (child2)");
                 test.Expect(child1.transform.Position + new Vector2(-20, 40), grandChild.transform.Position, "Position is preserved after setting parent (grandChild)");
@@ -86,9 +86,9 @@ namespace Machina.Tests
                 var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200), 0.15f);
                 var grandChild = scene.AddActor("Garry Grandchild", child1.transform.Position + new Vector2(0, 50), -0.1f);
 
-                child1.SetParent(parent);
-                child2.SetParent(parent);
-                grandChild.SetParent(child1);
+                child1.transform.SetParent(parent);
+                child2.transform.SetParent(parent);
+                grandChild.transform.SetParent(child1);
                 scene.FlushBuffers();
 
                 test.Expect(new Vector2(50, -50), child1.transform.LocalPosition, "Local position does not change with starting rotation (child1)");
@@ -105,15 +105,15 @@ namespace Machina.Tests
                 var grandChild = scene.AddActor("Garry Grandchild", child1.transform.Position + new Vector2(-20, 40));
 
 
-                child1.SetParent(parent);
-                child2.SetParent(parent);
-                grandChild.SetParent(child1);
-                test.Expect(0, parent.ChildCount, "ChildCount does not update until the next Update()");
+                child1.transform.SetParent(parent);
+                child2.transform.SetParent(parent);
+                grandChild.transform.SetParent(child1);
+                test.Expect(0, parent.transform.ChildCount, "ChildCount does not update until the next Update()");
                 scene.FlushBuffers();
                 // Assign angle AFTER parent assignment and an update
                 parent.transform.Angle = MathF.PI / 2;
 
-                test.Expect(2, parent.ChildCount, "ChildCount returns number of immediate children");
+                test.Expect(2, parent.transform.ChildCount, "ChildCount returns number of immediate children");
 
                 test.Expect(new Vector2(30, 130), child1.transform.Position, "Position after rotation (child1)");
                 test.Expect(new Vector2(-120, 50), child2.transform.Position, "Position after rotation (child2)");
@@ -132,7 +132,7 @@ namespace Machina.Tests
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0), 0f);
 
                 parent.transform.Angle = MathF.PI / 2;
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
 
                 test.Expect(new Vector2(180, 80), child.transform.Position, "Child position is unaffected");
@@ -148,7 +148,7 @@ namespace Machina.Tests
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
                 parent.transform.Angle = MathF.PI / 2;
 
@@ -166,18 +166,18 @@ namespace Machina.Tests
                 var parent2 = scene.AddActor("Otto Other Parent", new Vector2(-80, -80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
-                child.SetParent(parent2);
-                child.SetParent(parent2);
-                child.SetParent(parent);
-                child.SetParent(parent2);
+                child.transform.SetParent(parent);
+                child.transform.SetParent(parent2);
+                child.transform.SetParent(parent2);
+                child.transform.SetParent(parent);
+                child.transform.SetParent(parent2);
                 scene.FlushBuffers();
 
-                test.Expect(0, parent.ChildCount, "First parent has zero children during update");
-                test.Expect(1, parent2.ChildCount, "Second parent has 1 child during update");
+                test.Expect(0, parent.transform.ChildCount, "First parent has zero children during update");
+                test.Expect(1, parent2.transform.ChildCount, "Second parent has 1 child during update");
 
-                test.Expect(0, parent.ChildCount, "First parent has zero children after update");
-                test.Expect(1, parent2.ChildCount, "Second parent has 1 child after update");
+                test.Expect(0, parent.transform.ChildCount, "First parent has zero children after update");
+                test.Expect(1, parent2.transform.ChildCount, "Second parent has 1 child after update");
             }));
 
             AddTest(new Test("Setting parent to null will set it to have no parent", test =>
@@ -186,15 +186,15 @@ namespace Machina.Tests
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
 
                 child.transform.Position = new Vector2(300, 300);
-                child.SetParent(null);
+                child.transform.SetParent(null);
                 scene.FlushBuffers();
 
                 test.Expect(new Vector2(300, 300), child.transform.Position, "Child is not moved by unsetting its parent");
-                test.ExpectNull(child.Parent, "Child's parent is null");
+                test.ExpectNull(child.transform.Parent, "Child's parent is null");
                 test.Expect(2, scene.GetAllActors().Count, "Scene is aware of both actors");
             }));
 
@@ -203,9 +203,9 @@ namespace Machina.Tests
                 var scene = new Scene();
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
 
-                parent.SetParent(parent);
+                parent.transform.SetParent(parent);
 
-                test.ExpectNull(parent.Parent, "Setting non-parented object's parent to null should still have null parent");
+                test.ExpectNull(parent.transform.Parent, "Setting non-parented object's parent to null should still have null parent");
             });
 
             AddTest("Set position on parented object", test =>
@@ -214,7 +214,7 @@ namespace Machina.Tests
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
                 child.transform.Position = new Vector2(-50, -50);
 
@@ -227,7 +227,7 @@ namespace Machina.Tests
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
                 child.transform.Position = new Vector2(-50, -50);
                 parent.transform.LocalPosition = new Vector2(80, 80);
@@ -241,7 +241,7 @@ namespace Machina.Tests
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
-                child.SetParent(parent);
+                child.transform.SetParent(parent);
                 scene.FlushBuffers();
                 child.transform.LocalPosition = new Vector2(-20, -20);
 

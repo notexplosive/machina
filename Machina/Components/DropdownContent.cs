@@ -31,7 +31,7 @@ namespace Machina.Components
             this.actor.Visible = false;
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
-            this.triggerBoundingRect = this.actor.Parent.GetComponent<BoundingRect>();
+            this.triggerBoundingRect = this.actor.transform.Parent.actor.GetComponent<BoundingRect>();
             this.totalRectSize = new Point(this.triggerBoundingRect.Size.X, 0);
             this.backgroundSheet = backgroundSheet;
             this.hoverSheet = hoverSheet;

@@ -195,9 +195,14 @@ namespace Machina.Components
 
         public void SetParent(Actor newParent)
         {
+            if (newParent == this.actor)
+            {
+                return;
+            }
+
             if (this.HasParent)
             {
-                this.actor.Parent.transform.RemoveChild(this.actor);
+                this.Parent.RemoveChild(this.actor);
             }
 
             if (newParent != null)
@@ -281,7 +286,7 @@ namespace Machina.Components
             {
                 newActor = new Actor(name, null);
             }
-            newActor.SetParent(this.actor);
+            newActor.transform.SetParent(this.actor);
             newActor.transform.LocalPosition = position;
             return newActor;
         }
