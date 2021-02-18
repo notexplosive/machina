@@ -54,7 +54,7 @@ namespace Machina.Engine
         }
 
         public int ChildCount => this.transform.ChildCount;
-        public Actor Parent => this.transform.Parent;
+        public Actor Parent => this.transform.Parent?.actor;
 
 
         public void Destroy()

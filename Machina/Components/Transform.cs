@@ -18,7 +18,7 @@ namespace Machina.Components
         private Vector2 localPosition_impl;
         private float angle_impl;
         private float localAngle_impl;
-        public Actor Parent
+        public Transform Parent
         {
             get; private set;
         }
@@ -88,7 +88,7 @@ namespace Machina.Components
                 if (HasParent)
                 {
                     this.localDepth_impl = value;
-                    Depth = Parent.transform.Depth + this.localDepth_impl;
+                    Depth = Parent.Depth + this.localDepth_impl;
                 }
                 else
                 {
@@ -135,7 +135,7 @@ namespace Machina.Components
                 if (HasParent)
                 {
                     this.localAngle_impl = value;
-                    Angle = Parent.transform.Angle + this.localAngle_impl;
+                    Angle = Parent.Angle + this.localAngle_impl;
                 }
                 else
                 {
@@ -200,13 +200,17 @@ namespace Machina.Components
                 this.actor.Parent.transform.RemoveChild(this.actor);
             }
 
-            this.Parent = newParent;
             if (newParent != null)
             {
+                this.Parent = newParent.transform;
                 newParent.transform.AddChild(this.actor);
                 this.LocalPosition = this.WorldToLocalPosition(this.Position);
                 this.LocalAngle = this.Angle - newParent.transform.Angle;
                 this.LocalDepth = this.Depth - newParent.transform.Depth;
+            }
+            else
+            {
+                this.Parent = null;
             }
         }
 
@@ -243,8 +247,8 @@ namespace Machina.Components
             {
                 if (HasParent)
                 {
-                    var pos = Parent.transform.Position;
-                    return Matrix.CreateRotationZ(Parent.transform.angle_impl)
+                    var pos = Parent.Position;
+                    return Matrix.CreateRotationZ(Parent.angle_impl)
                         * Matrix.CreateTranslation(pos.X, pos.Y, 0);
                 }
                 else
