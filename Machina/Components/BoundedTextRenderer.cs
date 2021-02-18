@@ -116,7 +116,8 @@ namespace Machina.Components
 
         public bool CanAppendLinebreak()
         {
-            return currentHeight + this.font.LineSpacing < this.rect.Height;
+            // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
+            return currentHeight + this.font.LineSpacing * 2 < this.rect.Height;
         }
 
         public void Elide()

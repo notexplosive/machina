@@ -16,11 +16,11 @@ namespace Machina.Components
         private readonly SpriteSheet checkboxSpriteSheet;
         private readonly Image checkmark;
 
-        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark) : base(actor)
+        public CheckboxRenderer(Actor actor, SpriteSheet spriteSheet, Image checkmark, ToggleStateOnClick checkboxState, Clickable clickable) : base(actor)
         {
-            this.checkboxState = RequireComponent<ToggleStateOnClick>();
-            this.clickable = RequireComponent<Clickable>();
             this.boundingRect = RequireComponent<BoundingRect>();
+            this.checkboxState = checkboxState;
+            this.clickable = clickable;
             this.checkboxSpriteSheet = spriteSheet;
             this.checkmark = checkmark;
 

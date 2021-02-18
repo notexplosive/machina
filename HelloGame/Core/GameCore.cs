@@ -205,14 +205,25 @@ namespace HelloGame
             }
 
             {
-                var checkbox = gameScene.AddActor("Checkbox", new Vector2(40, 40));
-                new BoundingRect(checkbox, new Point(32, 32));
-                new Hoverable(checkbox);
-                new Clickable(checkbox);
-                new ToggleStateOnClick(checkbox);
-                // this will eventually go on a child object:
-                new CheckboxRenderer(checkbox, Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"), Assets.GetMachinaAsset<Image>("checkbox-checkmark-image"));
-                // todo checkbox label child
+                var checkboxContainer = gameScene.AddActor("Checkbox", new Vector2(40, 400));
+                new BoundingRect(checkboxContainer, new Point(256, 32));
+                new Hoverable(checkboxContainer);
+                var checkboxClickable = new Clickable(checkboxContainer);
+                var checkboxState = new ToggleStateOnClick(checkboxContainer);
+                new LayoutElement(checkboxContainer).StretchHorizontally = true;
+                new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
+
+                var checkboxBox = gameScene.AddActor("Checkbox-Box");
+                checkboxBox.SetParent(checkboxContainer);
+                new BoundingRect(checkboxBox, new Point(32, 32));
+                new LayoutElement(checkboxBox);
+                new CheckboxRenderer(checkboxBox, Assets.GetMachinaAsset<SpriteSheet>("checkbox-bg-sprites"), Assets.GetMachinaAsset<Image>("checkbox-checkmark-image"), checkboxState, checkboxClickable);
+
+                var checkboxLabel = gameScene.AddActor("Checkbox-Label");
+                checkboxLabel.SetParent(checkboxContainer);
+                new BoundingRect(checkboxLabel, new Point(0, 32));
+                new LayoutElement(checkboxLabel).StretchHorizontally = true;
+                new BoundedTextRenderer(checkboxLabel, "This is a test", defaultFont);
             }
         }
 
