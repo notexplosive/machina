@@ -88,6 +88,7 @@ namespace Machina.Components
                 if (HasParent)
                 {
                     this.localDepth_impl = value;
+                    Depth = Parent.transform.Depth + this.localDepth_impl;
                 }
                 else
                 {
@@ -134,6 +135,7 @@ namespace Machina.Components
                 if (HasParent)
                 {
                     this.localAngle_impl = value;
+                    Angle = Parent.transform.Angle + this.localAngle_impl;
                 }
                 else
                 {
@@ -266,7 +268,15 @@ namespace Machina.Components
 
         public Actor AddActorAsChild(string name, Vector2 position = default)
         {
-            var newActor = this.actor.scene.AddActor(name);
+            Actor newActor;
+            if (this.actor.scene != null)
+            {
+                newActor = this.actor.scene.AddActor(name);
+            }
+            else
+            {
+                newActor = new Actor(name, null);
+            }
             newActor.SetParent(this.actor);
             newActor.transform.LocalPosition = position;
             return newActor;

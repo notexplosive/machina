@@ -32,7 +32,7 @@ namespace Machina.Components
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
             this.triggerBoundingRect = this.actor.Parent.GetComponent<BoundingRect>();
-            this.totalRectSize = this.boundingRect.Size;
+            this.totalRectSize = new Point(this.triggerBoundingRect.Size.X, 0);
             this.backgroundSheet = backgroundSheet;
             this.hoverSheet = hoverSheet;
             this.margin = 7;
@@ -93,6 +93,18 @@ namespace Machina.Components
             this.boundingRect.Width = triggerBoundingRect.Width;
             this.boundingRect.Height = items.Count * this.font.LineSpacing;
             this.actor.transform.LocalPosition = new Vector2(0, this.triggerBoundingRect.Height);
+
+
+            this.totalRectSize = new Point(this.triggerBoundingRect.Width, 0);
+            foreach (var item in items)
+            {
+                var textSize = this.font.MeasureString(item.text) + new Vector2(this.margin * 2, 0);
+                if (textSize.X > this.totalRectSize.X)
+                {
+                    totalRectSize.X = (int) textSize.X;
+                }
+                this.totalRectSize.Y += (int) textSize.Y;
+            }
         }
 
         public void Hide()
@@ -119,14 +131,6 @@ namespace Machina.Components
         public DropdownContent Add(DropdownItem item)
         {
             this.items.Add(item);
-            var textSize = this.font.MeasureString(item.text) + new Vector2(this.margin * 2, 0);
-
-            if (textSize.X > this.totalRectSize.X)
-            {
-                totalRectSize.X = (int) textSize.X;
-            }
-
-            this.totalRectSize.Y += (int) textSize.Y;
 
             return this;
         }

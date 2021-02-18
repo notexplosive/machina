@@ -248,6 +248,34 @@ namespace Machina.Tests
                 test.Expect(new Vector2(-20, -20), child.transform.LocalPosition, "Local position was set");
                 test.Expect(new Vector2(60, 60), child.transform.Position, "Global position was set");
             });
+
+            AddTest("Set LocalDepth basic", test =>
+            {
+                var parent = new Actor("Peter Parent", null);
+                var child = parent.transform.AddActorAsChild("Carrie Child");
+                parent.transform.Depth = 0.5f;
+                parent.FlushBuffers();
+
+                child.transform.LocalDepth = 0.1f;
+
+                test.Expect(0.5f, parent.transform.Depth, "Depth of parent is set as expected");
+                test.Expect(0.1f, child.transform.LocalDepth, "LocalDepth of child is set as expected");
+                test.Expect(0.6f, child.transform.Depth, "Depth of child is set as expected");
+            });
+
+            AddTest("Set LocalAngle basic", test =>
+            {
+                var parent = new Actor("Peter Parent", null);
+                var child = parent.transform.AddActorAsChild("Carrie Child");
+                parent.transform.Angle = 0.5f;
+                parent.FlushBuffers();
+
+                child.transform.LocalAngle = 0.1f;
+
+                test.Expect(0.5f, parent.transform.Angle, "Angle of parent is set as expected");
+                test.Expect(0.1f, child.transform.LocalAngle, "LocalAngle of child is set as expected");
+                test.Expect(0.6f, child.transform.Angle, "Angle of child is set as expected");
+            });
         }
     }
 }

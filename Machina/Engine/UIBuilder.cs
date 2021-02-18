@@ -137,6 +137,7 @@ namespace Machina.Engine
             new BoundingRect(dropdownContent, Point.Zero);
             new Hoverable(dropdownContent);
             var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonDefault, style.buttonHover);
+            dropdownContent.transform.LocalDepth = -0.1f;
 
             foreach (var item in items)
             {

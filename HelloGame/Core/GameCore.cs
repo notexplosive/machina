@@ -220,6 +220,11 @@ namespace HelloGame
                     new DropdownContent.DropdownItem("First"),
                     new DropdownContent.DropdownItem("Second but it's super loooong"),
                     new DropdownContent.DropdownItem("Third"));
+
+                uiBuilder.BuildDropdownMenu(uiGroup,
+                    new DropdownContent.DropdownItem("Other First"),
+                    new DropdownContent.DropdownItem("Other Second"),
+                    new DropdownContent.DropdownItem("Third?!?!!"));
             }
 
             // Horizontal layout example
