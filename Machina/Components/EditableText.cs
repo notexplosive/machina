@@ -145,7 +145,6 @@ namespace Machina.Components
         struct TextCursor
         {
             public Point position;
-            public Point anchorPosition;
         }
     }
 }

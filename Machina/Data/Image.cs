@@ -7,6 +7,17 @@ using System.Text;
 
 namespace Machina.Data
 {
+    struct PointBool
+    {
+        public PointBool(bool x, bool y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public bool x;
+        public bool y;
+    }
+
     class Image : IAsset
     {
         private readonly SpriteSheet spriteSheet;
@@ -19,9 +30,9 @@ namespace Machina.Data
             this.frame = frame;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY, float layerDepth, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip, float layerDepth, Color color)
         {
-            spriteSheet.DrawFrame(frame, spriteBatch, position, scale, angle, flipX, flipY, layerDepth, color);
+            spriteSheet.DrawFrame(spriteBatch, frame, position, scale, angle, flip, layerDepth, color);
         }
 
         public void OnCleanup()

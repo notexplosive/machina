@@ -55,7 +55,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(CurrentFrame, spriteBatch, this.actor.transform.Position, this.scale, this.actor.transform.Angle, FlipX, FlipY, this.actor.transform.Depth, color);
+            this.spriteSheet.DrawFrame(spriteBatch, CurrentFrame, this.actor.transform.Position, this.scale, this.actor.transform.Angle, new PointBool(FlipX, FlipY), this.actor.transform.Depth, color);
         }
 
         public override void Update(float dt)

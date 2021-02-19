@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,18 @@ namespace Machina.Data
             this.texture = texture;
         }
 
-        public abstract void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY, float layerDepth, Color tintColor);
+        public abstract void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, float layerDepth, Color tintColor);
+
+
+        public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float layerDepth)
+        {
+            DrawFrame(spriteBatch, index, position, 1f, 0f, new PointBool(false, false), layerDepth, Color.White);
+        }
+
+        public void DrawFrame(SpriteBatch spriteBatch, int index, Transform transform, float scale = 1f, PointBool flip = default)
+        {
+            DrawFrame(spriteBatch, index, transform.Position, scale, transform.Angle, flip, transform.Depth, Color.White);
+        }
 
         public void OnCleanup()
         {

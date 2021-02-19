@@ -42,7 +42,7 @@ namespace Machina.Data
             this.frameCount = columnCount * rowCount;
         }
 
-        public override void DrawFrame(int index, SpriteBatch spriteBatch, Vector2 position, float scale, float angle, bool flipX, bool flipY, float layerDepth, Color tintColor)
+        public override void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, float layerDepth, Color tintColor)
         {
             Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 
@@ -54,7 +54,7 @@ namespace Machina.Data
             var destRect = new Rectangle(position.ToPoint(), adjustedFrameSize.ToPoint());
 
             spriteBatch.Draw(this.texture, destRect, sourceRect, tintColor, angle, frameSize.ToVector2() / 2,
-                (flipX ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flipY ? SpriteEffects.FlipVertically : SpriteEffects.None), layerDepth);
+                (flip.x ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flip.y ? SpriteEffects.FlipVertically : SpriteEffects.None), layerDepth);
 
             // Possibly useful for debugging:
             //spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);

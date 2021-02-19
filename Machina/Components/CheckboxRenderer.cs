@@ -44,11 +44,11 @@ namespace Machina.Components
                 frameIndex = 0;
             }
 
-            this.checkboxSpriteSheet.DrawFrame(this.animation.GetFrame(frameIndex), spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, false, false, transform.Depth, Color.White);
+            this.checkboxSpriteSheet.DrawFrame(spriteBatch, this.animation.GetFrame(frameIndex), this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new PointBool(false, false), transform.Depth, Color.White);
 
             if (this.checkboxState.GetIsChecked())
             {
-                this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, false, false, transform.Depth - 000000.1f, Color.White);
+                this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new PointBool(false, false), transform.Depth - 000000.1f, Color.White);
             }
         }
     }

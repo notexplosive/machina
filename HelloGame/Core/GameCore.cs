@@ -196,8 +196,8 @@ namespace HelloGame
 
             // Button layout example
             {
-                var layout = gameScene.AddActor("Layout", new Vector2(300, 10));
-                new BoundingRect(layout, 256, 400);
+                var layout = gameScene.AddActor("Layout", new Vector2(100, 10));
+                new BoundingRect(layout, 256, 500);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
