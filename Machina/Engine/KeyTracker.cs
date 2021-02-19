@@ -29,6 +29,7 @@ namespace Machina.Engine
             return !a.Equals(b);
         }
 
+        public bool None => !control && !alt && !shift;
         public override string ToString()
         {
             var sb = new StringBuilder();

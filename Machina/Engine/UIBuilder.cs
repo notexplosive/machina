@@ -150,7 +150,7 @@ namespace Machina.Engine
             var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
             new BoundingRect(dropdownContent, Point.Zero);
             new Hoverable(dropdownContent);
-            var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonDefault, style.buttonHover);
+            var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonPress, style.buttonHover);
             dropdownContent.transform.LocalDepth = -0.1f;
             dropdown.transform.LocalDepth = -0.01f;
 

@@ -13,15 +13,19 @@ namespace Machina.Components
         {
             get; set;
         }
-        private readonly SpriteFont font;
+        public readonly SpriteFont font;
         private readonly BoundingRect boundingRect;
+        private readonly Color textColor;
 
-        public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : base(actor)
+        public BoundedTextRenderer(Actor actor, string text, SpriteFont font, Color textColor) : base(actor)
         {
             this.Text = text;
             this.font = font;
             this.boundingRect = RequireComponent<BoundingRect>();
+            this.textColor = textColor;
         }
+
+        public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White) { }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -47,7 +51,7 @@ namespace Machina.Components
                 }
             }
 
-            spriteBatch.DrawString(this.font, measurer.Build(), this.boundingRect.TopLeft, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, transform.Depth);
+            spriteBatch.DrawString(this.font, measurer.Build(), this.boundingRect.TopLeft, this.textColor, 0, Vector2.Zero, 1f, SpriteEffects.None, transform.Depth);
         }
     }
 

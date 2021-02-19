@@ -288,6 +288,8 @@ namespace Machina.Components
             }
             newActor.transform.SetParent(this.actor);
             newActor.transform.LocalPosition = position;
+            newActor.transform.LocalDepth = 0f;
+            newActor.transform.LocalAngle = 0f;
             return newActor;
         }
 

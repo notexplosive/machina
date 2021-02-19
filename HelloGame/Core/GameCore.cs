@@ -130,7 +130,7 @@ namespace HelloGame
             new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
 
             var pillar = uiScene.AddActor("Pillar");
-            pillar.transform.Position = new Vector2(300, 350);
+            pillar.transform.Position = new Vector2(900, 350);
             new BoundingRect(pillar, new Point(32, 500));
             new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
             new Hoverable(pillar);
@@ -197,10 +197,11 @@ namespace HelloGame
             // Button layout example
             {
                 var layout = gameScene.AddActor("Layout", new Vector2(300, 10));
-                new BoundingRect(layout, 256, 300);
+                new BoundingRect(layout, 256, 400);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
+                new NinepatchRenderer(layout, defaultStyle.windowSheet);
 
                 uiBuilder.BuildButton(uiGroup, "Click me!", 32);
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!", true);
@@ -229,6 +230,21 @@ namespace HelloGame
                     new DropdownContent.DropdownItem("Other First"),
                     new DropdownContent.DropdownItem("Other Second"),
                     new DropdownContent.DropdownItem("Third?!?!!"));
+
+                var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
+                textInput.transform.LocalDepth = -0.001f;
+                new BoundingRect(textInput, new Point(32, 32));
+                new LayoutElement(textInput).StretchHorizontally();
+                new NinepatchRenderer(textInput, defaultStyle.textboxSheet);
+                new LayoutGroup(textInput, Orientation.Vertical).SetMargin(3);
+                new Hoverable(textInput);
+                var clickable = new Clickable(textInput);
+                var text = textInput.transform.AddActorAsChild("TextInput - Text");
+                text.transform.LocalDepth = -0.001f;
+                new BoundingRect(text, new Point(32, 32));
+                new LayoutElement(text).StretchHorizontally().StretchVertically();
+                new BoundedTextRenderer(text, "Sample text", defaultFont, Color.Black);
+                new EditableText(text, clickable);
             }
 
             // Horizontal layout example
