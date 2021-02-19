@@ -29,7 +29,6 @@ namespace Machina.Engine
             new LayoutElement(buttonActor).StretchHorizontally();
             new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
             var buttonLabelActor = scene.AddActor("Button Label");
-            buttonLabelActor.transform.LocalDepth = 0.000001f;
             new BoundingRect(buttonLabelActor, Point.Zero);
             var buttonLabelElement = new LayoutElement(buttonLabelActor);
             buttonLabelElement.StretchHorizontally();
@@ -38,6 +37,10 @@ namespace Machina.Engine
 
             buttonActor.transform.SetParent(group.actor);
             buttonLabelActor.transform.SetParent(buttonActor);
+
+            buttonActor.transform.LocalDepth = -0.000001f;
+            buttonLabelActor.transform.LocalDepth = -0.000001f;
+
 
             return buttonActor;
         }
@@ -115,20 +118,25 @@ namespace Machina.Engine
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
 
             checkboxContainer.transform.SetParent(uiGroup.actor);
+
+            checkboxBox.transform.LocalDepth = -0.000001f;
+            checkboxContainer.transform.LocalDepth = -0.000001f;
+            checkboxLabel.transform.LocalDepth = -0.000001f;
         }
 
         public Actor BuildLabel(LayoutGroup group, string textLabel)
         {
             var scene = group.actor.scene;
-            var spacerActor = scene.AddActor("Label");
-            new BoundingRect(spacerActor, new Point(32, 32));
-            new BoundedTextRenderer(spacerActor, textLabel, style.uiElementFont);
-            var e = new LayoutElement(spacerActor);
+            var labelActor = scene.AddActor("Label");
+            new BoundingRect(labelActor, new Point(32, 32));
+            new BoundedTextRenderer(labelActor, textLabel, style.uiElementFont);
+            var e = new LayoutElement(labelActor);
             e.StretchHorizontally();
 
-            spacerActor.transform.SetParent(group.actor);
+            labelActor.transform.SetParent(group.actor);
+            labelActor.transform.LocalDepth = -0.000001f;
 
-            return spacerActor;
+            return labelActor;
         }
 
         public void BuildDropdownMenu(LayoutGroup group, params DropdownContent.DropdownItem[] items)
@@ -144,6 +152,7 @@ namespace Machina.Engine
             new Hoverable(dropdownContent);
             var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonDefault, style.buttonHover);
             dropdownContent.transform.LocalDepth = -0.1f;
+            dropdown.transform.LocalDepth = -0.01f;
 
             foreach (var item in items)
             {
