@@ -33,6 +33,8 @@ namespace HelloGame
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
             Assets.AddMachinaAsset("test-ninepatch",
                 new NinepatchSheet("test-nine-patch", new Rectangle(0, 0, 48, 48), new Rectangle(16, 16, 16, 16)));
+
+
             var progressBarThreepatch =
                 Assets.AddMachinaAsset(
                     "progressbar-threepatch",
@@ -180,6 +182,8 @@ namespace HelloGame
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
                     Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                    Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                    Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
                     defaultFont,
                     Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
                     Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),

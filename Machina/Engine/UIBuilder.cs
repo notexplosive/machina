@@ -160,7 +160,7 @@ namespace Machina.Engine
         /// <summary>
         /// Should only be used in tests
         /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
 
         public readonly IFrameAnimation checkboxFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
@@ -168,6 +168,8 @@ namespace Machina.Engine
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;
+        public readonly NinepatchSheet textboxSheet;
+        public readonly NinepatchSheet windowSheet;
         public readonly SpriteFont uiElementFont;
         public readonly SpriteSheet uiSpriteSheet;
         public readonly Image checkboxImage;
@@ -177,6 +179,8 @@ namespace Machina.Engine
             NinepatchSheet defaultButtonSheet,
             NinepatchSheet hoverButtonSheet,
             NinepatchSheet pressButtonSheet,
+            NinepatchSheet textboxSheet,
+            NinepatchSheet windowSheet,
             SpriteFont buttonFont,
             SpriteSheet uiSpriteSheet,
             Image checkboxImage,
@@ -188,6 +192,8 @@ namespace Machina.Engine
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
             buttonPress = pressButtonSheet;
+            this.textboxSheet = textboxSheet;
+            this.windowSheet = windowSheet;
             this.uiElementFont = buttonFont;
             this.uiSpriteSheet = uiSpriteSheet;
             this.checkboxImage = checkboxImage;
