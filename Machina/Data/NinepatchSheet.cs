@@ -10,7 +10,7 @@ using Machina.Engine;
 namespace Machina.Data
 {
 
-    class NinepatchSheet : IAsset
+    public class NinepatchSheet : IAsset
     {
         public readonly NinepatchRects rects;
         private readonly Texture2D originalTexture;

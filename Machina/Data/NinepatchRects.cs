@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    enum NinepatchIndex
+    public enum NinepatchIndex
     {
         TopLeft = 0,
         TopCenter = 1,
@@ -19,7 +19,7 @@ namespace Machina.Data
         BottomRight = 8
     }
 
-    enum Side
+    public enum Side
     {
         Right,
         Bottom,
@@ -27,7 +27,7 @@ namespace Machina.Data
         Top,
     }
 
-    struct NinepatchRects
+    public struct NinepatchRects
     {
         public readonly Rectangle[] raw;
         public readonly int[] sidePixelBuffers;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    abstract class SpriteSheet : IAsset
+    public abstract class SpriteSheet : IAsset
     {
         protected readonly Texture2D texture;
         public IFrameAnimation DefaultAnimation

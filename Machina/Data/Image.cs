@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    struct PointBool
+    public struct PointBool
     {
         public PointBool(bool x, bool y)
         {
@@ -18,7 +18,7 @@ namespace Machina.Data
         public bool y;
     }
 
-    class Image : IAsset
+    public class Image : IAsset
     {
         private readonly SpriteSheet spriteSheet;
         private readonly int frame;

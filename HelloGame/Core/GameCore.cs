@@ -43,7 +43,6 @@ namespace HelloGame
                 Assets.AddMachinaAsset(
                     "pillar-threepatch",
                     new NinepatchSheet("test-three-patch-vertical", new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16)));
-            var defaultFont = Assets.GetSpriteFont("DefaultFont");
             var consoleFont = Assets.GetSpriteFont("ConsoleFont");
 
             var testNinepatch = Assets.GetMachinaAsset<NinepatchSheet>("test-ninepatch");
@@ -146,8 +145,8 @@ namespace HelloGame
             var scrollbarActor = gameScene.AddActor("Scrollbar");
             new BoundingRect(scrollbarActor, new Point(20, 20));
             new Hoverable(scrollbarActor);
-            var scrollbar = new Scrollbar(scrollbarActor, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500));
-            new BoundingRectRenderer(scrollbarActor);
+            var scrollbar = new Scrollbar(scrollbarActor, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500), defaultStyle.buttonHover);
+            new NinepatchRenderer(scrollbarActor, defaultStyle.buttonDefault);
 
             var miniMouse = innerScene.AddActor("miniCursor");
             new ScrollbarListener(miniMouse, scrollbar);
@@ -178,20 +177,7 @@ namespace HelloGame
             }
 
 
-            var defaultStyle = new UIStyle(
-                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
-                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
-                    Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
-                    Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
-                    Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
-                    defaultFont,
-                    Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
-                    Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                    Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
-                    new LinearFrameAnimation(0, 3),
-                    new LinearFrameAnimation(3, 3),
-                    new LinearFrameAnimation(9, 3)
-                    );
+
             var uiBuilder = new UIBuilder(defaultStyle);
 
             // Button layout example

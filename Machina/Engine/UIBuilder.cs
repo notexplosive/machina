@@ -184,7 +184,7 @@ namespace Machina.Engine
         }
     }
 
-    class UIStyle
+    public class UIStyle
     {
         /// <summary>
         /// Should only be used in tests

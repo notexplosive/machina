@@ -28,6 +28,7 @@ namespace Machina.Engine
         protected SpriteBatch spriteBatch;
         public readonly GameCanvas gameCanvas;
         private ILogger logger;
+        public UIStyle defaultStyle;
 
         public static DebugLevel DebugLevel
         {
@@ -91,6 +92,35 @@ namespace Machina.Engine
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
+            // Load initial assets
+            Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-checkbox-checkmark-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
+            Assets.AddMachinaAsset("ui-radio-fill-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
+            Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet", new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
+            Assets.AddMachinaAsset("ui-textbox-ninepatch",
+                new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
+            Assets.AddMachinaAsset("ui-window-ninepatch",
+                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(32, 104, 8, 8)));
+
+            var defaultFont = Assets.GetSpriteFont("DefaultFont");
+
+            this.defaultStyle = new UIStyle(
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                defaultFont,
+                Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
+                new LinearFrameAnimation(0, 3),
+                new LinearFrameAnimation(3, 3),
+                new LinearFrameAnimation(9, 3)
+            );
+
             // Framestep
             {
                 var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
@@ -119,24 +149,16 @@ namespace Machina.Engine
                 sceneGraphPanelScrollbar.transform.SetParent(sceneGraphPanel);
                 new BoundingRect(sceneGraphPanelScrollbar, new Point(32, 0));
                 new Hoverable(sceneGraphPanelScrollbar);
-                var scrollbar = new Scrollbar(sceneGraphPanelScrollbar, sceneGraphPanel.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900));
+
+
+                var scrollbar = new Scrollbar(sceneGraphPanelScrollbar, sceneGraphPanel.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900), defaultStyle.buttonHover);
 
                 var sceneGraphActor = sceneGraphContent.AddActor("SceneGraphActor");
                 new SceneGraphRenderer(sceneGraphActor, this.sceneLayers, scrollbar);
                 new ScrollbarListener(sceneGraphActor, scrollbar);
             }
 
-            // Load initial assets
-            Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-checkbox-checkmark-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            Assets.AddMachinaAsset("ui-radio-fill-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet", new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            Assets.AddMachinaAsset("ui-textbox-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
-            Assets.AddMachinaAsset("ui-window-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(32, 104, 8, 8)));
+
 
 
 #if DEBUG

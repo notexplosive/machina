@@ -17,12 +17,13 @@ namespace Machina.Components
         private readonly BoundingRect containerBoundingRect;
         private readonly Camera targetCamera;
         private readonly int scrollIncrement;
+        private readonly NinepatchSheet thumbSheet;
         private bool isGrabbed;
         private float mouseYOnGrab;
         private float scrollPercentOnGrab;
         public MinMax<int> worldBounds;
 
-        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, int scrollIncrement = 64) : base(actor)
+        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, NinepatchSheet thumbSheet, int scrollIncrement = 64) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
@@ -34,6 +35,7 @@ namespace Machina.Components
 
             this.worldBounds = scrollRange;
             this.scrollIncrement = scrollIncrement;
+            this.thumbSheet = thumbSheet;
             CurrentScrollUnits = 0;
 
             this.targetCamera.OnChangeZoom += UpdateScrollReflexive;
@@ -55,7 +57,7 @@ namespace Machina.Components
         {
             if (IsScrollbarNeeded)
             {
-                spriteBatch.FillRectangle(ThumbRect, Color.Orange, this.actor.transform.Depth);
+                this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner, this.transform.Depth - 0.0001f);
             }
         }
 

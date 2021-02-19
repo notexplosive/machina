@@ -10,7 +10,7 @@ namespace Machina.Data
         HoldLastFrame,
         Loop
     }
-    interface IFrameAnimation
+    public interface IFrameAnimation
     {
         public abstract int Length
         {
