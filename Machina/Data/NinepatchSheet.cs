@@ -48,10 +48,33 @@ namespace Machina.Data
                 outerDestinationRect.Height - this.rects.TopBuffer - this.rects.BottomBuffer);
         }
 
-        public NinepatchRects GenerateDestinationRects(Rectangle outer)
+        private Rectangle GenerateOuterDestinationRect(Rectangle innerDestinationRect)
         {
-            var inner = GenerateInnerDestinationRect(outer);
-            return new NinepatchRects(outer, inner);
+            return new Rectangle(
+                innerDestinationRect.Left - this.rects.LeftBuffer,
+                innerDestinationRect.Top - this.rects.TopBuffer,
+                innerDestinationRect.Width + this.rects.LeftBuffer + this.rects.RightBuffer,
+                innerDestinationRect.Height + this.rects.TopBuffer + this.rects.BottomBuffer);
+        }
+
+        public enum GenerationDirection
+        {
+            Inner,
+            Outer
+        }
+
+        public NinepatchRects GenerateDestinationRects(Rectangle starter, GenerationDirection gen = GenerationDirection.Inner)
+        {
+            if (gen == GenerationDirection.Inner)
+            {
+                var inner = GenerateInnerDestinationRect(starter);
+                return new NinepatchRects(starter, inner);
+            }
+            else
+            {
+                var outer = GenerateOuterDestinationRect(starter);
+                return new NinepatchRects(outer, starter);
+            }
         }
 
         public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
@@ -87,9 +110,9 @@ namespace Machina.Data
             spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle outerDestinationRect, float layerDepth)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle outerDestinationRect, GenerationDirection gen, float layerDepth)
         {
-            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(outerDestinationRect), layerDepth);
+            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(outerDestinationRect, gen), layerDepth);
         }
 
         public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, float layerDepth)

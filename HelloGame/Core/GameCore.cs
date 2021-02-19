@@ -201,7 +201,7 @@ namespace HelloGame
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
                 uiGroup.SetMargin(15);
-                new NinepatchRenderer(layout, defaultStyle.windowSheet);
+                new NinepatchRenderer(layout, defaultStyle.windowSheet, NinepatchSheet.GenerationDirection.Outer);
 
                 uiBuilder.BuildButton(uiGroup, "Click me!", 32);
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!", true);

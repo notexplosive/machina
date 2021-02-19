@@ -57,7 +57,7 @@ namespace Machina.Components
             }
 
             var rect = this.boundingRect.Rect;
-            this.backgroundSheet.DrawFullNinepatch(spriteBatch, rect, transform.Depth + 0.00001f);
+            this.backgroundSheet.DrawFullNinepatch(spriteBatch, rect, NinepatchSheet.GenerationDirection.Inner, transform.Depth + 0.00001f);
 
             var drawPos = new Vector2(rect.Right, this.transform.Position.Y) + new Vector2(-rect.Height / 2, rect.Height / 2);
             this.spriteSheet.DrawFrame(this.frames.GetFrame(frameIndex), spriteBatch, drawPos, 1f, 0f, false, false, transform.Depth, Color.White);
