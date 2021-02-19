@@ -231,20 +231,7 @@ namespace HelloGame
                     new DropdownContent.DropdownItem("Other Second"),
                     new DropdownContent.DropdownItem("Third?!?!!"));
 
-                var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
-                textInput.transform.LocalDepth = -0.001f;
-                new BoundingRect(textInput, new Point(32, 32));
-                new LayoutElement(textInput).StretchHorizontally();
-                new NinepatchRenderer(textInput, defaultStyle.textboxSheet);
-                new LayoutGroup(textInput, Orientation.Vertical).SetMargin(3);
-                new Hoverable(textInput);
-                var clickable = new Clickable(textInput);
-                var text = textInput.transform.AddActorAsChild("TextInput - Text");
-                text.transform.LocalDepth = -0.001f;
-                new BoundingRect(text, new Point(32, 32));
-                new LayoutElement(text).StretchHorizontally().StretchVertically();
-                new BoundedTextRenderer(text, "Sample text", defaultFont, Color.Black);
-                new EditableText(text, clickable);
+                uiBuilder.BuildTextField(uiGroup);
             }
 
             // Horizontal layout example

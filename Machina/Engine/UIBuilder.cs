@@ -162,6 +162,26 @@ namespace Machina.Engine
             new BoundedTextRenderer(dropdown, "", style.uiElementFont);
             new DropdownTrigger(dropdown, content, style.uiSpriteSheet, style.dropdownFrames, style.buttonDefault);
         }
+
+        public Actor BuildTextField(LayoutGroup uiGroup)
+        {
+            var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
+            textInput.transform.LocalDepth = -0.001f;
+            new BoundingRect(textInput, new Point(32, 28));
+            new LayoutElement(textInput).StretchHorizontally();
+            new NinepatchRenderer(textInput, style.textboxSheet);
+            new LayoutGroup(textInput, Orientation.Vertical).SetMargin(3);
+            new Hoverable(textInput);
+            var clickable = new Clickable(textInput);
+            var text = textInput.transform.AddActorAsChild("TextInput - Text");
+            text.transform.LocalDepth = -0.001f;
+            new BoundingRect(text, new Point(32, 32));
+            new LayoutElement(text).StretchHorizontally().StretchVertically();
+            new BoundedTextRenderer(text, "", style.uiElementFont, Color.Black);
+            new EditableText(text, clickable);
+
+            return textInput;
+        }
     }
 
     class UIStyle
