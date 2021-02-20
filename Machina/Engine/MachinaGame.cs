@@ -96,6 +96,7 @@ namespace Machina.Engine
             Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
             Assets.AddMachinaAsset("ui-button-hover", new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
             Assets.AddMachinaAsset("ui-button-press", new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
+            Assets.AddMachinaAsset("ui-slider-ninepatch", new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24), new Rectangle(8, 152, 8, 8)));
             Assets.AddMachinaAsset("ui-checkbox-checkmark-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
             Assets.AddMachinaAsset("ui-radio-fill-image", new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
             Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet", new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
@@ -112,13 +113,15 @@ namespace Machina.Engine
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
                 defaultFont,
                 Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
                 Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
                 Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
                 new LinearFrameAnimation(0, 3),
                 new LinearFrameAnimation(3, 3),
-                new LinearFrameAnimation(9, 3)
+                new LinearFrameAnimation(9, 3),
+                new LinearFrameAnimation(15, 3)
             );
 
             // Framestep

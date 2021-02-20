@@ -76,13 +76,12 @@ namespace HelloGame
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
 
                 var radioLayout = gameScene.AddActor("Inner Layout");
-                new BoundingRect(radioLayout, Point.Zero);
+                new BoundingRect(radioLayout, new Point(32, 124));
                 var innerGroup = new LayoutGroup(radioLayout, Orientation.Vertical);
                 innerGroup.PaddingBetweenElements = 5;
                 innerGroup.SetMargin(0);
                 var innerGroupElement = new LayoutElement(radioLayout)
-                    .StretchHorizontally()
-                    .StretchVertically();
+                    .StretchHorizontally();
                 radioLayout.transform.SetParent(layout);
                 uiBuilder.BuildLabel(innerGroup, "Section title:");
                 uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
@@ -100,6 +99,8 @@ namespace HelloGame
                     new DropdownContent.DropdownItem("Third?!?!!"));
 
                 uiBuilder.BuildTextField(uiGroup);
+
+                uiBuilder.BuildSlider(uiGroup);
             }
 
             // Horizontal layout example

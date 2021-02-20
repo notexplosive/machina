@@ -124,6 +124,18 @@ namespace Machina.Engine
             checkboxLabel.transform.LocalDepth = new Depth(-1);
         }
 
+        public Actor BuildSlider(LayoutGroup uiGroup)
+        {
+            var sliderActor = uiGroup.actor.transform.AddActorAsChild("Slider");
+            new BoundingRect(sliderActor, new Point(0, 24));
+            new LayoutElement(sliderActor).StretchHorizontally();
+            new Hoverable(sliderActor);
+            new Slider(sliderActor, style.sliderSheet, style.uiSpriteSheet, style.sliderThumbFrames);
+            sliderActor.transform.LocalDepth = -1;
+
+            return sliderActor;
+        }
+
         public Actor BuildLabel(LayoutGroup group, string textLabel)
         {
             var scene = group.actor.scene;
@@ -189,9 +201,10 @@ namespace Machina.Engine
         /// <summary>
         /// Should only be used in tests
         /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
 
         public readonly IFrameAnimation checkboxFrames = new LinearFrameAnimation(0, 3);
+        public readonly IFrameAnimation sliderThumbFrames;
         public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation dropdownFrames = new LinearFrameAnimation(0, 3);
         public readonly NinepatchSheet buttonDefault;
@@ -199,6 +212,7 @@ namespace Machina.Engine
         public readonly NinepatchSheet buttonPress;
         public readonly NinepatchSheet textboxSheet;
         public readonly NinepatchSheet windowSheet;
+        public readonly NinepatchSheet sliderSheet;
         public readonly SpriteFont uiElementFont;
         public readonly SpriteSheet uiSpriteSheet;
         public readonly Image checkboxImage;
@@ -210,19 +224,22 @@ namespace Machina.Engine
             NinepatchSheet pressButtonSheet,
             NinepatchSheet textboxSheet,
             NinepatchSheet windowSheet,
+            NinepatchSheet sliderSheet,
             SpriteFont buttonFont,
             SpriteSheet uiSpriteSheet,
             Image checkboxImage,
             Image radioImage,
             IFrameAnimation checkboxFrames,
             IFrameAnimation radioFrames,
-            IFrameAnimation dropdownFrames)
+            IFrameAnimation dropdownFrames,
+            IFrameAnimation sliderFrames)
         {
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
             buttonPress = pressButtonSheet;
             this.textboxSheet = textboxSheet;
             this.windowSheet = windowSheet;
+            this.sliderSheet = sliderSheet;
             this.uiElementFont = buttonFont;
             this.uiSpriteSheet = uiSpriteSheet;
             this.checkboxImage = checkboxImage;
@@ -230,6 +247,7 @@ namespace Machina.Engine
             this.radioFrames = radioFrames;
             this.dropdownFrames = dropdownFrames;
             this.checkboxFrames = checkboxFrames;
+            this.sliderThumbFrames = sliderFrames;
         }
     }
 }

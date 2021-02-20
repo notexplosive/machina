@@ -110,9 +110,9 @@ namespace Machina.Data
             spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle outerDestinationRect, GenerationDirection gen, Depth layerDepth)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle starter, GenerationDirection gen, Depth layerDepth)
         {
-            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(outerDestinationRect, gen), layerDepth);
+            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(starter, gen), layerDepth);
         }
 
         public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, Depth layerDepth)

@@ -16,6 +16,9 @@ namespace Machina.Data
             this.val = val;
         }
 
+        public static implicit operator int(Depth d) => d.val;
+        public static implicit operator Depth(int i) => new Depth(i);
+
         public int AsInt => this.val;
         public float AsFloat
         {
