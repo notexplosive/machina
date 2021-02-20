@@ -105,6 +105,8 @@ namespace Machina.Components
                 }
                 this.totalRectSize.Y += (int) textSize.Y;
             }
+
+            this.boundingRect.Width = this.totalRectSize.X;
         }
 
         public void Hide()

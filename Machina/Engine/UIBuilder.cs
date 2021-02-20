@@ -17,7 +17,7 @@ namespace Machina.Engine
             this.style = style;
         }
 
-        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height = 32)
+        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height = 48)
         {
             var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
@@ -33,7 +33,7 @@ namespace Machina.Engine
             var buttonLabelElement = new LayoutElement(buttonLabelActor);
             buttonLabelElement.StretchHorizontally();
             buttonLabelElement.StretchVertically();
-            new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont);
+            new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
 
             buttonActor.transform.SetParent(group.actor);
             buttonLabelActor.transform.SetParent(buttonActor);
@@ -90,7 +90,7 @@ namespace Machina.Engine
             }
 
             var checkboxContainer = scene.AddActor("Checkbox", new Vector2(40, 400));
-            new BoundingRect(checkboxContainer, new Point(256, 24));
+            new BoundingRect(checkboxContainer, new Point(256, 30));
             new Hoverable(checkboxContainer);
             var checkboxClickable = new Clickable(checkboxContainer);
             ICheckboxStateProvider stateProvider;
@@ -105,7 +105,7 @@ namespace Machina.Engine
             var checkboxBox = scene.AddActor("Checkbox-Box");
             checkboxBox.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxBox, new Point(24, 24));
-            new LayoutElement(checkboxBox);
+            new LayoutElement(checkboxBox).StretchVertically();
             if (isCheckbox)
                 new CheckboxRenderer(checkboxBox, style.uiSpriteSheet, style.checkboxImage, stateProvider, checkboxClickable, style.checkboxFrames);
             else
@@ -114,8 +114,8 @@ namespace Machina.Engine
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxLabel, new Point(0, 24));
-            new LayoutElement(checkboxLabel).StretchHorizontally();
-            new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont);
+            new LayoutElement(checkboxLabel).StretchHorizontally().StretchVertically();
+            new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Center);
 
             checkboxContainer.transform.SetParent(uiGroup.actor);
 
@@ -141,7 +141,7 @@ namespace Machina.Engine
             var scene = group.actor.scene;
             var labelActor = scene.AddActor("Label");
             new BoundingRect(labelActor, new Point(32, 32));
-            new BoundedTextRenderer(labelActor, textLabel, style.uiElementFont);
+            new BoundedTextRenderer(labelActor, textLabel, style.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Bottom);
             var e = new LayoutElement(labelActor);
             e.StretchHorizontally();
 

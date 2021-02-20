@@ -85,7 +85,7 @@ namespace HelloGame
                 uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
 
                 var radioLayout = gameScene.AddActor("Inner Layout");
-                new BoundingRect(radioLayout, new Point(32, 124));
+                new BoundingRect(radioLayout, new Point(32, 140));
                 var innerGroup = new LayoutGroup(radioLayout, Orientation.Vertical);
                 innerGroup.PaddingBetweenElements = 5;
                 innerGroup.SetMargin(0);
