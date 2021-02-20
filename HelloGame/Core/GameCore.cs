@@ -61,8 +61,11 @@ namespace HelloGame
 
             var boundedTextActor = gameScene.AddActor("Text Renderer Actor", new Vector2(100, 500));
             new BoundingRect(boundedTextActor, new Point(128, 256)).SetOffsetToCenter();
-            new BoundedTextRenderer(boundedTextActor, "Text\nWith linebreaks that are used but sometimes not\nManual\nBreaks", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
+            new BoundedTextRenderer(boundedTextActor, "Despite all known laws of aviation, the bee should not be able to fly\n\nThe bee of course, flies anyway. Because this is a very long string", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
 
+            var boundedTextActor2 = gameScene.AddActor("Text Renderer Actor", new Vector2(228, 500));
+            new BoundingRect(boundedTextActor2, new Point(128, 256)).SetOffsetToCenter();
+            new BoundedTextRenderer(boundedTextActor2, "Other string that\nhas line breaks", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Right, VerticalAlignment.Top);
 
 
             var uiBuilder = new UIBuilder(defaultStyle);

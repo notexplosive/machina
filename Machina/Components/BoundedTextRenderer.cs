@@ -69,7 +69,10 @@ namespace Machina.Components
                 }
             }
 
-            measurer.AppendLinebreak();
+            if (measurer.HasNextTextLine())
+            {
+                measurer.AddNextTextLine();
+            }
 
             var yOffset = 0;
             if (verticalAlignment == VerticalAlignment.Center)
@@ -133,7 +136,19 @@ namespace Machina.Components
         public TextMeasurer(string text, SpriteFont font, Rectangle rect, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             this.widthOfCurrentLine = 0f;
-            this.words = text.Split(' ');
+
+            var splitLines = text.Trim().Split('\n');
+            var words = new List<string>();
+            foreach (var textLine in splitLines)
+            {
+                var splitWords = textLine.Split(' ');
+                foreach (var word in splitWords)
+                {
+                    words.Add(word);
+                }
+                words.Add("\n"); // Re-add the newline as a sentinal value
+            }
+            this.words = words.ToArray();
             this.stringBuilder = new StringBuilder();
             this.currentWordIndex = 0;
             this.font = font;
@@ -160,7 +175,14 @@ namespace Machina.Components
         public void AppendNextWord()
         {
             var word = this.words[currentWordIndex];
-            AppendWord(word);
+            if (word == "\n")
+            {
+                AppendLinebreak();
+            }
+            else
+            {
+                AppendWord(word);
+            }
             currentWordIndex++;
         }
 
@@ -171,11 +193,21 @@ namespace Machina.Components
             this.stringBuilder.Append(' ');
         }
 
-        public void AppendLinebreak()
+        public bool HasNextTextLine()
+        {
+            return this.stringBuilder.Length > 0;
+        }
+
+        public void AddNextTextLine()
         {
             this.textLines.Add(new TextLine(this.stringBuilder.ToString(), font, totalAvailableRect, this.totalAvailableRect.Y + currentY, horizontalAlignment));
-            this.currentY += this.font.LineSpacing;
             this.stringBuilder.Clear();
+        }
+
+        public void AppendLinebreak()
+        {
+            AddNextTextLine();
+            this.currentY += this.font.LineSpacing;
             this.widthOfCurrentLine = 0;
         }
 
