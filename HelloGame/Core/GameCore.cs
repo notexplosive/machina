@@ -59,8 +59,14 @@ namespace HelloGame
             var cameraScroller = gameScene.AddActor("CameraScroller");
             new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
 
+            var boundedTextActor = gameScene.AddActor("Text Renderer Actor", new Vector2(100, 500));
+            new BoundingRect(boundedTextActor, new Point(128, 256)).SetOffsetToCenter();
+            new BoundedTextRenderer(boundedTextActor, "Text\nWith linebreaks that are used but sometimes not\nManual\nBreaks", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
+
+
 
             var uiBuilder = new UIBuilder(defaultStyle);
+
 
             // Button layout example
             {
