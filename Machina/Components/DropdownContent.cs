@@ -48,7 +48,7 @@ namespace Machina.Components
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
-            if (buttonState == ButtonState.Pressed && button == MouseButton.Left)
+            if (buttonState == ButtonState.Released && button == MouseButton.Left)
             {
                 int index = CalculateIndexOfHoverPosition(currentPosition);
                 if (index >= 0 && index < this.items.Count)
