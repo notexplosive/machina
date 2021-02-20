@@ -30,7 +30,7 @@ namespace Machina.Data
             this.frame = frame;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip, float layerDepth, Color color)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color color)
         {
             spriteSheet.DrawFrame(spriteBatch, frame, position, scale, angle, flip, layerDepth, color);
         }

@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -19,15 +20,15 @@ namespace Machina.Tests
                 sceneLayers.Add(scene);
                 var mousePoint = new Point(200, 200);
                 var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-                var unreachedHoverable = BuildHoverable(scene, Point.Zero, "Hoverable that is too far to be hovered", 0.5f);
-                var onPointHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is", 0.5f);
-                var behindHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is, but farther back", 0.6f);
+                var unreachedHoverable = BuildHoverable(scene, Point.Zero, "Hoverable that is too far to be hovered", new Depth(5));
+                var onPointHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is", new Depth(5));
+                var behindHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is, but farther back", new Depth(6));
 
                 // Need to update to push created interables into main iterable list
                 scene.Update(0f);
 
                 sceneLayers.Update(0, Matrix.Identity, new InputState(mouseState, new KeyboardState()));
-                test.Expect(0.5f, scene.hitTester.Candidate.depth, "Lowest depth element was clicked");
+                test.Expect(new Depth(5), scene.hitTester.Candidate.depth, "Lowest depth element was clicked");
                 test.ExpectFalse(unreachedHoverable.IsHovered, "Unreached hoverable should not be hovered");
                 test.ExpectFalse(unreachedHoverable.IsSoftHovered, "Unreached hoverable should not be soft hovered");
                 test.ExpectFalse(behindHoverable.IsHovered, "Behind hoverable should not be hovered");
@@ -45,8 +46,8 @@ namespace Machina.Tests
                 sceneLayers.Add(upperScene);
                 var mousePoint = new Point(200, 200);
                 var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-                var onPointHoverable = BuildHoverable(upperScene, mousePoint, "Hoverable in upper scene", 0.5f);
-                var behindHoverable = BuildHoverable(lowerScene, mousePoint, "Hoverable in lower scene but closer depth", 0.1f);
+                var onPointHoverable = BuildHoverable(upperScene, mousePoint, "Hoverable in upper scene", new Depth(5));
+                var behindHoverable = BuildHoverable(lowerScene, mousePoint, "Hoverable in lower scene but closer depth", new Depth(1));
 
                 // Push created iterables
                 sceneLayers.UpdateWithNoInput(0f);
@@ -58,7 +59,7 @@ namespace Machina.Tests
             }));
         }
 
-        private Hoverable BuildHoverable(Scene scene, Point startingPosition, string name, float depth)
+        private Hoverable BuildHoverable(Scene scene, Point startingPosition, string name, Depth depth)
         {
             var actor = scene.AddActor(name, startingPosition.ToVector2());
             actor.transform.Depth = depth;

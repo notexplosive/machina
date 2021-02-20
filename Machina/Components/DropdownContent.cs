@@ -74,15 +74,15 @@ namespace Machina.Components
             {
                 // BG fill
                 var bgRect = new Rectangle(this.boundingRect.TopLeft.ToPoint(), totalRectSize);
-                this.backgroundSheet.DrawFullNinepatch(spriteBatch, bgRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth + 0.0001f);
+                this.backgroundSheet.DrawFullNinepatch(spriteBatch, bgRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth - 1);
 
                 if (hoveredIndex != -1 && items[hoveredIndex].Equals(item))
                 {
                     // Hover
                     var hoverRect = new Rectangle(position.ToPoint(), new Point(this.totalRectSize.X, this.font.LineSpacing));
-                    this.hoverSheet.DrawFullNinepatch(spriteBatch, hoverRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth + 0.00001f);
+                    this.hoverSheet.DrawFullNinepatch(spriteBatch, hoverRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth - 2);
                 }
-                spriteBatch.DrawString(this.font, item.text, position + new Vector2(this.margin, 0), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, transform.Depth - 0.00001f);
+                spriteBatch.DrawString(this.font, item.text, position + new Vector2(this.margin, 0), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, (transform.Depth - 3).AsFloat);
                 position.Y += this.font.LineSpacing;
             }
         }

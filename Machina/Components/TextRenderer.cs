@@ -32,7 +32,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(Font, Text, this.actor.transform.Position, FontColor, this.actor.transform.Angle, new Vector2(), 1f, SpriteEffects.None, this.actor.transform.Depth);
+            spriteBatch.DrawString(Font, Text, this.actor.transform.Position, FontColor, this.actor.transform.Angle, new Vector2(), 1f, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
         }
     }
 }

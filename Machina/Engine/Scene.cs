@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using Machina.Data;
 
 namespace Machina.Engine
 {
@@ -22,12 +23,12 @@ namespace Machina.Engine
             }
         }
 
-        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, float depth = 0.5f)
+        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, int depthAsInt = Depth.Max / 2)
         {
             var actor = new Actor(name, this);
             actor.transform.Position = position;
             actor.transform.Angle = angle;
-            actor.transform.Depth = depth;
+            actor.transform.Depth = new Depth(depthAsInt);
             return actor;
         }
 

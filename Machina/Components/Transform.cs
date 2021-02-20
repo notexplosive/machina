@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -12,8 +13,8 @@ namespace Machina.Components
     {
         public readonly Actor actor;
 
-        private float depth_impl = 0.5f;
-        private float localDepth_impl;
+        private Depth depth_impl = Depth.Middle;
+        private Depth localDepth_impl;
         private Vector2 position_impl;
         private Vector2 localPosition_impl;
         private float angle_impl;
@@ -57,7 +58,7 @@ namespace Machina.Components
             }
         }
 
-        public float Depth
+        public Depth Depth
         {
             get
             {
@@ -74,7 +75,7 @@ namespace Machina.Components
             }
         }
 
-        public float LocalDepth
+        public Depth LocalDepth
         {
             get
             {
@@ -293,7 +294,7 @@ namespace Machina.Components
             }
             newActor.transform.SetParent(this.actor);
             newActor.transform.LocalPosition = position;
-            newActor.transform.LocalDepth = 0f;
+            newActor.transform.LocalDepth = new Depth(0);
             newActor.transform.LocalAngle = 0f;
             return newActor;
         }

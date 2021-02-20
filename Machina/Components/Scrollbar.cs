@@ -56,7 +56,7 @@ namespace Machina.Components
         {
             if (IsScrollbarNeeded)
             {
-                this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner, this.transform.Depth - 0.0001f);
+                this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner, this.transform.Depth - 1);
             }
         }
 

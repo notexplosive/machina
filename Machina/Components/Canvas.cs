@@ -31,8 +31,8 @@ namespace Machina.Components
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
             {
                 spriteBatch.Begin();
-                spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.transform.Depth);
-                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red, 1, this.actor.transform.Depth);
+                spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
+                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
                 spriteBatch.End();
             };
 
@@ -98,7 +98,7 @@ namespace Machina.Components
         {
             if (this.renderTarget != null)
             {
-                spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None, this.actor.transform.Depth);
+                spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Machina.Data;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -11,16 +12,15 @@ namespace Machina.Engine
         private readonly int id;
         public readonly Actor actor;
         public readonly Action<bool> approvalCallback;
-        public readonly float depth;
-        // Has an impossibly high depth of 2.0f
-        public readonly static HitTestResult Empty = new HitTestResult(2.0f, null);
+        public readonly Depth depth;
+        public readonly static HitTestResult Empty = new HitTestResult(new Depth(Depth.Max), null);
 
         public HitTestResult(Actor actor, Action<bool> callback) : this(actor.transform.Depth, callback)
         {
             this.actor = actor;
         }
 
-        public HitTestResult(float depth, Action<bool> callback)
+        public HitTestResult(Depth depth, Action<bool> callback)
         {
             this.id = IdPool++;
             this.depth = depth;
@@ -35,7 +35,7 @@ namespace Machina.Engine
                 return 0;
             }
 
-            return other.depth > this.depth ? -1 : 1;
+            return other.depth.AsInt > this.depth.AsInt ? -1 : 1;
         }
 
         public bool Equals(HitTestResult other)
@@ -90,7 +90,7 @@ namespace Machina.Engine
 
         public void AddCandidate(HitTestResult target)
         {
-            if (target.depth < Candidate.depth)
+            if (target.depth.AsInt < Candidate.depth.AsInt)
             {
                 Candidate = target;
             }

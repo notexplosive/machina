@@ -34,7 +34,7 @@ namespace Machina.Components
             {
                 spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
                     new Point((int) textRenderer.font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0),
-                    new Point(1, (int) (textRenderer.font.LineSpacing * 0.9f))), Color.Black, this.transform.Depth);
+                    new Point(1, (int) (textRenderer.font.LineSpacing * 0.9f))), Color.Black, this.transform.Depth.AsFloat);
             }
         }
 

@@ -90,12 +90,12 @@ namespace Machina.Components
         {
             if (this.IsHovered)
             {
-                spriteBatch.FillRectangle(this.boundingRect.Rect, new Color(Color.Blue, 0.25f), this.actor.transform.Depth - 0.000001f);
+                spriteBatch.FillRectangle(this.boundingRect.Rect, new Color(Color.Blue, 0.25f), (this.actor.transform.Depth - 1).AsFloat);
             }
 
             if (this.debug_isHoveredFromCallbacks)
             {
-                spriteBatch.DrawRectangle(this.boundingRect.Rect, Color.Orange, 2f, this.actor.transform.Depth - 0.000002f);
+                spriteBatch.DrawRectangle(this.boundingRect.Rect, Color.Orange, 2f, (this.actor.transform.Depth - 2).AsFloat);
             }
         }
         private void Debug_IndicateHoverStarted()

@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using System;
@@ -253,12 +254,12 @@ namespace Machina.Tests
             {
                 var parent = new Actor("Peter Parent", null);
                 var child = parent.transform.AddActorAsChild("Carrie Child");
-                parent.transform.Depth = 0.5f;
-                child.transform.LocalDepth = 0.1f;
+                parent.transform.Depth = new Depth(1);
+                child.transform.LocalDepth = new Depth(2);
 
-                test.Expect(0.5f, parent.transform.Depth, "Depth of parent is set as expected");
-                test.Expect(0.1f, child.transform.LocalDepth, "LocalDepth of child is set as expected");
-                test.Expect(0.6f, child.transform.Depth, "Depth of child is set as expected");
+                test.Expect(new Depth(1), parent.transform.Depth, "Depth of parent is set as expected");
+                test.Expect(new Depth(2), child.transform.LocalDepth, "LocalDepth of child is set as expected");
+                test.Expect(new Depth(3), child.transform.Depth, "Depth of child is set as expected");
             });
 
             AddTest("Set LocalAngle basic", test =>
@@ -277,12 +278,12 @@ namespace Machina.Tests
             {
                 var parent = new Actor("Peter Parent", null);
                 var child = parent.transform.AddActorAsChild("Carrie Child");
-                parent.transform.Depth = 0.5f;
-                child.transform.LocalDepth = 0.1f;
-                var grandchild = parent.transform.AddActorAsChild("Gary Grandchild");
-                grandchild.transform.LocalDepth = 0.1f;
+                parent.transform.Depth = new Depth(1);
+                child.transform.LocalDepth = new Depth(2);
+                var grandchild = child.transform.AddActorAsChild("Gary Grandchild");
+                grandchild.transform.LocalDepth = new Depth(3);
 
-                test.Expect(0.6f, grandchild.transform.Depth, "Grandchild depth is set as expected");
+                test.Expect(new Depth(6), grandchild.transform.Depth, "Grandchild depth is set as expected");
             });
         }
     }

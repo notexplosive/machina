@@ -48,7 +48,7 @@ namespace Machina.Components
 
             if (this.checkboxState.GetIsChecked())
             {
-                this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new PointBool(false, false), transform.Depth - 000000.1f, Color.White);
+                this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new PointBool(false, false), transform.Depth - 1, Color.White);
             }
         }
     }

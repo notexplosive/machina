@@ -148,13 +148,13 @@ namespace Machina.Engine
                 new LayoutElement(spacer).StretchHorizontally();
 
                 var content = sceneGraphContainer.transform.AddActorAsChild("Content");
-                content.transform.LocalDepth = -0.0001f;
+                content.transform.LocalDepth = new Depth(-1);
                 new BoundingRect(content, Point.Zero);
                 new LayoutElement(content).StretchHorizontally().StretchVertically();
                 new LayoutGroup(content, Orientation.Horizontal);
 
                 var view = content.transform.AddActorAsChild("View");
-                view.transform.LocalDepth = -0.0001f;
+                view.transform.LocalDepth = new Depth(-1);
                 var sceneGraphContent = new Scene();
                 new BoundingRect(view, Point.Zero).SetOffsetToTopLeft();
                 new LayoutElement(view).StretchHorizontally().StretchVertically();
@@ -164,7 +164,7 @@ namespace Machina.Engine
 
 
                 var scrollbarActor = content.transform.AddActorAsChild("Scrollbar");
-                scrollbarActor.transform.LocalDepth = -0.0001f;
+                scrollbarActor.transform.LocalDepth = new Depth(-1);
                 new BoundingRect(scrollbarActor, new Point(32, 0));
                 new LayoutElement(scrollbarActor).StretchVertically();
                 new Hoverable(scrollbarActor);

@@ -38,8 +38,8 @@ namespace Machina.Engine
             buttonActor.transform.SetParent(group.actor);
             buttonLabelActor.transform.SetParent(buttonActor);
 
-            buttonActor.transform.LocalDepth = -0.000001f;
-            buttonLabelActor.transform.LocalDepth = -0.000001f;
+            buttonActor.transform.LocalDepth = new Depth(-1);
+            buttonLabelActor.transform.LocalDepth = new Depth(-1);
 
 
             return buttonActor;
@@ -119,9 +119,9 @@ namespace Machina.Engine
 
             checkboxContainer.transform.SetParent(uiGroup.actor);
 
-            checkboxBox.transform.LocalDepth = -0.000001f;
-            checkboxContainer.transform.LocalDepth = -0.000001f;
-            checkboxLabel.transform.LocalDepth = -0.000001f;
+            checkboxBox.transform.LocalDepth = new Depth(-1);
+            checkboxContainer.transform.LocalDepth = new Depth(-1);
+            checkboxLabel.transform.LocalDepth = new Depth(-1);
         }
 
         public Actor BuildLabel(LayoutGroup group, string textLabel)
@@ -134,7 +134,7 @@ namespace Machina.Engine
             e.StretchHorizontally();
 
             labelActor.transform.SetParent(group.actor);
-            labelActor.transform.LocalDepth = -0.000001f;
+            labelActor.transform.LocalDepth = new Depth(-1);
 
             return labelActor;
         }
@@ -151,8 +151,8 @@ namespace Machina.Engine
             new BoundingRect(dropdownContent, Point.Zero);
             new Hoverable(dropdownContent);
             var content = new DropdownContent(dropdownContent, style.uiElementFont, style.buttonPress, style.buttonHover);
-            dropdownContent.transform.LocalDepth = -0.1f;
-            dropdown.transform.LocalDepth = -0.01f;
+            dropdownContent.transform.LocalDepth = new Depth(-10);
+            dropdown.transform.LocalDepth = new Depth(-3);
 
             foreach (var item in items)
             {
@@ -166,7 +166,7 @@ namespace Machina.Engine
         public Actor BuildTextField(LayoutGroup uiGroup)
         {
             var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
-            textInput.transform.LocalDepth = -0.001f;
+            textInput.transform.LocalDepth = new Depth(-1);
             new BoundingRect(textInput, new Point(32, 28));
             new LayoutElement(textInput).StretchHorizontally();
             new NinepatchRenderer(textInput, style.textboxSheet);
@@ -174,7 +174,7 @@ namespace Machina.Engine
             new Hoverable(textInput);
             var clickable = new Clickable(textInput);
             var text = textInput.transform.AddActorAsChild("TextInput - Text");
-            text.transform.LocalDepth = -0.001f;
+            text.transform.LocalDepth = new Depth(-1);
             new BoundingRect(text, new Point(32, 32));
             new LayoutElement(text).StretchHorizontally().StretchVertically();
             new BoundedTextRenderer(text, "", style.uiElementFont, Color.Black);

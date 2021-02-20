@@ -28,10 +28,10 @@ namespace Machina.Data
             this.texture = texture;
         }
 
-        public abstract void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, float layerDepth, Color tintColor);
+        public abstract void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color tintColor);
 
 
-        public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float layerDepth)
+        public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth)
         {
             DrawFrame(spriteBatch, index, position, 1f, 0f, new PointBool(false, false), layerDepth, Color.White);
         }
