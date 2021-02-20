@@ -40,6 +40,11 @@ namespace Machina.Components
             spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2);
             spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2);
 
+            if (this.HasParent)
+            {
+                spriteBatch.DrawLine(this.Position, this.Parent.Position, Color.White, 1, 0f);
+            }
+
             // Transform needs to call base
             base.DebugDraw(spriteBatch);
         }
@@ -237,7 +242,7 @@ namespace Machina.Components
         private void RemoveChild(Actor child)
         {
             GentlyRemoveIterable(child);
-            this.Parent = null;
+            child.transform.Parent = null;
             child.scene?.AddActor(child);
         }
 

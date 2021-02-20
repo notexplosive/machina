@@ -37,21 +37,43 @@ namespace Machina.Components
             };
 
             this.boundingRect = RequireComponent<BoundingRect>();
+            this.boundingRect.onSizeChange += BuildRenderTarget;
 
-            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+            if (this.boundingRect.Area > 0)
+            {
+                BuildRenderTarget(this.boundingRect.Size);
+            }
+        }
 
-            renderTarget = new RenderTarget2D(
-                graphicsDevice,
-                boundingRect.Width,
-                boundingRect.Height,
-                false,
-                graphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
+        private void BuildRenderTarget(Point newSize)
+        {
+            if (renderTarget != null)
+            {
+                renderTarget.Dispose();
+                renderTarget = null;
+            }
+
+            if (newSize.X * newSize.Y > 0)
+            {
+
+                var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+                renderTarget = new RenderTarget2D(
+                        graphicsDevice,
+                        newSize.X,
+                        newSize.Y,
+                        false,
+                        graphicsDevice.PresentationParameters.BackBufferFormat,
+                        DepthFormat.Depth24);
+            }
         }
 
         public override void OnDelete()
         {
-            renderTarget.Dispose();
+            this.boundingRect.onSizeChange -= BuildRenderTarget;
+            if (renderTarget != null)
+            {
+                renderTarget.Dispose();
+            }
         }
 
         public void DrawContent(SpriteBatch spriteBatch)
@@ -74,7 +96,10 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None, this.actor.transform.Depth);
+            if (this.renderTarget != null)
+            {
+                spriteBatch.Draw(renderTarget, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None, this.actor.transform.Depth);
+            }
         }
     }
 }

@@ -134,24 +134,44 @@ namespace Machina.Engine
 
             // Scene graph renderer
             {
+                var sceneGraphContainer = sceneLayers.debugScene.AddActor("SceneGraphContainer");
+                new BoundingRect(sceneGraphContainer, new Point(350, 350));
+                new LayoutGroup(sceneGraphContainer, Orientation.Vertical);
+                var tool = new InvokableDebugTool(sceneGraphContainer, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
+                new Hoverable(sceneGraphContainer);
+                new Draggable(sceneGraphContainer);
+                new MoveOnDrag(sceneGraphContainer);
+                new NinepatchRenderer(sceneGraphContainer, defaultStyle.windowSheet, NinepatchSheet.GenerationDirection.Outer);
+
+                var spacer = sceneGraphContainer.transform.AddActorAsChild("Spacer");
+                new BoundingRect(spacer, new Point(32, 32));
+                new LayoutElement(spacer).StretchHorizontally();
+
+                var content = sceneGraphContainer.transform.AddActorAsChild("Content");
+                content.transform.LocalDepth = -0.0001f;
+                new BoundingRect(content, Point.Zero);
+                new LayoutElement(content).StretchHorizontally().StretchVertically();
+                new LayoutGroup(content, Orientation.Horizontal);
+
+                var view = content.transform.AddActorAsChild("View");
+                view.transform.LocalDepth = -0.0001f;
                 var sceneGraphContent = new Scene();
-                var sceneGraphPanel = sceneLayers.debugScene.AddActor("SceneGraphRenderer Scene Renderer");
-                var tool = new InvokableDebugTool(sceneGraphPanel, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
-                sceneGraphPanel.transform.Position = new Vector2(-400, 0);
-                new BoundingRect(sceneGraphPanel, new Point(300, 256)).SetOffsetToTopLeft();
-                new Canvas(sceneGraphPanel);
-                new Hoverable(sceneGraphPanel);
-                new SceneRenderer(sceneGraphPanel, sceneGraphContent, () => { return true; });
-                new Draggable(sceneGraphPanel);
-                new MoveOnDrag(sceneGraphPanel);
-
-                var sceneGraphPanelScrollbar = sceneLayers.debugScene.AddActor("SceneGraphRenderer Scrollbar");
-                sceneGraphPanelScrollbar.transform.SetParent(sceneGraphPanel);
-                new BoundingRect(sceneGraphPanelScrollbar, new Point(32, 0));
-                new Hoverable(sceneGraphPanelScrollbar);
+                new BoundingRect(view, Point.Zero).SetOffsetToTopLeft();
+                new LayoutElement(view).StretchHorizontally().StretchVertically();
+                new Canvas(view);
+                new Hoverable(view);
+                new SceneRenderer(view, sceneGraphContent, () => { return true; });
 
 
-                var scrollbar = new Scrollbar(sceneGraphPanelScrollbar, sceneGraphPanel.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900), defaultStyle.buttonHover);
+                var scrollbarActor = content.transform.AddActorAsChild("SceneGraphRenderer Scrollbar");
+                scrollbarActor.transform.LocalDepth = -0.0001f;
+                new BoundingRect(scrollbarActor, new Point(32, 0));
+                new LayoutElement(scrollbarActor).StretchVertically();
+                new Hoverable(scrollbarActor);
+                new NinepatchRenderer(scrollbarActor, defaultStyle.buttonDefault, NinepatchSheet.GenerationDirection.Inner);
+
+
+                var scrollbar = new Scrollbar(scrollbarActor, view.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900), defaultStyle.buttonHover);
 
                 var sceneGraphActor = sceneGraphContent.AddActor("SceneGraphActor");
                 new SceneGraphRenderer(sceneGraphActor, this.sceneLayers, scrollbar);

@@ -31,20 +31,34 @@ namespace Machina.Components
                 lineNumber++;
             }
 
-            foreach (var scene in sceneLayers.AllScenesExceptDebug())
+            foreach (var scene in sceneLayers.AllScenes())
             {
                 DrawString("Scene", 0);
-                foreach (var actor in scene.GetAllActors())
+                foreach (var targetActor in scene.GetRootLevelActors())
                 {
-                    DrawString(actor.name, 1);
-                    foreach (var component in actor.GetComponents<BaseComponent>())
+                    DrawString(targetActor.name + ": " + targetActor.transform.Position.ToString(), 1);
+
+                    DrawChildren(targetActor, 1, DrawString);
+
+                    foreach (var component in targetActor.GetComponents<BaseComponent>())
                     {
-                        DrawString(component.GetType().Name.ToString(), 2);
+                        // DrawString(component.GetType().Name.ToString(), 2);
                     }
                 }
             }
 
             this.scrollbar.worldBounds = new MinMax<int>(0, lineNumber * boxHeight);
+        }
+
+        public void DrawChildren(Actor targetActor, int indent, Action<string, int> DrawString)
+        {
+
+            for (int i = 0; i < targetActor.transform.ChildCount; i++)
+            {
+                var child = targetActor.transform.ChildAt(i);
+                DrawString(child.name + ": " + child.transform.LocalPosition.ToString(), indent + 1);
+                DrawChildren(child, indent + 1, DrawString);
+            }
         }
     }
 }

@@ -17,7 +17,11 @@ namespace Machina.Components
         }
         public Point Size => this.size;
 
+        public int Area => this.Width * this.Height;
+
         public Point Location => Rect.Location;
+
+        public Action<Point> onSizeChange;
 
         public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
@@ -38,6 +42,7 @@ namespace Machina.Components
             }
             set
             {
+                this.onSizeChange?.Invoke(new Point(value, this.size.Y));
                 this.size.X = value;
             }
         }
@@ -49,6 +54,7 @@ namespace Machina.Components
             }
             set
             {
+                this.onSizeChange?.Invoke(new Point(this.size.X, value));
                 this.size.Y = value;
             }
         }

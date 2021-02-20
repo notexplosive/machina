@@ -34,6 +34,9 @@ namespace Machina.Components
                 .AppendCallback(() => { this.currentTweenChain = null; })
             ;
 
+            // start out off screen
+            this.actor.transform.Position = new Vector2(-512, 32);
+
             this.currentTweenChain = null;
         }
 

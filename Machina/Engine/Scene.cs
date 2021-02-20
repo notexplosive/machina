@@ -31,6 +31,11 @@ namespace Machina.Engine
             return actor;
         }
 
+        public List<Actor> GetRootLevelActors()
+        {
+            return new List<Actor>(iterables);
+        }
+
         public List<Actor> GetAllActors()
         {
             void extractChild(List<Actor> accumulator, Actor actor)
