@@ -163,7 +163,7 @@ namespace Machina.Engine
                 new SceneRenderer(view, sceneGraphContent, () => { return true; });
 
 
-                var scrollbarActor = content.transform.AddActorAsChild("SceneGraphRenderer Scrollbar");
+                var scrollbarActor = content.transform.AddActorAsChild("Scrollbar");
                 scrollbarActor.transform.LocalDepth = -0.0001f;
                 new BoundingRect(scrollbarActor, new Point(32, 0));
                 new LayoutElement(scrollbarActor).StretchVertically();

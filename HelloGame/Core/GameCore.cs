@@ -56,133 +56,15 @@ namespace HelloGame
 
             //
 
-            var ballActor = gameScene.AddActor("Ball", new Vector2(Graphics.PreferredBackBufferWidth / 2, Graphics.PreferredBackBufferHeight / 2));
-            new TextureRenderer(ballActor, Assets.GetTexture("ball"));
-            new BoundingRect(ballActor, Point.Zero);
-            new SpriteRenderer(ballActor, linkinSpriteSheet).SetupBoundingRect();
-            new KeyboardMovement(ballActor);
-            new Hoverable(ballActor);
-            new Draggable(ballActor);
-            new MoveOnDrag(ballActor);
-            ballActor.transform.Depth = 0.2f;
-            ballActor.transform.Angle = MathF.PI / 2;
-
-            Actor other = gameScene.AddActor("other", ballActor.transform.Position + new Vector2(100, 0), 0.5f, 0.3f);
-            new SpriteRenderer(other, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
-            new Hoverable(other);
-            new Draggable(other);
-            new MoveOnDrag(other);
-            other.transform.SetParent(ballActor);
-
-            Actor other2 = gameScene.AddActor("other2", ballActor.transform.Position + new Vector2(25, 200), 1f, 0.4f);
-            new SpriteRenderer(other2, linkinSpriteSheet).SetupBoundingRect().SetAnimation(standAnim);
-            new Hoverable(other2);
-            new Draggable(other2);
-            new MoveOnDrag(other2);
-            other2.transform.SetParent(other);
-
-            Actor linkin = gameScene.AddActor("Linkin", new Vector2(250, 250));
-            var linkinRenderer = new SpriteRenderer(linkin, linkinSpriteSheet);
-            new BoundingRect(linkin, 32, 32);
-            new BoundingRectRenderer(linkin);
-            new TweenChainComponent(linkin)
-                .AddMoveTween(new Vector2(300, 300), 1, EaseFuncs.SineEaseIn)
-                .AddWaitTween(2f)
-                .AddMoveTween(new Vector2(1300, 0), 1, EaseFuncs.Linear);
-
-            linkinRenderer.SetAnimation(walkAnim);
-            linkinRenderer.SetupBoundingRect();
-
             var cameraScroller = gameScene.AddActor("CameraScroller");
             new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
-
-            var innerScene = new Scene();
-            var microActor = innerScene.AddActor("MicroActor");
-            microActor.transform.Position = new Vector2(10, 500);
-            new BoundingRect(microActor, Point.Zero);
-            new SpriteRenderer(microActor, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
-            new Hoverable(microActor);
-
-            var microActor2 = innerScene.AddActor("MicroActor");
-            microActor2.transform.Position = new Vector2(10, 50);
-            new BoundingRect(microActor2, Point.Zero);
-            new SpriteRenderer(microActor2, linkinSpriteSheet).SetAnimation(standAnim).SetupBoundingRect();
-            new Hoverable(microActor2);
-
-            var sceneRenderBox = gameScene.AddActor("SceneRenderBox", new Vector2(50, 350));
-            new BoundingRect(sceneRenderBox, new Point(160, 450));
-            new Canvas(sceneRenderBox);
-            new Hoverable(sceneRenderBox);
-            new SceneRenderer(sceneRenderBox, innerScene, () => { return true; });
-            innerScene.camera.Zoom = 1.5f;
-
-            var ninepatchActor = gameScene.AddActor("Ninepatch", new Vector2(400, 400));
-            new BoundingRect(ninepatchActor, new Point(400, 300));
-            new NinepatchRenderer(ninepatchActor, testNinepatch);
-            new Hoverable(ninepatchActor);
-            new Clickable(ninepatchActor);
-            new CallbackOnClick(ninepatchActor, MouseButton.Left, () => { ninepatchActor.Visible = !ninepatchActor.Visible; });
-
-            var progressBar = gameScene.AddActor("ProgressBar");
-            progressBar.transform.Position = new Vector2(500, 50);
-            new BoundingRect(progressBar, new Point(500, 24));
-            new ThreepatchRenderer(progressBar, progressBarThreepatch, Orientation.Horizontal);
-
-            var pillar = uiScene.AddActor("Pillar");
-            pillar.transform.Position = new Vector2(900, 350);
-            new BoundingRect(pillar, new Point(32, 500));
-            new ThreepatchRenderer(pillar, pillarThreepatch, Orientation.Vertical);
-            new Hoverable(pillar);
-            new TextRenderer(pillar, consoleFont, "Hello from the UI Scene!");
-            pillar.transform.Depth = 1f;
-
-            var mouse = gameScene.AddActor("gameCursor");
-            new MouseCircle(mouse, 10, Color.BlueViolet);
-
-            var uiMouse = uiScene.AddActor("gameCursor");
-            new MouseCircle(uiMouse, 20, Color.CadetBlue);
-
-            var scrollbarActor = gameScene.AddActor("Scrollbar");
-            new BoundingRect(scrollbarActor, new Point(20, 20));
-            new Hoverable(scrollbarActor);
-            var scrollbar = new Scrollbar(scrollbarActor, sceneRenderBox.GetComponent<BoundingRect>(), innerScene.camera, new MinMax<int>(0, 500), defaultStyle.buttonHover);
-            new NinepatchRenderer(scrollbarActor, defaultStyle.buttonDefault);
-
-            var miniMouse = innerScene.AddActor("miniCursor");
-            new ScrollbarListener(miniMouse, scrollbar);
-            new MouseCircle(miniMouse, 15, Color.LightBlue);
-            new PanAndZoomCamera(miniMouse, Keys.LeftShift);
-
-            {
-                var selectorActor = gameScene.AddActor("selector", new Vector2(100, 0));
-                var selector = new SingleSelector(selectorActor);
-
-                var selectable = gameScene.AddActor("selectable", new Vector2(80, 50));
-                new BoundingRect(selectable, new Point(50, 50));
-                new Hoverable(selectable);
-                new Clickable(selectable);
-                selector.BuildSelectable(selectable);
-
-                var selectable2 = gameScene.AddActor("selectable2", new Vector2(130, 50));
-                new BoundingRect(selectable2, new Point(50, 50));
-                new Hoverable(selectable2);
-                new Clickable(selectable2);
-                selector.BuildSelectable(selectable2);
-
-                var selectable3 = gameScene.AddActor("selectable3", new Vector2(180, 50));
-                new BoundingRect(selectable3, new Point(50, 50));
-                new Hoverable(selectable3);
-                new Clickable(selectable3);
-                selector.BuildSelectable(selectable3);
-            }
-
 
 
             var uiBuilder = new UIBuilder(defaultStyle);
 
             // Button layout example
             {
-                var layout = gameScene.AddActor("Layout", new Vector2(100, 10));
+                var layout = gameScene.AddActor("Layout", new Vector2(300, 300));
                 new BoundingRect(layout, 256, 500);
                 var uiGroup = new LayoutGroup(layout, Orientation.Vertical);
                 uiGroup.PaddingBetweenElements = 5;
