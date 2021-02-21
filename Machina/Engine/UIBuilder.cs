@@ -17,7 +17,7 @@ namespace Machina.Engine
             this.style = style;
         }
 
-        public Actor BuildButton(LayoutGroup group, string buttonLabelText, int height = 48)
+        public Actor BuildButton(LayoutGroup group, string buttonLabelText, Action onPressCallback, int height = 48)
         {
             var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
@@ -25,6 +25,7 @@ namespace Machina.Engine
             new NinepatchRenderer(buttonActor, style.buttonDefault);
             new Hoverable(buttonActor);
             new Clickable(buttonActor);
+            new CallbackOnClick(buttonActor, onPressCallback);
             new ButtonNinepatchHandler(buttonActor, style.buttonHover, style.buttonPress);
             new LayoutElement(buttonActor).StretchHorizontally();
             new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
@@ -65,9 +66,10 @@ namespace Machina.Engine
             return spacerActor;
         }
 
-        public void BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)
+        public CheckboxState BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)
         {
-            BuildCheckboxOrRadioButton(uiGroup, labelText, startChecked, true);
+            var actor = BuildCheckboxOrRadioButton(uiGroup, labelText, startChecked, true);
+            return actor.GetComponent<CheckboxState>();
         }
 
         public void BuildRadioButton(LayoutGroup uiGroup, string labelText, bool startFilled = false)
@@ -75,7 +77,7 @@ namespace Machina.Engine
             BuildCheckboxOrRadioButton(uiGroup, labelText, startFilled, false);
         }
 
-        private void BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool startChecked, bool isCheckbox)
+        private Actor BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool startChecked, bool isCheckbox)
         {
             var scene = uiGroup.actor.scene;
 
@@ -122,18 +124,20 @@ namespace Machina.Engine
             checkboxBox.transform.LocalDepth = new Depth(-1);
             checkboxContainer.transform.LocalDepth = new Depth(-1);
             checkboxLabel.transform.LocalDepth = new Depth(-1);
+
+            return checkboxContainer;
         }
 
-        public Actor BuildSlider(LayoutGroup uiGroup)
+        public Slider BuildSlider(LayoutGroup uiGroup)
         {
             var sliderActor = uiGroup.actor.transform.AddActorAsChild("Slider");
             new BoundingRect(sliderActor, new Point(0, 24));
             new LayoutElement(sliderActor).StretchHorizontally();
             new Hoverable(sliderActor);
-            new Slider(sliderActor, style.sliderSheet, style.uiSpriteSheet, style.sliderThumbFrames);
+            var slider = new Slider(sliderActor, style.sliderSheet, style.uiSpriteSheet, style.sliderThumbFrames);
             sliderActor.transform.LocalDepth = -1;
 
-            return sliderActor;
+            return slider;
         }
 
         public Actor BuildLabel(LayoutGroup group, string textLabel)
@@ -151,7 +155,7 @@ namespace Machina.Engine
             return labelActor;
         }
 
-        public void BuildDropdownMenu(LayoutGroup group, params DropdownContent.DropdownItem[] items)
+        public DropdownTrigger BuildDropdownMenu(LayoutGroup group, params DropdownContent.DropdownItem[] items)
         {
             var actor = group.actor;
             var dropdown = actor.transform.AddActorAsChild("Dropdown");
@@ -172,10 +176,10 @@ namespace Machina.Engine
             }
 
             new BoundedTextRenderer(dropdown, "", style.uiElementFont);
-            new DropdownTrigger(dropdown, content, style.uiSpriteSheet, style.dropdownFrames, style.buttonDefault);
+            return new DropdownTrigger(dropdown, content, style.uiSpriteSheet, style.dropdownFrames, style.buttonDefault);
         }
 
-        public Actor BuildTextField(LayoutGroup uiGroup)
+        public EditableText BuildTextField(LayoutGroup uiGroup)
         {
             var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
             textInput.transform.LocalDepth = new Depth(-1);
@@ -190,9 +194,7 @@ namespace Machina.Engine
             new BoundingRect(text, new Point(32, 32));
             new LayoutElement(text).StretchHorizontally().StretchVertically();
             new BoundedTextRenderer(text, "", style.uiElementFont, Color.Black);
-            new EditableText(text, clickable);
-
-            return textInput;
+            return new EditableText(text, clickable);
         }
     }
 

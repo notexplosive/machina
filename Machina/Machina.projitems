@@ -18,6 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\RadioButtonState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Slider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Depth.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\GameSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UIState.cs" />
     <Compile Include="..\Machina\Components\EditableText.cs" />
     <Compile Include="..\Machina\Components\CheckboxState.cs" />
     <Compile Include="..\Machina\Data\Image.cs" />

@@ -64,6 +64,7 @@ namespace Machina.Engine
             Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
             Graphics = new GraphicsDeviceManager(this);
+            Graphics.HardwareModeSwitch = false;
             gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);

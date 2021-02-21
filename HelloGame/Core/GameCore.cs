@@ -13,8 +13,9 @@ namespace HelloGame
     {
         private Scene gameScene;
         private Scene uiScene;
+        private GameSettings settings;
 
-        public GameCore() : base(new Point(1600, 900), ResizeBehavior.MaintainDesiredResolution)
+        public GameCore() : base(new Point(1600, 900), ResizeBehavior.FillContent)
         {
             IsMouseVisible = true;
         }
@@ -59,15 +60,6 @@ namespace HelloGame
             var cameraScroller = gameScene.AddActor("CameraScroller");
             new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
 
-            var boundedTextActor = gameScene.AddActor("Text Renderer Actor", new Vector2(100, 500));
-            new BoundingRect(boundedTextActor, new Point(128, 256)).SetOffsetToCenter();
-            new BoundedTextRenderer(boundedTextActor, "Despite all known laws of aviation, the bee should not be able to fly\n\nThe bee of course, flies anyway. Because this is a very long string", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
-
-            var boundedTextActor2 = gameScene.AddActor("Text Renderer Actor", new Vector2(228, 500));
-            new BoundingRect(boundedTextActor2, new Point(128, 256)).SetOffsetToCenter();
-            new BoundedTextRenderer(boundedTextActor2, "Other string that\nhas line breaks", defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Right, VerticalAlignment.Top);
-
-
             var uiBuilder = new UIBuilder(defaultStyle);
 
 
@@ -80,49 +72,14 @@ namespace HelloGame
                 uiGroup.SetMargin(15);
                 new NinepatchRenderer(layout, defaultStyle.windowSheet, NinepatchSheet.GenerationDirection.Outer);
 
-                uiBuilder.BuildButton(uiGroup, "Click me!", 32);
-                uiBuilder.BuildCheckbox(uiGroup, "Check me out!", true);
-                uiBuilder.BuildCheckbox(uiGroup, "Check me out!");
-
-                var radioLayout = gameScene.AddActor("Inner Layout");
-                new BoundingRect(radioLayout, new Point(32, 140));
-                var innerGroup = new LayoutGroup(radioLayout, Orientation.Vertical);
-                innerGroup.PaddingBetweenElements = 5;
-                innerGroup.SetMargin(0);
-                var innerGroupElement = new LayoutElement(radioLayout)
-                    .StretchHorizontally();
-                radioLayout.transform.SetParent(layout);
-                uiBuilder.BuildLabel(innerGroup, "Section title:");
-                uiBuilder.BuildRadioButton(innerGroup, "Choose me!");
-                uiBuilder.BuildRadioButton(innerGroup, "Or me!", true);
-                uiBuilder.BuildRadioButton(innerGroup, "What about me!");
-
-                uiBuilder.BuildDropdownMenu(uiGroup,
-                    new DropdownContent.DropdownItem("First"),
-                    new DropdownContent.DropdownItem("Second but it's super loooong"),
-                    new DropdownContent.DropdownItem("Third"));
-
-                uiBuilder.BuildDropdownMenu(uiGroup,
-                    new DropdownContent.DropdownItem("Other First"),
-                    new DropdownContent.DropdownItem("Other Second"),
-                    new DropdownContent.DropdownItem("Third?!?!!"));
-
-                uiBuilder.BuildTextField(uiGroup);
-
-                uiBuilder.BuildSlider(uiGroup);
-            }
-
-            // Horizontal layout example
-            {
-                var horizontalLayout = gameScene.AddActor("Layout", new Vector2(800, 200));
-                new BoundingRect(horizontalLayout, 256, 128);
-                var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Horizontal);
-                uiGroup.PaddingBetweenElements = 5;
-                uiGroup.SetMargin(15);
-
-                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
-                uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
-                uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
+                uiBuilder.BuildLabel(uiGroup, "Graphics Settings");
+                settings.fullscreenState = uiBuilder.BuildCheckbox(uiGroup, "Fullscreen", false);
+                uiBuilder.BuildLabel(uiGroup, "Music Volume");
+                settings.musicVolumeState = uiBuilder.BuildSlider(uiGroup);
+                uiBuilder.BuildLabel(uiGroup, "Sound Volume");
+                settings.soundVolumeState = uiBuilder.BuildSlider(uiGroup);
+                uiBuilder.BuildSpacer(uiGroup, Point.Zero, true, true);
+                uiBuilder.BuildButton(uiGroup, "Apply", () => { settings.Apply(); });
             }
         }
 
@@ -130,17 +87,6 @@ namespace HelloGame
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            if (/*Keyboard.GetState().IsKeyDown(Keys.F4)*/ false)
-            {
-                if (!Graphics.IsFullScreen)
-                {
-                    Graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-                    Graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-                    Graphics.IsFullScreen = true;
-                    Graphics.ApplyChanges();
-                }
-            }
 
             base.Update(gameTime);
         }

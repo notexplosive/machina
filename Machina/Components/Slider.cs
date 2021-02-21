@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Slider : BaseComponent
+    class Slider : BaseComponent, UIState<int>
     {
         private readonly BoundingRect boundingRect;
         private readonly Hoverable hoverable;
@@ -95,6 +95,11 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.FillRectangle(ThumbRect, Color.Red, (transform.Depth - 5).AsFloat);
+        }
+
+        public int GetState()
+        {
+            return (int) (Percent * this.numberOfIncrements);
         }
     }
 }

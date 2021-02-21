@@ -1,11 +1,12 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Machina.Components
 {
-    class CheckboxState : BaseComponent, ICheckboxStateProvider
+    class CheckboxState : BaseComponent, ICheckboxStateProvider, UIState<bool>
     {
         private readonly Clickable clickable;
         public bool IsChecked
@@ -34,6 +35,11 @@ namespace Machina.Components
         }
 
         public bool GetIsChecked()
+        {
+            return IsChecked;
+        }
+
+        public bool GetState()
         {
             return IsChecked;
         }

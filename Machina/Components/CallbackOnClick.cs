@@ -11,7 +11,7 @@ namespace Machina.Components
         private readonly MouseButton button;
         private readonly Clickable clickable;
 
-        public CallbackOnClick(Actor actor, MouseButton button, Action callback) : base(actor)
+        public CallbackOnClick(Actor actor, Action callback, MouseButton button = MouseButton.Left) : base(actor)
         {
             this.callback = callback;
             this.button = button;
