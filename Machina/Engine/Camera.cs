@@ -18,6 +18,8 @@ namespace Machina.Engine
             {
                 this.resizer = resizer;
             }
+
+            ZoomTarget = () => { return this.ViewportCenter; };
         }
 
         public Vector2 Position
@@ -54,7 +56,7 @@ namespace Machina.Engine
         }
 
         public Vector2 CanvasTopLeft => resizer != null ? resizer.CanvasRect.Location.ToVector2() : Vector2.Zero;
-
+        public Func<Vector2> ZoomTarget;
         public Vector2 ViewportCenter
         {
             get
@@ -82,9 +84,9 @@ namespace Machina.Engine
         /// </summary>
         public Matrix GraphicsTransformMatrix =>
             Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
-            * Matrix.CreateTranslation(new Vector3(-ViewportCenter, 0))
+            * Matrix.CreateTranslation(new Vector3(-ZoomTarget(), 0))
             * RotationAndZoomMatrix
-            * Matrix.CreateTranslation(new Vector3(ViewportCenter, 0))
+            * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0))
             ;
 
         public float NativeScaleFactor

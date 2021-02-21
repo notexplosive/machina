@@ -13,6 +13,7 @@ namespace Machina.Engine
         public readonly Scene debugScene;
         public readonly IFrameStep frameStep;
         private readonly List<Scene> sceneList = new List<Scene>();
+
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
@@ -23,7 +24,7 @@ namespace Machina.Engine
             this.frameStep = frameStep;
         }
 
-        internal Scene AddNewScene(GameCanvas canvas)
+        public Scene AddNewScene(GameCanvas canvas)
         {
             var scene = new Scene(canvas, this.frameStep);
             Add(scene);

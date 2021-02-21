@@ -21,7 +21,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var font = MachinaGame.Assets.DefaultSmallFont;
+            var font = MachinaGame.Assets.MachinaDefaultSmall;
             var boxHeight = font.LineSpacing;
             var lineNumber = 0;
 
@@ -31,7 +31,7 @@ namespace Machina.Components
                 lineNumber++;
             }
 
-            foreach (var scene in sceneLayers.AllScenes())
+            foreach (var scene in sceneLayers.AllScenesExceptDebug())
             {
                 DrawString("Scene", 0);
                 foreach (var targetActor in scene.GetRootLevelActors())

@@ -49,11 +49,6 @@ namespace Machina.Engine
             }
         }
 
-        public bool PendingResize
-        {
-            get;
-            private set;
-        }
         public Point WindowSize
         {
             get;
@@ -72,13 +67,7 @@ namespace Machina.Engine
 
         public void OnResize(int windowWidth, int windowHeight)
         {
-            PendingResize = true;
             WindowSize = new Point(windowWidth, windowHeight);
-        }
-
-        public void FinishResize()
-        {
-            this.PendingResize = false;
         }
 
         public void BuildCanvas(GraphicsDevice graphicsDevice)
@@ -129,7 +118,7 @@ namespace Machina.Engine
             {
                 graphicsDevice.SetRenderTarget(null);
 
-                spriteBatch.Begin();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null);
                 spriteBatch.Draw(screenRenderTarget,
                     canvasRect,
                     null, Color.White);

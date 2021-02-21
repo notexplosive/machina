@@ -61,7 +61,6 @@ namespace Machina.Engine
             frameStep = new EmptyFrameStep();
 #endif
 
-            Assets = new AssetLibrary(this);
             Content.RootDirectory = "Content";
             Graphics = new GraphicsDeviceManager(this);
             Graphics.HardwareModeSwitch = false;
@@ -69,15 +68,22 @@ namespace Machina.Engine
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
+            Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(new Scene(gameCanvas), frameStep);
+        }
+
+        protected void SetWindowSize(Point windowSize)
+        {
+            MachinaGame.Print("Screen size changed to", windowSize);
+            Graphics.PreferredBackBufferWidth = windowSize.X;
+            Graphics.PreferredBackBufferHeight = windowSize.Y;
+            Graphics.ApplyChanges();
+            gameCanvas.OnResize(windowSize.X, windowSize.Y);
         }
 
         protected override void Initialize()
         {
-            Graphics.PreferredBackBufferWidth = startingWindowSize.X;
-            Graphics.PreferredBackBufferHeight = startingWindowSize.Y;
-            Graphics.ApplyChanges();
-            gameCanvas.OnResize(startingWindowSize.X, startingWindowSize.Y);
+            SetWindowSize(startingWindowSize);
             gameCanvas.BuildCanvas(GraphicsDevice);
 
             base.Initialize();
@@ -88,7 +94,7 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var consoleFont = Assets.DefaultFont;
+            var consoleFont = Assets.MachinaDefaultSmall;
             var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
@@ -219,14 +225,6 @@ namespace Machina.Engine
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             sceneLayers.Update(dt, Matrix.Identity, InputState.Raw);
-
-            if (gameCanvas.PendingResize)
-            {
-                Graphics.PreferredBackBufferWidth = gameCanvas.WindowSize.X;
-                Graphics.PreferredBackBufferHeight = gameCanvas.WindowSize.Y;
-                Graphics.ApplyChanges();
-                gameCanvas.FinishResize();
-            }
 
             base.Update(gameTime);
         }

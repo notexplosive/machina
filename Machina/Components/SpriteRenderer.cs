@@ -15,8 +15,12 @@ namespace Machina.Components
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private int framesPerSecond = 15;
-        private float scale = 3f;
+        private float scale = 1f;
         public Color color;
+        public bool IsPaused
+        {
+            get; set;
+        }
         public bool FlipX
         {
             get; set;
@@ -60,15 +64,17 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            IncrementTime(dt);
+            if (!IsPaused)
+            {
+                IncrementTime(dt);
+            }
         }
 
-        public int CurrentFrame
+        public int CurrentFrame => this.currentAnimation.GetFrame(elapsedTime);
+
+        public void SetFrame(int frame)
         {
-            get
-            {
-                return this.currentAnimation.GetFrame(elapsedTime);
-            }
+            this.elapsedTime = frame;
         }
 
         public SpriteRenderer SetAnimation(IFrameAnimation animation)
