@@ -17,6 +17,9 @@ namespace Machina.Components
             this.clickable = RequireComponent<Clickable>();
             this.clickable.onClick += OnClick;
             this.selector = selector;
+
+            onSelect += () => { };
+            onDeselect += () => { };
         }
 
         public override void OnDelete()
