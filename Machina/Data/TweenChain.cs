@@ -88,8 +88,11 @@ namespace Machina.Data
 
         public void StartNextTween()
         {
-            this.currentItem = this.chainInernal[this.currentIndex].StartTween();
-            this.currentIndex++;
+            if (this.chainInernal.Count > 0)
+            {
+                this.currentItem = this.chainInernal[this.currentIndex].StartTween();
+                this.currentIndex++;
+            }
         }
 
         public void Update(float dt)
