@@ -13,6 +13,7 @@ namespace Machina.Engine
         public readonly Camera camera;
         public readonly IFrameStep frameStep = new EmptyFrameStep();
         public readonly HitTester hitTester = new HitTester();
+        public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
 
         public Scene(GameCanvas gameCanvas = null, IFrameStep frameStep = null)
         {
@@ -30,6 +31,12 @@ namespace Machina.Engine
             actor.transform.Angle = angle;
             actor.transform.Depth = new Depth(depthAsInt);
             return actor;
+        }
+
+        public void StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
+        {
+            coroutines.Add(coroutine);
+            coroutine.MoveNext();
         }
 
         public List<Actor> GetRootLevelActors()
@@ -71,6 +78,7 @@ namespace Machina.Engine
 
         public void DeleteActor(Actor actor)
         {
+            actor.transform.SetParent(null);
             DeleteIterable(actor);
         }
 
@@ -79,9 +87,33 @@ namespace Machina.Engine
             GentlyRemoveIterable(actor);
         }
 
+        public override void Update(float dt)
+        {
+            var coroutinesCopy = new List<IEnumerator<ICoroutineAction>>(this.coroutines);
+            foreach (var coroutine in coroutinesCopy)
+            {
+                if (coroutine.Current.IsComplete(dt))
+                {
+                    var hasNext = coroutine.MoveNext();
+                    if (!hasNext || coroutine.Current == null)
+                    {
+                        this.coroutines.Remove(coroutine);
+                    }
+                }
+            }
+            base.Update(dt);
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
+            var blend = new BlendState();
+            blend.ColorBlendFunction = BlendState.NonPremultiplied.ColorBlendFunction;
+            blend.ColorDestinationBlend = BlendState.NonPremultiplied.ColorDestinationBlend;
+            blend.ColorSourceBlend = BlendState.NonPremultiplied.ColorSourceBlend;
+            blend.AlphaSourceBlend = BlendState.NonPremultiplied.AlphaSourceBlend;
+            blend.AlphaDestinationBlend = Blend.DestinationAlpha;
+            blend.AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction;
+            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
 
             base.Draw(spriteBatch);
 

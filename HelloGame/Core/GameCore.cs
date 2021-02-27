@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Machina.ThirdParty;
 using System;
 using Machina.Engine;
+using System.Collections.Generic;
 
 namespace HelloGame
 {
@@ -61,6 +62,31 @@ namespace HelloGame
             new PanAndZoomCamera(cameraScroller, Keys.LeftControl);
 
             var uiBuilder = new UIBuilder(defaultStyle);
+
+            IEnumerator<ICoroutineAction> testCoroutine()
+            {
+                MachinaGame.Print("Waited 0 second");
+                yield return new WaitSeconds(1);
+                MachinaGame.Print("Waited 1 second");
+                yield return new WaitSeconds(1);
+                MachinaGame.Print("Waited 2 seconds");
+                yield return new WaitUntil(() => { return true; });
+                MachinaGame.Print("Instant");
+            }
+
+            IEnumerator<ICoroutineAction> testCoroutine2()
+            {
+                MachinaGame.Print("Waited 0 second");
+                yield return new WaitSeconds(0.25f);
+                MachinaGame.Print("Waited 0.25 second");
+                yield return new WaitSeconds(0.25f);
+                MachinaGame.Print("Waited 0.5 second");
+                yield return new WaitSeconds(0.25f);
+                MachinaGame.Print("Waited 0.75 second");
+            }
+
+            gameScene.StartCoroutine(testCoroutine());
+            gameScene.StartCoroutine(testCoroutine2());
 
 
             // Button layout example
