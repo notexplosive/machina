@@ -26,7 +26,7 @@ namespace Machina.Components
     {
         public readonly Actor actor;
         public Transform transform => actor.transform;
-        public BaseComponent(Actor actor)
+        protected BaseComponent(Actor actor)
         {
             this.actor = actor;
             // THIS IS THE ONE TIME IT'S OKAY TO CALL ADD COMPONENT, ALL OTHER TIMES ARE FORBIDDEN
