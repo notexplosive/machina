@@ -42,7 +42,7 @@ namespace Machina.Components
                 this.isPanning = buttonState == ButtonState.Pressed;
             }
 
-            if (mouseButton == MouseButton.Right)
+            if (mouseButton == MouseButton.Right && this.zoomModifierIsDown)
             {
                 this.isRotating = buttonState == ButtonState.Pressed;
             }
