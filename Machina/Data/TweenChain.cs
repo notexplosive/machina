@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    class TweenChain
+    public class TweenChain
     {
         private readonly List<IChainItem> chainInernal;
         private int currentIndex;
@@ -41,6 +41,12 @@ namespace Machina.Data
         public TweenChain()
         {
             this.chainInernal = new List<IChainItem>();
+            this.currentIndex = 0;
+        }
+
+        public void Clear()
+        {
+            this.chainInernal.Clear();
             this.currentIndex = 0;
         }
 
@@ -80,12 +86,17 @@ namespace Machina.Data
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
+        public void StartNextTween()
+        {
+            this.currentItem = this.chainInernal[this.currentIndex].StartTween();
+            this.currentIndex++;
+        }
+
         public void Update(float dt)
         {
             if (this.currentItem == null && this.chainInernal.Count > this.currentIndex)
             {
-                this.currentItem = this.chainInernal[this.currentIndex].StartTween();
-                this.currentIndex++;
+                StartNextTween();
             }
 
             if (this.currentItem != null)
@@ -99,6 +110,8 @@ namespace Machina.Data
             }
         }
 
+        public bool IsFinished => this.currentIndex == this.chainInernal.Count && this.currentItem == null; // this is clunky af
+
         /// <summary>
         /// Maintains the current chain but puts us back at the beginning
         /// </summary>
@@ -110,6 +123,14 @@ namespace Machina.Data
             {
                 item.Refresh();
             }
+
+            StartNextTween();
+        }
+
+        public void ForceComplete()
+        {
+            this.currentIndex = this.chainInernal.Count;
+            this.currentItem = null;
         }
 
         public interface IChainItem
