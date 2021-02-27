@@ -16,6 +16,9 @@ namespace Machina.Data
         }
         public bool x;
         public bool y;
+
+        public static PointBool False = new PointBool(false, false);
+        public static PointBool True = new PointBool(true, true);
     }
 
     public class Image : IAsset
