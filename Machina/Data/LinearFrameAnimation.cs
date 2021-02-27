@@ -28,7 +28,7 @@ namespace Machina.Data
             return other.firstFrame == this.firstFrame && other.length == this.length && other.loopType == this.loopType;
         }
 
-        public int LastFrame => this.firstFrame + length;
+        public int LastFrame => this.firstFrame + length - 1;
 
         public int Length => this.length;
 

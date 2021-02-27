@@ -77,6 +77,11 @@ namespace Machina.Components
             this.elapsedTime = frame;
         }
 
+        public bool IsAnimationFinished()
+        {
+            return this.elapsedTime > this.currentAnimation.Length;
+        }
+
         public SpriteRenderer SetAnimation(IFrameAnimation animation)
         {
             if (!this.currentAnimation.Equals(animation))

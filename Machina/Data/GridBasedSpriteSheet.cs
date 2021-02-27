@@ -42,7 +42,7 @@ namespace Machina.Data
             this.frameCount = columnCount * rowCount;
         }
 
-        public override void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color tintColor)
+        public override void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color tintColor, bool isCentered = true)
         {
             Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 
@@ -53,7 +53,13 @@ namespace Machina.Data
             var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
             var destRect = new Rectangle(position.ToPoint(), adjustedFrameSize.ToPoint());
 
-            spriteBatch.Draw(this.texture, destRect, sourceRect, tintColor, angle, frameSize.ToVector2() / 2,
+            var offset = Vector2.Zero;
+            if (isCentered)
+            {
+                offset = frameSize.ToVector2() / 2;
+            }
+
+            spriteBatch.Draw(this.texture, destRect, sourceRect, tintColor, angle, offset,
                 (flip.x ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flip.y ? SpriteEffects.FlipVertically : SpriteEffects.None), layerDepth.AsFloat);
 
             // Possibly useful for debugging:
