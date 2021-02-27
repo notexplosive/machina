@@ -85,6 +85,7 @@ namespace Machina.Engine
         {
             SetWindowSize(startingWindowSize);
             gameCanvas.BuildCanvas(GraphicsDevice);
+            this.IsMouseVisible = true;
 
             base.Initialize();
         }
