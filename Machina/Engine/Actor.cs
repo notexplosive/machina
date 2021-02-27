@@ -18,6 +18,11 @@ namespace Machina.Engine
             get; set;
         }
 
+        public bool IsDestroyed
+        {
+            get; private set;
+        }
+
         /// <summary>
         /// Create an actor and add them to the given scene.
         /// </summary>
@@ -61,6 +66,12 @@ namespace Machina.Engine
             }
 
             this.scene.DeleteActor(this);
+            this.IsDestroyed = true;
+        }
+
+        public void Delete()
+        {
+            this.scene.DeleteActor(this);
         }
 
         /// <summary>
@@ -99,16 +110,7 @@ namespace Machina.Engine
 
         public IEnumerable<T> GetComponents<T>() where T : BaseComponent
         {
-            var result = new List<T>();
-            foreach (var component in this.iterables)
-            {
-                if (component is T converted)
-                {
-                    result.Add(converted);
-                }
-            }
-
-            return result;
+            return GetComponentsUnsafe<T>();
         }
 
         public void RemoveComponent<T>() where T : BaseComponent
@@ -137,6 +139,25 @@ namespace Machina.Engine
                 parentName = this.transform.Parent.actor.ToString() + "/";
             }
             return parentName + this.name;
+        }
+
+        /// <summary>
+        /// Same as GetComponents except T can be any type
+        /// </summary>
+        /// <typeparam name="T">Any type the component qualifies under</typeparam>
+        /// <returns></returns>
+        public IEnumerable<T> GetComponentsUnsafe<T>()
+        {
+            var result = new List<T>();
+            foreach (var component in this.iterables)
+            {
+                if (component is T converted)
+                {
+                    result.Add(converted);
+                }
+            }
+
+            return result;
         }
     }
 
