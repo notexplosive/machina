@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class EditableText : BaseComponent
+    public class EditableText : BaseComponent
     {
         private readonly BoundedTextRenderer textRenderer;
         private readonly Clickable clickable;

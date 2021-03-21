@@ -22,7 +22,7 @@ namespace Machina.Components
         Right
     }
 
-    class BoundedTextRenderer : BaseComponent
+    public class BoundedTextRenderer : BaseComponent
     {
         public string Text
         {
