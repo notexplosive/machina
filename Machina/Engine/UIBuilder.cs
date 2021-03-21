@@ -193,7 +193,7 @@ namespace Machina.Engine
             text.transform.LocalDepth = new Depth(-1);
             new BoundingRect(text, new Point(32, 32));
             new LayoutElement(text).StretchHorizontally().StretchVertically();
-            new BoundedTextRenderer(text, "", style.uiElementFont, Color.Black);
+            new BoundedTextRenderer(text, "", style.uiElementFont, Color.Black, overflow: Overflow.Ignore);
             return new EditableText(text, clickable);
         }
     }

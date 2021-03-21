@@ -22,6 +22,12 @@ namespace Machina.Components
         Right
     }
 
+    public enum Overflow
+    {
+        Elide,
+        Ignore
+    }
+
     public class BoundedTextRenderer : BaseComponent
     {
         public string Text
@@ -37,10 +43,16 @@ namespace Machina.Components
         private Color dropShadowColor;
         private bool isDropShadowEnabled;
         private readonly Depth depthOffset;
+        private readonly Overflow overflow;
         private readonly HorizontalAlignment horizontalAlignment;
         private readonly VerticalAlignment verticalAlignment;
 
-        public BoundedTextRenderer(Actor actor, string text, SpriteFont font, Color textColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left, VerticalAlignment verticalAlignment = VerticalAlignment.Top, Depth depthOffset = default) : base(actor)
+        public BoundedTextRenderer(Actor actor, string text, SpriteFont font,
+            Color textColor,
+            HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment verticalAlignment = VerticalAlignment.Top,
+            Overflow overflow = Overflow.Elide,
+            Depth depthOffset = default) : base(actor)
         {
             this.Text = text;
             this.Font = font;
@@ -49,6 +61,7 @@ namespace Machina.Components
             this.horizontalAlignment = horizontalAlignment;
             this.verticalAlignment = verticalAlignment;
             this.depthOffset = depthOffset;
+            this.overflow = overflow;
         }
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White) { }
@@ -61,19 +74,26 @@ namespace Machina.Components
 
             while (!measurer.IsAtEnd())
             {
-                if (measurer.CanAppendNextWord())
+                if (measurer.HasRoomForNextWordOnCurrentLine())
                 {
                     measurer.AppendNextWord();
                 }
                 else
                 {
-                    if (measurer.CanAppendLinebreak())
+                    if (measurer.HasRoomForMoreLines())
                     {
                         measurer.AppendLinebreak();
                     }
                     else
                     {
-                        measurer.Elide();
+                        if (this.overflow == Overflow.Elide)
+                        {
+                            measurer.Elide();
+                        }
+                        else
+                        {
+                            measurer.AppendNextWord();
+                        }
                         break;
                     }
                 }
@@ -213,13 +233,13 @@ namespace Machina.Components
             this.verticalAlignment = verticalAlignment;
         }
 
-        public bool CanAppendNextWord()
+        public bool HasRoomForNextWordOnCurrentLine()
         {
             var word = this.words[currentWordIndex];
-            return CanAppendWord(word);
+            return HasRoomForWordOnCurrentLine(word);
         }
 
-        private bool CanAppendWord(string word)
+        private bool HasRoomForWordOnCurrentLine(string word)
         {
             var widthAfterAppend = this.widthOfCurrentLine + this.font.MeasureString(word).X + spaceWidth;
             return widthAfterAppend < totalAvailableRect.Width;
@@ -271,7 +291,7 @@ namespace Machina.Components
 
         public ICollection<TextLine> Lines => this.textLines;
 
-        public bool CanAppendLinebreak()
+        public bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
             return currentY + this.font.LineSpacing * 2 < this.totalAvailableRect.Height;
@@ -280,7 +300,7 @@ namespace Machina.Components
         public void Elide()
         {
             var ellipses = "...";
-            if (CanAppendWord(ellipses))
+            if (HasRoomForWordOnCurrentLine(ellipses))
             {
                 AppendWord(ellipses);
             }
@@ -288,7 +308,7 @@ namespace Machina.Components
             {
                 if (this.stringBuilder.Length > 0)
                 {
-                    var widthOfLastCharacter = this.font.MeasureString(this.stringBuilder[this.stringBuilder.Length - 1].ToString()).X;
+                    var widthOfLastCharacter = this.font.MeasureString(this.stringBuilder[^1].ToString()).X;
                     this.stringBuilder.Remove(this.stringBuilder.Length - 1, 1);
                     this.widthOfCurrentLine -= widthOfLastCharacter;
                     Elide();
