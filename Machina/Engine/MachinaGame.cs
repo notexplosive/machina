@@ -94,7 +94,7 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
-            gameCanvas.OnResize(windowSize.X, windowSize.Y);
+            gameCanvas.SetWindowSize(windowSize.X, windowSize.Y);
         }
 
         protected override void Initialize()
@@ -265,7 +265,7 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            gameCanvas.OnResize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            gameCanvas.SetWindowSize(Window.ClientBounds.Width, Window.ClientBounds.Height);
         }
 
         protected override void OnExiting(Object sender, EventArgs args)

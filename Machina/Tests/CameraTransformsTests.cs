@@ -34,7 +34,7 @@ namespace Machina.Tests
                 var windowSizeBeforeResize = gameCanvas.WindowSize;
                 var canvasRectBeforeResize = gameCanvas.CanvasRect;
                 var resizeSize = new Point(500, 500);
-                gameCanvas.OnResize(resizeSize.X, resizeSize.Y);
+                gameCanvas.SetWindowSize(resizeSize.X, resizeSize.Y);
 
                 test.Expect(desiredSize, windowSizeBeforeResize, "Window size matches desired size before resize");
                 test.Expect(resizeSize, gameCanvas.WindowSize, "Window size is new size after resize");
@@ -62,7 +62,7 @@ namespace Machina.Tests
                 });
 
                 // Resize to a huge resolution that's a different aspect ratio so we can get a worst-case transform scenario
-                gameCanvas.OnResize(1920, 1080);
+                gameCanvas.SetWindowSize(1920, 1080);
                 sceneLayers.Add(scene);
                 var prevMouseState = new MouseState(200, 200, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 var currentMouseState = new MouseState(220, 250, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);

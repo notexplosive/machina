@@ -29,7 +29,7 @@ namespace Machina.Engine
             {
                 resizeStrategy = new MaintainDesiredResolutionStrategy();
             }
-            OnResize(idealWidth, idealHeight);
+            SetWindowSize(idealWidth, idealHeight);
         }
 
         public Rectangle CanvasRect
@@ -65,7 +65,7 @@ namespace Machina.Engine
 
         public Point WorldSize => this.idealSize;
 
-        public void OnResize(int windowWidth, int windowHeight)
+        public void SetWindowSize(int windowWidth, int windowHeight)
         {
             WindowSize = new Point(windowWidth, windowHeight);
         }
