@@ -87,7 +87,7 @@ namespace Machina.Engine
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
             Assets = new AssetLibrary(this);
-            this.sceneLayers = new SceneLayers(new Scene(gameCanvas), frameStep);
+            this.sceneLayers = new SceneLayers(new Scene(gameCanvas), gameCanvas, frameStep);
             Window.TextInput += this.sceneLayers.OnTextInput;
         }
 

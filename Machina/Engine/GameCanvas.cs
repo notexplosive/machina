@@ -12,7 +12,25 @@ namespace Machina.Engine
         FillContent
     }
 
-    public class GameCanvas
+    public interface IGameCanvas
+    {
+        public Point ViewportSize
+        {
+            get;
+        }
+
+        public float ScaleFactor
+        {
+            get;
+        }
+
+        public Rectangle CanvasRect
+        {
+            get;
+        }
+    }
+
+    public class GameCanvas : IGameCanvas
     {
         private RenderTarget2D screenRenderTarget;
         private readonly IResizeStrategy resizeStrategy;

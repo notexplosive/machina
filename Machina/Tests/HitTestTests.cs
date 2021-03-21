@@ -15,7 +15,7 @@ namespace Machina.Tests
         {
             AddTest(new Test("Test Hoverables in a single scene", test =>
             {
-                var sceneLayers = new SceneLayers(null, new EmptyFrameStep());
+                var sceneLayers = new SceneLayers(null, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
                 var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
                 sceneLayers.Add(scene);
                 var mousePoint = new Point(200, 200);
@@ -39,7 +39,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Test Hoverables across multiple scenes", test =>
             {
-                var sceneLayers = new SceneLayers(null, new EmptyFrameStep());
+                var sceneLayers = new SceneLayers(null, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
                 var lowerScene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
                 var upperScene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
                 sceneLayers.Add(lowerScene);

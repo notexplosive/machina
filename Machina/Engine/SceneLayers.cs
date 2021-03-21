@@ -12,27 +12,29 @@ namespace Machina.Engine
     {
         public readonly Scene debugScene;
         public readonly IFrameStep frameStep;
+        private readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
 
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
-        private Nullable<TextInputEventArgs> pendingInput;
+        private TextInputEventArgs? pendingInput;
 
         public void OnTextInput(object sender, TextInputEventArgs e)
         {
             this.pendingInput = e;
         }
 
-        public SceneLayers(Scene debugScene, IFrameStep frameStep)
+        public SceneLayers(Scene debugScene, IGameCanvas gameCanvas, IFrameStep frameStep)
         {
             this.debugScene = debugScene;
             this.frameStep = frameStep;
+            this.gameCanvas = gameCanvas;
         }
 
-        public Scene AddNewScene(GameCanvas canvas)
+        public Scene AddNewScene()
         {
-            var scene = new Scene(canvas, this.frameStep);
+            var scene = new Scene(this.gameCanvas, this.frameStep);
             Add(scene);
             return scene;
         }

@@ -8,11 +8,12 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SceneRenderer : BaseComponent
+    class SceneRenderer : BaseComponent, IGameCanvas
     {
         private readonly Canvas canvas;
+        private readonly BoundingRect boundingRect;
         private readonly Hoverable hoverable;
-        private readonly SceneLayers sceneLayers = new SceneLayers(null, new EmptyFrameStep());
+        private readonly SceneLayers sceneLayers;
         private readonly Func<bool> shouldAllowKeyboardEvents;
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         public Func<bool> bypassHoverConstraint;
@@ -20,8 +21,10 @@ namespace Machina.Components
         public SceneRenderer(Actor actor, Scene targetScene, Func<bool> shouldAllowKeyboardEvents) : base(actor)
         {
             this.canvas = RequireComponent<Canvas>();
-            this.canvas.DrawAdditionalContent += DrawInnerScene;
+            this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
+            this.sceneLayers = new SceneLayers(null, this, new EmptyFrameStep());
+            this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.hoverable.OnHoverEnd += ClearHitTesters;
 
             this.sceneLayers.Add(targetScene);
@@ -71,5 +74,11 @@ namespace Machina.Components
         }
 
         public SceneLayers SceneLayers => this.sceneLayers;
+
+        public Point ViewportSize => this.boundingRect.Rect.Size;
+
+        public float ScaleFactor => 1;
+
+        public Rectangle CanvasRect => this.boundingRect.Rect;
     }
 }

@@ -8,9 +8,9 @@ namespace Machina.Engine
     // Initial implementation of this camera comes from https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/
     public class Camera
     {
-        private GameCanvas gameCanvas;
+        private readonly IGameCanvas gameCanvas;
 
-        public Camera(GameCanvas gameCanvas)
+        public Camera(IGameCanvas gameCanvas)
         {
             Zoom = 1.0f;
             this.gameCanvas = gameCanvas;

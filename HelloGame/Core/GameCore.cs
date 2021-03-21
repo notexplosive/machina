@@ -28,8 +28,8 @@ namespace HelloGame
 
         protected override void OnGameLoad()
         {
-            gameScene = sceneLayers.AddNewScene(this.gameCanvas);
-            uiScene = sceneLayers.AddNewScene(this.gameCanvas);
+            gameScene = sceneLayers.AddNewScene();
+            uiScene = sceneLayers.AddNewScene();
 
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));
