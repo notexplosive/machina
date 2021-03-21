@@ -187,7 +187,7 @@ namespace Machina.Engine
 
                 var view = content.transform.AddActorAsChild("View");
                 view.transform.LocalDepth = new Depth(-1);
-                var sceneGraphContent = new Scene();
+                var sceneGraphContent = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
                 new BoundingRect(view, Point.Zero).SetOffsetToTopLeft();
                 new LayoutElement(view).StretchHorizontally().StretchVertically();
                 new Canvas(view);

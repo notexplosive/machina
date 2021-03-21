@@ -85,7 +85,7 @@ namespace Machina.Tests
 
             AddTest("Complex Horizontal Layout using UIBuilder", test =>
             {
-                var scene = new Scene();
+                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
                 var uiBuilder = new UIBuilder(UIStyle.Empty);
                 var horizontalLayout = scene.AddActor("Layout");
                 new BoundingRect(horizontalLayout, 256, 128);

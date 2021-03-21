@@ -8,18 +8,13 @@ namespace Machina.Engine
     // Initial implementation of this camera comes from https://roguesharp.wordpress.com/2014/07/13/tutorial-5-creating-a-2d-camera-with-pan-and-zoom-in-monogame/
     public class Camera
     {
-        private GameCanvas resizer;
+        private GameCanvas gameCanvas;
 
-        public Camera(GameCanvas resizer = null)
+        public Camera(GameCanvas gameCanvas)
         {
             Zoom = 1.0f;
-
-            if (resizer != null)
-            {
-                this.resizer = resizer;
-            }
-
-            ZoomTarget = () => { return this.ViewportCenter; };
+            this.gameCanvas = gameCanvas;
+            ZoomTarget = () => { return ViewportCenter; };
         }
 
         public Vector2 Position
@@ -48,14 +43,14 @@ namespace Machina.Engine
 
         public int ViewportWidth
         {
-            get => resizer != null ? resizer.ViewportSize.X : 0;
+            get => gameCanvas.ViewportSize.X;
         }
         public int ViewportHeight
         {
-            get => resizer != null ? resizer.ViewportSize.Y : 0;
+            get => gameCanvas.ViewportSize.Y;
         }
 
-        public Vector2 CanvasTopLeft => resizer != null ? resizer.CanvasRect.Location.ToVector2() : Vector2.Zero;
+        public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();
         public Func<Vector2> ZoomTarget;
         public Vector2 ViewportCenter
         {
@@ -91,7 +86,7 @@ namespace Machina.Engine
 
         public float NativeScaleFactor
         {
-            get => resizer != null ? resizer.ScaleFactor : 1.0f;
+            get => gameCanvas.ScaleFactor;
         }
 
         /// <summary>

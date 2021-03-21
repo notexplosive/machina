@@ -15,7 +15,7 @@ namespace Machina.Engine
         public readonly HitTester hitTester = new HitTester();
         public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
 
-        public Scene(GameCanvas gameCanvas = null, IFrameStep frameStep = null)
+        public Scene(GameCanvas gameCanvas, IFrameStep frameStep = null)
         {
             this.camera = new Camera(gameCanvas);
             if (frameStep != null)
@@ -116,13 +116,15 @@ namespace Machina.Engine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var blend = new BlendState();
-            blend.ColorBlendFunction = BlendState.NonPremultiplied.ColorBlendFunction;
-            blend.ColorDestinationBlend = BlendState.NonPremultiplied.ColorDestinationBlend;
-            blend.ColorSourceBlend = BlendState.NonPremultiplied.ColorSourceBlend;
-            blend.AlphaSourceBlend = BlendState.NonPremultiplied.AlphaSourceBlend;
-            blend.AlphaDestinationBlend = Blend.DestinationAlpha;
-            blend.AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction;
+            var blend = new BlendState
+            {
+                ColorBlendFunction = BlendState.NonPremultiplied.ColorBlendFunction,
+                ColorDestinationBlend = BlendState.NonPremultiplied.ColorDestinationBlend,
+                ColorSourceBlend = BlendState.NonPremultiplied.ColorSourceBlend,
+                AlphaSourceBlend = BlendState.NonPremultiplied.AlphaSourceBlend,
+                AlphaDestinationBlend = Blend.DestinationAlpha,
+                AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction
+            };
             spriteBatch.Begin(SpriteSortMode.BackToFront, blend, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
 
             base.Draw(spriteBatch);
