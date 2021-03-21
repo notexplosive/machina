@@ -53,9 +53,11 @@ namespace Machina.Components
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White) { }
 
-        public override void Draw(SpriteBatch spriteBatch)
+
+
+        private TextMeasurer CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(this.Text, this.Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment);
+            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment);
 
             while (!measurer.IsAtEnd())
             {
@@ -82,6 +84,19 @@ namespace Machina.Components
                 measurer.AddNextTextLine();
             }
 
+            return measurer;
+        }
+
+        public Point TextLocalPos
+        {
+            get
+            {
+                return GetTextLocalPos(CreateMeasuredText());
+            }
+        }
+
+        public Point GetTextLocalPos(TextMeasurer measurer)
+        {
             var yOffset = 0;
             if (verticalAlignment == VerticalAlignment.Center)
             {
@@ -92,9 +107,25 @@ namespace Machina.Components
                 yOffset = this.boundingRect.Height - Font.LineSpacing * measurer.Lines.Count;
             }
 
+            var xOffset = 0;
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.positionX, line.positionY + yOffset);
+                xOffset = line.positionX - (int) transform.Position.X;
+                break;
+            }
+
+            return new Point(xOffset, yOffset);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            var measurer = CreateMeasuredText();
+
+            var offset = GetTextLocalPos(measurer);
+
+            foreach (var line in measurer.Lines)
+            {
+                var pos = new Vector2(line.positionX, line.positionY + offset.Y);
                 var depth = transform.Depth + this.depthOffset;
 
                 spriteBatch.DrawString(this.Font, line.textContent, pos, this.TextColor, 0, Vector2.Zero, 1f, SpriteEffects.None, depth);
@@ -113,7 +144,7 @@ namespace Machina.Components
         }
     }
 
-    struct TextLine
+    public struct TextLine
     {
         public string textContent;
         public readonly int positionY;
@@ -141,7 +172,7 @@ namespace Machina.Components
         }
     }
 
-    struct TextMeasurer
+    public struct TextMeasurer
     {
         private float widthOfCurrentLine;
         private int currentWordIndex;

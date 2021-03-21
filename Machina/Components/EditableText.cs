@@ -32,6 +32,8 @@ namespace Machina.Components
         {
             if (this.isInFocus)
             {
+                var topLeft = transform.Position.ToPoint() + this.textRenderer.TextLocalPos;
+
                 if (Text.Length != 0)
                 {
                     var cursorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
@@ -39,17 +41,17 @@ namespace Machina.Components
                     var lineHeight = (int) (textRenderer.Font.LineSpacing * 0.9f);
 
                     // Caret
-                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
+                    spriteBatch.FillRectangle(new Rectangle(topLeft +
                         cursorLocalPos,
                         new Point(1, lineHeight)), Color.Black, transform.Depth - 1);
 
                     // Highlight
-                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), Color.CornflowerBlue, transform.Depth + 1);
+                    spriteBatch.FillRectangle(new Rectangle(topLeft + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), Color.CornflowerBlue, transform.Depth + 1);
                 }
                 else
                 {
                     // fallback case, probably not needed
-                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
+                    spriteBatch.FillRectangle(new Rectangle(topLeft +
                         new Point(0, 0),
                         new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), Color.Black, transform.Depth - 1);
                 }
