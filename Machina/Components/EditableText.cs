@@ -15,17 +15,27 @@ namespace Machina.Components
         private readonly Clickable clickable;
         private bool isInFocus;
         private TextCursor cursor;
+        private Color cursorColor = Color.White;
+        private Color highlightColor = Color.CornflowerBlue;
+
         public string Text
         {
             get => this.textRenderer.Text;
             set => this.textRenderer.Text = value;
         }
 
-        public EditableText(Actor actor, Clickable clickable) : base(actor)
+        public EditableText(Actor actor, Clickable clickable, Color cursorColor, Color highlightColor) : base(actor)
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.clickable = clickable;
             this.clickable.onClick += OnClick;
+            this.cursorColor = cursorColor;
+            this.highlightColor = highlightColor;
+        }
+
+        public EditableText(Actor actor, Clickable clickable) : this(actor, clickable, Color.Black, Color.CornflowerBlue)
+        {
+            // forwards to main ctor
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -43,17 +53,17 @@ namespace Machina.Components
                     // Caret
                     spriteBatch.FillRectangle(new Rectangle(topLeft +
                         cursorLocalPos,
-                        new Point(1, lineHeight)), Color.Black, transform.Depth - 1);
+                        new Point(1, lineHeight)), this.cursorColor, transform.Depth - 1);
 
                     // Highlight
-                    spriteBatch.FillRectangle(new Rectangle(topLeft + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), Color.CornflowerBlue, transform.Depth + 1);
+                    spriteBatch.FillRectangle(new Rectangle(topLeft + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), this.highlightColor, transform.Depth + 1);
                 }
                 else
                 {
                     // fallback case, probably not needed
                     spriteBatch.FillRectangle(new Rectangle(topLeft +
                         new Point(0, 0),
-                        new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), Color.Black, transform.Depth - 1);
+                        new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor, transform.Depth - 1);
                 }
             }
         }
