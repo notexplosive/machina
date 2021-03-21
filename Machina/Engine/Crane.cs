@@ -73,6 +73,11 @@ namespace Machina.Engine
         /// It will flush the newIterable and deletedIterable buffers.
         /// </summary>
         public void FlushBuffers();
+        /// <summary>
+        /// When a TextInput event is fired
+        /// </summary>
+        /// <param name="textInputEventArgs"></param>
+        void OnTextInput(TextInputEventArgs textInputEventArgs);
     }
 
     /// <summary>
@@ -235,6 +240,15 @@ namespace Machina.Engine
                 iterable.OnKey(key, state, modifiers);
             }
         }
+
+        public virtual void OnTextInput(TextInputEventArgs textInputEventArgs)
+        {
+            foreach (var iterable in iterables)
+            {
+                iterable.OnTextInput(textInputEventArgs);
+            }
+        }
+
         public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             foreach (var iterable in iterables)
@@ -291,6 +305,9 @@ namespace Machina.Engine
         {
         }
         public virtual void OnPostUpdate()
+        {
+        }
+        public virtual void OnTextInput(TextInputEventArgs inputEventArgs)
         {
         }
         public void FlushBuffers()

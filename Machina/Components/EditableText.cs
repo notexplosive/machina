@@ -32,68 +32,113 @@ namespace Machina.Components
         {
             if (this.isInFocus)
             {
-                spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
-                    new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0),
-                    new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), Color.Black, this.transform.Depth.AsFloat);
+                if (Text.Length != 0)
+                {
+                    var cursorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
+                    var anchorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.anchorPos.X)).X, 0);
+                    var lineHeight = (int) (textRenderer.Font.LineSpacing * 0.9f);
+
+                    // Caret
+                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
+                        cursorLocalPos,
+                        new Point(1, lineHeight)), Color.Black, transform.Depth - 1);
+
+                    // Highlight
+                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), Color.CornflowerBlue, transform.Depth + 1);
+                }
+                else
+                {
+                    // fallback case, probably not needed
+                    spriteBatch.FillRectangle(new Rectangle(transform.Position.ToPoint() +
+                        new Point(0, 0),
+                        new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), Color.Black, transform.Depth - 1);
+                }
             }
         }
 
-        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        public override void OnTextInput(TextInputEventArgs inputEventArgs)
         {
             if (this.isInFocus)
             {
-                if (state == ButtonState.Pressed && !modifiers.control && !modifiers.alt)
+                if (IsPrintable(inputEventArgs.Character))
                 {
-                    if (IsPrintable(key))
+                    Text = Text.Insert(this.cursor.position.X, inputEventArgs.Character.ToString());
+                    this.cursor.position.X++;
+                    this.cursor.ResetAnchor();
+                }
+                else
+                {
+                    var key = inputEventArgs.Key;
+                    if (key == Keys.Back)
                     {
-                        var str = modifiers.shift ? key.ToString() : key.ToString().ToLower();
-                        Text = Text.Insert(this.cursor.position.X, str);
-                        this.cursor.position.X++;
-                    }
-                    else
-                    {
-                        if (key == Keys.Left)
+                        if (this.cursor.HasHighlight)
+                        {
+                            Text = Text.Remove(this.cursor.HighlightStart, this.cursor.HighlightLength);
+                            this.cursor.position.X = this.cursor.HighlightStart;
+                        }
+                        else if (this.cursor.position.X > 0)
                         {
                             this.cursor.position.X--;
-                            if (this.cursor.position.X < 0)
-                            {
-                                this.cursor.position.X = 0;
-                            }
+                            Text = Text.Remove(this.cursor.position.X, 1);
                         }
-                        else if (key == Keys.Right)
+                        this.cursor.ResetAnchor();
+                    }
+                    if (key == Keys.Delete)
+                    {
+                        if (this.cursor.HasHighlight)
                         {
-                            this.cursor.position.X++;
-                            if (this.cursor.position.X > Text.Length)
-                            {
-                                this.cursor.position.X = Text.Length;
-                            }
+                            Text = Text.Remove(this.cursor.HighlightStart, this.cursor.HighlightLength);
+                            this.cursor.position.X = this.cursor.HighlightStart;
                         }
-                        else if (key == Keys.Back)
+                        else if (this.cursor.position.X != Text.Length)
                         {
-                            if (this.cursor.position.X > 0)
-                            {
-                                this.cursor.position.X--;
-                                Text = Text.Remove(this.cursor.position.X, 1);
-                            }
+                            Text = Text.Remove(this.cursor.position.X, 1);
                         }
-                        else if (key == Keys.Space)
-                        {
-                            Text = Text.Insert(this.cursor.position.X, " ");
-                            this.cursor.position.X++;
-                        }
+                        this.cursor.ResetAnchor();
                     }
                 }
             }
         }
 
-        private bool IsPrintable(Keys key)
+        private bool IsPrintable(char character)
         {
-            return ((int) key >= 65 && (int) key <= 90);
+            return !char.IsControl(character);
         }
 
-        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
+            if (this.isInFocus && state == ButtonState.Pressed)
+            {
+                if (key == Keys.Left)
+                {
+                    this.cursor.position.X--;
+                    if (this.cursor.position.X < 0)
+                    {
+                        this.cursor.position.X = 0;
+                    }
+                }
+                else if (key == Keys.Right)
+                {
+                    this.cursor.position.X++;
+                    if (this.cursor.position.X > Text.Length)
+                    {
+                        this.cursor.position.X = Text.Length;
+                    }
+                }
+                else if (key == Keys.Home)
+                {
+                    this.cursor.position.X = 0;
+                }
+                else if (key == Keys.End)
+                {
+                    this.cursor.position.X = Text.Length;
+                }
 
+                if (!modifiers.shift)
+                {
+                    this.cursor.ResetAnchor();
+                }
+            }
         }
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
@@ -103,7 +148,6 @@ namespace Machina.Components
                 if (!this.clickable.IsHovered)
                 {
                     this.isInFocus = false;
-
                 }
                 else
                 {
@@ -114,13 +158,15 @@ namespace Machina.Components
                         int charIndex = 0;
                         foreach (var c in textRenderer.Text)
                         {
-                            totalLength += textRenderer.Font.MeasureString(c.ToString()).X;
-                            charIndex++;
+                            var textWidth = textRenderer.Font.MeasureString(c.ToString()).X;
+                            totalLength += textWidth / 2;
 
                             if (totalLength > currentPosition.X)
                             {
                                 break;
                             }
+                            totalLength += textWidth / 2;
+                            charIndex++;
                         }
                         this.cursor.position.X = charIndex;
                     }
@@ -133,7 +179,6 @@ namespace Machina.Components
             if (button == MouseButton.Left)
             {
                 this.isInFocus = true;
-
             }
         }
 
@@ -145,6 +190,20 @@ namespace Machina.Components
         struct TextCursor
         {
             public Point position;
+            public Point anchorPos;
+
+            public void ResetAnchor()
+            {
+                this.anchorPos = this.position;
+            }
+
+            public bool HasHighlight => this.anchorPos != this.position;
+
+            public int HighlightStart => Math.Min(this.position.X, this.anchorPos.X);
+
+            public int HighlightEnd => Math.Max(this.position.X, this.anchorPos.X);
+
+            public int HighlightLength => HighlightEnd - HighlightStart;
         }
     }
 }

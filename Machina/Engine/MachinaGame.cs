@@ -85,6 +85,7 @@ namespace Machina.Engine
 
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(new Scene(gameCanvas), frameStep);
+            Window.TextInput += this.sceneLayers.OnTextInput;
         }
 
         protected void SetWindowSize(Point windowSize)

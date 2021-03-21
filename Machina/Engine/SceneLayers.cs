@@ -17,6 +17,12 @@ namespace Machina.Engine
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
+        private Nullable<TextInputEventArgs> pendingInput;
+
+        public void OnTextInput(object sender, TextInputEventArgs e)
+        {
+            this.pendingInput = e;
+        }
 
         public SceneLayers(Scene debugScene, IFrameStep frameStep)
         {
@@ -90,6 +96,12 @@ namespace Machina.Engine
 
                 if (allowKeyboardEvents)
                 {
+                    if (this.pendingInput.HasValue)
+                    {
+                        scene.OnTextInput(this.pendingInput.Value);
+                        this.pendingInput = null;
+                    }
+
                     foreach (var key in keyTracker.Released)
                     {
                         scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);

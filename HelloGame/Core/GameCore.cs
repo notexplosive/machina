@@ -109,6 +109,7 @@ namespace HelloGame
                 settings.soundVolumeState = uiBuilder.BuildSlider(uiGroup);
                 uiBuilder.BuildSpacer(uiGroup, Point.Zero, true, true);
                 uiBuilder.BuildButton(uiGroup, "Apply", () => { settings.Apply(); });
+                uiBuilder.BuildTextField(uiGroup);
             }
         }
 
