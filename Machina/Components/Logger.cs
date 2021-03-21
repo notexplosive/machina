@@ -33,7 +33,14 @@ namespace Machina.Components
             var strings = new List<string>();
             foreach (var obj in objects)
             {
-                strings.Add(obj.ToString());
+                if (obj == null)
+                {
+                    strings.Add("null");
+                }
+                else
+                {
+                    strings.Add(obj.ToString());
+                }
             }
 
             var output = string.Join("   ", strings);

@@ -5,20 +5,23 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class DestroyWhenAnimationFinished : BaseComponent
+    class CallbackWhenAnimationFinished : BaseComponent
     {
         private readonly SpriteRenderer spriteRenderer;
+        private readonly Action callback;
 
-        public DestroyWhenAnimationFinished(Actor actor) : base(actor)
+        public CallbackWhenAnimationFinished(Actor actor, Action callback) : base(actor)
         {
             this.spriteRenderer = RequireComponent<SpriteRenderer>();
+            this.callback = callback;
         }
 
         public override void Update(float dt)
         {
             if (this.spriteRenderer.IsAnimationFinished())
             {
-                this.actor.Destroy();
+                // TODO: this will fire every update after animation is done, kind of assumes DestroyWhenAnimationFinished... hmm
+                this.callback?.Invoke();
             }
         }
     }

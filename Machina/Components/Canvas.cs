@@ -30,10 +30,13 @@ namespace Machina.Components
         {
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
             {
-                spriteBatch.Begin();
-                spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
-                spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
-                spriteBatch.End();
+                if (MachinaGame.DebugLevel > DebugLevel.Passive)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
+                    spriteBatch.DrawRectangle(new Rectangle(10, 10, 10, 10), Color.Red, 1, this.actor.transform.Depth.AsFloat);
+                    spriteBatch.End();
+                }
             };
 
             this.boundingRect = RequireComponent<BoundingRect>();

@@ -16,7 +16,7 @@ namespace HelloGame
         private Scene uiScene;
         private GameSettings settings;
 
-        public GameCore() : base(new Point(1600, 900), ResizeBehavior.FillContent)
+        public GameCore() : base(new Point(1600, 900), new Point(1600, 900), ResizeBehavior.FillContent)
         {
             IsMouseVisible = true;
         }
@@ -72,6 +72,7 @@ namespace HelloGame
                 MachinaGame.Print("Waited 2 seconds");
                 yield return new WaitUntil(() => { return true; });
                 MachinaGame.Print("Instant");
+                yield return null;
             }
 
             IEnumerator<ICoroutineAction> testCoroutine2()

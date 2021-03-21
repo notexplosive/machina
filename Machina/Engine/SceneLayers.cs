@@ -36,6 +36,16 @@ namespace Machina.Engine
             this.sceneList.Add(scene);
         }
 
+        public int IndexOf(Scene scene)
+        {
+            return this.sceneList.IndexOf(scene);
+        }
+
+        public void Set(int i, Scene scene)
+        {
+            this.sceneList[i] = scene;
+        }
+
         public Scene[] AllScenes()
         {
             Scene[] array = new Scene[sceneList.Count + (debugScene != null ? 1 : 0)];

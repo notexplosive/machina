@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Machina.Engine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -9,16 +10,15 @@ namespace Machina.Data
     /// <summary>
     /// Specify the start point and length of the animation, animation starts at firstFrame, and ends on firstFrame + length
     /// </summary>
-    struct LinearFrameAnimation : IFrameAnimation
+    public struct LinearFrameAnimation : IFrameAnimation
     {
         public readonly int length;
         public readonly LoopType loopType;
         public readonly int firstFrame;
 
         public LinearFrameAnimation(LinearFrameAnimation copy) : this(copy.firstFrame, copy.length, copy.loopType) { }
-        public LinearFrameAnimation(int firstFrame = 0, int length = 0, LoopType loop = LoopType.Loop)
+        public LinearFrameAnimation(int firstFrame = 0, int length = 1, LoopType loop = LoopType.Loop)
         {
-            Debug.Assert(length >= 0, "Length of an animation cannot be zero");
             this.firstFrame = firstFrame;
             this.length = length;
             this.loopType = loop;
@@ -36,14 +36,14 @@ namespace Machina.Data
 
         public int GetFrame(float elapsedTime)
         {
-            if (length == 0)
+            if (length == 1)
             {
                 return this.firstFrame;
             }
 
             if (this.loopType == LoopType.Loop)
             {
-                float alongDuration = elapsedTime % (length + 1);
+                float alongDuration = elapsedTime % length;
                 return (int) (alongDuration + this.firstFrame);
             }
             else

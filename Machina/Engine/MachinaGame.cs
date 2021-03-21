@@ -23,12 +23,26 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
+        private readonly Point startingResolution;
         private readonly Point startingWindowSize;
         protected readonly SceneLayers sceneLayers;
         protected SpriteBatch spriteBatch;
         public readonly GameCanvas gameCanvas;
         private ILogger logger;
-        public UIStyle defaultStyle;
+        public static UIStyle defaultStyle;
+
+        internal static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
+        {
+            if (rect.Width * rect.Height == 0)
+            {
+                return null;
+            }
+            Texture2D cropTexture = new Texture2D(Current.GraphicsDevice, rect.Width, rect.Height);
+            Color[] data = new Color[rect.Width * rect.Height];
+            sourceTexture.GetData(0, rect, data, 0, data.Length);
+            cropTexture.SetData(data);
+            return cropTexture;
+        }
 
         public static DebugLevel DebugLevel
         {
@@ -48,11 +62,12 @@ namespace Machina.Engine
             get; private set;
         }
 
-        public MachinaGame(Point startingResolution, ResizeBehavior resizeBehavior)
+        public MachinaGame(Point startingResolution, Point windowSize, ResizeBehavior resizeBehavior)
         {
             Current = this;
             this.logger = new StdOutConsoleLogger();
-            this.startingWindowSize = startingResolution;
+            this.startingResolution = startingResolution;
+            this.startingWindowSize = windowSize;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -74,7 +89,7 @@ namespace Machina.Engine
 
         protected void SetWindowSize(Point windowSize)
         {
-            MachinaGame.Print("Screen size changed to", windowSize);
+            Print("Screen size changed to", windowSize);
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
@@ -83,9 +98,10 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
-            SetWindowSize(startingWindowSize);
+            SetWindowSize(startingResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             this.IsMouseVisible = true;
+            SetWindowSize(this.startingWindowSize);
 
             base.Initialize();
         }
@@ -96,7 +112,7 @@ namespace Machina.Engine
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             var consoleFont = Assets.MachinaDefaultSmall;
-            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
+            var debugActor = sceneLayers.debugScene.AddActor("DebugActor", depthAsInt: 100);
             this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
@@ -115,7 +131,7 @@ namespace Machina.Engine
 
             var defaultFont = Assets.GetSpriteFont("DefaultFont");
 
-            this.defaultStyle = new UIStyle(
+            defaultStyle = new UIStyle(
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
@@ -131,6 +147,11 @@ namespace Machina.Engine
                 new LinearFrameAnimation(9, 3),
                 new LinearFrameAnimation(15, 3)
             );
+
+            {
+                var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
+                new FrameRateCounter(framerateCounterActor);
+            }
 
             // Framestep
             {

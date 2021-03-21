@@ -24,6 +24,11 @@ namespace Machina.Components
             get; private set;
         }
 
+        public int GetChildIndex(Transform transform)
+        {
+            return this.iterables.IndexOf(transform.actor);
+        }
+
         public Transform(Actor actor)
         {
             this.actor = actor;
@@ -37,13 +42,13 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawLine(this.Position, this.Position + new Angle(-this.Angle).ToUnitVector() * 15, Color.LawnGreen, 2);
-            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2);
-            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2);
+            spriteBatch.DrawLine(this.Position, this.Position + new Angle(-this.Angle).ToUnitVector() * 15, Color.LawnGreen, 2, Depth);
+            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(15, 0)), Color.Cyan, 2, Depth);
+            spriteBatch.DrawLine(this.Position, this.LocalToWorldPosition(this.LocalPosition + new Vector2(0, -15)), Color.OrangeRed, 2, Depth);
 
             if (this.HasParent)
             {
-                spriteBatch.DrawLine(this.Position, this.Parent.Position, Color.White, 1, 0f);
+                spriteBatch.DrawLine(this.Position, this.Parent.Position, Color.White, 1, Depth);
             }
 
             // Transform needs to call base
@@ -103,6 +108,10 @@ namespace Machina.Components
             }
         }
 
+        public void DeleteChild(Actor actor)
+        {
+            DeleteIterable(actor);
+        }
 
         public float Angle
         {
@@ -206,22 +215,22 @@ namespace Machina.Components
                 return;
             }
 
-            if (this.HasParent)
+            if (HasParent)
             {
-                this.Parent.RemoveChild(this.actor);
+                Parent.RemoveChild(this.actor);
             }
 
             if (newParent != null)
             {
-                this.Parent = newParent.transform;
+                Parent = newParent.transform;
                 newParent.transform.AddChild(this.actor);
-                this.LocalPosition = this.WorldToLocalPosition(this.Position);
-                this.LocalAngle = this.Angle - newParent.transform.Angle;
-                this.LocalDepth = this.Depth - newParent.transform.Depth;
+                LocalPosition = WorldToLocalPosition(Position);
+                LocalAngle = Angle - newParent.transform.Angle;
+                LocalDepth = Depth - newParent.transform.Depth;
             }
             else
             {
-                this.Parent = null;
+                Parent = null;
             }
         }
 
@@ -247,9 +256,18 @@ namespace Machina.Components
             child.scene?.AddActor(child);
         }
 
+        public bool HasChildAt(int index)
+        {
+            return index >= 0 && index < iterables.Count;
+        }
+
         public Actor ChildAt(int index)
         {
-            return iterables[index];
+            if (HasChildAt(index))
+            {
+                return iterables[index];
+            }
+            return null;
         }
 
         public Matrix TransformMatrix

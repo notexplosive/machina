@@ -126,7 +126,7 @@ namespace Machina.Components
             var nextLocation = new Point(groupRect.Location.X + margin, groupRect.Location.Y + margin);
             foreach (var element in elements)
             {
-                element.actor.transform.Position = nextLocation.ToVector2();
+                element.actor.transform.Position = nextLocation.ToVector2() + element.boundingRect.Offset;
                 if (isVertical)
                 {
                     nextLocation += new Point(0, element.Rect.Height + this.PaddingBetweenElements);

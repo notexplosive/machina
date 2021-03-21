@@ -69,5 +69,7 @@ namespace Machina.Components
                 return Matrix.CreateTranslation(topLeft.X, topLeft.Y, 0);
             }
         }
+
+        public SceneLayers SceneLayers => this.sceneLayers;
     }
 }

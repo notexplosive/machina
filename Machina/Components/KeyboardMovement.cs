@@ -33,11 +33,6 @@ namespace Machina.Components
                 this.actor.transform.Depth += 1;
             }
 
-            if (curKeys.IsKeyDown(Keys.E))
-            {
-                this.actor.transform.Depth -= 1;
-            }
-
             if (curKeys.IsKeyDown(Keys.Z))
             {
                 this.actor.transform.Angle += (float) Math.PI / 60;

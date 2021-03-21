@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Machina.Components
 {
-    class Clickable : BaseComponent
+    public class Clickable : BaseComponent
     {
         public Action<MouseButton> onClick;
         private bool leftButtonDown;

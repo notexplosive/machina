@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -27,27 +28,34 @@ namespace Machina.Components
         {
             get; set;
         }
-        public readonly SpriteFont font;
+        public SpriteFont Font
+        {
+            get; set;
+        }
         private readonly BoundingRect boundingRect;
-        private readonly Color textColor;
+        public Color TextColor;
+        private Color dropShadowColor;
+        private bool isDropShadowEnabled;
+        private readonly Depth depthOffset;
         private readonly HorizontalAlignment horizontalAlignment;
         private readonly VerticalAlignment verticalAlignment;
 
-        public BoundedTextRenderer(Actor actor, string text, SpriteFont font, Color textColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left, VerticalAlignment verticalAlignment = VerticalAlignment.Top) : base(actor)
+        public BoundedTextRenderer(Actor actor, string text, SpriteFont font, Color textColor, HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left, VerticalAlignment verticalAlignment = VerticalAlignment.Top, Depth depthOffset = default) : base(actor)
         {
             this.Text = text;
-            this.font = font;
+            this.Font = font;
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.textColor = textColor;
+            this.TextColor = textColor;
             this.horizontalAlignment = horizontalAlignment;
             this.verticalAlignment = verticalAlignment;
+            this.depthOffset = depthOffset;
         }
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White) { }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var measurer = new TextMeasurer(this.Text, this.font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment);
+            var measurer = new TextMeasurer(this.Text, this.Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment);
 
             while (!measurer.IsAtEnd())
             {
@@ -77,17 +85,31 @@ namespace Machina.Components
             var yOffset = 0;
             if (verticalAlignment == VerticalAlignment.Center)
             {
-                yOffset = this.boundingRect.Height / 2 - font.LineSpacing / 2 * measurer.Lines.Count;
+                yOffset = this.boundingRect.Height / 2 - Font.LineSpacing / 2 * measurer.Lines.Count;
             }
             else if (verticalAlignment == VerticalAlignment.Bottom)
             {
-                yOffset = this.boundingRect.Height - font.LineSpacing * measurer.Lines.Count;
+                yOffset = this.boundingRect.Height - Font.LineSpacing * measurer.Lines.Count;
             }
 
             foreach (var line in measurer.Lines)
             {
-                spriteBatch.DrawString(this.font, line.textContent, new Vector2(line.positionX, line.positionY + yOffset), this.textColor, 0, Vector2.Zero, 1f, SpriteEffects.None, transform.Depth.AsFloat);
+                var pos = new Vector2(line.positionX, line.positionY + yOffset);
+                var depth = transform.Depth + this.depthOffset;
+
+                spriteBatch.DrawString(this.Font, line.textContent, pos, this.TextColor, 0, Vector2.Zero, 1f, SpriteEffects.None, depth);
+                if (this.isDropShadowEnabled)
+                {
+                    spriteBatch.DrawString(this.Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, 0, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                }
             }
+        }
+
+        public BoundedTextRenderer EnableDropShadow(Color color)
+        {
+            this.dropShadowColor = color;
+            this.isDropShadowEnabled = true;
+            return this;
         }
     }
 

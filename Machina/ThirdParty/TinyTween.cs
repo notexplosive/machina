@@ -23,6 +23,7 @@
 // * Wrapped code in the Machina.ThirdParty namespace.
 // * Renamed ScaleFunc/ScaleFuncs to EaseFunc and EaseFuncs respectively
 // * Made LerpFloat public
+// * Added EaseInOutBack, and other tween functions
 
 using System;
 using System.Collections.Generic;
@@ -460,6 +461,21 @@ namespace Machina.ThirdParty
     public static class EaseFuncs
     {
         /// <summary>
+        /// https://easings.net/
+        /// </summary>
+        public static readonly EaseFunc EaseInOutBack = EaseInOutBackImpl;
+
+        /// <summary>
+        /// https://easings.net/
+        /// </summary>
+        public static readonly EaseFunc EaseInBack = EaseInBackImpl;
+
+        /// <summary>
+        /// https://easings.net/
+        /// </summary>
+        public static readonly EaseFunc EaseOutBack = EaseOutBackImpl;
+
+        /// <summary>
         /// A linear progress scale function.
         /// </summary>
         public static readonly EaseFunc Linear = LinearImpl;
@@ -593,6 +609,31 @@ namespace Machina.ThirdParty
         private static float QuinticEaseInOutImpl(float progress)
         {
             return EaseInOutPower(progress, 5);
+        }
+        private static float EaseInBackImpl(float progress)
+        {
+            const float c1 = 1.70158f;
+            const float c3 = c1 + 1;
+
+            return c3 * progress * progress * progress - c1 * progress * progress;
+        }
+
+        private static float EaseOutBackImpl(float progress)
+        {
+            const float c1 = 1.70158f;
+            const float c3 = c1 + 1;
+
+            return 1 + c3 * MathF.Pow(progress - 1, 3) + c1 * MathF.Pow(progress - 1, 2);
+        }
+
+        private static float EaseInOutBackImpl(float progress)
+        {
+            const float c1 = 1.70158f;
+            const float c2 = c1 * 1.525f;
+
+            return progress < 0.5
+              ? (MathF.Pow(2 * progress, 2) * ((c2 + 1) * 2 * progress - c2)) / 2
+              : (MathF.Pow(2 * progress - 2, 2) * ((c2 + 1) * (progress * 2 - 2) + c2) + 2) / 2;
         }
 
         private static float EaseInPower(float progress, int power)

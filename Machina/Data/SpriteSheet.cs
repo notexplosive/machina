@@ -9,7 +9,9 @@ namespace Machina.Data
 {
     public abstract class SpriteSheet : IAsset
     {
+        public bool DebugMe = false;
         protected readonly Texture2D texture;
+        public Texture2D SourceTexture => this.texture;
         public IFrameAnimation DefaultAnimation
         {
             get
@@ -44,6 +46,8 @@ namespace Machina.Data
         {
             DrawFrame(spriteBatch, index, transform.Position, scale, transform.Angle, flip, transform.Depth, Color.White);
         }
+
+        public abstract Rectangle GetSourceRectForFrame(int index);
 
         public void OnCleanup()
         {

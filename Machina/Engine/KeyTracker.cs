@@ -12,6 +12,8 @@ namespace Machina.Engine
         public readonly bool alt;
         public readonly bool shift;
 
+        public static ModifierKeys NoModifiers = new ModifierKeys(false, false, false);
+
         public ModifierKeys(bool control, bool alt, bool shift)
         {
             this.control = control;

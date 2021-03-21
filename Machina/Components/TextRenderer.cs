@@ -18,7 +18,7 @@ namespace Machina.Components
         {
             get; set;
         }
-        private SpriteFont Font
+        public SpriteFont Font
         {
             get; set;
         }

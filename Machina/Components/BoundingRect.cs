@@ -82,7 +82,7 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(Rect, Color.Pink);
+            spriteBatch.DrawRectangle(Rect, Color.Pink, 1f, transform.Depth);
         }
     }
 }

@@ -10,8 +10,7 @@ namespace Machina.Engine
     public interface ICrane
     {
         /// <summary>
-        /// Called every frame with the delta time since last frame. Might call Start() if the
-        /// iterable is being added from the temporary buffer
+        /// Called every frame with the delta time since last frame.
         /// </summary>
         /// <param name="dt">Delta time since last frame</param>
         public void Update(float dt);
@@ -96,7 +95,12 @@ namespace Machina.Engine
             iterablesCreatedThisFrame.Add(newIterable);
         }
 
-        protected bool IsIterablePendingDeletion(T iterable)
+        /// <summary>
+        /// Is a child iterable pending deletion?
+        /// </summary>
+        /// <param name="iterable"></param>
+        /// <returns></returns>
+        public bool IsIterablePendingDeletion(T iterable)
         {
             return iterablesDeletedThisFrame.Contains(iterable) || iterablesGentlyRemovedThisFrame.Contains(iterable);
         }

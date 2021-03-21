@@ -16,11 +16,11 @@ namespace Machina.Data
         private readonly Texture2D originalTexture;
         private readonly Texture2D[] textures;
 
-        public NinepatchSheet(Texture2D texture, Rectangle outerRect, Rectangle innerRect)
+        public NinepatchSheet(Texture2D sourceTexture, Rectangle outerRect, Rectangle innerRect)
         {
-            this.originalTexture = texture;
-            Debug.Assert(texture.Width >= outerRect.Width, "Texture is to small");
-            Debug.Assert(texture.Height >= outerRect.Height, "Texture is to small");
+            this.originalTexture = sourceTexture;
+            Debug.Assert(sourceTexture.Width >= outerRect.Width, "Texture is to small");
+            Debug.Assert(sourceTexture.Height >= outerRect.Height, "Texture is to small");
 
             this.rects = new NinepatchRects(outerRect, innerRect);
             this.textures = new Texture2D[9];
@@ -30,10 +30,7 @@ namespace Machina.Data
                 var rect = rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
-                    Texture2D cropTexture = new Texture2D(MachinaGame.Current.GraphicsDevice, rect.Width, rect.Height);
-                    Color[] data = new Color[rect.Width * rect.Height];
-                    texture.GetData(0, rect, data, 0, data.Length);
-                    cropTexture.SetData(data);
+                    var cropTexture = MachinaGame.CropTexture(rect, sourceTexture);
                     textures[i] = cropTexture;
                 }
             }
@@ -110,12 +107,12 @@ namespace Machina.Data
             spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle starter, GenerationDirection gen, Depth layerDepth)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle starter, GenerationDirection gen, Depth layerDepth, float opacity = 1f)
         {
-            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(starter, gen), layerDepth);
+            DrawFullNinepatch(spriteBatch, GenerateDestinationRects(starter, gen), layerDepth, opacity);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, Depth layerDepth)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, Depth layerDepth, float opacity = 1f)
         {
             Debug.Assert(this.rects.isValidNinepatch, "Attempted to draw an invalid Ninepatch.");
 
@@ -123,7 +120,7 @@ namespace Machina.Data
             {
                 var dest = destinationRects.raw[i];
                 var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
-                spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
+                spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, new Color(Color.White, opacity), 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
             }
         }
 

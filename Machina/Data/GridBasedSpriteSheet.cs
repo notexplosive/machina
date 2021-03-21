@@ -42,13 +42,18 @@ namespace Machina.Data
             this.frameCount = columnCount * rowCount;
         }
 
+        public override Rectangle GetSourceRectForFrame(int index)
+        {
+            int x = index % this.columnCount;
+            int y = index / this.columnCount;
+            return new Rectangle(new Point(x * frameSize.X, y * frameSize.Y), frameSize);
+        }
+
         public override void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color tintColor, bool isCentered = true)
         {
             Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 
-            int x = index % this.columnCount;
-            int y = index / this.columnCount;
-            var sourceRect = new Rectangle(new Point(x * frameSize.X, y * frameSize.Y), frameSize);
+            var sourceRect = GetSourceRectForFrame(index);
 
             var adjustedFrameSize = (this.frameSize.ToVector2() * scale);
             var destRect = new Rectangle(position.ToPoint(), adjustedFrameSize.ToPoint());
@@ -62,10 +67,12 @@ namespace Machina.Data
             spriteBatch.Draw(this.texture, destRect, sourceRect, tintColor, angle, offset,
                 (flip.x ? SpriteEffects.FlipHorizontally : SpriteEffects.None) | (flip.y ? SpriteEffects.FlipVertically : SpriteEffects.None), layerDepth.AsFloat);
 
-            // Possibly useful for debugging:
-            //spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);
-            //spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
-            //spriteBatch.DrawRectangle(sourceRect, Color.White);
+            if (DebugMe)
+            {
+                spriteBatch.Draw(this.texture, new Vector2(0, 0), Color.White);
+                spriteBatch.DrawRectangle(new Rectangle(0, 0, this.texture.Width, this.texture.Height), Color.Red);
+                spriteBatch.DrawRectangle(sourceRect, Color.White);
+            }
         }
     }
 }

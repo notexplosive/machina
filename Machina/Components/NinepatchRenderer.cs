@@ -14,7 +14,7 @@ namespace Machina.Components
         protected readonly BoundingRect boundingRect;
         private readonly NinepatchSheet.GenerationDirection generationDirection;
 
-        public NinepatchSheet SpriteSheet
+        public NinepatchSheet Sheet
         {
             get; set;
         }
@@ -23,12 +23,12 @@ namespace Machina.Components
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.generationDirection = gen;
-            SpriteSheet = spriteSheet;
+            Sheet = spriteSheet;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            SpriteSheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.generationDirection, this.actor.transform.Depth);
+            Sheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.generationDirection, this.actor.transform.Depth);
         }
     }
 }

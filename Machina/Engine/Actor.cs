@@ -44,7 +44,7 @@ namespace Machina.Engine
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (this.Visible)
+            if (Visible)
             {
                 base.Draw(spriteBatch);
             }
@@ -52,10 +52,25 @@ namespace Machina.Engine
 
         public override void PreDraw(SpriteBatch spriteBatch)
         {
-            if (this.Visible)
+            if (Visible)
             {
                 base.PreDraw(spriteBatch);
             }
+        }
+
+        public List<T> GetComponentsInImmediateChildren<T>() where T : BaseComponent
+        {
+            var result = new List<T>();
+            for (int i = 0; i < this.transform.ChildCount; i++)
+            {
+                var child = this.transform.ChildAt(i);
+                var comp = child.GetComponent<T>();
+                if (comp != null)
+                {
+                    result.Add(comp);
+                }
+            }
+            return result;
         }
 
         public void Destroy()
@@ -71,6 +86,9 @@ namespace Machina.Engine
 
         public void Delete()
         {
+            // We make actors invisible while we're trying to delete them
+            // Sometimes they'll linger for a frame... can we fix that?
+            Visible = false;
             this.scene.DeleteActor(this);
         }
 

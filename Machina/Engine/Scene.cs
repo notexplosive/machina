@@ -33,10 +33,11 @@ namespace Machina.Engine
             return actor;
         }
 
-        public void StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
+        public IEnumerator<ICoroutineAction> StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
         {
             coroutines.Add(coroutine);
             coroutine.MoveNext();
+            return coroutine;
         }
 
         public List<Actor> GetRootLevelActors()
@@ -57,7 +58,10 @@ namespace Machina.Engine
                 for (int i = 0; i < actor.transform.ChildCount; i++)
                 {
                     var child = actor.transform.ChildAt(i);
-                    extractChild(accumulator, child);
+                    if (!actor.transform.IsIterablePendingDeletion(child))
+                    {
+                        extractChild(accumulator, child);
+                    }
                 }
             }
 
@@ -78,8 +82,14 @@ namespace Machina.Engine
 
         public void DeleteActor(Actor actor)
         {
-            actor.transform.SetParent(null);
-            DeleteIterable(actor);
+            if (actor.transform.Parent != null)
+            {
+                actor.transform.Parent.DeleteChild(actor);
+            }
+            else
+            {
+                DeleteIterable(actor);
+            }
         }
 
         public void GentlyRemoveActor(Actor actor)

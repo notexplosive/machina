@@ -21,23 +21,23 @@ namespace Machina.Components
             this.pressedSheet = pressedSheet;
             this.clickable = RequireComponent<Clickable>();
             this.renderer = RequireComponent<NinepatchRenderer>();
-            this.defaultSheet = renderer.SpriteSheet;
+            this.defaultSheet = renderer.Sheet;
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             if (this.clickable.IsHovered)
             {
-                this.renderer.SpriteSheet = this.hoverSheet;
+                this.renderer.Sheet = this.hoverSheet;
 
                 if (this.clickable.IsPrimedForLeftMouseButton)
                 {
-                    this.renderer.SpriteSheet = this.pressedSheet;
+                    this.renderer.Sheet = this.pressedSheet;
                 }
             }
             else
             {
-                this.renderer.SpriteSheet = this.defaultSheet;
+                this.renderer.Sheet = this.defaultSheet;
             }
         }
     }

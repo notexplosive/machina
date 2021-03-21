@@ -9,13 +9,19 @@ namespace Machina.Components
 {
     class TextureRenderer : BaseComponent
     {
-        public Texture2D texture;
-        public Vector2 offset;
+        public readonly Texture2D texture;
+        private Vector2 offset;
 
         public TextureRenderer(Actor actor, Texture2D texture) : base(actor)
         {
             this.texture = texture;
+            this.offset = Vector2.Zero;
+        }
+
+        public TextureRenderer CenterOffset()
+        {
             this.offset = new Vector2(texture.Width / 2, texture.Height / 2);
+            return this;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

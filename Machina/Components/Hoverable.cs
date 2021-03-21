@@ -18,7 +18,7 @@ namespace Machina.Components
         }
 
         /// <summary>
-        /// The cursor is within the BoundingRect, but it might be blocked
+        /// The cursor is within the BoundingRect, but it might be blocked or might be invisible
         /// </summary>
         public bool IsSoftHovered
         {
@@ -30,14 +30,17 @@ namespace Machina.Components
         public Action OnHoverEnd;
         private bool wasHovered;
         private bool debug_isHoveredFromCallbacks;
+        private bool softOnly;
         private readonly BoundingRect boundingRect;
 
-        public Hoverable(Actor actor) : base(actor)
+        public Hoverable(Actor actor, bool softOnly = false) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
 
             this.OnHoverStart += Debug_IndicateHoverStarted;
             this.OnHoverEnd += Debug_IndicateHoverEnded;
+
+            this.softOnly = softOnly;
         }
 
         public override void Update(float dt)
@@ -67,7 +70,7 @@ namespace Machina.Components
             if (this.boundingRect.Rect.Contains(currentPosition))
             {
                 this.IsSoftHovered = true;
-                if (this.actor.Visible)
+                if (this.actor.Visible && !this.softOnly)
                 {
                     this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, OnHitTestApproval));
                 }

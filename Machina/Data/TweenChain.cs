@@ -130,10 +130,24 @@ namespace Machina.Data
             StartNextTween();
         }
 
-        public void ForceComplete()
+        /// <summary>
+        /// Skip to the end of the tween, skipping everything in between
+        /// </summary>
+        public void SkipToEnd()
         {
             this.currentIndex = this.chainInernal.Count;
             this.currentItem = null;
+        }
+
+        /// <summary>
+        /// This could go wrong in a lot of ways, it's also kinda slow
+        /// </summary>
+        public void FinishRestOfTween_Dangerous()
+        {
+            while (currentItem != null)
+            {
+                this.Update(1f / 60);
+            }
         }
 
         public interface IChainItem
@@ -227,7 +241,7 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                callbackFn();
+                callbackFn?.Invoke();
                 IsComplete = true;
                 return this;
             }
