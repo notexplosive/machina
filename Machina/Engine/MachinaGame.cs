@@ -62,12 +62,12 @@ namespace Machina.Engine
             get; private set;
         }
 
-        public MachinaGame(Point startingResolution, Point windowSize, ResizeBehavior resizeBehavior)
+        public MachinaGame(Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
             Current = this;
             this.logger = new StdOutConsoleLogger();
-            this.startingResolution = startingResolution;
-            this.startingWindowSize = windowSize;
+            this.startingResolution = startingRenderResolution;
+            this.startingWindowSize = startingWindowSize;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -79,7 +79,7 @@ namespace Machina.Engine
             Content.RootDirectory = "Content";
             Graphics = new GraphicsDeviceManager(this);
             Graphics.HardwareModeSwitch = false;
-            gameCanvas = new GameCanvas(startingResolution.X, startingResolution.Y, resizeBehavior);
+            gameCanvas = new GameCanvas(startingRenderResolution.X, startingRenderResolution.Y, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
@@ -98,7 +98,7 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
-            SetWindowSize(startingResolution);
+            SetWindowSize(this.startingResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             this.IsMouseVisible = true;
             SetWindowSize(this.startingWindowSize);
@@ -150,7 +150,7 @@ namespace Machina.Engine
 
             {
                 var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
-                new FrameRateCounter(framerateCounterActor);
+                new FrameRateCounter(framerateCounterActor, this.startingResolution);
             }
 
             // Framestep

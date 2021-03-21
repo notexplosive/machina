@@ -63,6 +63,7 @@ namespace HelloGame
 
             var uiBuilder = new UIBuilder(defaultStyle);
 
+            /*
             IEnumerator<ICoroutineAction> testCoroutine()
             {
                 MachinaGame.Print("Waited 0 second");
@@ -85,9 +86,10 @@ namespace HelloGame
                 yield return new WaitSeconds(0.25f);
                 MachinaGame.Print("Waited 0.75 second");
             }
+            */
 
-            gameScene.StartCoroutine(testCoroutine());
-            gameScene.StartCoroutine(testCoroutine2());
+            // gameScene.StartCoroutine(testCoroutine());
+            // gameScene.StartCoroutine(testCoroutine2());
 
 
             // Button layout example
