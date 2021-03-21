@@ -77,8 +77,11 @@ namespace Machina.Engine
 #endif
 
             Content.RootDirectory = "Content";
-            Graphics = new GraphicsDeviceManager(this);
-            Graphics.HardwareModeSwitch = false;
+            Graphics = new GraphicsDeviceManager(this)
+            {
+                HardwareModeSwitch = false
+            };
+
             gameCanvas = new GameCanvas(startingRenderResolution.X, startingRenderResolution.Y, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
