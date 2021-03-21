@@ -48,11 +48,11 @@ namespace Machina.Engine
 
         public int ViewportWidth
         {
-            get => resizer != null ? resizer.WorldSize.X : 0;
+            get => resizer != null ? resizer.ViewportSize.X : 0;
         }
         public int ViewportHeight
         {
-            get => resizer != null ? resizer.WorldSize.Y : 0;
+            get => resizer != null ? resizer.ViewportSize.Y : 0;
         }
 
         public Vector2 CanvasTopLeft => resizer != null ? resizer.CanvasRect.Location.ToVector2() : Vector2.Zero;

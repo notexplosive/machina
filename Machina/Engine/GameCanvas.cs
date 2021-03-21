@@ -15,12 +15,11 @@ namespace Machina.Engine
     public class GameCanvas
     {
         private RenderTarget2D screenRenderTarget;
-        private readonly Point idealSize;
         private readonly IResizeStrategy resizeStrategy;
 
         public GameCanvas(int idealWidth, int idealHeight, ResizeBehavior resizeBehavior)
         {
-            this.idealSize = new Point(idealWidth, idealHeight);
+            ViewportSize = new Point(idealWidth, idealHeight);
             if (resizeBehavior == ResizeBehavior.FillContent)
             {
                 resizeStrategy = new FillStrategy();
@@ -36,8 +35,8 @@ namespace Machina.Engine
         {
             get
             {
-                var canvasRect = CanvasSize;
-                return new Rectangle((WindowSize.X - canvasRect.X) / 2, (WindowSize.Y - canvasRect.Y) / 2, canvasRect.X, canvasRect.Y);
+                var canvasSize = resizeStrategy.GetCanvasSize(WindowSize, ViewportSize);
+                return new Rectangle((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y);
             }
         }
 
@@ -45,7 +44,7 @@ namespace Machina.Engine
         {
             get
             {
-                return this.resizeStrategy.GetScaleFactor(WindowSize, idealSize);
+                return this.resizeStrategy.GetScaleFactor(WindowSize, ViewportSize);
             }
         }
 
@@ -55,24 +54,19 @@ namespace Machina.Engine
             private set;
         }
 
-        public Point CanvasSize
+        public Point ViewportSize
         {
-            get
-            {
-                return resizeStrategy.GetCanvasSize(WindowSize, idealSize);
-            }
+            get; private set;
         }
-
-        public Point WorldSize => this.idealSize;
 
         public void SetWindowSize(int windowWidth, int windowHeight)
         {
             WindowSize = new Point(windowWidth, windowHeight);
         }
 
-        public void BuildCanvas(GraphicsDevice graphicsDevice)
+        public void BuildCanvas(GraphicsDevice graphicsDevice, Point canvasSize)
         {
-            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, WindowSize);
+            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, canvasSize);
         }
 
         public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice)
@@ -89,26 +83,26 @@ namespace Machina.Engine
         {
             void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
             void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
-            RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize);
-            Point GetCanvasSize(Point windowSize, Point idealSize);
-            float GetScaleFactor(Point windowSize, Point idealSize);
+            RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize);
+            Point GetCanvasSize(Point windowSize, Point viewportSize);
+            float GetScaleFactor(Point windowSize, Point viewportSize);
         }
 
         private class MaintainDesiredResolutionStrategy : IResizeStrategy
         {
-            public float GetScaleFactor(Point windowSize, Point idealSize)
+            public float GetScaleFactor(Point windowSize, Point viewportSize)
             {
-                var normalizedWidth = (float) windowSize.X / idealSize.X;
-                var normalizedHeight = (float) windowSize.Y / idealSize.Y;
+                var normalizedWidth = (float) windowSize.X / viewportSize.X;
+                var normalizedHeight = (float) windowSize.Y / viewportSize.Y;
                 return Math.Min(normalizedWidth, normalizedHeight);
             }
 
-            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize)
+            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize)
             {
                 return new RenderTarget2D(
                     graphicsDevice,
-                    windowSize.X,
-                    windowSize.Y,
+                    viewportSize.X,
+                    viewportSize.Y,
                     false,
                     graphicsDevice.PresentationParameters.BackBufferFormat,
                     DepthFormat.Depth24);
@@ -126,9 +120,9 @@ namespace Machina.Engine
                 spriteBatch.End();
             }
 
-            public Point GetCanvasSize(Point windowSize, Point idealSize)
+            public Point GetCanvasSize(Point windowSize, Point viewportSize)
             {
-                return (new Vector2(idealSize.X, idealSize.Y) * GetScaleFactor(windowSize, idealSize)).ToPoint();
+                return (new Vector2(viewportSize.X, viewportSize.Y) * GetScaleFactor(windowSize, viewportSize)).ToPoint();
             }
 
             public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
@@ -140,7 +134,7 @@ namespace Machina.Engine
 
         private class FillStrategy : IResizeStrategy
         {
-            public Point GetCanvasSize(Point windowSize, Point idealSize)
+            public Point GetCanvasSize(Point windowSize, Point viewportSize)
             {
                 return windowSize;
             }
@@ -150,22 +144,26 @@ namespace Machina.Engine
                 // no-op
             }
 
-            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point windowSize)
+            public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize)
             {
+                // no-op
                 return null;
             }
 
-            public float GetScaleFactor(Point windowSize, Point idealSize)
+            public float GetScaleFactor(Point windowSize, Point viewportSize)
             {
+                // no-op
                 return 1f;
             }
 
             public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
+                // no-op
             }
 
             public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
             {
+                // no-op
             }
         }
     }

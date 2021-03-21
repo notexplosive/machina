@@ -99,8 +99,7 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
-            SetWindowSize(this.startingResolution);
-            gameCanvas.BuildCanvas(GraphicsDevice);
+            gameCanvas.BuildCanvas(GraphicsDevice, this.startingResolution);
             this.IsMouseVisible = true;
             SetWindowSize(this.startingWindowSize);
 

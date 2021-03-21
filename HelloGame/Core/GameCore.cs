@@ -16,7 +16,7 @@ namespace HelloGame
         private Scene uiScene;
         private GameSettings settings;
 
-        public GameCore() : base(new Point(1600, 900), new Point(1600, 900), ResizeBehavior.FillContent)
+        public GameCore() : base(new Point(1600, 900), new Point(1600, 900), ResizeBehavior.MaintainDesiredResolution)
         {
             IsMouseVisible = true;
         }
