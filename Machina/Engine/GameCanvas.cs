@@ -14,20 +14,20 @@ namespace Machina.Engine
 
     public class GameCanvas
     {
-        private readonly Point idealSize;
         private RenderTarget2D screenRenderTarget;
-        private IStrategy strategy;
+        private readonly Point idealSize;
+        private readonly IResizeStrategy resizeStrategy;
 
         public GameCanvas(int idealWidth, int idealHeight, ResizeBehavior resizeBehavior)
         {
             this.idealSize = new Point(idealWidth, idealHeight);
             if (resizeBehavior == ResizeBehavior.FillContent)
             {
-                strategy = new FillStrategy();
+                resizeStrategy = new FillStrategy();
             }
             else
             {
-                strategy = new MaintainDesiredResolutionStrategy();
+                resizeStrategy = new MaintainDesiredResolutionStrategy();
             }
             OnResize(idealWidth, idealHeight);
         }
@@ -45,7 +45,7 @@ namespace Machina.Engine
         {
             get
             {
-                return this.strategy.GetScaleFactor(WindowSize, idealSize);
+                return this.resizeStrategy.GetScaleFactor(WindowSize, idealSize);
             }
         }
 
@@ -59,7 +59,7 @@ namespace Machina.Engine
         {
             get
             {
-                return strategy.GetCanvasSize(WindowSize, idealSize);
+                return resizeStrategy.GetCanvasSize(WindowSize, idealSize);
             }
         }
 
@@ -72,20 +72,20 @@ namespace Machina.Engine
 
         public void BuildCanvas(GraphicsDevice graphicsDevice)
         {
-            this.screenRenderTarget = strategy.BuildCanvas(graphicsDevice, WindowSize);
+            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, WindowSize);
         }
 
         public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice)
         {
-            strategy.PrepareToDrawOnCanvas(graphicsDevice, this.screenRenderTarget);
+            resizeStrategy.PrepareToDrawOnCanvas(graphicsDevice, this.screenRenderTarget);
         }
 
         public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
-            strategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
+            resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
         }
 
-        private interface IStrategy
+        private interface IResizeStrategy
         {
             void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
             void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
@@ -94,7 +94,7 @@ namespace Machina.Engine
             float GetScaleFactor(Point windowSize, Point idealSize);
         }
 
-        private class MaintainDesiredResolutionStrategy : IStrategy
+        private class MaintainDesiredResolutionStrategy : IResizeStrategy
         {
             public float GetScaleFactor(Point windowSize, Point idealSize)
             {
@@ -138,7 +138,7 @@ namespace Machina.Engine
             }
         }
 
-        private class FillStrategy : IStrategy
+        private class FillStrategy : IResizeStrategy
         {
             public Point GetCanvasSize(Point windowSize, Point idealSize)
             {
