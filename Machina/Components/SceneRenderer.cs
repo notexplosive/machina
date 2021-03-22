@@ -81,6 +81,6 @@ namespace Machina.Components
 
         public float ScaleFactor => 1;
 
-        public Rectangle CanvasRect => this.boundingRect.Rect;
+        public Rectangle CanvasRect => new Rectangle(new Point(0, 0), ViewportSize);
     }
 }
