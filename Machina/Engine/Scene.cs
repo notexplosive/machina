@@ -15,9 +15,13 @@ namespace Machina.Engine
         public readonly HitTester hitTester = new HitTester();
         public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
 
-        public Scene(IGameCanvas gameCanvas, IFrameStep frameStep = null)
+        public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
-            this.camera = new Camera(gameCanvas);
+            if (sceneLayers != null)
+            {
+                this.camera = new Camera(sceneLayers.gameCanvas);
+            }
+
             if (frameStep != null)
             {
                 this.frameStep = frameStep;

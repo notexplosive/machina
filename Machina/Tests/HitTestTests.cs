@@ -15,9 +15,8 @@ namespace Machina.Tests
         {
             AddTest(new Test("Test Hoverables in a single scene", test =>
             {
-                var sceneLayers = new SceneLayers(null, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
-                sceneLayers.Add(scene);
+                var sceneLayers = new SceneLayers(false, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
+                var scene = sceneLayers.AddNewScene();
                 var mousePoint = new Point(200, 200);
                 var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 var unreachedHoverable = BuildHoverable(scene, Point.Zero, "Hoverable that is too far to be hovered", new Depth(5));
@@ -39,11 +38,9 @@ namespace Machina.Tests
 
             AddTest(new Test("Test Hoverables across multiple scenes", test =>
             {
-                var sceneLayers = new SceneLayers(null, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
-                var lowerScene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
-                var upperScene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
-                sceneLayers.Add(lowerScene);
-                sceneLayers.Add(upperScene);
+                var sceneLayers = new SceneLayers(false, new GameCanvas(800, 600, ResizeBehavior.FillContent), new EmptyFrameStep());
+                var lowerScene = sceneLayers.AddNewScene();
+                var upperScene = sceneLayers.AddNewScene();
                 var mousePoint = new Point(200, 200);
                 var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 var onPointHoverable = BuildHoverable(upperScene, mousePoint, "Hoverable in upper scene", new Depth(5));

@@ -46,8 +46,8 @@ namespace Machina.Tests
             AddTest("Mouse Position Transform Integration", test =>
             {
                 var gameCanvas = new GameCanvas(800, 600, ResizeBehavior.MaintainDesiredResolution);
-                var sceneLayers = new SceneLayers(null, gameCanvas, new EmptyFrameStep());
-                var scene = new Scene(gameCanvas);
+                var sceneLayers = new SceneLayers(false, gameCanvas, new EmptyFrameStep());
+                var scene = sceneLayers.AddNewScene();
                 scene.camera.Zoom = 2.6f;
                 scene.camera.Position = new Vector2(120, 240);
 

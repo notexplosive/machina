@@ -11,7 +11,7 @@ namespace Machina.Tests
         {
             AddTest("Scene can get all actors", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var o1 = scene.AddActor("other1");
                 var child = scene.AddActor("Child");
                 var parent = scene.AddActor("Parent");
@@ -29,7 +29,7 @@ namespace Machina.Tests
 
             AddTest("Scene can get all actors, ignoring ones about to be removed", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var o1 = scene.AddActor("other1");
                 var child = scene.AddActor("Child");
                 var parent = scene.AddActor("Parent");
@@ -48,7 +48,7 @@ namespace Machina.Tests
 
             AddTest("Scene can get all actors, ignoring hierarchy's about to be removed", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var o1 = scene.AddActor("other1");
                 var child = scene.AddActor("Child");
                 var parent = scene.AddActor("Parent");

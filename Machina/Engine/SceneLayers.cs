@@ -12,7 +12,7 @@ namespace Machina.Engine
     {
         public readonly Scene debugScene;
         public readonly IFrameStep frameStep;
-        private readonly IGameCanvas gameCanvas;
+        public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
 
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
@@ -25,16 +25,20 @@ namespace Machina.Engine
             this.pendingInput = e;
         }
 
-        public SceneLayers(Scene debugScene, IGameCanvas gameCanvas, IFrameStep frameStep)
+        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas, IFrameStep frameStep)
         {
-            this.debugScene = debugScene;
             this.frameStep = frameStep;
             this.gameCanvas = gameCanvas;
+
+            if (useDebugScene)
+            {
+                this.debugScene = new Scene(this);
+            }
         }
 
         public Scene AddNewScene()
         {
-            var scene = new Scene(this.gameCanvas, this.frameStep);
+            var scene = new Scene(this, this.frameStep);
             Add(scene);
             return scene;
         }

@@ -29,7 +29,7 @@ namespace Machina.Tests
         {
             AddTest(new Test("Component deletes when actor is deleted", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var actor = scene.AddActor("Terry Triangle");
                 var deleteCount = 0;
                 new FakeComponent(actor, () => { deleteCount++; });
@@ -58,7 +58,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Transform transforms without rotation", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child1 = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(50, 50));
                 var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200));
@@ -81,7 +81,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Transform transforms with initial rotation", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80), MathF.PI / 2);
                 var child1 = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(50, 50), MathF.PI / 2);
                 var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200), 0.15f);
@@ -99,7 +99,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Transform transforms with rotation after parent assignment", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child1 = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(50, 50));
                 var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200));
@@ -128,7 +128,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Set Rotation then Set Parent", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0), 0f);
 
@@ -145,7 +145,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Set Parent then Set Rotation", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
@@ -162,7 +162,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Set parent multiple times in one frame", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var parent2 = scene.AddActor("Otto Other Parent", new Vector2(-80, -80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
@@ -183,7 +183,7 @@ namespace Machina.Tests
 
             AddTest(new Test("Setting parent to null will set it to have no parent", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
@@ -201,7 +201,7 @@ namespace Machina.Tests
 
             AddTest("Setting parent to yourself should be a no-op", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
 
                 parent.transform.SetParent(parent);
@@ -211,7 +211,7 @@ namespace Machina.Tests
 
             AddTest("Set position on parented object", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
@@ -224,7 +224,7 @@ namespace Machina.Tests
 
             AddTest("Set position on parented object does not get overridden by setting local position", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
@@ -238,7 +238,7 @@ namespace Machina.Tests
 
             AddTest("Setting local position moves the actor", test =>
             {
-                var scene = new Scene(new GameCanvas(800, 600, ResizeBehavior.FillContent));
+                var scene = new Scene(null);
                 var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
                 var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
