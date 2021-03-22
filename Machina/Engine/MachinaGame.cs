@@ -242,6 +242,11 @@ namespace Machina.Engine
 #endif
 
             OnGameLoad();
+
+#if DEBUG
+#else
+            PlayLogoIntro();
+#endif
         }
 
         protected override void UnloadContent()
@@ -287,6 +292,38 @@ namespace Machina.Engine
             {
                 scene.OnDelete();
             }
+        }
+
+        void PlayLogoIntro()
+        {
+            var oldLayers = SceneLayers;
+            var windowSize = this.startingWindowSize;
+            var desiredWidth = 400;
+            float ratio = (float) windowSize.X / desiredWidth;
+            var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
+            gameCanvas.BuildCanvas(GraphicsDevice);
+            var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());
+            var introScene = introLayers.AddNewScene();
+
+            introLayers.BackgroundColor = Color.Black;
+            var textActor = introScene.AddActor("text");
+            var boundingRect = new BoundingRect(textActor, 20, 20);
+            new BoundingRectToViewportSize(textActor);
+            new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
+            new IntroTextAnimation(textActor);
+
+            // Steal control
+            SceneLayers = introLayers;
+
+            Print(boundingRect.Size);
+
+            void onEnd()
+            {
+                // Restore control
+                SceneLayers = oldLayers;
+            }
+
+            new CallbackOnDestroy(textActor, onEnd);
         }
 
         /// <summary>
