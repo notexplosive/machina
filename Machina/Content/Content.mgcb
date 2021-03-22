@@ -52,3 +52,15 @@
 /processorParam:TextureFormat=Color
 /build:images/button-ninepatches.png
 
+#begin sounds/key-impact.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/key-impact.ogg
+
+#begin sounds/ouch.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/ouch.ogg
+

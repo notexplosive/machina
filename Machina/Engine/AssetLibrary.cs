@@ -7,15 +7,17 @@ using Microsoft.Xna.Framework;
 using System.Diagnostics;
 using System.IO;
 using Machina.Data;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Machina.Engine
 {
     public class AssetLibrary
     {
-        private Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
-        private Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
-        private Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
-        private ContentManager content;
+        private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+        private readonly Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
+        private readonly Dictionary<string, SoundEffect> soundEffects = new Dictionary<string, SoundEffect>();
+        private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
+        private readonly ContentManager content;
 
         public AssetLibrary(Game game)
         {
@@ -42,23 +44,19 @@ namespace Machina.Engine
 
         public void LoadAllContent()
         {
-            LoadAllSpriteFonts();
-            LoadAllTextures();
-        }
-
-        public void LoadAllTextures()
-        {
             foreach (var imageName in GetFilesAtContentDirectory("images"))
             {
                 LoadTexture("images/" + imageName);
             }
-        }
 
-        public void LoadAllSpriteFonts()
-        {
             foreach (var spriteFont in GetFilesAtContentDirectory("fonts", "xnb"))
             {
                 LoadSpriteFont("fonts/" + spriteFont);
+            }
+
+            foreach (var spriteFont in GetFilesAtContentDirectory("sounds", "xnb"))
+            {
+                LoadSoundEffect("sounds/" + spriteFont);
             }
         }
 
@@ -82,6 +80,16 @@ namespace Machina.Engine
             Console.WriteLine(string.Format("Loaded SpriteFont: {0}", fullName));
         }
 
+        private void LoadSoundEffect(string fullName)
+        {
+            var splitName = fullName.Split('/');
+            var name = splitName[^1];
+
+            var soundEffect = this.content.Load<SoundEffect>(fullName);
+            soundEffects.Add(name, soundEffect);
+            Console.WriteLine(string.Format("Loaded SoundEffect: {0}", fullName));
+        }
+
         public void UnloadAssets()
         {
             foreach (var asset in this.assets.Values)
@@ -100,6 +108,17 @@ namespace Machina.Engine
         {
             Debug.Assert(spriteFonts.ContainsKey(name), "No SpriteFont called `" + name + "` was found");
             return spriteFonts[name];
+        }
+
+        public SoundEffectInstance CreateSoundEffectInstance(string name)
+        {
+            return GetSoundEffect(name).CreateInstance();
+        }
+
+        public SoundEffect GetSoundEffect(string name)
+        {
+            Debug.Assert(soundEffects.ContainsKey(name), "No sound effect called `" + name + "` was found");
+            return soundEffects[name];
         }
 
         public T GetMachinaAsset<T>(string name) where T : class, IAsset
