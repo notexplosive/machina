@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundedTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnClick.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnDestroy.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackWhenAnimationFinished.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CheckboxRenderer.cs" />

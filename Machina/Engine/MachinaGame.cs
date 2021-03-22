@@ -23,9 +23,8 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
-        private readonly Point startingResolution;
-        private readonly Point startingWindowSize;
-        protected readonly SceneLayers sceneLayers;
+        protected readonly Point startingWindowSize;
+        protected SceneLayers sceneLayers;
         protected SpriteBatch spriteBatch;
         public readonly GameCanvas gameCanvas;
         private ILogger logger;
@@ -66,7 +65,6 @@ namespace Machina.Engine
         {
             Current = this;
             this.logger = new StdOutConsoleLogger();
-            this.startingResolution = startingRenderResolution;
             this.startingWindowSize = startingWindowSize;
 
             IFrameStep frameStep;
@@ -102,7 +100,7 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
-            gameCanvas.BuildCanvas(GraphicsDevice, this.startingResolution);
+            gameCanvas.BuildCanvas(GraphicsDevice);
             this.IsMouseVisible = true;
             SetWindowSize(this.startingWindowSize);
 

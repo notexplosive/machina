@@ -28,6 +28,36 @@ namespace HelloGame
 
         protected override void OnGameLoad()
         {
+
+            void Intro()
+            {
+                var oldLayers = this.sceneLayers;
+                var gameCanvas = new GameCanvas(new Point(300, 300), ResizeBehavior.MaintainDesiredResolution);
+                gameCanvas.BuildCanvas(GraphicsDevice);
+                var introLayers = new SceneLayers(true, gameCanvas, this.sceneLayers.frameStep);
+                var introScene = introLayers.AddNewScene();
+                var textActor = introScene.AddActor("text");
+                new TextRenderer(textActor, MachinaGame.Assets.GetSpriteFont("LogoFont"), "notexplosive.net");
+
+                var backgroundActor = introScene.AddActor("background");
+                backgroundActor.transform.Depth += 10;
+                new BoundingRect(backgroundActor, new Point(300, 300));
+                new BoundingRectRenderer(backgroundActor);
+
+                // Steal control
+                this.sceneLayers = introLayers;
+
+                Action onEnd = () =>
+                {
+                    // Restore control
+                    this.sceneLayers = oldLayers;
+                };
+
+                var timer = introScene.AddActor("Timer");
+                new DestroyTimer(timer, 5);
+                new CallbackOnDestroy(timer, onEnd);
+            }
+
             gameScene = sceneLayers.AddNewScene();
             uiScene = sceneLayers.AddNewScene();
 
@@ -111,6 +141,8 @@ namespace HelloGame
                 uiBuilder.BuildButton(uiGroup, "Apply", () => { settings.Apply(); });
                 uiBuilder.BuildTextField(uiGroup);
             }
+
+            Intro();
         }
 
         protected override void Update(GameTime gameTime)

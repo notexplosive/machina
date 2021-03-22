@@ -13,12 +13,22 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin fonts/ChevyRay - Roundabout.ttf
+/copy:fonts/ChevyRay - Roundabout.ttf
+
 #begin fonts/DefaultFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:fonts/DefaultFont.spritefont
+
+#begin fonts/LogoFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/LogoFont.spritefont
 
 #begin fonts/MachinaDefaultSmallFont.spritefont
 /importer:FontDescriptionImporter

@@ -86,9 +86,9 @@ namespace Machina.Engine
             WindowSize = windowSize;
         }
 
-        public void BuildCanvas(GraphicsDevice graphicsDevice, Point canvasSize)
+        public void BuildCanvas(GraphicsDevice graphicsDevice)
         {
-            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, canvasSize);
+            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, ViewportSize);
         }
 
         public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice)
