@@ -13,23 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin fonts/ConsoleFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/ConsoleFont.spritefont
-
-#begin fonts/DefaultFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:fonts/DefaultFont.spritefont
-
-#begin fonts/pointfree.ttf
-/copy:fonts/pointfree.ttf
-
 #begin images/ball.png
 /importer:TextureImporter
 /processor:TextureProcessor

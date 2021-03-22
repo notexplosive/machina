@@ -14,15 +14,13 @@ namespace Machina.Components
     class ConsoleOverlay : BaseComponent, IDebugOutputRenderer
     {
         private readonly SpriteFont spriteFont;
-        private readonly GraphicsDeviceManager graphics;
         private readonly TweenChain tweenChain;
         private readonly List<string> messages;
         private float opacity;
 
-        public ConsoleOverlay(Actor actor, SpriteFont spriteFont, GraphicsDeviceManager graphics) : base(actor)
+        public ConsoleOverlay(Actor actor, SpriteFont spriteFont) : base(actor)
         {
             this.spriteFont = spriteFont;
-            this.graphics = graphics;
             this.messages = new List<string>();
             this.opacity = 0f;
             this.tweenChain = new TweenChain()
@@ -33,7 +31,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var screenWidth = graphics.PreferredBackBufferWidth;
+            var screenWidth = this.actor.scene.sceneLayers.gameCanvas.WindowSize.X;
             int i = 0;
 
             spriteBatch.FillRectangle(new Rectangle(0, 0, screenWidth, spriteFont.LineSpacing * messages.Count), new Color(Color.Black, opacity / 2), 0.001f);

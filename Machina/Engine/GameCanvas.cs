@@ -28,6 +28,10 @@ namespace Machina.Engine
         {
             get;
         }
+        public Point WindowSize
+        {
+            get;
+        }
     }
 
     public class GameCanvas : IGameCanvas
@@ -87,9 +91,9 @@ namespace Machina.Engine
             this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, canvasSize);
         }
 
-        public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice)
+        public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice)
         {
-            resizeStrategy.PrepareToDrawOnCanvas(graphicsDevice, this.screenRenderTarget);
+            resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.screenRenderTarget);
         }
 
         public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
@@ -99,7 +103,7 @@ namespace Machina.Engine
 
         private interface IResizeStrategy
         {
-            void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
+            void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
             void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
             RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize);
             Point GetCanvasSize(Point windowSize, Point viewportSize);
@@ -143,7 +147,7 @@ namespace Machina.Engine
                 return (new Vector2(viewportSize.X, viewportSize.Y) * GetScaleFactor(windowSize, viewportSize)).ToPoint();
             }
 
-            public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
+            public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 graphicsDevice.SetRenderTarget(screenRenderTarget);
                 graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
@@ -174,7 +178,7 @@ namespace Machina.Engine
                 return 1f;
             }
 
-            public void PrepareToDrawOnCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
+            public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 // no-op
             }

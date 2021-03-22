@@ -29,5 +29,8 @@
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\obj\DesktopGL\fonts\" />
+  </ItemGroup>
   <Import Project="..\Machina\Machina.projitems" Label="Shared" />
 </Project>

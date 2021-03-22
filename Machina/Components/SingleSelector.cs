@@ -37,7 +37,7 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(MachinaGame.Assets.MachinaDefault, this.selected != null ? this.selected.actor.ToString() : "(null)", this.actor.transform.Position, Color.Yellow);
+            spriteBatch.DrawString(MachinaGame.Assets.GetSpriteFont("DefaultFont"), this.selected != null ? this.selected.actor.ToString() : "(null)", this.actor.transform.Position, Color.Yellow);
         }
     }
 }

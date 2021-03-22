@@ -10,10 +10,11 @@ namespace Machina.Engine
 {
     public class Scene : Crane<Actor>
     {
-        public readonly Camera camera;
-        public readonly IFrameStep frameStep = new EmptyFrameStep();
-        public readonly HitTester hitTester = new HitTester();
+        public readonly IFrameStep frameStep;
+        public readonly SceneLayers sceneLayers;
         public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
+        public readonly HitTester hitTester = new HitTester();
+        public Camera camera;
 
         public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
@@ -22,10 +23,14 @@ namespace Machina.Engine
                 this.camera = new Camera(sceneLayers.gameCanvas);
             }
 
-            if (frameStep != null)
-            {
-                this.frameStep = frameStep;
-            }
+            this.sceneLayers = sceneLayers;
+
+            this.frameStep = frameStep != null ? frameStep : new EmptyFrameStep();
+        }
+
+        public void SetGameCanvas(IGameCanvas gameCanvas)
+        {
+            this.camera = new Camera(gameCanvas);
         }
 
         public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, int depthAsInt = Depth.Max / 2)

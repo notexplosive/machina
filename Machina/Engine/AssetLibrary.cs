@@ -17,10 +17,6 @@ namespace Machina.Engine
         private Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private ContentManager content;
 
-        public SpriteFont MachinaDefault => GetSpriteFont("MachinaDefaultFont");
-
-        public SpriteFont MachinaDefaultSmall => GetSpriteFont("MachinaDefaultSmallFont");
-
         public AssetLibrary(Game game)
         {
             this.content = game.Content;

@@ -114,9 +114,9 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var consoleFont = Assets.MachinaDefaultSmall;
+            var consoleFont = Assets.GetSpriteFont("DefaultFont");
             var debugActor = sceneLayers.debugScene.AddActor("DebugActor", depthAsInt: 100);
-            this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont, Graphics));
+            this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont));
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
 
             // Load initial assets
@@ -132,7 +132,7 @@ namespace Machina.Engine
             Assets.AddMachinaAsset("ui-window-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(32, 104, 8, 8)));
 
-            var defaultFont = Assets.GetSpriteFont("DefaultFont");
+            var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
 
             defaultStyle = new UIStyle(
                 Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
@@ -153,7 +153,7 @@ namespace Machina.Engine
 
             {
                 var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
-                new FrameRateCounter(framerateCounterActor, this.startingResolution);
+                new FrameRateCounter(framerateCounterActor);
             }
 
             // Framestep
@@ -257,11 +257,12 @@ namespace Machina.Engine
         protected override void Draw(GameTime gameTime)
         {
             sceneLayers.PreDraw(spriteBatch);
-            gameCanvas.PrepareToDrawOnCanvas(GraphicsDevice);
+            gameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
             GraphicsDevice.Clear(Color.DarkSlateGray); // Draw main background color
-            sceneLayers.Draw(spriteBatch);
 
+            sceneLayers.DrawOnCanvas(spriteBatch);
             gameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+            sceneLayers.DrawDebugScene(spriteBatch);
             base.Draw(gameTime);
         }
 

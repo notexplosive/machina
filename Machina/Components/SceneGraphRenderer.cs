@@ -21,7 +21,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var font = MachinaGame.Assets.MachinaDefaultSmall;
+            var font = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
             var boxHeight = font.LineSpacing;
             var lineNumber = 0;
 

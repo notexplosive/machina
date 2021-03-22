@@ -45,7 +45,7 @@ namespace HelloGame
                 Assets.AddMachinaAsset(
                     "pillar-threepatch",
                     new NinepatchSheet("test-three-patch-vertical", new Rectangle(0, 0, 32, 32), new Rectangle(0, 8, 32, 16)));
-            var consoleFont = Assets.GetSpriteFont("ConsoleFont");
+            var consoleFont = Assets.GetSpriteFont("DefaultFontSmall");
 
             var testNinepatch = Assets.GetMachinaAsset<NinepatchSheet>("test-ninepatch");
             var linkinSpriteSheet = Assets.GetMachinaAsset<SpriteSheet>("linkin-sprite-sheet");

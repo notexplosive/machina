@@ -36,7 +36,7 @@ namespace Machina.Components
 
         private void DrawInnerScene(SpriteBatch spriteBatch)
         {
-            this.sceneLayers.Draw(spriteBatch);
+            this.sceneLayers.DrawOnCanvas(spriteBatch);
         }
 
         public override void OnDelete()
@@ -76,11 +76,9 @@ namespace Machina.Components
         }
 
         public SceneLayers SceneLayers => this.sceneLayers;
-
-        public Point ViewportSize => this.boundingRect.Rect.Size;
-
+        public Point ViewportSize => this.boundingRect.Size;
+        public Point WindowSize => this.boundingRect.Size;
         public float ScaleFactor => 1;
-
         public Rectangle CanvasRect => new Rectangle(new Point(0, 0), ViewportSize);
     }
 }

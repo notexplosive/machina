@@ -33,6 +33,7 @@ namespace Machina.Engine
             if (useDebugScene)
             {
                 this.debugScene = new Scene(this);
+                this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize.X, gameCanvas.WindowSize.Y, ResizeBehavior.FillContent));
             }
         }
 
@@ -165,9 +166,9 @@ namespace Machina.Engine
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawOnCanvas(SpriteBatch spriteBatch)
         {
-            var scenes = AllScenes();
+            var scenes = AllScenesExceptDebug();
 
             foreach (var scene in scenes)
             {
@@ -181,6 +182,11 @@ namespace Machina.Engine
                     scene.DebugDraw(spriteBatch);
                 }
             }
+        }
+
+        public void DrawDebugScene(SpriteBatch spriteBatch)
+        {
+            this.debugScene?.Draw(spriteBatch);
         }
     }
 }
