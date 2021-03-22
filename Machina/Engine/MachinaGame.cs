@@ -93,7 +93,7 @@ namespace Machina.Engine
 
         protected void SetWindowSize(Point windowSize)
         {
-            Print("Screen size changed to", windowSize);
+            Print("Window size changed to", windowSize);
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();

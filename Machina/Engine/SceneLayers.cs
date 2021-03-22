@@ -43,6 +43,10 @@ namespace Machina.Engine
             return scene;
         }
 
+        /// <summary>
+        /// This is private intentionally, you should only add a scene to the SceneLayers as a new scene via AddNewScene
+        /// </summary>
+        /// <param name="scene"></param>
         private void Add(Scene scene)
         {
             this.sceneList.Add(scene);
