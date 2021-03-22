@@ -43,7 +43,7 @@ namespace Machina.Engine
             return scene;
         }
 
-        public void Add(Scene scene)
+        private void Add(Scene scene)
         {
             this.sceneList.Add(scene);
         }
