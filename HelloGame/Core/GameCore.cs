@@ -16,7 +16,7 @@ namespace HelloGame
         private Scene uiScene;
         private GameSettings settings;
 
-        public GameCore() : base(new Point(1600, 900), new Point(1600, 900), ResizeBehavior.MaintainDesiredResolution)
+        public GameCore() : base(new Point(1920, 1080), new Point(1920, 1080), ResizeBehavior.FillContent)
         {
             IsMouseVisible = true;
         }
@@ -31,35 +31,38 @@ namespace HelloGame
 
             void Intro()
             {
-                var oldLayers = this.sceneLayers;
-                var gameCanvas = new GameCanvas(new Point(300, 300), ResizeBehavior.MaintainDesiredResolution);
+                var oldLayers = SceneLayers;
+                var windowSize = this.startingWindowSize;
+                var desiredWidth = 400;
+                float ratio = (float) windowSize.X / desiredWidth;
+                var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
                 gameCanvas.BuildCanvas(GraphicsDevice);
-                var introLayers = new SceneLayers(true, gameCanvas, this.sceneLayers.frameStep);
+                var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());
                 var introScene = introLayers.AddNewScene();
-                var textActor = introScene.AddActor("text");
-                new TextRenderer(textActor, MachinaGame.Assets.GetSpriteFont("LogoFont"), "notexplosive.net");
 
-                var backgroundActor = introScene.AddActor("background");
-                backgroundActor.transform.Depth += 10;
-                new BoundingRect(backgroundActor, new Point(300, 300));
-                new BoundingRectRenderer(backgroundActor);
+                introLayers.BackgroundColor = Color.Black;
+                var textActor = introScene.AddActor("text");
+                var boundingRect = new BoundingRect(textActor, 20, 20);
+                new BoundingRectToViewportSize(textActor);
+                new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
+                new IntroTextAnimation(textActor);
 
                 // Steal control
-                this.sceneLayers = introLayers;
+                SceneLayers = introLayers;
 
-                Action onEnd = () =>
+                Print(boundingRect.Size);
+
+                void onEnd()
                 {
                     // Restore control
-                    this.sceneLayers = oldLayers;
-                };
+                    SceneLayers = oldLayers;
+                }
 
-                var timer = introScene.AddActor("Timer");
-                new DestroyTimer(timer, 5);
-                new CallbackOnDestroy(timer, onEnd);
+                new CallbackOnDestroy(textActor, onEnd);
             }
 
-            gameScene = sceneLayers.AddNewScene();
-            uiScene = sceneLayers.AddNewScene();
+            gameScene = SceneLayers.AddNewScene();
+            uiScene = SceneLayers.AddNewScene();
 
             Assets.AddMachinaAsset("hoop-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("hoop"), new Point(32, 32)));
             Assets.AddMachinaAsset("linkin-sprite-sheet", new GridBasedSpriteSheet(Assets.GetTexture("linkin"), new Point(16, 16)));

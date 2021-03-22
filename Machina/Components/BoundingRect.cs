@@ -17,6 +17,11 @@ namespace Machina.Components
         }
         public Point Size => this.size;
 
+        public void SetSize(Point viewportSize)
+        {
+            this.size = viewportSize;
+        }
+
         public int Area => this.Width * this.Height;
 
         public Point Location => Rect.Location;

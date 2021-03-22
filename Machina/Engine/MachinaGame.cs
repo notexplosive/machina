@@ -24,11 +24,21 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         protected readonly Point startingWindowSize;
-        protected SceneLayers sceneLayers;
+        private SceneLayers sceneLayers;
+        public SceneLayers SceneLayers
+        {
+            get => this.sceneLayers;
+            set
+            {
+                this.sceneLayers = value;
+                CurrentGameCanvas.SetWindowSize(this.currentWindowSize);
+            }
+        }
         protected SpriteBatch spriteBatch;
-        public readonly GameCanvas gameCanvas;
+        public GameCanvas CurrentGameCanvas => (sceneLayers.gameCanvas as GameCanvas);
         private ILogger logger;
         public static UIStyle defaultStyle;
+        private Point currentWindowSize;
 
         internal static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
@@ -66,6 +76,7 @@ namespace Machina.Engine
             Current = this;
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
+            this.currentWindowSize = startingWindowSize;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -80,12 +91,11 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            gameCanvas = new GameCanvas(startingRenderResolution, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
             Assets = new AssetLibrary(this);
-            this.sceneLayers = new SceneLayers(true, gameCanvas, frameStep);
+            this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
             Window.TextInput += this.sceneLayers.OnTextInput;
         }
 
@@ -95,12 +105,12 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
-            gameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
+            CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
         }
 
         protected override void Initialize()
         {
-            gameCanvas.BuildCanvas(GraphicsDevice);
+            CurrentGameCanvas.BuildCanvas(GraphicsDevice);
             this.IsMouseVisible = true;
             SetWindowSize(this.startingWindowSize);
 
@@ -255,18 +265,20 @@ namespace Machina.Engine
         protected override void Draw(GameTime gameTime)
         {
             sceneLayers.PreDraw(spriteBatch);
-            gameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
-            GraphicsDevice.Clear(Color.DarkSlateGray); // Draw main background color
+            CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+            GraphicsDevice.Clear(sceneLayers.BackgroundColor);
 
             sceneLayers.DrawOnCanvas(spriteBatch);
-            gameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+            CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
             sceneLayers.DrawDebugScene(spriteBatch);
             base.Draw(gameTime);
         }
 
         private void OnResize(object sender, EventArgs e)
         {
-            gameCanvas.SetWindowSize(new Point(Window.ClientBounds.Width, Window.ClientBounds.Height));
+            var windowSize = new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            this.currentWindowSize = windowSize;
+            CurrentGameCanvas.SetWindowSize(windowSize);
         }
 
         protected override void OnExiting(Object sender, EventArgs args)

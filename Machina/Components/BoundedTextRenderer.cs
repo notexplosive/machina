@@ -148,10 +148,10 @@ namespace Machina.Components
                 var pos = new Vector2(line.positionX, line.positionY + offset.Y);
                 var depth = transform.Depth + this.depthOffset;
 
-                spriteBatch.DrawString(this.Font, line.textContent, pos, this.TextColor, 0, Vector2.Zero, 1f, SpriteEffects.None, depth);
+                spriteBatch.DrawString(this.Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(this.Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, 0, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(this.Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
                 }
             }
         }

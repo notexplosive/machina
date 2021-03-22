@@ -19,6 +19,7 @@ namespace Machina.Engine
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
         private TextInputEventArgs? pendingInput;
+        public Color BackgroundColor = Color.SlateBlue;
 
         public void OnTextInput(object sender, TextInputEventArgs e)
         {
