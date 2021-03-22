@@ -39,9 +39,9 @@ namespace Machina.Engine
         private RenderTarget2D screenRenderTarget;
         private readonly IResizeStrategy resizeStrategy;
 
-        public GameCanvas(int idealWidth, int idealHeight, ResizeBehavior resizeBehavior)
+        public GameCanvas(Point viewportSize, ResizeBehavior resizeBehavior)
         {
-            ViewportSize = new Point(idealWidth, idealHeight);
+            ViewportSize = viewportSize;
             if (resizeBehavior == ResizeBehavior.FillContent)
             {
                 resizeStrategy = new FillStrategy();
@@ -50,7 +50,7 @@ namespace Machina.Engine
             {
                 resizeStrategy = new MaintainDesiredResolutionStrategy();
             }
-            SetWindowSize(idealWidth, idealHeight);
+            SetWindowSize(viewportSize);
         }
 
         public Rectangle CanvasRect
@@ -81,9 +81,9 @@ namespace Machina.Engine
             get; private set;
         }
 
-        public void SetWindowSize(int windowWidth, int windowHeight)
+        public void SetWindowSize(Point windowSize)
         {
-            WindowSize = new Point(windowWidth, windowHeight);
+            WindowSize = windowSize;
         }
 
         public void BuildCanvas(GraphicsDevice graphicsDevice, Point canvasSize)

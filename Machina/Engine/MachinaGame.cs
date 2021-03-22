@@ -82,7 +82,7 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            gameCanvas = new GameCanvas(startingRenderResolution.X, startingRenderResolution.Y, resizeBehavior);
+            gameCanvas = new GameCanvas(startingRenderResolution, resizeBehavior);
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
 
@@ -97,7 +97,7 @@ namespace Machina.Engine
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
-            gameCanvas.SetWindowSize(windowSize.X, windowSize.Y);
+            gameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
         }
 
         protected override void Initialize()
@@ -268,7 +268,7 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            gameCanvas.SetWindowSize(Window.ClientBounds.Width, Window.ClientBounds.Height);
+            gameCanvas.SetWindowSize(new Point(Window.ClientBounds.Width, Window.ClientBounds.Height));
         }
 
         protected override void OnExiting(Object sender, EventArgs args)

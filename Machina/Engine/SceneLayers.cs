@@ -33,7 +33,7 @@ namespace Machina.Engine
             if (useDebugScene)
             {
                 this.debugScene = new Scene(this);
-                this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize.X, gameCanvas.WindowSize.Y, ResizeBehavior.FillContent));
+                this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
             }
         }
 
