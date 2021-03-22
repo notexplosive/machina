@@ -52,6 +52,30 @@
 /processorParam:TextureFormat=Color
 /build:images/button-ninepatches.png
 
+#begin sounds/bbox-chape.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/bbox-chape.ogg
+
+#begin sounds/bbox-ku.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/bbox-ku.ogg
+
+#begin sounds/bbox-pff.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/bbox-pff.ogg
+
+#begin sounds/bbox-tik.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/bbox-tik.ogg
+
 #begin sounds/key-impact.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor

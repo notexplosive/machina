@@ -2,6 +2,7 @@
 using Machina.Engine;
 using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,11 +16,13 @@ namespace Machina.Components
         private bool spinning;
         private float totalTime;
         private float dampening = 1;
+        private SoundEffectInstance tikSound;
 
         public IntroTextAnimation(Actor actor) : base(actor)
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.actor.scene.StartCoroutine(IntroAnimation());
+            tikSound = MachinaGame.Assets.CreateSoundEffectInstance("bbox-tik");
             SwapColor();
         }
 
@@ -56,35 +59,68 @@ namespace Machina.Components
             toggle = !toggle;
         }
 
+        void PlayTick(float pitch = 0)
+        {
+            tikSound.Pitch = pitch;
+            tikSound.Stop();
+            tikSound.Play();
+        }
+
         private IEnumerator<ICoroutineAction> IntroAnimation()
         {
             var camera = this.actor.scene.camera;
             var speed = 1.5f;
+            var ouch = MachinaGame.Assets.CreateSoundEffectInstance("ouch");
+            ouch.Pitch = 1;
+
+            var chape = MachinaGame.Assets.CreateSoundEffectInstance("bbox-chape");
+            var ku = MachinaGame.Assets.CreateSoundEffectInstance("bbox-ku");
+            var pff = MachinaGame.Assets.CreateSoundEffectInstance("bbox-pff");
+
 
             yield return new WaitSeconds(0.5f / speed);
+
             this.textRenderer.Text = "Not";
+            PlayTick();
             camera.Zoom = 5;
             SwapColor();
+
             yield return new WaitSeconds(0.5f / speed);
+
             this.textRenderer.Text = "NotEx";
+            PlayTick();
             camera.Zoom = 4;
             //SwapColor();
+
             yield return new WaitSeconds(0.5f / speed);
+
             this.textRenderer.Text = "NotExplo";
+            PlayTick();
             camera.Zoom = 3;
+
             yield return new WaitSeconds(0.5f / speed);
+
             this.textRenderer.Text = "NotExplosive";
+            PlayTick();
             camera.Zoom = 2;
+
             yield return new WaitSeconds(1.5f / speed);
 
 
             this.textRenderer.Text = "NotExplosive.";
             camera.Zoom = 1.5f;
+            PlayTick(0.5f);
+
             yield return new WaitSeconds(0.25f / speed);
+
             this.textRenderer.Text = "NotExplosive.net";
+            PlayTick(0.5f);
             camera.Zoom = 1;
 
             yield return new WaitSeconds(0.75f / speed);
+
+            pff.Stop();
+            pff.Play();
             this.spinning = true;
             SwapColor();
 
@@ -92,12 +128,16 @@ namespace Machina.Components
 
             yield return new WaitSeconds(0.5f / speed);
             this.textRenderer.Text = "NotExplosive";
+            PlayTick(1);
             yield return new WaitSeconds(0.15f / speed);
             this.textRenderer.Text = "NotExpl";
+            PlayTick(1);
             yield return new WaitSeconds(0.15f / speed);
             this.textRenderer.Text = "No";
+            PlayTick(1);
             yield return new WaitSeconds(0.15f / speed);
             this.textRenderer.Text = "";
+            PlayTick(1);
             yield return new WaitSeconds(1f / speed);
             this.actor.Destroy();
         }
