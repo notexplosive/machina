@@ -1,5 +1,6 @@
 ﻿using Machina.Data;
 using Machina.Engine;
+using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,8 @@ namespace Machina.Components
                 dampening = Math.Clamp(dampening, 0, 1);
                 this.actor.scene.camera.Rotation = MathF.Sin(totalTime * 7) * dampening / 3;
                 this.actor.scene.camera.Zoom = 1 + MathF.Sin(totalTime * 5) * dampening / 5;
+
+                this.actor.scene.sceneLayers.BackgroundColor *= 0.99f;
             }
         }
 
@@ -57,10 +60,11 @@ namespace Machina.Components
         {
             var camera = this.actor.scene.camera;
             var speed = 1.5f;
+
             yield return new WaitSeconds(0.5f / speed);
             this.textRenderer.Text = "Not";
             camera.Zoom = 5;
-            //SwapColor();
+            SwapColor();
             yield return new WaitSeconds(0.5f / speed);
             this.textRenderer.Text = "NotEx";
             camera.Zoom = 4;
@@ -71,12 +75,12 @@ namespace Machina.Components
             yield return new WaitSeconds(0.5f / speed);
             this.textRenderer.Text = "NotExplosive";
             camera.Zoom = 2;
-            yield return new WaitSeconds(1f / speed);
+            yield return new WaitSeconds(1.5f / speed);
 
 
             this.textRenderer.Text = "NotExplosive.";
             camera.Zoom = 1.5f;
-            yield return new WaitSeconds(0.15f / speed);
+            yield return new WaitSeconds(0.25f / speed);
             this.textRenderer.Text = "NotExplosive.net";
             camera.Zoom = 1;
 
