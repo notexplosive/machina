@@ -96,7 +96,7 @@ namespace Machina.Engine
 
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
-            Window.TextInput += this.sceneLayers.OnTextInput;
+            Window.TextInput += this.sceneLayers.AddPendingTextInput;
         }
 
         protected void SetWindowSize(Point windowSize)
@@ -196,13 +196,13 @@ namespace Machina.Engine
                 new LayoutElement(content).StretchHorizontally().StretchVertically();
                 new LayoutGroup(content, Orientation.Horizontal);
 
-                var view = content.transform.AddActorAsChild("View");
+                var view = content.transform.AddActorAsChild("SceneGraphRendererView");
                 view.transform.LocalDepth = new Depth(-1);
                 new BoundingRect(view, Point.Zero).SetOffsetToTopLeft();
                 new LayoutElement(view).StretchHorizontally().StretchVertically();
                 new Canvas(view);
                 new Hoverable(view);
-                var sceneRenderer = new SceneRenderer(view, () => { return true; });
+                var sceneRenderer = new SceneRenderer(view, () => { return false; });
                 var sceneGraphContent = sceneRenderer.primaryScene;
 
 

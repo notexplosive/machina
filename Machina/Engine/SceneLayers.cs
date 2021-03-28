@@ -21,7 +21,7 @@ namespace Machina.Engine
         private TextInputEventArgs? pendingInput;
         public Color BackgroundColor = Color.SlateBlue;
 
-        public void OnTextInput(object sender, TextInputEventArgs e)
+        public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
             this.pendingInput = e;
         }
@@ -111,7 +111,6 @@ namespace Machina.Engine
                     if (this.pendingInput.HasValue)
                     {
                         scene.OnTextInput(this.pendingInput.Value);
-                        this.pendingInput = null;
                     }
 
                     foreach (var key in keyTracker.Released)
@@ -147,6 +146,8 @@ namespace Machina.Engine
                 }
             }
 
+            this.pendingInput = null;
+
             foreach (Scene scene in scenes)
             {
                 if (!scene.frameStep.IsPaused)
@@ -163,6 +164,7 @@ namespace Machina.Engine
             var scenes = AllScenes();
             foreach (var scene in scenes)
             {
+                scene.FlushBuffers();
                 scene.PreDraw(spriteBatch);
             }
         }

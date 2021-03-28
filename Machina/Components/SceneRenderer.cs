@@ -63,6 +63,14 @@ namespace Machina.Components
                 this.hoverable.IsHovered || bypassHover, this.shouldAllowKeyboardEvents());
         }
 
+        public override void OnTextInput(TextInputEventArgs inputEventArgs)
+        {
+            if (this.shouldAllowKeyboardEvents())
+            {
+                this.sceneLayers.AddPendingTextInput(null, inputEventArgs);
+            }
+        }
+
         /// <summary>
         /// Gets the position of the mouse within the scene, assuming the scene is not rotated.
         /// </summary>
