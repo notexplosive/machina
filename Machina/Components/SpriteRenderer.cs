@@ -15,7 +15,7 @@ namespace Machina.Components
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private int framesPerSecond = 15;
-        private float scale = 1f;
+        public float scale = 1f;
         public Color color;
         private Vector2 offset;
 
