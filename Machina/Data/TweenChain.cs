@@ -66,7 +66,7 @@ namespace Machina.Data
             return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors, FloatTween.LerpFloat));
         }
 
-        public TweenChain AppendIntTween(int targetVal, int duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
+        public TweenChain AppendIntTween(int targetVal, float duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
         {
             return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, LerpInt));
         }

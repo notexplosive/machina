@@ -25,5 +25,10 @@ namespace Machina.Data
         {
             return new TweenAccessors<Vector2>(actor.GetPosition, actor.SetPosition);
         }
+
+        public static TweenAccessors<Vector2> LocalPositionTweenAccessors(this Actor actor)
+        {
+            return new TweenAccessors<Vector2>(() => actor.transform.LocalPosition, val => actor.transform.LocalPosition = val);
+        }
     }
 }
