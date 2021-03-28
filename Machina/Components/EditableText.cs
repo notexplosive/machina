@@ -17,6 +17,8 @@ namespace Machina.Components
         private TextCursor cursor;
         private Color cursorColor = Color.White;
         private Color highlightColor = Color.CornflowerBlue;
+        private float flickerTimer;
+        public Action<string> onSubmit;
 
         public string Text
         {
@@ -42,36 +44,53 @@ namespace Machina.Components
         {
             if (this.isInFocus)
             {
-                var topLeft = transform.Position.ToPoint() + this.textRenderer.TextLocalPos;
+                var topLeft = this.textRenderer.TextWorldPos;
+                var lineHeight = (int) (textRenderer.Font.LineSpacing * 0.9f);
 
-                if (Text.Length != 0)
+                if (MathF.Cos(this.flickerTimer * 5) > 0)
                 {
-                    var cursorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
-                    var anchorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.anchorPos.X)).X, 0);
-                    var lineHeight = (int) (textRenderer.Font.LineSpacing * 0.9f);
+                    if (Text.Length != 0)
+                    {
+                        var cursorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
 
-                    // Caret
-                    spriteBatch.FillRectangle(new Rectangle(topLeft +
-                        cursorLocalPos,
-                        new Point(1, lineHeight)), this.cursorColor, transform.Depth - 1);
-
-                    // Highlight
-                    spriteBatch.FillRectangle(new Rectangle(topLeft + cursorLocalPos, new Point(anchorLocalPos.X - cursorLocalPos.X, lineHeight)), this.highlightColor, transform.Depth + 1);
+                        // Caret
+                        spriteBatch.FillRectangle(new Rectangle(topLeft +
+                            cursorLocalPos,
+                            new Point(1, lineHeight)), this.cursorColor, transform.Depth - 1);
+                    }
+                    else
+                    {
+                        // fallback case, probably not needed
+                        spriteBatch.FillRectangle(new Rectangle(topLeft +
+                            new Point(0, 0),
+                            new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor, transform.Depth - 1);
+                    }
                 }
-                else
+
+                if (this.cursor.HighlightLength > 0)
                 {
-                    // fallback case, probably not needed
-                    spriteBatch.FillRectangle(new Rectangle(topLeft +
-                        new Point(0, 0),
-                        new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor, transform.Depth - 1);
+                    // Highlight
+                    var highlightStartLocalPos = textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.HighlightStart)).X;
+                    var highlightedWidth = textRenderer.Font.MeasureString(HighlightedSubstring).X;
+                    spriteBatch.FillRectangle(new RectangleF(topLeft.ToVector2() + new Vector2(highlightStartLocalPos, 0), new Vector2(highlightedWidth, lineHeight)), this.highlightColor, transform.Depth + 2);
+
+                    spriteBatch.DrawString(textRenderer.Font, HighlightedSubstring + ", " + highlightedWidth, Vector2.Zero, Color.Red);
                 }
             }
         }
 
+        public string HighlightedSubstring => Text.Substring(this.cursor.HighlightStart, this.cursor.HighlightLength);
+
+        public override void Update(float dt)
+        {
+            this.flickerTimer += dt;
+        }
+
         public override void OnTextInput(TextInputEventArgs inputEventArgs)
         {
-            if (this.isInFocus)
+            if (this.isInFocus && this.actor.Visible)
             {
+                this.flickerTimer = 0;
                 if (IsPrintable(inputEventArgs.Character))
                 {
                     Text = Text.Insert(this.cursor.position.X, inputEventArgs.Character.ToString());
@@ -121,6 +140,7 @@ namespace Machina.Components
         {
             if (this.isInFocus && state == ButtonState.Pressed)
             {
+                this.flickerTimer = 0;
                 if (key == Keys.Left)
                 {
                     this.cursor.position.X--;
@@ -145,6 +165,10 @@ namespace Machina.Components
                 {
                     this.cursor.position.X = Text.Length;
                 }
+                else if (key == Keys.Enter)
+                {
+                    this.onSubmit?.Invoke(Text);
+                }
 
                 if (!modifiers.shift)
                 {
@@ -165,19 +189,21 @@ namespace Machina.Components
                 {
                     if (button == MouseButton.Left)
                     {
+                        this.flickerTimer = 0;
                         this.cursor = new TextCursor();
-                        var totalLength = transform.Position.X;
+
+                        var topLeft = this.textRenderer.TextWorldPos.ToVector2();
+                        var substring = "";
                         int charIndex = 0;
                         foreach (var c in textRenderer.Text)
                         {
-                            var textWidth = textRenderer.Font.MeasureString(c.ToString()).X;
-                            totalLength += textWidth / 2;
-
-                            if (totalLength > currentPosition.X)
+                            substring += c;
+                            var substrWidth = textRenderer.Font.MeasureString(substring).X;
+                            var rect = new Rectangle(topLeft.ToPoint(), new Point((int) substrWidth, textRenderer.Font.LineSpacing));
+                            if (rect.Contains(currentPosition))
                             {
                                 break;
                             }
-                            totalLength += textWidth / 2;
                             charIndex++;
                         }
                         this.cursor.position.X = charIndex;
@@ -186,11 +212,31 @@ namespace Machina.Components
             }
         }
 
+        public override void DebugDraw(SpriteBatch spriteBatch)
+        {
+            var topLeft = this.textRenderer.TextWorldPos.ToVector2();
+            var substring = "";
+            int charIndex = 0;
+            foreach (var c in textRenderer.Text)
+            {
+                substring += c;
+                var substrWidth = textRenderer.Font.MeasureString(substring).X;
+                var rect = new Rectangle(topLeft.ToPoint(), new Point((int) substrWidth, textRenderer.Font.LineSpacing));
+                spriteBatch.DrawRectangle(
+                    rect,
+                    Color.Orange, 1f, transform.Depth);
+                charIndex++;
+
+            }
+            this.cursor.position.X = charIndex;
+        }
+
         private void OnClick(MouseButton button)
         {
             if (button == MouseButton.Left)
             {
                 this.isInFocus = true;
+                this.cursor.ResetAnchor();
             }
         }
 

@@ -54,8 +54,8 @@ namespace Machina.Components
             Overflow overflow = Overflow.Elide,
             Depth depthOffset = default) : base(actor)
         {
-            this.Text = text;
-            this.Font = font;
+            Text = text;
+            Font = font;
             this.boundingRect = RequireComponent<BoundingRect>();
             this.TextColor = textColor;
             this.horizontalAlignment = horizontalAlignment;
@@ -114,6 +114,8 @@ namespace Machina.Components
                 return GetTextLocalPos(CreateMeasuredText());
             }
         }
+
+        public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
         public Point GetTextLocalPos(TextMeasurer measurer)
         {
