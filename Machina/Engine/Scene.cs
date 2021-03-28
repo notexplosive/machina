@@ -176,5 +176,13 @@ namespace Machina.Engine
         {
             this.frameStep.Step(this);
         }
+
+        ~Scene()
+        {
+            foreach (var actor in GetAllActors())
+            {
+                actor.Delete();
+            }
+        }
     }
 }
