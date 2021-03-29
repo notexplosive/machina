@@ -167,6 +167,7 @@ namespace Machina.Components
                 }
                 else if (key == Keys.Enter)
                 {
+                    this.isInFocus = false;
                     this.onSubmit?.Invoke(Text);
                 }
 
