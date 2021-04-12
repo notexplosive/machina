@@ -249,6 +249,11 @@ namespace Machina.Engine
 #endif
         }
 
+        public static void Quit()
+        {
+            Current.Exit();
+        }
+
         protected override void UnloadContent()
         {
             base.UnloadContent();
