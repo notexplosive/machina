@@ -299,7 +299,7 @@ namespace Machina.Components
 
         public bool HasParent => this.Parent != null;
 
-        public Actor AddActorAsChild(string name, Vector2 position = default)
+        public Actor AddActorAsChild(string name, Vector2 localPosition = default)
         {
             Actor newActor;
             if (this.actor.scene != null)
@@ -311,7 +311,7 @@ namespace Machina.Components
                 newActor = new Actor(name, null);
             }
             newActor.transform.SetParent(this.actor);
-            newActor.transform.LocalPosition = position;
+            newActor.transform.LocalPosition = localPosition;
             newActor.transform.LocalDepth = new Depth(0);
             newActor.transform.LocalAngle = 0f;
             return newActor;
