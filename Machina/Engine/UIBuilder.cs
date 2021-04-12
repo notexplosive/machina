@@ -50,6 +50,7 @@ namespace Machina.Engine
         {
             var scene = group.actor.scene;
             var spacerActor = scene.AddActor("Spacer");
+            spacerActor.transform.SetParent(group.actor);
             new BoundingRect(spacerActor, size);
             var e = new LayoutElement(spacerActor);
             if (stretchHorizontal)
@@ -61,7 +62,6 @@ namespace Machina.Engine
                 e.StretchVertically();
             }
 
-            spacerActor.transform.SetParent(group.actor);
 
             return spacerActor;
         }

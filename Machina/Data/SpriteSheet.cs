@@ -34,12 +34,12 @@ namespace Machina.Data
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, float angle = 0f)
         {
-            DrawFrame(spriteBatch, index, position, 1f, angle, new PointBool(false, false), layerDepth, Color.White);
+            DrawFrame(spriteBatch, index, position, 1f, angle, PointBool.False, layerDepth, Color.White);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, Color color)
         {
-            DrawFrame(spriteBatch, index, position, 1f, 0f, new PointBool(false, false), layerDepth, color);
+            DrawFrame(spriteBatch, index, position, 1f, 0f, PointBool.False, layerDepth, color);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Transform transform, float scale = 1f, PointBool flip = default)

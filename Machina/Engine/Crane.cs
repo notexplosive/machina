@@ -282,7 +282,7 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
+        public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
         }
 

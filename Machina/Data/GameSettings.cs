@@ -28,9 +28,9 @@ namespace Machina.Data
 
         public void Apply()
         {
-            this.Fullscreen = fullscreenState.GetState();
-            this.SoundVolume = soundVolumeState.GetState();
-            this.MusicVolume = musicVolumeState.GetState();
+            this.Fullscreen = fullscreenState.State;
+            this.SoundVolume = soundVolumeState.State;
+            this.MusicVolume = musicVolumeState.State;
 
             var graphics = MachinaGame.Graphics;
 

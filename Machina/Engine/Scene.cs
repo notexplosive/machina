@@ -24,7 +24,6 @@ namespace Machina.Engine
             }
 
             this.sceneLayers = sceneLayers;
-
             this.frameStep = frameStep != null ? frameStep : new EmptyFrameStep();
         }
 
