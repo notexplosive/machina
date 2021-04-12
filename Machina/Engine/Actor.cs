@@ -58,6 +58,17 @@ namespace Machina.Engine
             }
         }
 
+        public T GetComponentInImmediateParent<T>() where T : BaseComponent
+        {
+            var parent = this.transform.Parent;
+            if (parent == null)
+            {
+                return null;
+            }
+
+            return parent.actor.GetComponent<T>();
+        }
+
         public List<T> GetComponentsInImmediateChildren<T>() where T : BaseComponent
         {
             var result = new List<T>();
@@ -115,21 +126,14 @@ namespace Machina.Engine
         /// <returns></returns>
         public T GetComponent<T>() where T : BaseComponent
         {
-            foreach (var component in this.iterables)
-            {
-                if (component is T converted)
-                {
-                    return converted;
-                }
-            }
-
-            return null;
+            return GetComponentUnsafe<T>();
         }
 
         public IEnumerable<T> GetComponents<T>() where T : BaseComponent
         {
             return GetComponentsUnsafe<T>();
         }
+
 
         public void RemoveComponent<T>() where T : BaseComponent
         {
@@ -164,7 +168,7 @@ namespace Machina.Engine
         /// </summary>
         /// <typeparam name="T">Any type the component qualifies under</typeparam>
         /// <returns></returns>
-        public IEnumerable<T> GetComponentsUnsafe<T>()
+        public List<T> GetComponentsUnsafe<T>()
         {
             var result = new List<T>();
             foreach (var component in this.iterables)
@@ -176,6 +180,25 @@ namespace Machina.Engine
             }
 
             return result;
+        }
+
+
+        /// <summary>
+        /// Same as GetComponent except without the type safety
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponentUnsafe<T>() where T : class
+        {
+            foreach (var component in this.iterables)
+            {
+                if (component is T converted)
+                {
+                    return converted;
+                }
+            }
+
+            return null;
         }
     }
 
