@@ -51,15 +51,20 @@ namespace Machina.Components
             return this;
         }
 
-        internal TweenChainComponent AddCallback(Action callbackFn)
+        public TweenChainComponent AddCallback(Action callbackFn)
         {
             this.chain.AppendCallback(callbackFn);
             return this;
         }
 
-        internal void AddIntTween(int targetVal, int duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
+        public void AddIntTween(int targetVal, int duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
         {
             this.chain.AppendIntTween(targetVal, duration, easeFunc, accessors);
+        }
+
+        public void StopAndClearAllTweens()
+        {
+            this.chain.Clear();
         }
     }
 }

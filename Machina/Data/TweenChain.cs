@@ -10,7 +10,7 @@ namespace Machina.Data
 {
     public class TweenChain
     {
-        private readonly List<IChainItem> chainInernal;
+        private readonly List<IChainItem> chainInternal;
         private int currentIndex;
         private IChainItem currentItem;
         private TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
@@ -20,7 +20,7 @@ namespace Machina.Data
             var current = this.currentItem;
             if (current == null)
             {
-                current = this.chainInernal[this.currentIndex];
+                current = this.chainInternal[this.currentIndex];
             }
 
             if (current != null)
@@ -40,19 +40,19 @@ namespace Machina.Data
 
         public TweenChain()
         {
-            this.chainInernal = new List<IChainItem>();
+            this.chainInternal = new List<IChainItem>();
             this.currentIndex = 0;
         }
 
         public void Clear()
         {
-            this.chainInernal.Clear();
+            this.chainInternal.Clear();
             this.currentIndex = 0;
         }
 
         public TweenChain Append(IChainItem item)
         {
-            chainInernal.Add(item);
+            chainInternal.Add(item);
             return this;
         }
 
@@ -88,16 +88,16 @@ namespace Machina.Data
 
         public void StartNextTween()
         {
-            if (this.chainInernal.Count > 0)
+            if (this.chainInternal.Count > 0)
             {
-                this.currentItem = this.chainInernal[this.currentIndex].StartTween();
+                this.currentItem = this.chainInternal[this.currentIndex].StartTween();
                 this.currentIndex++;
             }
         }
 
         public void Update(float dt)
         {
-            if (this.currentItem == null && this.chainInernal.Count > this.currentIndex)
+            if (this.currentItem == null && this.chainInternal.Count > this.currentIndex)
             {
                 StartNextTween();
             }
@@ -109,11 +109,12 @@ namespace Machina.Data
                 if (this.currentItem.IsComplete)
                 {
                     this.currentItem = null;
+                    Update(dt); // recurse to queue up next item, this means callbacks execute instantly
                 }
             }
         }
 
-        public bool IsFinished => this.currentIndex == this.chainInernal.Count && this.currentItem == null; // this is clunky af
+        public bool IsFinished => this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
 
         /// <summary>
         /// Maintains the current chain but puts us back at the beginning
@@ -122,7 +123,7 @@ namespace Machina.Data
         {
             this.currentIndex = 0;
             this.currentItem = null;
-            foreach (var item in this.chainInernal)
+            foreach (var item in this.chainInternal)
             {
                 item.Refresh();
             }
@@ -135,7 +136,7 @@ namespace Machina.Data
         /// </summary>
         public void SkipToEnd()
         {
-            this.currentIndex = this.chainInernal.Count;
+            this.currentIndex = this.chainInternal.Count;
             this.currentItem = null;
         }
 
