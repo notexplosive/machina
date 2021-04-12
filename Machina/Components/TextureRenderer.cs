@@ -29,9 +29,9 @@ namespace Machina.Components
             spriteBatch.Draw(texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
         }
 
-        public override void Update(float dt)
+        public void SetupBoundingRect()
         {
-
+            RequireComponent<BoundingRect>().SetSize(new Point(this.texture.Width, this.texture.Height));
         }
     }
 }
