@@ -8,7 +8,7 @@ using Machina.Engine;
 
 namespace Machina.Components
 {
-    class BoundingRect : BaseComponent
+    public class BoundingRect : BaseComponent
     {
         private Point size;
         public Vector2 Offset
@@ -17,9 +17,9 @@ namespace Machina.Components
         }
         public Point Size => this.size;
 
-        public void SetSize(Point viewportSize)
+        public void SetSize(Point size)
         {
-            this.size = viewportSize;
+            this.size = size;
         }
 
         public int Area => this.Width * this.Height;
@@ -88,6 +88,12 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawRectangle(Rect, Color.Pink, 1f, transform.Depth);
+        }
+
+        public BoundingRect SetOffset(Vector2 point)
+        {
+            Offset = point;
+            return this;
         }
     }
 }
