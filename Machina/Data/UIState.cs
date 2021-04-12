@@ -6,6 +6,9 @@ namespace Machina.Data
 {
     public interface UIState<T>
     {
-        public abstract T GetState();
+        public abstract T State
+        {
+            get;
+        }
     }
 }

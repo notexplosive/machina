@@ -39,9 +39,6 @@ namespace Machina.Components
             return IsChecked;
         }
 
-        public bool GetState()
-        {
-            return IsChecked;
-        }
+        public bool State => IsChecked;
     }
 }

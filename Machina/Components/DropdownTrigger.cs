@@ -91,9 +91,6 @@ namespace Machina.Components
             }
         }
 
-        public DropdownContent.DropdownItem GetState()
-        {
-            return this.selectedItem;
-        }
+        public DropdownContent.DropdownItem State => this.selectedItem;
     }
 }

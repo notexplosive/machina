@@ -97,9 +97,9 @@ namespace Machina.Components
             spriteBatch.FillRectangle(ThumbRect, Color.Red, (transform.Depth - 5).AsFloat);
         }
 
-        public int GetState()
+        public int State
         {
-            return (int) (Percent * this.numberOfIncrements);
+            get => (int) (Percent * this.numberOfIncrements);
         }
     }
 }

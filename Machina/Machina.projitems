@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundedTextRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\BoundingBoxFill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundingRectToViewportSize.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnClick.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnDestroy.cs" />
@@ -32,6 +33,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\EditableText.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CheckboxState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateBool.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateInt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\UIBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ButtonNinepatchHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />
