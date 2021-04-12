@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Components
@@ -38,6 +39,10 @@ namespace Machina.Components
         {
             get; set;
         }
+        public Point Offset
+        {
+            get; set;
+        }
         private readonly BoundingRect boundingRect;
         public Color TextColor;
         private Color dropShadowColor;
@@ -54,6 +59,8 @@ namespace Machina.Components
             Overflow overflow = Overflow.Elide,
             Depth depthOffset = default) : base(actor)
         {
+            Debug.Assert(text != null);
+
             Text = text;
             Font = font;
             this.boundingRect = RequireComponent<BoundingRect>();
@@ -143,17 +150,17 @@ namespace Machina.Components
         {
             var measurer = CreateMeasuredText();
 
-            var offset = GetTextLocalPos(measurer);
+            var localPos = GetTextLocalPos(measurer);
 
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.positionX, line.positionY + offset.Y);
+                var pos = new Vector2(line.positionX, line.positionY + localPos.Y) + Offset.ToVector2();
                 var depth = transform.Depth + this.depthOffset;
 
-                spriteBatch.DrawString(this.Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
+                spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(this.Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
                 }
             }
         }
