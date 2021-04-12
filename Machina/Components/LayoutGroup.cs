@@ -7,13 +7,14 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class LayoutGroup : BaseComponent
+    public class LayoutGroup : BaseComponent
     {
-        private BoundingRect boundingRect;
-        private Orientation orientation;
+        private readonly BoundingRect boundingRect;
         public int PaddingBetweenElements;
         private int margin;
         private int prevChildCount;
+
+        public readonly Orientation orientation;
 
         public LayoutGroup(Actor actor, Orientation orientation) : base(actor)
         {
@@ -21,8 +22,9 @@ namespace Machina.Components
             this.orientation = orientation;
         }
 
-        public override void OnDelete()
+        public override void Start()
         {
+            ExecuteLayout();
         }
 
         public override void Update(float dt)
@@ -37,7 +39,6 @@ namespace Machina.Components
 
             this.prevChildCount = transform.ChildCount;
         }
-
         public void ExecuteLayout()
         {
             var isVertical = this.orientation == Orientation.Vertical;
@@ -172,6 +173,62 @@ namespace Machina.Components
                 }
             }
             return result;
+        }
+
+        public LayoutGroup HorizontallyStretchedSpacer()
+        {
+            var spacer = transform.AddActorAsChild("horizontal-spacer");
+            new BoundingRect(spacer, new Point());
+            new LayoutElement(spacer).StretchHorizontally();
+
+            return this;
+        }
+
+        public LayoutGroup VerticallyStretchedSpacer()
+        {
+            var spacer = transform.AddActorAsChild("vertical-spacer");
+            new BoundingRect(spacer, new Point());
+            new LayoutElement(spacer).StretchVertically();
+
+            return this;
+        }
+
+        public LayoutGroup PixelSpacer(int size)
+        {
+            var spacer = transform.AddActorAsChild("spacer");
+            new BoundingRect(spacer, new Point(size, size));
+            new LayoutElement(spacer);
+
+            return this;
+        }
+
+        public LayoutGroup PixelSpacer(int width, int height)
+        {
+            var spacer = transform.AddActorAsChild("spacer");
+            new BoundingRect(spacer, new Point(width, height));
+            new LayoutElement(spacer);
+
+            return this;
+        }
+
+        public LayoutElement AddElement(string name, Point size, Action<Actor> onPostCreate)
+        {
+            var elementActor = transform.AddActorAsChild(name);
+            new BoundingRect(elementActor, size);
+            var element = new LayoutElement(elementActor);
+            onPostCreate?.Invoke(elementActor);
+
+            return element;
+        }
+
+        public LayoutElement AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        {
+            return AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
+        }
+
+        public LayoutElement AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        {
+            return AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
         }
     }
 }
