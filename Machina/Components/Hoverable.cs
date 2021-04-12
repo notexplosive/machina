@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Hoverable : BaseComponent
+    public class Hoverable : BaseComponent
     {
 
         public bool IsHovered

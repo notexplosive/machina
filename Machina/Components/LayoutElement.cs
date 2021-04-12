@@ -3,11 +3,12 @@ using Machina.Engine;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Components
 {
-    class LayoutElement : BaseComponent
+    public class LayoutElement : BaseComponent
     {
         public readonly BoundingRect boundingRect;
         private LayoutGroup group => this.actor.transform.Parent?.actor.GetComponent<LayoutGroup>();
@@ -34,7 +35,11 @@ namespace Machina.Components
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.group?.ExecuteLayout();
+
+            Debug.Assert(this.actor.GetComponentInImmediateParent<LayoutGroup>() != null, "LayoutElement does not have a LayoutGroup parent");
         }
+
+        public Orientation GroupOrientation => group.orientation;
 
         public bool IsStretchedAlong(Orientation orientation)
         {
