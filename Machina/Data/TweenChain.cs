@@ -160,14 +160,6 @@ namespace Machina.Data
                 get;
             }
             public void Refresh();
-
-            /// <summary>
-            /// Risky, you need to know the exact type of tween you're looking for.
-            /// If the Chain is in a callback you'll get null
-            /// </summary>
-            /// <typeparam name="U">Tween subtype</typeparam>
-            /// <returns></returns>
-            public Tween<U> GetTween<U>() where U : struct;
         }
 
         public class ChainItem<T> : IChainItem where T : struct
@@ -208,11 +200,6 @@ namespace Machina.Data
             {
                 this.tween.Update(dt);
                 this.setter(this.tween.CurrentValue);
-            }
-
-            public Tween<U> GetTween<U>() where U : struct
-            {
-                return this.tween as Tween<U>;
             }
         }
 

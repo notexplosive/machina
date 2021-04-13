@@ -21,6 +21,7 @@ namespace Machina.Engine
         {
             var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
+            buttonActor.transform.SetParent(group.actor);
             new BoundingRect(buttonActor, 0, height);
             new NinepatchRenderer(buttonActor, style.buttonDefault);
             new Hoverable(buttonActor);
@@ -30,14 +31,12 @@ namespace Machina.Engine
             new LayoutElement(buttonActor).StretchHorizontally();
             new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
             var buttonLabelActor = scene.AddActor("Button Label");
+            buttonLabelActor.transform.SetParent(buttonActor);
             new BoundingRect(buttonLabelActor, Point.Zero);
             var buttonLabelElement = new LayoutElement(buttonLabelActor);
             buttonLabelElement.StretchHorizontally();
             buttonLabelElement.StretchVertically();
             new BoundedTextRenderer(buttonLabelActor, buttonLabelText, style.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
-
-            buttonActor.transform.SetParent(group.actor);
-            buttonLabelActor.transform.SetParent(buttonActor);
 
             buttonActor.transform.LocalDepth = new Depth(-1);
             buttonLabelActor.transform.LocalDepth = new Depth(-1);
@@ -92,6 +91,8 @@ namespace Machina.Engine
             }
 
             var checkboxContainer = scene.AddActor("Checkbox", new Vector2(40, 400));
+            checkboxContainer.transform.SetParent(uiGroup.actor);
+
             new BoundingRect(checkboxContainer, new Point(256, 30));
             new Hoverable(checkboxContainer);
             var checkboxClickable = new Clickable(checkboxContainer);
@@ -119,7 +120,6 @@ namespace Machina.Engine
             new LayoutElement(checkboxLabel).StretchHorizontally().StretchVertically();
             new BoundedTextRenderer(checkboxLabel, labelText, style.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Center);
 
-            checkboxContainer.transform.SetParent(uiGroup.actor);
 
             checkboxBox.transform.LocalDepth = new Depth(-1);
             checkboxContainer.transform.LocalDepth = new Depth(-1);
@@ -144,12 +144,12 @@ namespace Machina.Engine
         {
             var scene = group.actor.scene;
             var labelActor = scene.AddActor("Label");
+            labelActor.transform.SetParent(group.actor);
             new BoundingRect(labelActor, new Point(32, 32));
             new BoundedTextRenderer(labelActor, textLabel, style.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Bottom);
             var e = new LayoutElement(labelActor);
             e.StretchHorizontally();
 
-            labelActor.transform.SetParent(group.actor);
             labelActor.transform.LocalDepth = new Depth(-1);
 
             return labelActor;
