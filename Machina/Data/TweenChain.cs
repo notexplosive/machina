@@ -56,6 +56,14 @@ namespace Machina.Data
             return this;
         }
 
+        /*
+         * This would work if we had a way to obtain a LerpFunction for a type
+        public TweenChain Append<T>(T targetVal, float duration, EaseFunc easeFunc, TweenAccessors<T> accessors) where T : struct
+        {
+            return Append(new ChainItem<T>(targetVal, duration, easeFunc, accessors, GetLerpFunction<T>()));
+        }
+        */
+
         public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc, TweenAccessors<float> accessors)
         {
             return Append(new ChainItem<float>(targetVal, duration, easeFunc, accessors, FloatTween.LerpFloat));
@@ -81,9 +89,16 @@ namespace Machina.Data
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, TweenDataFunctions.PositionTweenAccessors(actor), Vector2.Lerp));
         }
 
-        internal TweenChain AppendVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
+        public TweenChain AppendVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
         {
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
+        }
+
+        public MultiChainItem AppendMulticastTween()
+        {
+            var multiChainItem = new MultiChainItem();
+            Append(multiChainItem);
+            return multiChainItem;
         }
 
         public void StartNextTween()
@@ -162,6 +177,63 @@ namespace Machina.Data
             public void Refresh();
         }
 
+        public class MultiChainItem : IChainItem
+        {
+            public readonly List<TweenChain> chains = new List<TweenChain>();
+
+            public bool IsComplete
+            {
+                get
+                {
+                    foreach (var chain in this.chains)
+                    {
+                        if (!chain.IsFinished)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            public IChainItem StartTween()
+            {
+                foreach (var chain in chains)
+                {
+                    chain.StartNextTween();
+                }
+                return this;
+            }
+
+            public void Refresh()
+            {
+                foreach (var chain in chains)
+                {
+                    chain.Refresh();
+                }
+            }
+
+            public void Update(float dt)
+            {
+                foreach (var chain in chains)
+                {
+                    chain.Update(dt);
+                }
+            }
+
+            /// <summary>
+            /// Adds a new TweenChain channel.
+            /// CAUTION: If you have two channels that manipulate the same field, last one added will take precedence
+            /// </summary>
+            /// <returns></returns>
+            public TweenChain AddChannel()
+            {
+                var chain = new TweenChain();
+                this.chains.Add(chain);
+                return chain;
+            }
+        }
+
         public class ChainItem<T> : IChainItem where T : struct
         {
             private readonly LerpFunc<T> lerpFunc;
@@ -215,11 +287,6 @@ namespace Machina.Data
             public bool IsComplete
             {
                 get; private set;
-            }
-
-            public Tween<T> GetTween<T>() where T : struct
-            {
-                return null;
             }
 
             public void Refresh()

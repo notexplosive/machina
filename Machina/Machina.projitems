@@ -9,6 +9,7 @@
     <Import_RootNamespace>Machina</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\AdHoc.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundedTextRenderer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundingBoxFill.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\BoundingRectToViewportSize.cs" />
