@@ -63,6 +63,25 @@ namespace HelloGame
 
             var uiBuilder = new UIBuilder(defaultStyle);
 
+            {
+                var character = gameScene.AddActor("Character", new Vector2(400, 100));
+                var spr = new SpriteRenderer(character, MachinaGame.Assets.GetMachinaAsset<SpriteSheet>("linkin-sprite-sheet"));
+                spr.SetAnimation(standAnim);
+                spr.scale = 5;
+
+                var tweener = new TweenChain();
+                var positionAccessors = new TweenAccessors<Vector2>(() => character.transform.Position, val => character.transform.Position = val);
+                var angleAccessors = new TweenAccessors<float>(() => character.transform.Angle, val => character.transform.Angle = val);
+                tweener.AppendCallback(() => { spr.SetAnimation(walkAnim); });
+                tweener.AppendVectorTween(new Vector2(350, 100), 2f, EaseFuncs.Linear, positionAccessors);
+                var multi = tweener.AppendMulticastTween();
+                multi.AddChannel().AppendVectorTween(new Vector2(700, 400), 2f, EaseFuncs.Linear, positionAccessors);
+                multi.AddChannel().AppendFloatTween(MathF.PI * 2, 1f, EaseFuncs.CubicEaseIn, angleAccessors)
+                    .AppendFloatTween(0, 0.5f, EaseFuncs.CubicEaseIn, angleAccessors);
+                tweener.AppendCallback(() => { spr.SetAnimation(standAnim); });
+                new AdHoc(character).onUpdate += tweener.Update;
+            }
+
             /*
             IEnumerator<ICoroutineAction> testCoroutine()
             {
