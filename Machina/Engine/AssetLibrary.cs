@@ -16,6 +16,7 @@ namespace Machina.Engine
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
         private readonly Dictionary<string, SoundEffect> soundEffects = new Dictionary<string, SoundEffect>();
+        private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
 
@@ -87,6 +88,7 @@ namespace Machina.Engine
 
             var soundEffect = this.content.Load<SoundEffect>(fullName);
             soundEffects.Add(name, soundEffect);
+            soundEffectInstances.Add(name, soundEffect.CreateInstance());
             Console.WriteLine(string.Format("Loaded SoundEffect: {0}", fullName));
         }
 
@@ -119,6 +121,17 @@ namespace Machina.Engine
         {
             Debug.Assert(soundEffects.ContainsKey(name), "No sound effect called `" + name + "` was found");
             return soundEffects[name];
+        }
+
+        /// <summary>
+        /// Gets a cached SoundEffectInstance created on launch
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public SoundEffectInstance GetSoundEffectInstance(string name)
+        {
+            Debug.Assert(soundEffectInstances.ContainsKey(name), "No sound effect called `" + name + "` was found");
+            return soundEffectInstances[name];
         }
 
         public T GetMachinaAsset<T>(string name) where T : class, IAsset
