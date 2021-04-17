@@ -8,10 +8,10 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class TweenChainComponent : BaseComponent
+    public class TweenChainComponent : BaseComponent
     {
 
-        TweenChain chain;
+        private readonly TweenChain chain;
 
         public TweenChainComponent(Actor actor) : base(actor)
         {
@@ -65,6 +65,11 @@ namespace Machina.Components
         public void StopAndClearAllTweens()
         {
             this.chain.Clear();
+        }
+
+        public void AddVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
+        {
+            this.chain.AppendVectorTween(targetVal, duration, easeFunc, accessors);
         }
     }
 }
