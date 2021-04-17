@@ -7,11 +7,11 @@ namespace Machina.Data
 {
     public struct Depth
     {
-        public const int Max = 10569646;
-        public static Depth Middle = new Depth(Max / 2);
+        public const int MaxAsInt = 10569646;
+        public static Depth Middle = new Depth(MaxAsInt / 2);
         private readonly int val;
 
-        public Depth(int val = Max / 2)
+        public Depth(int val = MaxAsInt / 2)
         {
             this.val = val;
         }
@@ -25,8 +25,8 @@ namespace Machina.Data
         {
             get
             {
-                Debug.Assert(val <= Max && val >= 0);
-                return (float) this.val / Max;
+                Debug.Assert(val <= MaxAsInt && val >= 0);
+                return (float) this.val / MaxAsInt;
             }
         }
 

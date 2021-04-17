@@ -13,7 +13,7 @@ namespace Machina.Engine
         public readonly Actor actor;
         public readonly Action<bool> approvalCallback;
         public readonly Depth depth;
-        public readonly static HitTestResult Empty = new HitTestResult(new Depth(Depth.Max), null);
+        public readonly static HitTestResult Empty = new HitTestResult(new Depth(Depth.MaxAsInt), null);
 
         public HitTestResult(Actor actor, Action<bool> callback) : this(actor.transform.Depth, callback)
         {
