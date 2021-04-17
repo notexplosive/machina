@@ -138,7 +138,8 @@ namespace Machina.Data
         {
             this.currentIndex = 0;
             this.currentItem = null;
-            foreach (var item in this.chainInternal)
+            var chainCopy = new List<IChainItem>(this.chainInternal);
+            foreach (var item in chainCopy)
             {
                 item.Refresh();
             }
@@ -198,9 +199,9 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                foreach (var chain in chains)
+                foreach (var chain in new List<TweenChain>(chains))
                 {
-                    chain.StartNextTween();
+                    chain.StartNextTweenIfAble();
                 }
                 return this;
             }
@@ -232,6 +233,12 @@ namespace Machina.Data
                 this.chains.Add(chain);
                 return chain;
             }
+        }
+
+        private void StartNextTweenIfAble()
+        {
+            if (this.currentItem == null && this.chainInternal.Count > this.currentIndex)
+                StartNextTween();
         }
 
         public class ChainItem<T> : IChainItem where T : struct
