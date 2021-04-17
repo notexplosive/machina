@@ -106,43 +106,46 @@ namespace Machina.Engine
             {
                 scene.FlushBuffers();
 
-                if (allowKeyboardEvents)
+                if (!scene.IsFrozen)
                 {
-                    if (this.pendingInput.HasValue)
+                    if (allowKeyboardEvents)
                     {
-                        scene.OnTextInput(this.pendingInput.Value);
+                        if (this.pendingInput.HasValue)
+                        {
+                            scene.OnTextInput(this.pendingInput.Value);
+                        }
+
+                        foreach (var key in keyTracker.Released)
+                        {
+                            scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
+                        }
+
+                        foreach (var key in keyTracker.Pressed)
+                        {
+                            scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
+                        }
                     }
 
-                    foreach (var key in keyTracker.Released)
+                    if (allowMouseUpdate)
                     {
-                        scene.OnKey(key, ButtonState.Released, keyTracker.Modifiers);
-                    }
+                        if (scrollTracker.ScrollDelta != 0)
+                        {
+                            scene.OnScroll(scrollTracker.ScrollDelta);
+                        }
 
-                    foreach (var key in keyTracker.Pressed)
-                    {
-                        scene.OnKey(key, ButtonState.Pressed, keyTracker.Modifiers);
-                    }
-                }
+                        foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
+                        {
+                            scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Pressed);
+                        }
 
-                if (allowMouseUpdate)
-                {
-                    if (scrollTracker.ScrollDelta != 0)
-                    {
-                        scene.OnScroll(scrollTracker.ScrollDelta);
-                    }
+                        foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
+                        {
+                            scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Released);
+                        }
 
-                    foreach (var mouseButton in mouseTracker.ButtonsPressedThisFrame)
-                    {
-                        scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Pressed);
+                        // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
+                        scene.OnMouseUpdate(rawMousePos, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
                     }
-
-                    foreach (var mouseButton in mouseTracker.ButtonsReleasedThisFrame)
-                    {
-                        scene.OnMouseButton(mouseButton, rawMousePos, ButtonState.Released);
-                    }
-
-                    // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                    scene.OnMouseUpdate(rawMousePos, mouseTracker.PositionDelta, mouseTracker.PositionDelta);
                 }
             }
 
@@ -150,13 +153,14 @@ namespace Machina.Engine
 
             foreach (Scene scene in scenes)
             {
-                if (!scene.frameStep.IsPaused)
+                if (!scene.frameStep.IsPaused && !scene.IsFrozen)
                 {
                     scene.Update(dt);
                 }
             }
 
             HitTestResult.ApproveTopCandidate(scenes);
+
         }
 
         public void PreDraw(SpriteBatch spriteBatch)

@@ -15,6 +15,10 @@ namespace Machina.Engine
         public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
         public readonly HitTester hitTester = new HitTester();
         public Camera camera;
+        public bool IsFrozen
+        {
+            get; private set;
+        }
 
         public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
@@ -32,7 +36,7 @@ namespace Machina.Engine
             this.camera = new Camera(gameCanvas);
         }
 
-        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, int depthAsInt = Depth.Max / 2)
+        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, int depthAsInt = Depth.MaxAsInt / 2)
         {
             var actor = new Actor(name, this);
             actor.transform.Position = position;
@@ -120,6 +124,19 @@ namespace Machina.Engine
                 }
             }
             base.Update(dt);
+        }
+
+        /// <summary>
+        /// Scene stops getting input, stops updating, it just draws
+        /// </summary>
+        public void Freeze()
+        {
+            IsFrozen = true;
+        }
+
+        public void Unfreeze()
+        {
+            IsFrozen = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
