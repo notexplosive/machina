@@ -71,7 +71,7 @@ namespace Machina.Engine
             get; private set;
         }
 
-        protected MachinaGame(Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
+        protected MachinaGame(string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
             Current = this;
             this.logger = new StdOutConsoleLogger();
