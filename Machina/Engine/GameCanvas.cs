@@ -36,7 +36,7 @@ namespace Machina.Engine
 
     public class GameCanvas : IGameCanvas
     {
-        private RenderTarget2D screenRenderTarget;
+        private RenderTarget2D internalCanvas;
         private readonly IResizeStrategy resizeStrategy;
 
         public GameCanvas(Point viewportSize, ResizeBehavior resizeBehavior)
@@ -88,17 +88,17 @@ namespace Machina.Engine
 
         public void BuildCanvas(GraphicsDevice graphicsDevice)
         {
-            this.screenRenderTarget = resizeStrategy.BuildCanvas(graphicsDevice, ViewportSize);
+            this.internalCanvas = resizeStrategy.BuildCanvas(graphicsDevice, ViewportSize);
         }
 
         public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice)
         {
-            resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.screenRenderTarget);
+            resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.internalCanvas);
         }
 
         public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
-            resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, screenRenderTarget, CanvasRect);
+            resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, this.internalCanvas, CanvasRect);
         }
 
         private interface IResizeStrategy
@@ -130,12 +130,11 @@ namespace Machina.Engine
                     DepthFormat.Depth24);
             }
 
-            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D canvas, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
-
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null);
-                spriteBatch.Draw(screenRenderTarget,
+                spriteBatch.Draw(canvas,
                     canvasRect,
                     null, Color.White);
 
@@ -159,11 +158,6 @@ namespace Machina.Engine
             public Point GetCanvasSize(Point windowSize, Point viewportSize)
             {
                 return windowSize;
-            }
-
-            public void DrawCanvas()
-            {
-                // no-op
             }
 
             public RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize)
