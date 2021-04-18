@@ -9,6 +9,7 @@ namespace Machina.Data
     {
         public const int MaxAsInt = 10569646;
         public static Depth Middle = new Depth(MaxAsInt / 2);
+        public static Depth Max = new Depth(MaxAsInt);
         private readonly int val;
 
         public Depth(int val = MaxAsInt / 2)
