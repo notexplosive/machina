@@ -1,5 +1,6 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,17 +38,25 @@ namespace Machina.Components
         {
             if (this.pendingSnapshot)
             {
-                var texture = MachinaGame.Current.SceneLayers.RenderToTexture(spriteBatch);
                 this.pendingSnapshot = false;
-                MachinaGame.Print("Snap!");
-                SaveSnapshotAndDisposeTexture(texture);
+                SaveSnapshotAndDisposeTexture(spriteBatch);
+                MachinaGame.Print("Snapshot taken");
             }
         }
 
-        public void SaveSnapshotAndDisposeTexture(Texture2D texture)
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
+            if (key == Keys.F12 && state == ButtonState.Pressed)
+            {
+                this.pendingSnapshot = true;
+            }
+        }
+
+        public void SaveSnapshotAndDisposeTexture(SpriteBatch spriteBatch)
+        {
+            var texture = MachinaGame.Current.SceneLayers.RenderToTexture(spriteBatch);
             var currentTime = DateTime.Now;
-            MachinaGame.Print("Saved", currentTime.ToFileTimeUtc() + ".png");
+
             Directory.CreateDirectory(MachinaGame.Current.devScreenshotPath);
             using (FileStream destStream = File.Create(Path.Combine(MachinaGame.Current.devScreenshotPath, currentTime.ToFileTimeUtc().ToString() + ".png")))
             {
