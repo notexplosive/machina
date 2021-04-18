@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\Image.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateBool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateInt.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\FileHelpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\UIBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ButtonNinepatchHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />

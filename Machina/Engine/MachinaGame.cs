@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Machina.Engine
 {
@@ -23,6 +24,11 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
+        public readonly string gameTitle;
+        public readonly string appDataPath;
+        public readonly string localContentPath;
+        public readonly string devContentPath;
+
         protected readonly Point startingWindowSize;
         private SceneLayers sceneLayers;
         public SceneLayers SceneLayers
@@ -71,12 +77,17 @@ namespace Machina.Engine
             get; private set;
         }
 
-        protected MachinaGame(string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
+        protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
-            Current = this;
+            this.gameTitle = gameTitle;
+            this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
+            this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
+            this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
+            Window.Title = gameTitle;
+            Current = this;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -159,6 +170,7 @@ namespace Machina.Engine
                 new LinearFrameAnimation(15, 3)
             );
 
+#if DEBUG
             {
                 var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
                 new FrameRateCounter(framerateCounterActor);
@@ -173,6 +185,12 @@ namespace Machina.Engine
                 new Hoverable(frameStepActor);
                 new Draggable(frameStepActor);
                 new MoveOnDrag(frameStepActor);
+            }
+
+            // Snapshotter
+            {
+                var snapshotActor = sceneLayers.debugScene.AddActor("SnapshotActor");
+                new SnapshotTaker(snapshotActor);
             }
 
             // Scene graph renderer
@@ -224,7 +242,6 @@ namespace Machina.Engine
 
 
 
-#if DEBUG
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
