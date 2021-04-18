@@ -19,6 +19,28 @@ namespace Machina.Engine
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
         private TextInputEventArgs? pendingInput;
+
+        public Texture2D RenderToTexture(SpriteBatch spriteBatch)
+        {
+            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+            var viewportSize = gameCanvas.ViewportSize;
+            var renderTarget = new RenderTarget2D(
+                                graphicsDevice,
+                                viewportSize.X,
+                                viewportSize.Y,
+                                false,
+                                graphicsDevice.PresentationParameters.BackBufferFormat,
+                                DepthFormat.Depth24);
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+
+            graphicsDevice.Clear(BackgroundColor);
+            DrawOnCanvas(spriteBatch);
+
+            graphicsDevice.SetRenderTarget(null);
+            return renderTarget;
+        }
+
         public Color BackgroundColor = Color.SlateBlue;
 
         public void AddPendingTextInput(object sender, TextInputEventArgs e)

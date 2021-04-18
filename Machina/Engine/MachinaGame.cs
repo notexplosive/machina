@@ -28,6 +28,7 @@ namespace Machina.Engine
         public readonly string appDataPath;
         public readonly string localContentPath;
         public readonly string devContentPath;
+        public readonly string devScreenshotPath;
 
         protected readonly Point startingWindowSize;
         private SceneLayers sceneLayers;
@@ -83,6 +84,7 @@ namespace Machina.Engine
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
             this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
+            this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
@@ -336,8 +338,6 @@ namespace Machina.Engine
 
             // Steal control
             SceneLayers = introLayers;
-
-            Print(boundingRect.Size);
 
             void onEnd()
             {

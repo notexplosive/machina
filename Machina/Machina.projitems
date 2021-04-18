@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\RadioButtonGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\RadioButtonState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Slider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\SnapshotTaker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SwapNinepatchOnHover.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Depth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameSettings.cs" />
