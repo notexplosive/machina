@@ -8,9 +8,9 @@ namespace Machina.Engine
 {
     public struct ModifierKeys
     {
-        public readonly bool control;
-        public readonly bool alt;
-        public readonly bool shift;
+        private readonly bool control;
+        private readonly bool alt;
+        private readonly bool shift;
 
         public static ModifierKeys NoModifiers = new ModifierKeys(false, false, false);
 
@@ -30,8 +30,15 @@ namespace Machina.Engine
         {
             return !a.Equals(b);
         }
-
         public bool None => !control && !alt && !shift;
+        public bool Control => control && !alt && !shift;
+        public bool ControlAlt => control && alt && !shift;
+        public bool Alt => !control && alt && !shift;
+        public bool Shift => !control && !alt && shift;
+        public bool AltShift => !control && alt && shift;
+        public bool ControlShift => control && !alt && shift;
+        public bool ControlAltShift => control && alt && shift;
+
         public override string ToString()
         {
             var sb = new StringBuilder();

@@ -171,7 +171,7 @@ namespace Machina.Components
                     this.onSubmit?.Invoke(Text);
                 }
 
-                if (!modifiers.shift)
+                if (!modifiers.Shift)
                 {
                     this.cursor.ResetAnchor();
                 }
