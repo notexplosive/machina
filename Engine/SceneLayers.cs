@@ -18,7 +18,7 @@ namespace Machina.Engine
         private readonly ScrollTracker scrollTracker = new ScrollTracker();
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
-        private TextInputEventArgs? pendingInput;
+        private TextInputEventArgs? pendingTextInput;
 
         public Texture2D RenderToTexture(SpriteBatch spriteBatch)
         {
@@ -45,7 +45,7 @@ namespace Machina.Engine
 
         public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
-            this.pendingInput = e;
+            this.pendingTextInput = e;
         }
 
         public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas, IFrameStep frameStep)
@@ -132,9 +132,9 @@ namespace Machina.Engine
                 {
                     if (allowKeyboardEvents)
                     {
-                        if (this.pendingInput.HasValue)
+                        if (this.pendingTextInput.HasValue)
                         {
-                            scene.OnTextInput(this.pendingInput.Value);
+                            scene.OnTextInput(this.pendingTextInput.Value);
                         }
 
                         foreach (var key in keyTracker.Released)
@@ -171,7 +171,7 @@ namespace Machina.Engine
                 }
             }
 
-            this.pendingInput = null;
+            this.pendingTextInput = null;
 
             foreach (Scene scene in scenes)
             {
