@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\Slider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SnapshotTaker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SwapNinepatchOnHover.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\CommandLineArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Demo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Depth.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\GameSettings.cs" />

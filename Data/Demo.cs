@@ -10,6 +10,7 @@ namespace Machina.Data
 {
     public class Demo
     {
+        public readonly static string MostRecentlySavedDemoPath = "most_recent_demo.json";
         public readonly List<SerializableEntry> records = new List<SerializableEntry>();
 
         public void Append(SerializableEntry record)
@@ -113,12 +114,14 @@ namespace Machina.Data
         public class Recorder
         {
             private float totalTime;
+            private readonly string fileName;
             private readonly Demo demo;
 
-            public Recorder()
+            public Recorder(string fileName)
             {
                 this.demo = new Demo();
                 this.totalTime = 0f;
+                this.fileName = fileName;
             }
 
             public void AddEntry(float dt, InputFrameState inputState)
@@ -127,25 +130,23 @@ namespace Machina.Data
                 this.demo.Append(new SerializableEntry(this.totalTime, inputState));
             }
 
-            public void WriteDemoToDisk(string fileName)
+            public void WriteDemoToDisk()
             {
-                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), fileName + ".json");
+                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), fileName);
             }
         }
 
         public class Playback
         {
             private readonly Demo demo;
-            private readonly SceneLayers sceneLayers;
             private float time;
             private int currentIndex;
 
-            public Playback(Demo demo, SceneLayers sceneLayers)
+            public Playback(Demo demo)
             {
                 this.demo = demo;
                 this.time = 0f;
                 this.currentIndex = 0;
-                this.sceneLayers = sceneLayers;
                 IsFinished = false;
             }
 
@@ -181,7 +182,7 @@ namespace Machina.Data
 
         public async static void FromDisk(string demoName, Action<Demo> onComplete)
         {
-            var demoJson = await FileHelpers.ReadTextLocalThenAppData(demoName + ".json");
+            var demoJson = await FileHelpers.ReadTextLocalThenAppData(demoName);
             var demo = DecodeRecords(demoJson);
             onComplete?.Invoke(demo);
         }

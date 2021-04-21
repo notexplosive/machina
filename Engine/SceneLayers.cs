@@ -135,7 +135,7 @@ namespace Machina.Engine
                 Recorder.AddEntry(dt, inputFrameState);
                 if (inputFrameState.keyboardFrameState.Modifiers.Control && inputFrameState.keyboardFrameState.Released.Contains(Keys.P))
                 {
-                    Recorder.WriteDemoToDisk("most_recent_demo");
+                    Recorder.WriteDemoToDisk();
                 }
             }
 

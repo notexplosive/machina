@@ -25,6 +25,12 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         public readonly string gameTitle;
+
+        public static CommandLineArgs CommandLineArgs
+        {
+            get; private set;
+        }
+
         public readonly string appDataPath;
         public readonly string localContentPath;
         public readonly string devContentPath;
@@ -89,6 +95,8 @@ namespace Machina.Engine
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
             this.gameTitle = gameTitle;
+            CommandLineArgs = new CommandLineArgs(args);
+
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
             this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
@@ -268,20 +276,35 @@ namespace Machina.Engine
 #else
             DebugLevel = DebugLevel.Off;
 #endif
-            bool playbackMode = false;
 
-            if (!playbackMode)
+            var demoName = Demo.MostRecentlySavedDemoPath;
+            var newDemoName = CommandLineArgs.GetArgumentValueIfExists("demopath");
+            if (newDemoName != null)
             {
-                this.sceneLayers.Recorder = new Demo.Recorder();
+                demoName = newDemoName;
             }
-            else
+
+            if (CommandLineArgs.HasArgument("demo"))
             {
-                Demo.FromDisk("most_recent_demo", demo =>
+                var mode = CommandLineArgs.GetArgumentValue("demo");
+                switch (mode)
                 {
-                    MachinaGame.Print("Loaded demo");
-                    this.DemoPlayback = new Demo.Playback(demo, this.sceneLayers);
-                });
+                    case "record":
+                        this.sceneLayers.Recorder = new Demo.Recorder(demoName);
+                        break;
+                    case "playback":
+                        Demo.FromDisk(demoName, demo =>
+                        {
+                            MachinaGame.Print("Loaded demo");
+                            this.DemoPlayback = new Demo.Playback(demo);
+                        });
+                        break;
+                    default:
+                        MachinaGame.Print("Unknown demo mode", mode);
+                        break;
+                }
             }
+
 
             OnGameLoad();
 
