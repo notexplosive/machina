@@ -26,7 +26,7 @@ namespace Machina.Tests
                 // Need to update to push created interables into main iterable list
                 scene.Update(0f);
 
-                sceneLayers.Update(0, Matrix.Identity, new InputState(mouseState, new KeyboardState()));
+                sceneLayers.Update(0, Matrix.Identity, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
                 test.Expect(new Depth(5), scene.hitTester.Candidate.depth, "Lowest depth element was clicked");
                 test.ExpectFalse(unreachedHoverable.IsHovered, "Unreached hoverable should not be hovered");
                 test.ExpectFalse(unreachedHoverable.IsSoftHovered, "Unreached hoverable should not be soft hovered");
@@ -49,7 +49,7 @@ namespace Machina.Tests
                 // Push created iterables
                 sceneLayers.UpdateWithNoInput(0f);
 
-                sceneLayers.Update(0, new InputState(mouseState, new KeyboardState()));
+                sceneLayers.Update(0, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
                 test.ExpectTrue(onPointHoverable.IsHovered, "Upper scene element is hovered");
                 test.ExpectFalse(behindHoverable.IsHovered, "Lower scene element is hovered, despite having higher depth");
                 test.ExpectTrue(behindHoverable.IsSoftHovered, "Lower scene element is soft hovered");

@@ -59,7 +59,7 @@ namespace Machina.Components
             var bypassHover = this.bypassHoverConstraint.Invoke();
             this.sceneLayers.Update(
                 dt,
-                Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix), InputState.Raw,
+                Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix), this.actor.scene.sceneLayers.CurrentInputFrameState,
                 this.hoverable.IsHovered || bypassHover, this.shouldAllowKeyboardEvents());
         }
 

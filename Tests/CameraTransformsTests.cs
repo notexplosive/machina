@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -63,10 +64,13 @@ namespace Machina.Tests
 
                 // Resize to a huge resolution that's a different aspect ratio so we can get a worst-case transform scenario
                 gameCanvas.SetWindowSize(new Point(1920, 1080));
-                var prevMouseState = new MouseState(200, 200, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-                var currentMouseState = new MouseState(220, 250, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-                sceneLayers.Update(0, Matrix.Identity, new InputState(prevMouseState, new KeyboardState()));
-                sceneLayers.Update(0, Matrix.Identity, new InputState(currentMouseState, new KeyboardState()));
+                var prevPos = new Point(200, 200);
+                var newPos = new Point(220, 250);
+                var mouseDelta = (newPos - prevPos).ToVector2();
+
+                sceneLayers.Update(0, Matrix.Identity,
+                    new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, new Point(200, 200), Vector2.Zero, 0)));
+                sceneLayers.Update(0, Matrix.Identity, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, new Point(220, 250), mouseDelta, 0)));
 
                 test.Expect(new Vector2(361.88037f, 478.03424f), savedPosition, "Mouse Postion");
                 test.Expect(new Vector2(4.2735047f, 10.683762f), savedPositionDelta, "Mouse Position Delta");

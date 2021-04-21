@@ -21,9 +21,10 @@ namespace Machina.Engine
                 await File.WriteAllTextAsync(fullPath, data);
             }
 #endif
-
             MachinaGame.Print("Saved:", fullPath);
+            /*
             MachinaGame.Print(data);
+            */
 
             onComplete?.Invoke();
         }

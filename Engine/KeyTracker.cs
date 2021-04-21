@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Machina.Data;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Machina.Engine
@@ -21,6 +23,13 @@ namespace Machina.Engine
             this.shift = shift;
         }
 
+        public ModifierKeys(int encodedInt) : this()
+        {
+            this.control = (encodedInt & 1) == 1;
+            this.alt = (encodedInt & 2) == 2;
+            this.shift = (encodedInt & 4) == 4;
+        }
+
         public static bool operator ==(ModifierKeys a, ModifierKeys b)
         {
             return a.Equals(b);
@@ -38,6 +47,12 @@ namespace Machina.Engine
         public bool AltShift => !control && alt && shift;
         public bool ControlShift => control && !alt && shift;
         public bool ControlAltShift => control && alt && shift;
+
+        public int EncodedInt => (Bool2Int(control) << 2) | (Bool2Int(alt) << 1) | (Bool2Int(shift) << 0);
+        public int Bool2Int(bool b)
+        {
+            return b ? 1 : 0;
+        }
 
         public override string ToString()
         {
@@ -77,26 +92,11 @@ namespace Machina.Engine
         }
     }
 
-    class KeyTracker
+    public class KeyTracker
     {
         private KeyboardState oldState;
 
-        public ModifierKeys Modifiers
-        {
-            get;
-            private set;
-        }
-        public Keys[] Pressed
-        {
-            get; private set;
-        }
-        public Keys[] Released
-        {
-            get;
-            private set;
-        }
-
-        public void Calculate(KeyboardState currentState)
+        public KeyboardFrameState Calculate(KeyboardState currentState)
         {
             var currentPressed = currentState.GetPressedKeys();
             var oldPressed = this.oldState.GetPressedKeys();
@@ -138,11 +138,8 @@ namespace Machina.Engine
                 alt = true;
             }
 
-            Modifiers = new ModifierKeys(control, alt, shift);
-            Pressed = keysPressedThisFrame.ToArray();
-            Released = keysReleasedThisFrame.ToArray();
-
             this.oldState = currentState;
+            return new KeyboardFrameState(keysPressedThisFrame.ToArray(), keysReleasedThisFrame.ToArray(), new ModifierKeys(control, alt, shift));
         }
     }
 }

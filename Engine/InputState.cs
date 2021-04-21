@@ -17,7 +17,7 @@ namespace Machina.Engine
             this.keyboardState = keyboard;
         }
 
-        public static InputState Raw
+        public static InputState RawHumanInput
         {
             get => new InputState(Mouse.GetState(), Keyboard.GetState());
         }

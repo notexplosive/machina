@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Data;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -13,31 +14,13 @@ namespace Machina.Engine
         Right
     }
 
-    class MouseTracker
+    public class MouseTracker
     {
-        public List<MouseButton> ButtonsReleasedThisFrame
-        {
-            get;
-            private set;
-        }
-        public List<MouseButton> ButtonsPressedThisFrame
-        {
-            get;
-            private set;
-        }
-
-        public Vector2 PositionDelta
-        {
-            get; private set;
-        }
-        public Point RawWindowPosition
-        {
-            get; private set;
-        }
+        private int previousScroll;
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public void Calculate(MouseState currentState)
+        public MouseFrameState Calculate(MouseState currentState)
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,
@@ -51,37 +34,85 @@ namespace Machina.Engine
                 currentState.RightButton,
             };
 
-            var pressedThisFrame = new List<MouseButton>();
-            var releasedThisFrame = new List<MouseButton>();
+            var pressedThisFrameList = new List<MouseButton>();
+            var releasedThisFrameList = new List<MouseButton>();
+
+            bool leftPressed = false;
+            bool middlePressed = false;
+            bool rightPressed = false;
+
+            bool leftReleased = false;
+            bool middleReleased = false;
+            bool rightReleased = false;
+
 
             for (int i = 0; i < 3; i++)
             {
                 if (currentButtons[i] != oldMouseButtons[i])
                 {
+                    var mouseButton = (MouseButton) i;
+
                     if (currentButtons[i] == ButtonState.Pressed)
                     {
-                        pressedThisFrame.Add((MouseButton) i);
+
+                        if (mouseButton == MouseButton.Left)
+                        {
+                            leftPressed = true;
+                        }
+
+                        if (mouseButton == MouseButton.Middle)
+                        {
+                            middlePressed = true;
+                        }
+
+                        if (mouseButton == MouseButton.Right)
+                        {
+                            rightPressed = true;
+                        }
                     }
 
                     if (currentButtons[i] == ButtonState.Released)
                     {
-                        releasedThisFrame.Add((MouseButton) i);
+                        if (mouseButton == MouseButton.Left)
+                        {
+                            leftReleased = true;
+                        }
+
+                        if (mouseButton == MouseButton.Middle)
+                        {
+                            middleReleased = true;
+                        }
+
+                        if (mouseButton == MouseButton.Right)
+                        {
+                            rightReleased = true;
+                        }
                     }
                 }
             }
 
-            ButtonsReleasedThisFrame = releasedThisFrame;
-            ButtonsPressedThisFrame = pressedThisFrame;
-            RawWindowPosition = currentState.Position;
+            var pressedThisFrame = new MouseButtonList(leftPressed, middlePressed, rightPressed);
+            var releasedThisFrame = new MouseButtonList(leftReleased, middleReleased, rightReleased);
+
+            Vector2 positionDelta = Vector2.Zero;
 
             if (!this.firstFrame)
             {
                 // We hide this on the first frame because game will launch with a huge mouse delta otherwise
-                PositionDelta = (currentState.Position - oldState.Position).ToVector2();
+                positionDelta = (currentState.Position - oldState.Position).ToVector2();
             }
+
+            var currentScroll = currentState.ScrollWheelValue;
+            var scrollDelta = (currentScroll - this.previousScroll) / 120;
+            this.previousScroll = currentScroll;
+
+
+            var frameState = new MouseFrameState(pressedThisFrame, releasedThisFrame, currentState.Position, positionDelta, scrollDelta);
 
             this.oldState = currentState;
             this.firstFrame = false;
+
+            return frameState;
         }
     }
 }

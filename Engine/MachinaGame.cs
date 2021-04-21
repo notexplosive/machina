@@ -77,6 +77,14 @@ namespace Machina.Engine
         {
             get; private set;
         }
+        public Demo.Playback DemoPlayback
+        {
+            get;
+            private set;
+        }
+
+        private readonly KeyTracker keyTracker;
+        private readonly MouseTracker mouseTracker;
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
@@ -110,6 +118,9 @@ namespace Machina.Engine
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
             Window.TextInput += this.sceneLayers.AddPendingTextInput;
+
+            this.keyTracker = new KeyTracker();
+            this.mouseTracker = new MouseTracker();
         }
 
         protected void SetWindowSize(Point windowSize)
@@ -242,8 +253,6 @@ namespace Machina.Engine
             }
 
 
-
-
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
@@ -259,6 +268,20 @@ namespace Machina.Engine
 #else
             DebugLevel = DebugLevel.Off;
 #endif
+            bool playbackMode = false;
+
+            if (!playbackMode)
+            {
+                this.sceneLayers.Recorder = new Demo.Recorder();
+            }
+            else
+            {
+                Demo.FromDisk("most_recent_demo", demo =>
+                {
+                    MachinaGame.Print("Loaded demo");
+                    this.DemoPlayback = new Demo.Playback(demo, this.sceneLayers);
+                });
+            }
 
             OnGameLoad();
 
@@ -286,7 +309,21 @@ namespace Machina.Engine
         {
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            sceneLayers.Update(dt, Matrix.Identity, InputState.Raw);
+            if (DemoPlayback != null && DemoPlayback.IsFinished == false)
+            {
+                var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                foreach (var frameState in frameStates)
+                {
+                    sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
+                }
+            }
+            else
+            {
+                var inputState = InputState.RawHumanInput;
+                var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState), mouseTracker.Calculate(inputState.mouseState));
+                sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
+            }
+
 
             base.Update(gameTime);
         }
