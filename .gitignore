@@ -365,4 +365,4 @@ FodyWeavers.xsd
 todo.txt
 screenshots
 launchSettings.json
-Content/Demos/
+*.demo
