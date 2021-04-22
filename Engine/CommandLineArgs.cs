@@ -1,10 +1,10 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Engine
 {
     public class CommandLineArgs
     {

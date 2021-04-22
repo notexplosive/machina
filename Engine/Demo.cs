@@ -1,4 +1,4 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Engine
 {
     public class Demo
     {

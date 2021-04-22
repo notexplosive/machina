@@ -66,7 +66,7 @@ namespace Machina.Engine
         private Point currentWindowSize;
         private int demoPlaybackSpeed;
 
-        internal static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
+        public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
             if (rect.Width * rect.Height == 0)
             {
