@@ -115,7 +115,6 @@ namespace Machina.Engine
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
 
-            Random = new SeededRandom();
 
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
@@ -125,12 +124,12 @@ namespace Machina.Engine
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
             this.demoPlaybackSpeed = 1;
+
             Window.Title = gameTitle;
             Current = this;
 
             IFrameStep frameStep;
 #if DEBUG
-            Random.Seed = 1234;
             frameStep = new FrameStep();
 #else
             frameStep = new EmptyFrameStep();
@@ -151,6 +150,7 @@ namespace Machina.Engine
 
             this.keyTracker = new KeyTracker();
             this.mouseTracker = new MouseTracker();
+            Random = new SeededRandom();
         }
 
         protected void SetWindowSize(Point windowSize)
@@ -317,6 +317,11 @@ namespace Machina.Engine
                         MachinaGame.Print("Unknown demo mode", arg);
                         break;
                 }
+            });
+
+            CommandLineArgs.RegisterValueArg("randomseed", arg =>
+            {
+                MachinaGame.Random.SetSeedFromString(arg);
             });
 
             this.demoPlaybackSpeed = 1;

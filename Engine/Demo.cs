@@ -13,6 +13,12 @@ namespace Machina.Engine
     {
         public readonly static string MostRecentlySavedDemoPath = "saved.demo";
         public readonly List<SerializableEntry> records = new List<SerializableEntry>();
+        private readonly int seedAtStart;
+
+        public Demo(int randomSeed)
+        {
+            this.seedAtStart = randomSeed;
+        }
 
         public void Append(SerializableEntry record)
         {
@@ -21,15 +27,15 @@ namespace Machina.Engine
 
         public string EncodeRecords()
         {
-            return JsonConvert.SerializeObject(new EntryList(this.records));
+            return JsonConvert.SerializeObject(new DemoContent(this.records, this.seedAtStart));
         }
 
         public static Demo DecodeRecords(string encodedRecords)
         {
-            var demo = new Demo();
-            var entryList = JsonConvert.DeserializeObject<EntryList>(encodedRecords);
+            var content = JsonConvert.DeserializeObject<DemoContent>(encodedRecords);
+            var demo = new Demo(content.randomSeed);
 
-            foreach (var entry in entryList.entries)
+            foreach (var entry in content.entries)
             {
                 demo.Append(new SerializableEntry(entry.time, entry.BuildInputFrameState()));
             }
@@ -51,11 +57,13 @@ namespace Machina.Engine
         }
 
         [Serializable]
-        public class EntryList
+        public class DemoContent
         {
             public SerializableEntry[] entries;
-            public EntryList(List<SerializableEntry> entries)
+            public readonly int randomSeed;
+            public DemoContent(List<SerializableEntry> entries, int randomSeed)
             {
+                this.randomSeed = randomSeed;
                 this.entries = entries.ToArray();
             }
         }
@@ -121,7 +129,7 @@ namespace Machina.Engine
 
             public Recorder(string fileName)
             {
-                this.demo = new Demo();
+                this.demo = new Demo(MachinaGame.Random.Seed);
                 this.totalTime = 0f;
                 this.fileName = fileName;
             }
@@ -151,6 +159,7 @@ namespace Machina.Engine
                 this.time = 0f;
                 this.currentIndex = 0;
                 this.demoLength = this.demo.records.Count;
+                MachinaGame.Random.Seed = demo.seedAtStart;
             }
 
             public bool IsFinished => this.currentIndex == demoLength;
