@@ -31,9 +31,21 @@ namespace Machina.Engine
             get; private set;
         }
 
+        /// <summary>
+        /// Path to users AppData folder (or platform equivalent)
+        /// </summary>
         public readonly string appDataPath;
+        /// <summary>
+        /// Path of the "Content" folder for the built Exectuable
+        /// </summary>
         public readonly string localContentPath;
+        /// <summary>
+        /// (brittle) Path of the "Content" folder in the dev environment
+        /// </summary>
         public readonly string devContentPath;
+        /// <summary>
+        /// (brittle) Path to the screenshots folder in the dev environment
+        /// </summary>
         public readonly string devScreenshotPath;
 
         protected readonly Point startingWindowSize;

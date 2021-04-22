@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Machina.Data
 {
     public class Demo
     {
-        public readonly static string MostRecentlySavedDemoPath = "most_recent_demo.json";
+        public readonly static string MostRecentlySavedDemoPath = "saved.demo";
         public readonly List<SerializableEntry> records = new List<SerializableEntry>();
 
         public void Append(SerializableEntry record)
@@ -133,7 +134,8 @@ namespace Machina.Data
 
             public void WriteDemoToDisk()
             {
-                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), fileName);
+                Directory.CreateDirectory(Path.Join(MachinaGame.Current.appDataPath, "Demos"));
+                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", fileName));
             }
         }
 

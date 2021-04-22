@@ -18,6 +18,7 @@ namespace Machina.Engine
             if (!skipDevPath)
             {
                 fullPath = Path.Combine(MachinaGame.Current.devContentPath, path);
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                 await File.WriteAllTextAsync(fullPath, data);
             }
 #endif
