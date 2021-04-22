@@ -322,12 +322,6 @@ namespace Machina.Engine
                 }
             });
 
-
-            CommandLineArgs.RegisterValueArg("playbackspeed", arg =>
-            {
-                DemoPlayback.SpeedMultiplier = int.Parse(arg);
-            });
-
             bool shouldSkipSnapshot = false;
             CommandLineArgs.RegisterFlagArg("skipsnapshot", () =>
             {
@@ -364,13 +358,10 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                for (int i = 0; i < this.DemoPlayback.SpeedMultiplier; i++)
+                var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                foreach (var frameState in frameStates)
                 {
-                    var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                    foreach (var frameState in frameStates)
-                    {
-                        sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
-                    }
+                    sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
                 }
             }
             else
