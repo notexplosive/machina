@@ -15,11 +15,11 @@ namespace Machina.Components
         private SpriteFont font;
         private string text;
 
-        public DemoPlaybackComponent(Actor actor, Demo.Playback playback) : base(actor)
+        public DemoPlaybackComponent(Actor actor, Demo.Playback playback, string demoName) : base(actor)
         {
             this.playback = playback;
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
-            this.text = "Playback";
+            this.text = "Playback " + demoName;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

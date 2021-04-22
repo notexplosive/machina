@@ -19,9 +19,9 @@ namespace Machina.Components
         public SnapshotTaker(Actor actor, bool doNotUseTimer) : base(actor)
         {
             this.lastSnapshotTime = DateTime.Now;
-            this.pendingSnapshot = true;
             this.waitDuration = 5;
             this.doNotUseTimer = doNotUseTimer;
+            this.pendingSnapshot = !doNotUseTimer;
         }
 
         public override void Update(float dt)

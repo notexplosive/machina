@@ -105,6 +105,7 @@ namespace Machina.Engine
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
+            this.demoPlaybackSpeed = 1;
             Window.Title = gameTitle;
             Current = this;
 
@@ -209,12 +210,6 @@ namespace Machina.Engine
                 new MoveOnDrag(frameStepActor);
             }
 
-            // Snapshotter
-            {
-                var snapshotActor = sceneLayers.debugScene.AddActor("SnapshotActor");
-                new SnapshotTaker(snapshotActor, CommandLineArgs.HasArgument("skipSnapshot"));
-            }
-
             // Scene graph renderer
             {
                 var sceneGraphContainer = sceneLayers.debugScene.AddActor("SceneGraphContainer");
@@ -279,16 +274,14 @@ namespace Machina.Engine
 #endif
 
             var demoName = Demo.MostRecentlySavedDemoPath;
-            var newDemoName = CommandLineArgs.GetArgumentValueIfExists("demopath");
-            if (newDemoName != null)
+            CommandLineArgs.RegisterValueArg("demopath", arg =>
             {
-                demoName = newDemoName;
-            }
+                demoName = arg;
+            });
 
-            string demoMode = CommandLineArgs.GetArgumentValueIfExists("demo");
-            if (demoMode != null)
+            CommandLineArgs.RegisterValueArg("demo", arg =>
             {
-                switch (demoMode)
+                switch (arg)
                 {
                     case "record":
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
@@ -297,24 +290,32 @@ namespace Machina.Engine
                         Demo.FromDisk(demoName, demo =>
                         {
                             DemoPlayback = new Demo.Playback(demo);
-                            new DemoPlaybackComponent(debugActor, DemoPlayback);
+                            new DemoPlaybackComponent(debugActor, DemoPlayback, demoName);
                         });
                         break;
                     default:
-                        MachinaGame.Print("Unknown demo mode", demoMode);
+                        MachinaGame.Print("Unknown demo mode", arg);
                         break;
                 }
-            }
+            });
 
             this.demoPlaybackSpeed = 1;
-            var playbackSpeedArg = CommandLineArgs.GetArgumentValueIfExists("playbackspeed");
-            if (playbackSpeedArg != null)
+
+            CommandLineArgs.RegisterValueArg("playbackspeed", arg =>
             {
-                this.demoPlaybackSpeed = int.Parse(playbackSpeedArg);
-            }
+                this.demoPlaybackSpeed = int.Parse(arg);
+            });
+
+            bool shouldSkipSnapshot = false;
+            CommandLineArgs.RegisterFlagArg("skipsnapshot", () =>
+            {
+                shouldSkipSnapshot = true;
+            });
 
             OnGameLoad();
+            CommandLineArgs.ExecuteArgs();
 
+            new SnapshotTaker(debugActor, shouldSkipSnapshot);
 #if DEBUG
 #else
             PlayLogoIntro();

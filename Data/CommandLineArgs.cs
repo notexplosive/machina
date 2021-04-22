@@ -1,6 +1,7 @@
 ﻿using Machina.Engine;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Data
@@ -8,6 +9,9 @@ namespace Machina.Data
     public class CommandLineArgs
     {
         private readonly List<string> argsTokens;
+        private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
+        private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
+
 
         public CommandLineArgs(string[] args)
         {
@@ -19,7 +23,7 @@ namespace Machina.Data
             this.argsTokens = list;
         }
 
-        public string GetArgumentValue(string argName)
+        private string GetArgumentValue(string argName)
         {
             var index = argsTokens.IndexOf(ToCommandToken(argName));
             if (index == -1)
@@ -60,19 +64,70 @@ namespace Machina.Data
             return "--" + val.ToLower();
         }
 
-        public bool HasArgument(string argName)
+        private bool HasArgument(string argName)
         {
             return argsTokens.Contains(ToCommandToken(argName));
         }
 
-        public string GetArgumentValueIfExists(string argName)
+        public void RegisterValueArg(string argName, Action<string> onExecute)
         {
-            if (HasArgument(argName))
+            Debug.Assert(!IsCommandToken(argName));
+            this.valueArgTable.Add(argName, new ValueArg(onExecute));
+        }
+
+        public void RegisterFlagArg(string argName, Action onExecute)
+        {
+            this.flagArgTable.Add(argName, new FlagArg(onExecute));
+        }
+
+        public void ExecuteArgs()
+        {
+            foreach (var argName in this.valueArgTable.Keys)
             {
-                return GetArgumentValue(argName);
+                if (HasArgument(argName))
+                {
+                    this.valueArgTable[argName].Execute(GetArgumentValue(argName));
+                }
             }
 
-            return null;
+            foreach (var argName in this.flagArgTable.Keys)
+            {
+                if (HasArgument(argName))
+                {
+                    this.flagArgTable[argName].Execute();
+                }
+            }
+        }
+
+
+        private class FlagArg
+        {
+            private readonly Action onExecute;
+
+            public FlagArg(Action onExecute)
+            {
+                this.onExecute = onExecute;
+            }
+
+            public void Execute()
+            {
+                this.onExecute();
+            }
+        }
+
+        private class ValueArg
+        {
+            private readonly Action<string> onExecute;
+
+            public ValueArg(Action<string> onExecute)
+            {
+                this.onExecute = onExecute;
+            }
+
+            public void Execute(string value)
+            {
+                this.onExecute(value);
+            }
         }
     }
 }
