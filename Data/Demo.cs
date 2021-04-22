@@ -85,13 +85,14 @@ namespace Machina.Data
                 this.scrollDelta = inputState.mouseFrameState.ScrollDelta;
                 this.mouseDeltaX = inputState.mouseFrameState.PositionDelta.X;
                 this.mouseDeltaY = inputState.mouseFrameState.PositionDelta.Y;
-                this.pressedKeys = inputState.keyboardFrameState.Pressed != null ? inputState.keyboardFrameState.Pressed : Array.Empty<Keys>();
-                this.releasedKeys = inputState.keyboardFrameState.Released != null ? inputState.keyboardFrameState.Released : Array.Empty<Keys>();
+                this.pressedKeys = inputState.keyboardFrameState.Pressed ?? Array.Empty<Keys>();
+                this.releasedKeys = inputState.keyboardFrameState.Released ?? Array.Empty<Keys>();
                 this.keyboardModifiersAsInt = inputState.keyboardFrameState.Modifiers.EncodedInt;
             }
 
             public SerializableEntry()
             {
+                // DO NOT DELETE!! Used by the Json Decoder
             }
 
             public InputFrameState BuildInputFrameState()
@@ -113,8 +114,8 @@ namespace Machina.Data
 
         public class Recorder
         {
+            public readonly string fileName;
             private float totalTime;
-            private readonly string fileName;
             private readonly Demo demo;
 
             public Recorder(string fileName)

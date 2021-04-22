@@ -47,12 +47,6 @@ namespace Machina.Engine
 
         public Color BackgroundColor = Color.SlateBlue;
 
-        public Demo.Recorder Recorder
-        {
-            get;
-            set;
-        }
-
         public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
             this.pendingTextInput = e;
@@ -128,16 +122,6 @@ namespace Machina.Engine
         {
             this.CurrentInputFrameState = inputFrameState;
             var scenes = AllScenes();
-
-
-            if (Recorder != null)
-            {
-                Recorder.AddEntry(dt, inputFrameState);
-                if (inputFrameState.keyboardFrameState.Modifiers.Control && inputFrameState.keyboardFrameState.Released.Contains(Keys.P))
-                {
-                    Recorder.WriteDemoToDisk();
-                }
-            }
 
             var rawMousePos = Vector2.Transform(inputFrameState.mouseFrameState.RawWindowPosition.ToVector2(), mouseTransformMatrix);
 

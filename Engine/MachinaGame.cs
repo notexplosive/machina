@@ -284,13 +284,13 @@ namespace Machina.Engine
                 demoName = newDemoName;
             }
 
-            if (CommandLineArgs.HasArgument("demo"))
+            string demoMode = CommandLineArgs.GetArgumentValueIfExists("demo");
+            if (demoMode != null)
             {
-                var mode = CommandLineArgs.GetArgumentValue("demo");
-                switch (mode)
+                switch (demoMode)
                 {
                     case "record":
-                        this.sceneLayers.Recorder = new Demo.Recorder(demoName);
+                        new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
                         Demo.FromDisk(demoName, demo =>
@@ -300,11 +300,10 @@ namespace Machina.Engine
                         });
                         break;
                     default:
-                        MachinaGame.Print("Unknown demo mode", mode);
+                        MachinaGame.Print("Unknown demo mode", demoMode);
                         break;
                 }
             }
-
 
             OnGameLoad();
 
