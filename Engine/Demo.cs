@@ -190,7 +190,7 @@ namespace Machina.Engine
 
         public async static void FromDisk(string demoName, Action<Demo> onComplete)
         {
-            var demoJson = await FileHelpers.ReadTextLocalThenAppData(demoName);
+            var demoJson = await FileHelpers.ReadTextLocalThenAppData(Path.Join("Demos", demoName));
             var demo = DecodeRecords(demoJson);
             onComplete?.Invoke(demo);
         }

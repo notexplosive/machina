@@ -65,6 +65,11 @@ namespace Machina.Engine
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
         private int demoPlaybackSpeed;
+        public static SeededRandom Random
+        {
+            get;
+            private set;
+        }
 
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
@@ -110,6 +115,8 @@ namespace Machina.Engine
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
 
+            Random = new SeededRandom();
+
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
             this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
@@ -123,6 +130,7 @@ namespace Machina.Engine
 
             IFrameStep frameStep;
 #if DEBUG
+            Random.Seed = 1234;
             frameStep = new FrameStep();
 #else
             frameStep = new EmptyFrameStep();
