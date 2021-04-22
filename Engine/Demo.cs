@@ -173,6 +173,11 @@ namespace Machina.Engine
                 get;
                 private set;
             }
+            public int SpeedMultiplier
+            {
+                get;
+                set;
+            }
 
             public InputFrameState[] UpdateAndGetInputFrameStates(float dt)
             {

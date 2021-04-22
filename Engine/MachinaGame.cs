@@ -64,7 +64,6 @@ namespace Machina.Engine
         private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
-        private int demoPlaybackSpeed;
         public static SeededRandom Random
         {
             get;
@@ -123,7 +122,6 @@ namespace Machina.Engine
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
-            this.demoPlaybackSpeed = 1;
 
             Window.Title = gameTitle;
             Current = this;
@@ -293,6 +291,11 @@ namespace Machina.Engine
             DebugLevel = DebugLevel.Off;
 #endif
 
+            CommandLineArgs.RegisterValueArg("randomseed", arg =>
+            {
+                MachinaGame.Random.SetSeedFromString(arg);
+            });
+
             var demoName = Demo.MostRecentlySavedDemoPath;
             CommandLineArgs.RegisterValueArg("demopath", arg =>
             {
@@ -319,16 +322,10 @@ namespace Machina.Engine
                 }
             });
 
-            CommandLineArgs.RegisterValueArg("randomseed", arg =>
-            {
-                MachinaGame.Random.SetSeedFromString(arg);
-            });
-
-            this.demoPlaybackSpeed = 1;
 
             CommandLineArgs.RegisterValueArg("playbackspeed", arg =>
             {
-                this.demoPlaybackSpeed = int.Parse(arg);
+                DemoPlayback.SpeedMultiplier = int.Parse(arg);
             });
 
             bool shouldSkipSnapshot = false;
@@ -367,7 +364,7 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                for (int i = 0; i < this.demoPlaybackSpeed; i++)
+                for (int i = 0; i < this.DemoPlayback.SpeedMultiplier; i++)
                 {
                     var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
                     foreach (var frameState in frameStates)
