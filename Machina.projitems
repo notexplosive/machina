@@ -18,7 +18,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackOnKey.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CallbackWhenAnimationFinished.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\CheckboxRenderer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\DemoRecorder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\DemoPlaybackComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\DemoRecorderComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\DestroyWhenAnimationFinished.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\DropdownContent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\DropdownTrigger.cs" />

@@ -148,10 +148,16 @@ namespace Machina.Data
                 this.demo = demo;
                 this.time = 0f;
                 this.currentIndex = 0;
-                IsFinished = false;
+                this.demoLength = this.demo.records.Count;
             }
 
-            public bool IsFinished
+            public bool IsFinished => this.currentIndex == demoLength;
+
+            private readonly int demoLength;
+
+            public float Progress => this.currentIndex / (float) demoLength;
+
+            public InputFrameState LatestFrameState
             {
                 get;
                 private set;
@@ -164,18 +170,13 @@ namespace Machina.Data
                 var size = finalIndex - this.currentIndex;
                 var result = new InputFrameState[size];
 
-                if (this.currentIndex == finalIndex)
-                {
-                    MachinaGame.Print("Playback finished");
-                    IsFinished = true;
-                }
-
                 for (int i = this.currentIndex; i < finalIndex; i++)
                 {
                     var record = this.demo.records[i];
                     result[i - this.currentIndex] = record.BuildInputFrameState();
                 }
                 this.currentIndex = finalIndex;
+                this.LatestFrameState = result[size - 1];
 
                 return result;
             }

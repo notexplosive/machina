@@ -295,8 +295,8 @@ namespace Machina.Engine
                     case "playback":
                         Demo.FromDisk(demoName, demo =>
                         {
-                            MachinaGame.Print("Loaded demo");
-                            this.DemoPlayback = new Demo.Playback(demo);
+                            DemoPlayback = new Demo.Playback(demo);
+                            new DemoPlaybackComponent(debugActor, DemoPlayback);
                         });
                         break;
                     default:
