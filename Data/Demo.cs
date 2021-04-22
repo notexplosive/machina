@@ -176,7 +176,11 @@ namespace Machina.Data
                     result[i - this.currentIndex] = record.BuildInputFrameState();
                 }
                 this.currentIndex = finalIndex;
-                this.LatestFrameState = result[size - 1];
+
+                if (size > 0)
+                {
+                    this.LatestFrameState = result[size - 1];
+                }
 
                 return result;
             }

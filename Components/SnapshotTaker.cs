@@ -14,23 +14,28 @@ namespace Machina.Components
         private DateTime lastSnapshotTime;
         private bool pendingSnapshot;
         private double waitDuration;
+        private bool doNotUseTimer;
 
-        public SnapshotTaker(Actor actor) : base(actor)
+        public SnapshotTaker(Actor actor, bool doNotUseTimer) : base(actor)
         {
             this.lastSnapshotTime = DateTime.Now;
             this.pendingSnapshot = true;
             this.waitDuration = 5;
+            this.doNotUseTimer = doNotUseTimer;
         }
 
         public override void Update(float dt)
         {
-            var currentTime = DateTime.Now;
-            var timeSince = currentTime - lastSnapshotTime;
-            if (timeSince.TotalSeconds >= this.waitDuration)
+            if (!this.doNotUseTimer)
             {
-                this.pendingSnapshot = true;
-                this.lastSnapshotTime = currentTime;
-                this.waitDuration *= 2;
+                var currentTime = DateTime.Now;
+                var timeSince = currentTime - lastSnapshotTime;
+                if (timeSince.TotalSeconds >= this.waitDuration)
+                {
+                    this.pendingSnapshot = true;
+                    this.lastSnapshotTime = currentTime;
+                    this.waitDuration *= 2;
+                }
             }
         }
 

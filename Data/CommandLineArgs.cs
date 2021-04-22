@@ -47,6 +47,11 @@ namespace Machina.Data
 
         private bool IsCommandToken(string val)
         {
+            if (val.Length <= 2)
+            {
+                return false;
+            }
+
             return val.Substring(0, 2) == "--";
         }
 

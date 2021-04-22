@@ -52,6 +52,7 @@ namespace Machina.Engine
         private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
+        private int demoPlaybackSpeed;
 
         internal static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
@@ -211,7 +212,7 @@ namespace Machina.Engine
             // Snapshotter
             {
                 var snapshotActor = sceneLayers.debugScene.AddActor("SnapshotActor");
-                new SnapshotTaker(snapshotActor);
+                new SnapshotTaker(snapshotActor, CommandLineArgs.HasArgument("skipSnapshot"));
             }
 
             // Scene graph renderer
@@ -305,6 +306,13 @@ namespace Machina.Engine
                 }
             }
 
+            this.demoPlaybackSpeed = 1;
+            var playbackSpeedArg = CommandLineArgs.GetArgumentValueIfExists("playbackspeed");
+            if (playbackSpeedArg != null)
+            {
+                this.demoPlaybackSpeed = int.Parse(playbackSpeedArg);
+            }
+
             OnGameLoad();
 
 #if DEBUG
@@ -333,10 +341,13 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                foreach (var frameState in frameStates)
+                for (int i = 0; i < this.demoPlaybackSpeed; i++)
                 {
-                    sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
+                    var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                    foreach (var frameState in frameStates)
+                    {
+                        sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
+                    }
                 }
             }
             else
