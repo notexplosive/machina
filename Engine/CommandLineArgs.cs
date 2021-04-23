@@ -11,7 +11,7 @@ namespace Machina.Engine
         private readonly List<string> argsTokens;
         private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
-
+        public Action onFinishExecute;
 
         public CommandLineArgs(string[] args)
         {
@@ -97,6 +97,8 @@ namespace Machina.Engine
                     this.flagArgTable[argName].Execute();
                 }
             }
+
+            onFinishExecute?.Invoke();
         }
 
 
