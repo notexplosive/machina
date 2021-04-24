@@ -19,6 +19,11 @@ namespace Machina.Engine
         {
             get; private set;
         }
+        public float TimeScale
+        {
+            get;
+            set;
+        } = 1f;
 
         public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
@@ -114,7 +119,7 @@ namespace Machina.Engine
             var coroutinesCopy = new List<IEnumerator<ICoroutineAction>>(this.coroutines);
             foreach (var coroutine in coroutinesCopy)
             {
-                if (coroutine.Current.IsComplete(dt))
+                if (coroutine.Current.IsComplete(dt * TimeScale))
                 {
                     var hasNext = coroutine.MoveNext();
                     if (!hasNext || coroutine.Current == null)
@@ -123,7 +128,7 @@ namespace Machina.Engine
                     }
                 }
             }
-            base.Update(dt);
+            base.Update(dt * TimeScale);
         }
 
         /// <summary>
