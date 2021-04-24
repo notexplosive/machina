@@ -14,6 +14,7 @@ namespace Machina.Engine
             set
             {
                 this.CleanRandom = new Random(value);
+                MachinaGame.Print("seed set: ", value);
                 this.seed_impl = value;
             }
         }
@@ -34,7 +35,7 @@ namespace Machina.Engine
 
         public static int GenerateSeed()
         {
-            return (int)DateTime.Now.Ticks & 0x0000FFFF;
+            return (int) DateTime.Now.Ticks & 0x0000FFFF;
         }
 
         /// <summary>
