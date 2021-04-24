@@ -10,6 +10,7 @@ namespace Machina.Engine
     {
         private readonly List<string> argsTokens;
         private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
+        private readonly Dictionary<string, ValueArg> earlyValueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
         public Action onFinishExecute;
 
@@ -75,6 +76,12 @@ namespace Machina.Engine
             this.valueArgTable.Add(argName, new ValueArg(onExecute));
         }
 
+        public void RegisterEarlyValueArg(string argName, Action<string> onExecute)
+        {
+            Debug.Assert(!IsCommandToken(argName));
+            this.earlyValueArgTable.Add(argName, new ValueArg(onExecute));
+        }
+
         public void RegisterFlagArg(string argName, Action onExecute)
         {
             this.flagArgTable.Add(argName, new FlagArg(onExecute));
@@ -95,6 +102,27 @@ namespace Machina.Engine
                 if (HasArgument(argName))
                 {
                     this.flagArgTable[argName].Execute();
+                }
+            }
+
+            onFinishExecute?.Invoke();
+        }
+
+        public void ExecuteEarlyArgs()
+        {
+            foreach (var argName in this.earlyValueArgTable.Keys)
+            {
+                if (HasArgument(argName))
+                {
+                    this.earlyValueArgTable[argName].Execute(GetArgumentValue(argName));
+                }
+            }
+
+            //foreach (var argName in this.earlyFlagArgTable.Keys)
+            {
+                //  if (HasArgument(argName))
+                {
+                    // this.earlyFlagArgTable[argName].Execute();
                 }
             }
 

@@ -274,7 +274,6 @@ namespace Machina.Engine
                 new ScrollbarListener(sceneGraphActor, scrollbar);
             }
 
-
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
@@ -290,8 +289,10 @@ namespace Machina.Engine
 #else
             DebugLevel = DebugLevel.Off;
 #endif
+            var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
-            CommandLineArgs.RegisterValueArg("randomseed", arg =>
+
+            CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
             {
                 MachinaGame.Random.SetSeedFromString(arg);
             });
@@ -310,10 +311,11 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
+                        SceneLayers.frameStep.IsPaused = true;
                         Demo.FromDisk(demoName, demo =>
                         {
-                            DemoPlayback = new Demo.Playback(demo);
-                            new DemoPlaybackComponent(debugActor, DemoPlayback, demoName);
+                            SceneLayers.frameStep.IsPaused = false;
+                            DemoPlayback = demoPlaybackComponent.SetDemo(demo, demoName);
                         });
                         break;
                     default:
@@ -322,12 +324,13 @@ namespace Machina.Engine
                 }
             });
 
-            bool shouldSkipSnapshot = false;
+            bool shouldSkipSnapshot = DebugLevel >= DebugLevel.Passive;
             CommandLineArgs.RegisterFlagArg("skipsnapshot", () =>
             {
                 shouldSkipSnapshot = true;
             });
 
+            CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
             CommandLineArgs.ExecuteArgs();
 

@@ -12,18 +12,27 @@ namespace Machina.Components
     public class DemoPlaybackComponent : BaseComponent
     {
         private Demo.Playback playback;
-        private SpriteFont font;
         private string text;
+        private readonly SpriteFont font;
 
-        public DemoPlaybackComponent(Actor actor, Demo.Playback playback, string demoName) : base(actor)
+        public DemoPlaybackComponent(Actor actor) : base(actor)
         {
-            this.playback = playback;
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
+        }
+
+        public Demo.Playback SetDemo(Demo demo, string demoName)
+        {
+            this.playback = new Demo.Playback(demo);
             this.text = "Playback " + demoName;
+            return this.playback;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (this.playback == null)
+            {
+                return;
+            }
             var windowSize = this.actor.scene.sceneLayers.gameCanvas.WindowSize;
             var borderRect = new Rectangle(new Point(0, 0), windowSize);
             var padding = 2;
@@ -72,6 +81,11 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
+            if (this.playback == null)
+            {
+                return;
+            }
+
             if (this.playback.IsFinished)
             {
                 this.actor.RemoveComponent<DemoPlaybackComponent>();
