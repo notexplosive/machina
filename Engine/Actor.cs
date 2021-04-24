@@ -114,7 +114,7 @@ namespace Machina.Engine
             Type type = component.GetType();
             Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
 
-            // TODO: This should be AddIterable so we can AddComponent during an update, but then we can't assemble everything on frame 0
+            // TODO: This should be AddIterable so we can AddComponent during an update, but then we can't assemble everything on frame 0 and RequireComponent doesn't work
             this.iterables.Add(component);
             return component;
         }
