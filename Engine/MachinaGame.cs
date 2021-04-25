@@ -324,7 +324,7 @@ namespace Machina.Engine
                 }
             });
 
-            bool shouldSkipSnapshot = DebugLevel >= DebugLevel.Passive;
+            bool shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
             CommandLineArgs.RegisterFlagArg("skipsnapshot", () =>
             {
                 shouldSkipSnapshot = true;
