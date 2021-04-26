@@ -105,6 +105,30 @@ namespace Machina.Engine
             get;
             private set;
         }
+        public static bool Fullscreen
+        {
+            set
+            {
+                if (Graphics.IsFullScreen != value)
+                {
+                    if (value)
+                    {
+                        Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
+                        Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
+                        Graphics.IsFullScreen = true;
+                    }
+                    else
+                    {
+                        Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
+                        Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
+                        Graphics.IsFullScreen = false;
+                    }
+                    Graphics.ApplyChanges();
+                }
+            }
+
+            get => Graphics.IsFullScreen;
+        }
 
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
