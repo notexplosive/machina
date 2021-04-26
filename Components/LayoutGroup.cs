@@ -230,5 +230,9 @@ namespace Machina.Components
         {
             return AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
         }
+        public LayoutElement AddBothStretchedElement(string name, Action<Actor> onPostCreate)
+        {
+            return AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
+        }
     }
 }
