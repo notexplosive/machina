@@ -19,7 +19,7 @@ namespace Machina.Data
             this.min = min;
             this.max = max;
 
-            Debug.Assert(min.CompareTo(max) < 0, "Min cannot be >= max");
+            Debug.Assert(min.CompareTo(max) <= 0, "Min cannot be > max");
         }
 
         public bool IsWithin(T value)
