@@ -1,4 +1,5 @@
 ﻿using Machina.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -12,6 +13,7 @@ namespace Machina.Components
         public Action<float> onUpdate;
         public Action<SpriteBatch> onDraw;
         public Action<Keys, ButtonState, ModifierKeys> onKey;
+        internal Action<MouseButton, Vector2, ButtonState> onMouseButton;
 
         public AdHoc(Actor actor) : base(actor)
         {
@@ -31,6 +33,11 @@ namespace Machina.Components
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
             this.onKey?.Invoke(key, state, modifiers);
+        }
+
+        public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
+        {
+            this.onMouseButton?.Invoke(button, currentPosition, state);
         }
     }
 }

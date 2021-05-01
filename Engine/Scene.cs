@@ -10,9 +10,9 @@ namespace Machina.Engine
 {
     public class Scene : Crane<Actor>
     {
+        private readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
         public readonly IFrameStep frameStep;
         public readonly SceneLayers sceneLayers;
-        public readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
         public readonly HitTester hitTester = new HitTester();
         public Camera camera;
         public bool IsFrozen

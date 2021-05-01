@@ -105,6 +105,30 @@ namespace Machina.Engine
             get;
             private set;
         }
+        public static bool Fullscreen
+        {
+            set
+            {
+                if (Graphics.IsFullScreen != value)
+                {
+                    if (value)
+                    {
+                        Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
+                        Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
+                        Graphics.IsFullScreen = true;
+                    }
+                    else
+                    {
+                        Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
+                        Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
+                        Graphics.IsFullScreen = false;
+                    }
+                    Graphics.ApplyChanges();
+                }
+            }
+
+            get => Graphics.IsFullScreen;
+        }
 
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
@@ -330,15 +354,17 @@ namespace Machina.Engine
                 shouldSkipSnapshot = true;
             });
 
-            CommandLineArgs.ExecuteEarlyArgs();
-            OnGameLoad();
-            CommandLineArgs.ExecuteArgs();
 
-            new SnapshotTaker(debugActor, shouldSkipSnapshot);
+
+            CommandLineArgs.ExecuteEarlyArgs();
 #if DEBUG
+            OnGameLoad();
 #else
             PlayLogoIntro();
 #endif
+            CommandLineArgs.ExecuteArgs();
+
+            new SnapshotTaker(debugActor, shouldSkipSnapshot);
         }
 
         public static void Quit()
@@ -357,7 +383,7 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
-            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
@@ -407,10 +433,10 @@ namespace Machina.Engine
 
         void PlayLogoIntro()
         {
-            var oldLayers = SceneLayers;
+            var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
             var desiredWidth = 400;
-            float ratio = (float) windowSize.X / desiredWidth;
+            float ratio = (float)windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());
@@ -428,8 +454,9 @@ namespace Machina.Engine
 
             void onEnd()
             {
-                // Restore control
-                SceneLayers = oldLayers;
+                // Start the actual game
+                SceneLayers = oldSceneLayers;
+                OnGameLoad();
             }
 
             new CallbackOnDestroy(textActor, onEnd);
