@@ -8,7 +8,7 @@ namespace Machina.Engine
 {
     public class CommandLineArgs
     {
-        private readonly List<string> argsTokens;
+        private readonly List<string> argsStrings;
         private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, ValueArg> earlyValueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
@@ -21,27 +21,27 @@ namespace Machina.Engine
             {
                 list[i] = list[i].ToLower();
             }
-            this.argsTokens = list;
+            this.argsStrings = list;
         }
 
-        private string GetArgumentValue(string argName)
+        private string GetArgumentValueFromInitialString(string argName)
         {
-            var index = argsTokens.IndexOf(ToCommandToken(argName));
+            var index = argsStrings.IndexOf(ConvertToCommandToken(argName));
             if (index == -1)
             {
                 MachinaGame.Print("Command line switch", argName, "not found");
                 return null;
             }
 
-            if (argsTokens.Count == index + 1)
+            if (argsStrings.Count == index + 1)
             {
                 MachinaGame.Print("Argument value missing for", argName);
                 return null;
             }
             else
             {
-                var val = argsTokens[index + 1];
-                if (IsCommandToken(val))
+                var val = argsStrings[index + 1];
+                if (IsStringACommand(val))
                 {
                     MachinaGame.Print("Argument value missing for", argName);
                     return null;
@@ -50,7 +50,12 @@ namespace Machina.Engine
             }
         }
 
-        private bool IsCommandToken(string val)
+        /// <summary>
+        /// Is the string in the form `--commandName`
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        private bool IsStringACommand(string val)
         {
             if (val.Length <= 2)
             {
@@ -60,46 +65,73 @@ namespace Machina.Engine
             return val.Substring(0, 2) == "--";
         }
 
-        private string ToCommandToken(string val)
+        /// <summary>
+        /// Convert `foo` to `--foo`
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+        private string ConvertToCommandToken(string val)
         {
             return "--" + val.ToLower();
         }
 
-        private bool HasArgument(string argName)
+        private bool InitialStringHasArgument(string argName)
         {
-            return argsTokens.Contains(ToCommandToken(argName));
+            return argsStrings.Contains(ConvertToCommandToken(argName));
         }
 
+        /// <summary>
+        /// Command line arg that is evaluated just AFTER the game is loaded.
+        /// This is useful for the user's game since users can register args 
+        /// during game load and have them execute right after
+        /// </summary>
+        /// <param name="argName">String to invoke the argument, not including the `--`</param>
+        /// <param name="onExecute">Callback when argument is used, passes string directly following the arg</param>
         public void RegisterValueArg(string argName, Action<string> onExecute)
         {
-            Debug.Assert(!IsCommandToken(argName));
+            Debug.Assert(!IsStringACommand(argName));
             this.valueArgTable.Add(argName, new ValueArg(onExecute));
         }
 
+        /// <summary>
+        /// Command line Arg that is evalulated BEFORE the game is loaded.
+        /// This is only useful in MachinaGame internally.
+        /// </summary>
+        /// <param name="argName">String to invoke the argument, not including the `--`</param>
+        /// <param name="onExecute">Callback when argument is used, passes string directly following the arg</param>
         public void RegisterEarlyValueArg(string argName, Action<string> onExecute)
         {
-            Debug.Assert(!IsCommandToken(argName));
+            Debug.Assert(!IsStringACommand(argName));
             this.earlyValueArgTable.Add(argName, new ValueArg(onExecute));
         }
 
+        /// <summary>
+        /// Command line arg that is evaluated just AFTER the game is loaded.
+        /// Users can register flag args during OnGameLoad and they'll execute right after
+        /// </summary>
+        /// <param name="argName">String to invoke the argument, not including the `--`</param>
+        /// <param name="onExecute">Callback that will execute if the command is present</param>
         public void RegisterFlagArg(string argName, Action onExecute)
         {
             this.flagArgTable.Add(argName, new FlagArg(onExecute));
         }
 
+        /// <summary>
+        /// Executes the args, users don't need to do this, MachinaGame does this for you.
+        /// </summary>
         public void ExecuteArgs()
         {
             foreach (var argName in this.valueArgTable.Keys)
             {
-                if (HasArgument(argName))
+                if (InitialStringHasArgument(argName))
                 {
-                    this.valueArgTable[argName].Execute(GetArgumentValue(argName));
+                    this.valueArgTable[argName].Execute(GetArgumentValueFromInitialString(argName));
                 }
             }
 
             foreach (var argName in this.flagArgTable.Keys)
             {
-                if (HasArgument(argName))
+                if (InitialStringHasArgument(argName))
                 {
                     this.flagArgTable[argName].Execute();
                 }
@@ -108,13 +140,16 @@ namespace Machina.Engine
             onFinishExecute?.Invoke();
         }
 
+        /// <summary>
+        /// Executes early args, MachinaGame does this for you.
+        /// </summary>
         public void ExecuteEarlyArgs()
         {
             foreach (var argName in this.earlyValueArgTable.Keys)
             {
-                if (HasArgument(argName))
+                if (InitialStringHasArgument(argName))
                 {
-                    this.earlyValueArgTable[argName].Execute(GetArgumentValue(argName));
+                    this.earlyValueArgTable[argName].Execute(GetArgumentValueFromInitialString(argName));
                 }
             }
 
