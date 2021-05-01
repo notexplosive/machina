@@ -356,15 +356,20 @@ namespace Machina.Engine
 
 
 
-            CommandLineArgs.ExecuteEarlyArgs();
 #if DEBUG
-            OnGameLoad();
+            LoadGame();
 #else
-            PlayLogoIntro();
+            PlayIntroAndLoadGame();
 #endif
-            CommandLineArgs.ExecuteArgs();
 
             new SnapshotTaker(debugActor, shouldSkipSnapshot);
+        }
+
+        private void LoadGame()
+        {
+            CommandLineArgs.ExecuteEarlyArgs();
+            OnGameLoad();
+            CommandLineArgs.ExecuteArgs();
         }
 
         public static void Quit()
@@ -383,7 +388,7 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
@@ -431,12 +436,12 @@ namespace Machina.Engine
             }
         }
 
-        void PlayLogoIntro()
+        void PlayIntroAndLoadGame()
         {
             var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
             var desiredWidth = 400;
-            float ratio = (float)windowSize.X / desiredWidth;
+            float ratio = (float) windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());
@@ -456,7 +461,7 @@ namespace Machina.Engine
             {
                 // Start the actual game
                 SceneLayers = oldSceneLayers;
-                OnGameLoad();
+                LoadGame();
             }
 
             new CallbackOnDestroy(textActor, onEnd);
