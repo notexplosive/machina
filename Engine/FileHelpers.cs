@@ -52,19 +52,25 @@ namespace Machina.Engine
             return result;
         }
 
-        public static async Task<string> ReadTextLocalThenAppData(string path)
+        /// <summary>
+        /// Checks to see if path exists in AppData. If it's there, read it.
+        /// If it's not there, check the local directory instead.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static async Task<string> ReadTextAppDataThenLocal(string path)
         {
-            var local = Path.Combine(MachinaGame.Current.localContentPath, path);
-            if (File.Exists(local))
-            {
-                var result = await File.ReadAllTextAsync(local);
-                return result;
-            }
-
             var appData = Path.Combine(MachinaGame.Current.appDataPath, path);
             if (File.Exists(appData))
             {
                 var result = await File.ReadAllTextAsync(appData);
+                return result;
+            }
+
+            var local = Path.Combine(MachinaGame.Current.localContentPath, path);
+            if (File.Exists(local))
+            {
+                var result = await File.ReadAllTextAsync(local);
                 return result;
             }
 
