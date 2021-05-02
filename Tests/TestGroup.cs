@@ -25,7 +25,7 @@ namespace Machina.Tests
         public TestGroup(string name)
         {
             this.groupName = name;
-            registry.Add(this);
+            Register(this);
         }
 
         public void AddTest(Test test)

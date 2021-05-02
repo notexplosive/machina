@@ -30,6 +30,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\Slider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SnapshotTaker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\SwapNinepatchOnHover.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Data\UnorderedPair.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\CommandLineArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\Demo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\Depth.cs" />
@@ -43,7 +44,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateBool.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Data\UIStateInt.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\FileHelpers.cs" />
-    <Compile Include="..\machina\Engine\SeededRandom.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Tests\DataTests.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Engine\SeededRandom.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Engine\UIBuilder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ButtonNinepatchHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\Clickable.cs" />

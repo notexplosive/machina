@@ -303,6 +303,7 @@ namespace Machina.Engine
 
             // Run tests
             new ActorTests();
+            new DataTests();
             new HitTestTests();
             new CameraTransformsTests();
             new LayoutTests();
