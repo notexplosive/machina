@@ -336,12 +336,7 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
-                        SceneLayers.frameStep.IsPaused = true;
-                        Demo.FromDisk(demoName, demo =>
-                        {
-                            SceneLayers.frameStep.IsPaused = false;
-                            DemoPlayback = demoPlaybackComponent.SetDemo(demo, demoName);
-                        });
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
                         break;
                     default:
                         MachinaGame.Print("Unknown demo mode", arg);

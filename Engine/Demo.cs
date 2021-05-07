@@ -197,11 +197,14 @@ namespace Machina.Engine
             }
         }
 
-        public async static void FromDisk(string demoName, Action<Demo> onComplete)
+        /// <summary>
+        /// This needs to be Sync because we might do some CleanRandom stuff while we're waiting for the demo to load
+        /// </summary>
+        /// <param name="demoName"></param>
+        public static Demo FromDisk_Sync(string demoName)
         {
-            var demoJson = await FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName));
-            var demo = DecodeRecords(demoJson);
-            onComplete?.Invoke(demo);
+            var demoJson = FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
+            return DecodeRecords(demoJson);
         }
     }
 }
