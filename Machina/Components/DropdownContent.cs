@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class DropdownContent : BaseComponent
+    public class DropdownContent : BaseComponent
     {
         public Action<DropdownItem> onOptionSelect;
         private readonly List<DropdownItem> items = new List<DropdownItem>();

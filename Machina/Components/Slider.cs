@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Slider : BaseComponent, UIState<int>
+    public class Slider : BaseComponent, UIState<int>
     {
         private readonly BoundingRect boundingRect;
         private readonly Hoverable hoverable;
