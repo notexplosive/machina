@@ -15,24 +15,6 @@ namespace Machina.Data
         private IChainItem currentItem;
         private TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
 
-        public Tween<T> CurrentTween<T>() where T : struct
-        {
-            var current = this.currentItem;
-            if (current == null)
-            {
-                current = this.chainInternal[this.currentIndex];
-            }
-
-            if (current != null)
-            {
-                return (current as ChainItem<T>).tween;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         private static float dummyGetter() => 0f;
         private static void dummySetter(float val)
         {
@@ -48,6 +30,7 @@ namespace Machina.Data
         {
             this.chainInternal.Clear();
             this.currentIndex = 0;
+            this.currentItem = null;
         }
 
         public TweenChain Append(IChainItem item)
@@ -101,7 +84,7 @@ namespace Machina.Data
             return multiChainItem;
         }
 
-        public void StartNextTween()
+        private void StartNextTween()
         {
             if (this.chainInternal.Count > 0)
             {
@@ -124,7 +107,10 @@ namespace Machina.Data
                 if (this.currentItem.IsComplete)
                 {
                     this.currentItem = null;
-                    Update(dt); // recurse to queue up next item, this means callbacks execute instantly
+                    // We recurse to queue up next item, this has a few interesting consequences:
+                    // 1) callbacks execute instantly, therefore:
+                    // 2) callbacks that queue up additional callbacks with no delay will infinite loop
+                    Update(dt);
                 }
             }
         }
