@@ -304,7 +304,6 @@ namespace Machina.Engine
             // Run tests
             new DataTests();
             new HitTestTests();
-            new CameraTransformsTests();
             new LayoutTests();
 
             Print(TestGroup.RunAllRegisteredTests(), "tests passed");
