@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Scrollbar : BaseComponent
+    public class Scrollbar : BaseComponent
     {
         private readonly BoundingRect myBoundingRect;
         private readonly Hoverable hoverable;

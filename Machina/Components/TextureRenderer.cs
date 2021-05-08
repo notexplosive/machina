@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class TextureRenderer : BaseComponent
+    public class TextureRenderer : BaseComponent
     {
         public readonly Texture2D texture;
         private Vector2 offset;

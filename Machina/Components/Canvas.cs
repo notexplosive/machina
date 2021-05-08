@@ -10,7 +10,7 @@ using Machina.Engine;
 
 namespace Machina.Components
 {
-    class Canvas : BaseComponent
+    public class Canvas : BaseComponent
     {
         // Must supply a spriteBatch.Begin/End for each function
         public Action<SpriteBatch> DrawAdditionalContent;

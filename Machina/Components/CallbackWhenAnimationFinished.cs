@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class CallbackWhenAnimationFinished : BaseComponent
+    public class CallbackWhenAnimationFinished : BaseComponent
     {
         private readonly SpriteRenderer spriteRenderer;
         private readonly Action callback;

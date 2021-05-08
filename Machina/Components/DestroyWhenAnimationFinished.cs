@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class DestroyWhenAnimationFinished : BaseComponent
+    public class DestroyWhenAnimationFinished : BaseComponent
     {
         private readonly SpriteRenderer spriteRenderer;
 

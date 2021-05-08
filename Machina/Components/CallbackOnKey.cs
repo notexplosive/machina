@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class CallbackOnKey : BaseComponent
+    public class CallbackOnKey : BaseComponent
     {
         private readonly Keys key;
         private readonly ModifierKeys modif;

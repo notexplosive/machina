@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SceneRenderer : BaseComponent, IGameCanvas
+    public class SceneRenderer : BaseComponent, IGameCanvas
     {
         private readonly Canvas canvas;
         private readonly BoundingRect boundingRect;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Machina.Engine
 {
-    static class FileHelpers
+    public static class FileHelpers
     {
         public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false, Action onComplete = null)
         {

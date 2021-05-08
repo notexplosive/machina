@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    struct ChooseFrameAnimation : IFrameAnimation
+    public struct ChooseFrameAnimation : IFrameAnimation
     {
         readonly int[] frames;
         private LoopType loopType;

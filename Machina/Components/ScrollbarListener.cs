@@ -11,7 +11,7 @@ namespace Machina.Components
     /// If you have a scrollbar, you can only scroll it when hovering the bar. This ensures you can scroll it while anywhere else.
     /// Used primarily for SceneRenderers but there's no reason it can't be used elsewhere.
     /// </summary>
-    class ScrollbarListener : BaseComponent
+    public class ScrollbarListener : BaseComponent
     {
         private readonly Scrollbar scrollbar;
 
