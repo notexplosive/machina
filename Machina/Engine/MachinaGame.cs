@@ -1,6 +1,5 @@
 ﻿using Machina.Components;
 using Machina.Data;
-using Machina.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -300,8 +299,6 @@ namespace Machina.Engine
 
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
-
-            Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
 #else
             DebugLevel = DebugLevel.Off;
