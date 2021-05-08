@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Machina.Engine
 {
-    class UIBuilder
+    public class UIBuilder
     {
         private UIStyle style;
 

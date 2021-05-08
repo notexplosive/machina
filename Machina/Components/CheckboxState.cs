@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class CheckboxState : BaseComponent, ICheckboxStateProvider, UIState<bool>
+    public class CheckboxState : BaseComponent, ICheckboxStateProvider, UIState<bool>
     {
         private readonly Clickable clickable;
         public bool IsChecked

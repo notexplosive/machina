@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class DropdownTrigger : BaseComponent, UIState<DropdownContent.DropdownItem>
+    public class DropdownTrigger : BaseComponent, UIState<DropdownContent.DropdownItem>
     {
         private DropdownContent.DropdownItem selectedItem;
         private readonly Clickable clickable;

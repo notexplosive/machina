@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SpriteRenderer : BaseComponent
+    public class SpriteRenderer : BaseComponent
     {
         public readonly SpriteSheet spriteSheet;
         private IFrameAnimation currentAnimation;

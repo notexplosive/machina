@@ -13,7 +13,7 @@ namespace Machina.Data
     /// <summary>
     /// SpriteSheet that assumes the texture is arranged in a grid of frames where each frame is the same size
     /// </summary>
-    class GridBasedSpriteSheet : SpriteSheet
+    public class GridBasedSpriteSheet : SpriteSheet
     {
         public readonly Point frameSize;
 

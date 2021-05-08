@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class PanAndZoomCamera : BaseComponent
+    public class PanAndZoomCamera : BaseComponent
     {
         private bool isPanning;
         private bool isRotating;

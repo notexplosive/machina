@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class NinepatchRenderer : BaseComponent
+    public class NinepatchRenderer : BaseComponent
     {
         protected readonly BoundingRect boundingRect;
         private readonly NinepatchSheet.GenerationDirection generationDirection;
