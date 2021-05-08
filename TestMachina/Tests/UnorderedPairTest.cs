@@ -7,8 +7,9 @@ using Xunit;
 
 namespace TestMachina.Tests
 {
-    class UnorderedPairTest
+    public class UnorderedPairTest
     {
+        [Fact]
         public void unordered_pair_pinning_test()
         {
             var pair1 = new UnorderedPair<Point>(new Point(0, 1), new Point(5, 5));

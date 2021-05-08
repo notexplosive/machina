@@ -301,10 +301,6 @@ namespace Machina.Engine
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
 
-            // Run tests
-            new HitTestTests();
-            new LayoutTests();
-
             Print(TestGroup.RunAllRegisteredTests(), "tests passed");
 
 #else
