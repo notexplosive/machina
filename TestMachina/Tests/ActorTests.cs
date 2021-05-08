@@ -1,4 +1,3 @@
-using Machina.Components;
 using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
@@ -11,21 +10,6 @@ namespace TestMachina.Tests
 {
     public class ActorTests
     {
-        private class FakeComponent : BaseComponent
-        {
-            private Action onDeleteLambda;
-
-            public FakeComponent(Actor actor, Action onDeleteLambda) : base(actor)
-            {
-                this.onDeleteLambda = onDeleteLambda;
-            }
-
-            public override void OnDelete()
-            {
-                this.onDeleteLambda();
-            }
-        }
-
         [Fact]
         public void Destroying_actor_destroys_component()
         {
