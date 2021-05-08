@@ -302,7 +302,6 @@ namespace Machina.Engine
             Print("Debug build detected");
 
             // Run tests
-            new DataTests();
             new HitTestTests();
             new LayoutTests();
 
