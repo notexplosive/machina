@@ -91,9 +91,18 @@ namespace Machina.Engine
         {
             get; private set;
         }
-        public static AssetLibrary Assets
+        public static IAssetLibrary Assets
         {
             get; private set;
+        }
+
+        /// <summary>
+        /// Should only be used for tests
+        /// </summary>
+        /// <param name="assetLibrary"></param>
+        public static void SetAssetLibrary(IAssetLibrary assetLibrary)
+        {
+            Assets = assetLibrary;
         }
         public static MachinaGame Current
         {

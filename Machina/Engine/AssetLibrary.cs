@@ -11,7 +11,19 @@ using Microsoft.Xna.Framework.Audio;
 
 namespace Machina.Engine
 {
-    public class AssetLibrary
+    public interface IAssetLibrary
+    {
+        public T AddMachinaAsset<T>(string name, T asset) where T : IAsset;
+        public T GetMachinaAsset<T>(string name) where T : class, IAsset;
+        public SpriteFont GetSpriteFont(string name);
+        public Texture2D GetTexture(string name);
+        public void LoadAllContent();
+        public void UnloadAssets();
+        public SoundEffectInstance CreateSoundEffectInstance(string name);
+        public SoundEffectInstance GetSoundEffectInstance(string name);
+    }
+
+    public class AssetLibrary : IAssetLibrary
     {
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
@@ -24,7 +36,7 @@ namespace Machina.Engine
         {
             this.content = game.Content;
         }
-        public List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
+        private List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
         {
             var result = new List<string>();
 
