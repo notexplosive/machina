@@ -37,9 +37,9 @@ namespace Machina.Data
             DrawFrame(spriteBatch, index, position, 1f, angle, PointBool.False, layerDepth, Color.White);
         }
 
-        public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, Color color)
+        public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, Color color, bool isCentered = true)
         {
-            DrawFrame(spriteBatch, index, position, 1f, 0f, PointBool.False, layerDepth, color);
+            DrawFrame(spriteBatch, index, position, 1f, 0f, PointBool.False, layerDepth, color, isCentered);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Transform transform, float scale = 1f, PointBool flip = default)

@@ -163,7 +163,7 @@ namespace Machina.Engine
             };
 
             Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnResize);
+            Window.ClientSizeChanged += OnResize;
 
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
