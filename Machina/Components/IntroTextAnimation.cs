@@ -22,7 +22,7 @@ namespace Machina.Components
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.actor.scene.StartCoroutine(IntroAnimation());
-            tikSound = MachinaGame.Assets.CreateSoundEffectInstance("bbox-tik");
+            tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-tik");
             SwapColor();
         }
 
@@ -70,12 +70,10 @@ namespace Machina.Components
         {
             var camera = this.actor.scene.camera;
             var speed = 1.5f;
-            var ouch = MachinaGame.Assets.CreateSoundEffectInstance("ouch");
-            ouch.Pitch = 1;
+            var ouch = MachinaGame.Assets.GetSoundEffectInstance("ouch");
+            ouch.Pitch = 0.25f;
+            ouch.Volume = 0.25f;
 
-            var chape = MachinaGame.Assets.CreateSoundEffectInstance("bbox-chape");
-            var ku = MachinaGame.Assets.CreateSoundEffectInstance("bbox-ku");
-            var pff = MachinaGame.Assets.CreateSoundEffectInstance("bbox-pff");
 
 
             yield return new WaitSeconds(0.5f / speed);
@@ -88,20 +86,20 @@ namespace Machina.Components
             yield return new WaitSeconds(0.5f / speed);
 
             this.textRenderer.Text = "NotEx";
-            PlayTick();
+            PlayTick(-0.75f);
             camera.Zoom = 4;
             //SwapColor();
 
             yield return new WaitSeconds(0.5f / speed);
 
             this.textRenderer.Text = "NotExplo";
-            PlayTick();
+            PlayTick(-0.25f);
             camera.Zoom = 3;
 
             yield return new WaitSeconds(0.5f / speed);
 
             this.textRenderer.Text = "NotExplosive";
-            PlayTick();
+            PlayTick(-0.5f);
             camera.Zoom = 2;
 
             yield return new WaitSeconds(1.5f / speed);
@@ -119,8 +117,7 @@ namespace Machina.Components
 
             yield return new WaitSeconds(0.75f / speed);
 
-            pff.Stop();
-            pff.Play();
+            ouch.Play();
             this.spinning = true;
             SwapColor();
 
