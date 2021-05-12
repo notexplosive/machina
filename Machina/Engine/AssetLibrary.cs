@@ -110,6 +110,16 @@ namespace Machina.Engine
             {
                 asset.OnCleanup();
             }
+
+            foreach (var texture in this.textures.Values)
+            {
+                texture.Dispose();
+            }
+
+            foreach (var sfx in this.soundEffectInstances.Values)
+            {
+                sfx.Dispose();
+            }
         }
 
         public Texture2D GetTexture(string name)
