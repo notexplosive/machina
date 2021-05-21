@@ -81,14 +81,13 @@ namespace Machina.Components
             this.textRenderer.Text = "Not";
             PlayTick();
             camera.Zoom = 5;
-            SwapColor();
 
             yield return new WaitSeconds(0.5f / speed);
 
             this.textRenderer.Text = "NotEx";
             PlayTick(-0.75f);
             camera.Zoom = 4;
-            //SwapColor();
+            SwapColor();
 
             yield return new WaitSeconds(0.5f / speed);
 
@@ -114,12 +113,12 @@ namespace Machina.Components
             this.textRenderer.Text = "NotExplosive.net";
             PlayTick(0.5f);
             camera.Zoom = 1;
+            SwapColor();
 
             yield return new WaitSeconds(0.75f / speed);
 
             ouch.Play();
             this.spinning = true;
-            SwapColor();
 
             yield return new WaitUntil(() => dampening == 0);
 
