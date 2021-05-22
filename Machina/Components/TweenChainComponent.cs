@@ -71,5 +71,10 @@ namespace Machina.Components
         {
             this.chain.AppendVectorTween(targetVal, duration, easeFunc, accessors);
         }
+
+        public TweenChain.MultiChainItem AddMulticastTween()
+        {
+            return this.chain.AppendMulticastTween();
+        }
     }
 }
