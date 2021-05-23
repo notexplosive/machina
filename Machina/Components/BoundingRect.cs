@@ -85,6 +85,13 @@ namespace Machina.Components
             Offset = new Vector2(Width / 2, Height / 2);
         }
 
+        public void CenterToBounds()
+        {
+            var offsetAmount = new Vector2(Width / 2, Height / 2) - Offset;
+            Offset += offsetAmount;
+            transform.Position += offsetAmount;
+        }
+
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawRectangle(Rect, Color.Pink, 1f, transform.Depth);
