@@ -17,9 +17,10 @@ namespace Machina.Components
         }
         public Point Size => this.size;
 
-        public void SetSize(Point size)
+        public BoundingRect SetSize(Point size)
         {
             this.size = size;
+            return this;
         }
 
         public int Area => this.Width * this.Height;
@@ -75,21 +76,24 @@ namespace Machina.Components
 
         public Vector2 TopLeft => Rect.Location.ToVector2();
 
-        public void SetOffsetToTopLeft()
+        public BoundingRect SetOffsetToTopLeft()
         {
             Offset = new Vector2(0, 0);
+            return this;
         }
 
-        public void SetOffsetToCenter()
+        public BoundingRect SetOffsetToCenter()
         {
             Offset = new Vector2(Width / 2, Height / 2);
+            return this;
         }
 
-        public void CenterToBounds()
+        public BoundingRect CenterToBounds()
         {
             var offsetAmount = new Vector2(Width / 2, Height / 2) - Offset;
             Offset += offsetAmount;
             transform.Position += offsetAmount;
+            return this;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch)

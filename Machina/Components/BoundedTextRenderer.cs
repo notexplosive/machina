@@ -160,7 +160,7 @@ namespace Machina.Components
                 spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(Font, line.textContent, pos + new Vector2(1, 1), this.dropShadowColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(Font, line.textContent, pos + new Vector2(1, 1), new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f)), transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
                 }
             }
         }
