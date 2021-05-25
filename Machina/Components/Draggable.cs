@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class Draggable : BaseComponent
+    public class Draggable : BaseComponent
     {
         /// <summary>
         /// Passes the accumulated delta of the drag

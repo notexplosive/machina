@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class MoveOnDrag : BaseComponent
+    public class MoveOnDrag : BaseComponent
     {
         private readonly Draggable draggable;
         private Vector2 positionAtStartOfDrag;
