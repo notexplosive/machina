@@ -142,7 +142,6 @@ namespace Machina.Engine
             }
 
 
-            var oldGamePadPressed = this.oldGamePadState.Buttons;
 
             void ConvertGamepadButtonToKeyboard(ButtonState newState, ButtonState oldState, Keys key)
             {
