@@ -7,9 +7,12 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SingleSelector : BaseComponent
+    public class SingleSelector : BaseComponent
     {
-        private SingleSelectable selected;
+        public SingleSelectable Selected
+        {
+            get; private set;
+        }
 
         public SingleSelector(Actor actor) : base(actor)
         {
@@ -24,20 +27,20 @@ namespace Machina.Components
         {
             if (!IsSelected(target))
             {
-                this.selected?.onDeselect?.Invoke();
-                this.selected = target;
-                this.selected.onSelect?.Invoke();
+                Selected?.onDeselect?.Invoke();
+                Selected = target;
+                Selected.onSelect?.Invoke();
             }
         }
 
         private bool IsSelected(SingleSelectable target)
         {
-            return this.selected == target;
+            return Selected == target;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(MachinaGame.Assets.GetSpriteFont("DefaultFont"), this.selected != null ? this.selected.actor.ToString() : "(null)", this.actor.transform.Position, Color.Yellow);
+            spriteBatch.DrawString(MachinaGame.Assets.GetSpriteFont("DefaultFont"), Selected != null ? Selected.actor.ToString() : "(null)", this.actor.transform.Position, Color.Yellow);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Machina.Components
         /// <summary>
         /// Passes the accumulated delta of the drag
         /// </summary>
-        public Action<Vector2> onDrag;
+        public event Action<Vector2> Drag;
         /// <summary>
         /// Passes the cursor world position on drag start
         /// </summary>
-        public Action<Vector2> onDragStart;
+        public event Action<Vector2> DragStart;
         public bool IsDragging
         {
             private set; get;
@@ -29,12 +29,7 @@ namespace Machina.Components
         public Draggable(Actor actor) : base(actor)
         {
             this.hoverable = RequireComponent<Hoverable>();
-            this.IsDragging = false;
-        }
-
-        public override void Update(float dt)
-        {
-
+            IsDragging = false;
         }
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
@@ -43,32 +38,32 @@ namespace Machina.Components
             {
                 if (buttonState == ButtonState.Pressed)
                 {
-                    if (this.hoverable.IsHovered && !this.IsDragging)
+                    if (this.hoverable.IsHovered && !IsDragging)
                     {
-                        this.IsDragging = true;
+                        IsDragging = true;
                         this.accumulatedDragDelta = Vector2.Zero;
-                        this.onDragStart?.Invoke(currentPosition);
+                        this.DragStart?.Invoke(currentPosition);
                     }
                 }
                 else
                 {
-                    this.IsDragging = false;
+                    IsDragging = false;
                 }
             }
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            if (this.IsDragging)
+            if (IsDragging)
             {
                 this.accumulatedDragDelta += positionDelta;
-                this.onDrag?.Invoke(this.accumulatedDragDelta);
+                this.Drag?.Invoke(this.accumulatedDragDelta);
             }
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            if (this.IsDragging)
+            if (IsDragging)
             {
                 spriteBatch.DrawLine(this.actor.transform.Position, this.actor.transform.Position + accumulatedDragDelta, Color.Orange, 4, 0.2f);
             }

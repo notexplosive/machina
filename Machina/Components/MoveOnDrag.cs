@@ -15,8 +15,8 @@ namespace Machina.Components
         public MoveOnDrag(Actor actor, Transform targetTransform = null) : base(actor)
         {
             this.draggable = RequireComponent<Draggable>();
-            this.draggable.onDrag += OnDrag;
-            this.draggable.onDragStart += OnDragStart;
+            this.draggable.Drag += OnDrag;
+            this.draggable.DragStart += OnDragStart;
 
             if (targetTransform == null)
             {
@@ -30,8 +30,8 @@ namespace Machina.Components
 
         public override void OnDelete()
         {
-            this.draggable.onDrag -= OnDrag;
-            this.draggable.onDragStart -= OnDragStart;
+            this.draggable.Drag -= OnDrag;
+            this.draggable.DragStart -= OnDragStart;
         }
 
         private void OnDragStart(Vector2 point)

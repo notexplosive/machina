@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    class SingleSelectable : BaseComponent
+    public class SingleSelectable : BaseComponent
     {
         public Action onSelect;
         public Action onDeselect;
@@ -30,6 +30,11 @@ namespace Machina.Components
         private void OnClick(MouseButton obj)
         {
             this.selector.Select(this);
+        }
+
+        public bool IsSelected()
+        {
+            return this.selector.Selected == this;
         }
     }
 }
