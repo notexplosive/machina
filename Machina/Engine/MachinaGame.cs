@@ -395,7 +395,7 @@ namespace Machina.Engine
             else
             {
                 var inputState = InputState.RawHumanInput;
-                var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState), mouseTracker.Calculate(inputState.mouseState));
+                var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState, inputState.gamepadState), mouseTracker.Calculate(inputState.mouseState));
                 sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
             }
 
