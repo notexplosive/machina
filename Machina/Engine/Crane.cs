@@ -46,7 +46,11 @@ namespace Machina.Engine
         /// <summary>
         /// Called when the object is removed from its iterable set
         /// </summary>
-        public void OnDelete();
+        public void OnDeleteFinished();
+        /// <summary>
+        /// Called when the object is flagged for removal from its iterable set
+        /// </summary>
+        public void OnDeleteImmediate();
         /// <summary>
         /// Called when user presses or releases a key
         /// </summary>
@@ -117,6 +121,7 @@ namespace Machina.Engine
         protected void DeleteIterable(T removedIterable)
         {
             iterablesDeletedThisFrame.Add(removedIterable);
+            removedIterable.OnDeleteImmediate();
         }
 
         /// <summary>
@@ -144,7 +149,7 @@ namespace Machina.Engine
             {
                 if (iterables.Remove(iterable))
                 {
-                    iterable.OnDelete();
+                    iterable.OnDeleteFinished();
                 }
             }
 
@@ -225,11 +230,11 @@ namespace Machina.Engine
             }
         }
 
-        public virtual void OnDelete()
+        public virtual void OnDeleteFinished()
         {
             foreach (var iterable in iterables)
             {
-                iterable.OnDelete();
+                iterable.OnDeleteFinished();
             }
         }
 
@@ -263,6 +268,14 @@ namespace Machina.Engine
                 iterable.OnMouseButton(button, currentPosition, state);
             }
         }
+
+        public void OnDeleteImmediate()
+        {
+            foreach (var iterable in iterables)
+            {
+                iterable.OnDeleteImmediate();
+            }
+        }
     }
 
     public abstract class NonIteratingCrane : ICrane
@@ -290,7 +303,7 @@ namespace Machina.Engine
         {
         }
 
-        public virtual void OnDelete()
+        public virtual void OnDeleteFinished()
         {
         }
 
@@ -308,6 +321,9 @@ namespace Machina.Engine
         {
         }
         public virtual void OnTextInput(TextInputEventArgs inputEventArgs)
+        {
+        }
+        public virtual void OnDeleteImmediate()
         {
         }
         public void FlushBuffers()

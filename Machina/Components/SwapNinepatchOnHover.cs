@@ -24,7 +24,7 @@ namespace Machina.Components
             this.hoverable.OnHoverEnd += OnHoverEnd;
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.hoverable.OnHoverStart -= OnHoverStart;
             this.hoverable.OnHoverEnd -= OnHoverEnd;

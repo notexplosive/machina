@@ -70,7 +70,7 @@ namespace Machina.Components
             this.textRenderer.Text = " " + this.selectedItem.text; // awkward space character
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.clickable.onClick -= OnClick;
             this.content.onOptionSelect -= OnOptionSelected;

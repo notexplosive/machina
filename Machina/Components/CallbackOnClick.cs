@@ -19,7 +19,7 @@ namespace Machina.Components
             clickable.onClick += FireCallback;
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             clickable.onClick -= FireCallback;
         }

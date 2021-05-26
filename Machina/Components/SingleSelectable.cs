@@ -22,7 +22,7 @@ namespace Machina.Components
             onDeselect += () => { };
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.clickable.onClick -= OnClick;
         }

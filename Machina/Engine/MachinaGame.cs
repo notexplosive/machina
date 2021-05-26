@@ -426,7 +426,7 @@ namespace Machina.Engine
         {
             foreach (var scene in sceneLayers.AllScenes())
             {
-                scene.OnDelete();
+                scene.OnDeleteFinished();
             }
         }
 

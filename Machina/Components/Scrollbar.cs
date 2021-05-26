@@ -45,7 +45,7 @@ namespace Machina.Components
             this.worldBounds = scrollRange;
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.targetCamera.OnChangeZoom -= UpdateScrollReflexive;
         }

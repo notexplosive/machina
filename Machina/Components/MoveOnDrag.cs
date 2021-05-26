@@ -28,7 +28,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.draggable.Drag -= OnDrag;
             this.draggable.DragStart -= OnDragStart;

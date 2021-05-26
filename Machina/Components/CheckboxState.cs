@@ -21,7 +21,7 @@ namespace Machina.Components
             this.IsChecked = startingValue;
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             clickable.onClick -= OnClick;
         }

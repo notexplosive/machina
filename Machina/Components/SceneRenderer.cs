@@ -39,7 +39,7 @@ namespace Machina.Components
             this.sceneLayers.DrawOnCanvas(spriteBatch);
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.canvas.DrawAdditionalContent -= DrawInnerScene;
             this.hoverable.OnHoverEnd -= ClearHitTesters;

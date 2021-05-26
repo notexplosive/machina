@@ -15,7 +15,7 @@ namespace TestMachina.Utility
             this.onDeleteLambda = onDeleteLambda;
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             this.onDeleteLambda();
         }

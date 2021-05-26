@@ -42,7 +42,7 @@ namespace Machina.Components
             }
         }
 
-        public override void OnDelete()
+        public override void OnDeleteFinished()
         {
             clickable.onClick -= OnClick;
         }
