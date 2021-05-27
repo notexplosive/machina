@@ -8,7 +8,7 @@ namespace Machina.Data
     public struct ChooseFrameAnimation : IFrameAnimation
     {
         readonly int[] frames;
-        private LoopType loopType;
+        private readonly LoopType loopType;
 
         public ChooseFrameAnimation(params int[] listOfFrames)
         {

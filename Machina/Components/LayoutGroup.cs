@@ -214,6 +214,7 @@ namespace Machina.Components
         public LayoutElement AddElement(string name, Point size, Action<Actor> onPostCreate)
         {
             var elementActor = transform.AddActorAsChild(name);
+            elementActor.transform.LocalDepth = -1;
             new BoundingRect(elementActor, size);
             var element = new LayoutElement(elementActor);
             onPostCreate?.Invoke(elementActor);
