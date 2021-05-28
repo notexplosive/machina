@@ -11,35 +11,39 @@ namespace Machina.Components
     public class LayoutElement : BaseComponent
     {
         public readonly BoundingRect boundingRect;
-        private LayoutGroup group => this.actor.transform.Parent?.actor.GetComponent<LayoutGroup>();
         private bool stretchHorizontally;
         private bool stretchVertically;
+        private readonly LayoutGroup parentGroup;
 
         public Rectangle Rect => this.boundingRect.Rect;
 
         public LayoutElement StretchVertically()
         {
             stretchVertically = true;
-            this.group?.ExecuteLayout();
+            this.parentGroup.ExecuteLayout();
             return this;
         }
 
         public LayoutElement StretchHorizontally()
         {
             stretchHorizontally = true;
-            this.group?.ExecuteLayout();
+            this.parentGroup.ExecuteLayout();
             return this;
         }
 
         public LayoutElement(Actor actor) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.group?.ExecuteLayout();
-
-            Debug.Assert(this.actor.GetComponentInImmediateParent<LayoutGroup>() != null, "LayoutElement does not have a LayoutGroup parent");
+            this.parentGroup = this.actor.GetComponentInImmediateParent<LayoutGroup>();
+            Debug.Assert(this.parentGroup != null, "LayoutElement does not have a LayoutGroup parent");
         }
 
-        public Orientation GroupOrientation => group.orientation;
+        public override void Start()
+        {
+            this.parentGroup.ExecuteLayout();
+        }
+
+        public Orientation GroupOrientation => parentGroup.orientation;
 
         public bool IsStretchedAlong(Orientation orientation)
         {

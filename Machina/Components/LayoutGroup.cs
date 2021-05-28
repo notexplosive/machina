@@ -12,7 +12,6 @@ namespace Machina.Components
         private readonly BoundingRect boundingRect;
         public int PaddingBetweenElements;
         private int margin;
-        private int prevChildCount;
 
         public readonly Orientation orientation;
 
@@ -27,18 +26,6 @@ namespace Machina.Components
             ExecuteLayout();
         }
 
-        public override void Update(float dt)
-        {
-            // We check if number of children changed in this awkward way during update because
-            // if we used a callback when parent is set it would not work because the buffers
-            // aren't flushed.
-            if (transform.ChildCount != this.prevChildCount)
-            {
-                OnNumberOfChildrenChanged();
-            }
-
-            this.prevChildCount = transform.ChildCount;
-        }
         public void ExecuteLayout()
         {
             var isVertical = this.orientation == Orientation.Vertical;
@@ -147,11 +134,6 @@ namespace Machina.Components
                     subgroup.ExecuteLayout();
                 }
             }
-        }
-
-        public void OnNumberOfChildrenChanged()
-        {
-            ExecuteLayout();
         }
 
         public LayoutGroup SetMargin(int margin)
