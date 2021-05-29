@@ -50,11 +50,11 @@ namespace Machina.Engine
             return actor;
         }
 
-        public IEnumerator<ICoroutineAction> StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
+        public WaitUntil StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
         {
             coroutines.Add(coroutine);
             coroutine.MoveNext();
-            return coroutine;
+            return new WaitUntil(() => coroutine.Current == null);
         }
 
         public List<Actor> GetRootLevelActors()
