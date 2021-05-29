@@ -40,6 +40,13 @@
 #begin fonts/pointfree.ttf
 /copy:fonts/pointfree.ttf
 
+#begin fonts/TinyFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/TinyFont.spritefont
+
 #begin images/button-ninepatches.png
 /importer:TextureImporter
 /processor:TextureProcessor

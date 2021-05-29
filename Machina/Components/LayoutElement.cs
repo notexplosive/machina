@@ -1,6 +1,7 @@
 ﻿using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -41,6 +42,11 @@ namespace Machina.Components
         public override void Start()
         {
             this.parentGroup.ExecuteLayout();
+        }
+
+        public override void DebugDraw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(MachinaGame.Assets.GetSpriteFont("TinyFont"), this.actor.name, this.boundingRect.TopLeft, Color.Orange);
         }
 
         public Orientation GroupOrientation => parentGroup.orientation;
