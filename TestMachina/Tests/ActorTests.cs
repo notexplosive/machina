@@ -5,6 +5,7 @@ using TestMachina.Utility;
 using System;
 using System.Collections;
 using Xunit;
+using FluentAssertions;
 
 namespace TestMachina.Tests
 {
@@ -135,6 +136,21 @@ namespace TestMachina.Tests
 
             Assert.True(new Vector2(0, -100).ApproximateEqual(child.transform.LocalPosition)); // Child local position takes rotation into account
             Assert.Equal(-MathF.PI / 2, child.transform.LocalAngle); // Child local rotation takes rotation into account
+        }
+
+        [Fact]
+        public void moving_parent_with_children()
+        {
+            var scene = new Scene(null);
+            var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
+            var child = parent.transform.AddActorAsChild("Carrie Child", new Vector2(100, 0));
+            var grandChild = child.transform.AddActorAsChild("Garry Grandchild", new Vector2(100, 0));
+            scene.FlushBuffers();
+
+            parent.transform.Position = new Vector2(0, 0);
+
+            child.transform.Position.Should().Be(new Vector2(100, 0));
+            grandChild.transform.Position.Should().Be(new Vector2(200, 0));
         }
 
         [Fact]
