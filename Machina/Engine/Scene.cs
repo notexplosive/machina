@@ -119,7 +119,11 @@ namespace Machina.Engine
             var coroutinesCopy = new List<IEnumerator<ICoroutineAction>>(this.coroutines);
             foreach (var coroutine in coroutinesCopy)
             {
-                if (coroutine.Current.IsComplete(dt * TimeScale))
+                if (coroutine.Current == null)
+                {
+                    this.coroutines.Remove(coroutine);
+                }
+                else if (coroutine.Current.IsComplete(dt * TimeScale))
                 {
                     var hasNext = coroutine.MoveNext();
                     if (!hasNext || coroutine.Current == null)
