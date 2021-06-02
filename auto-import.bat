@@ -10,6 +10,7 @@ dotnet sln add .\machina\Machina
 dotnet sln add .\machina\TestMachina
 dotnet add %1 reference .\machina\Machina\
 call .\machina\on-import.bat
+xcopy .\machina\.gitignore ..
 git add .
 git commit -m "(Machina:Automated) Initial Commit"
 pause
