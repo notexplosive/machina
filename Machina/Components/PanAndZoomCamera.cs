@@ -52,7 +52,7 @@ namespace Machina.Components
         {
             if (this.isPanning)
             {
-                this.actor.scene.camera.PositionOffset -= positionDelta;
+                this.actor.scene.camera.ScaledPosition -= positionDelta;
             }
 
             if (this.isRotating)

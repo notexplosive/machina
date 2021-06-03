@@ -57,7 +57,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (IsScrollbarNeeded)
+            if (HasValidThumb)
             {
                 this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner, this.transform.Depth - 1);
             }
@@ -144,7 +144,7 @@ namespace Machina.Components
             return deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
         }
 
-        private bool IsScrollbarNeeded => OnScreenPercent < 1f;
+        private bool HasValidThumb => OnScreenPercent < 1f && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
         /// <summary>
         /// Total height of scrollable area
         /// </summary>
@@ -172,17 +172,17 @@ namespace Machina.Components
             }
         }
 
-        public float CurrentScrollUnits => this.targetCamera.PositionOffset.Y;
+        public float CurrentScrollUnits => this.targetCamera.ScaledPosition.Y;
 
         public void SetScrolledUnits(float value)
         {
-            if (IsScrollbarNeeded)
+            if (HasValidThumb)
             {
-                this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
+                this.targetCamera.ScaledPosition = new Vector2(this.targetCamera.ScaledPosition.X, Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
             }
             else
             {
-                this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, 0);
+                this.targetCamera.ScaledPosition = new Vector2(this.targetCamera.ScaledPosition.X, 0);
             }
         }
 

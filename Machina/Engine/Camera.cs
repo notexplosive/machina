@@ -20,7 +20,7 @@ namespace Machina.Engine
         /// <summary>
         /// How offset the camera is from its initial position
         /// </summary>
-        public Vector2 PositionOffset
+        public Vector2 UnscaledPosition
         {
             get; set;
         }
@@ -56,7 +56,16 @@ namespace Machina.Engine
         }
         public Point UnscaledViewportSize => (gameCanvas.ViewportSize.ToVector2()).ToPoint();
         public Vector2 ScaledViewportSize => gameCanvas.ViewportSize.ToVector2() / this.zoom;
-        public Vector2 ScaledViewportTopLeft => ScreenToWorld(CanvasTopLeft);
+        public Vector2 ScaledPosition
+        {
+            get => ScreenToWorld(CanvasTopLeft);
+            set
+            {
+                var old = ScaledPosition;
+                var offset = value - old;
+                UnscaledPosition += offset;
+            }
+        }
         public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();
         public Func<Vector2> ZoomTarget
         {
@@ -89,7 +98,7 @@ namespace Machina.Engine
         /// this isn't quite enough.
         /// </summary>
         public Matrix GraphicsTransformMatrix =>
-            Matrix.CreateTranslation(-(int) PositionOffset.X, -(int) PositionOffset.Y, 0)
+            Matrix.CreateTranslation(-(int) UnscaledPosition.X, -(int) UnscaledPosition.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ZoomTarget(), 0))
             * RotationAndZoomMatrix
             * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0))

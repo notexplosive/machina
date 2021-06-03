@@ -40,8 +40,8 @@ namespace TestMachina.Tests
             var gameCanvas = new GameCanvas(new Point(800, 600), ResizeBehavior.MaintainDesiredResolution);
             var sceneLayers = new SceneLayers(false, gameCanvas, new EmptyFrameStep());
             var scene = sceneLayers.AddNewScene();
+            scene.camera.ScaledPosition = new Vector2(120, 240);
             scene.camera.Zoom = 2.6f;
-            scene.camera.PositionOffset = new Vector2(120, 240);
 
             Vector2 savedPosition = Vector2.Zero;
             Vector2 savedPositionDelta = Vector2.Zero;
