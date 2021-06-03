@@ -100,7 +100,7 @@ namespace Machina.Components
                     var deltaFromThumb = currentPosition.Y - thumbCenterY;
                     var scrollDeltaPercent = CalculateDeltaPercent(deltaFromThumb);
 
-                    CurrentScrollPercent += scrollDeltaPercent;
+                    SetScrollPercent(CurrentScrollPercent + scrollDeltaPercent);
 
                     this.scrollPercentOnGrab = CurrentScrollPercent;
                 }
@@ -130,7 +130,7 @@ namespace Machina.Components
             var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
             if (this.isGrabbed)
             {
-                CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
+                SetScrollPercent(totalScrollDeltaPercent + scrollPercentOnGrab);
             }
         }
 
@@ -172,10 +172,7 @@ namespace Machina.Components
             }
         }
 
-        public float CurrentScrollUnits
-        {
-            get => this.targetCamera.PositionOffset.Y;
-        }
+        public float CurrentScrollUnits => this.targetCamera.PositionOffset.Y;
 
         public void SetScrolledUnits(float value)
         {
@@ -189,13 +186,11 @@ namespace Machina.Components
             }
         }
 
-        public float CurrentScrollPercent
+        public float CurrentScrollPercent => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
+
+        public void SetScrollPercent(float percent)
         {
-            get => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
-            set
-            {
-                SetScrolledUnits(value * TotalWorldUnits);
-            }
+            SetScrolledUnits(percent * TotalWorldUnits);
         }
     }
 }
