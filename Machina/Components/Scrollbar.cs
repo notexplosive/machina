@@ -53,7 +53,6 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
-            this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, CurrentScrollUnits);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -178,13 +177,9 @@ namespace Machina.Components
             }
         }
 
-        /// <summary>
-        /// How many pixels we have moved the camera
-        /// </summary>
-        private float currentScrollUnits;
         public float CurrentScrollUnits
         {
-            get => this.currentScrollUnits;
+            get => this.targetCamera.PositionOffset.Y;
             set
             {
                 SetClampedScrollUnits(value);
@@ -195,17 +190,17 @@ namespace Machina.Components
         {
             if (IsScrollbarNeeded)
             {
-                this.currentScrollUnits = Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits);
+                this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
             }
             else
             {
-                this.currentScrollUnits = 0;
+                this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, 0);
             }
         }
 
         public float CurrentScrollPercent
         {
-            get => (this.currentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
+            get => (this.CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
             set
             {
                 CurrentScrollUnits = value * TotalWorldUnits;
