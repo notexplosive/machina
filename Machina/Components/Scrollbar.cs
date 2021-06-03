@@ -21,7 +21,7 @@ namespace Machina.Components
         private bool isGrabbed;
         private float mouseYOnGrab;
         private float scrollPercentOnGrab;
-        public MinMax<int> worldBounds;
+        private MinMax<int> worldBounds;
 
         public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, NinepatchSheet thumbSheet, int scrollIncrement = 64) : base(actor)
         {

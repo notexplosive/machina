@@ -47,7 +47,7 @@ namespace Machina.Components
                 }
             }
 
-            this.scrollbar.worldBounds = new MinMax<int>(0, lineNumber * boxHeight);
+            this.scrollbar.SetWorldBounds(new MinMax<int>(0, lineNumber * boxHeight));
         }
 
         public void DrawChildren(Actor targetActor, int indent, Action<string, int> DrawString)
