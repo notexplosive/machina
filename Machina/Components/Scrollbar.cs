@@ -122,7 +122,13 @@ namespace Machina.Components
 
         public void ApplyScrollDelta(int scrollDelta)
         {
-            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
+            // CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
+            this.targetCamera.PositionOffset -= new Vector2(0, Convert_Something(scrollDelta));
+        }
+
+        private float Convert_Something(int scrollDelta)
+        {
+            return (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -131,7 +137,7 @@ namespace Machina.Components
             var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
             if (this.isGrabbed)
             {
-                this.CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
+                CurrentScrollPercent = totalScrollDeltaPercent + scrollPercentOnGrab;
             }
         }
 
@@ -146,9 +152,21 @@ namespace Machina.Components
         }
 
         private bool IsScrollbarNeeded => OnScreenPercent < 1f;
+        /// <summary>
+        /// Total height of scrollable area
+        /// </summary>
         private float TotalWorldUnits => (this.worldBounds.max - OnScreenUnits) - this.worldBounds.min;
+        /// <summary>
+        /// How many scrollable units are represented on screen?
+        /// </summary>
         private float OnScreenUnits => this.containerBoundingRect.Height / this.targetCamera.Zoom;
+        /// <summary>
+        /// What percentage of the total scrollable height is visible on screen
+        /// </summary>
         private float OnScreenPercent => OnScreenUnits / (this.worldBounds.max - this.worldBounds.min);
+        /// <summary>
+        /// How many pixels tall should the scrollbar thumb be
+        /// </summary>
         private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);
         private Rectangle ThumbRect
         {
@@ -173,7 +191,7 @@ namespace Machina.Components
 
         private void SetClampedScrollUnits(float value)
         {
-            if (this.IsScrollbarNeeded)
+            if (IsScrollbarNeeded)
             {
                 this.currentScrollUnits = Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits);
             }
