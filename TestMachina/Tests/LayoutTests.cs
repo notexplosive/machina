@@ -96,10 +96,13 @@ namespace TestMachina.Tests
             var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Horizontal);
             uiGroup.PaddingBetweenElements = 5;
             uiGroup.SetMargin(15);
+            Actor e1 = null;
+            Actor e2 = null;
+            Actor e3 = null;
 
-            var e1 = uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), false, false);
-            var e2 = uiBuilder.BuildSpacer(uiGroup, new Point(64, 32), false, true);
-            var e3 = uiBuilder.BuildSpacer(uiGroup, new Point(32, 32), true, true);
+            uiGroup.AddElement("e1", new Point(32, 32), act => e1 = act);
+            uiGroup.AddElement("e2", new Point(64, 32), act => e2 = act).StretchVertically();
+            uiGroup.AddElement("e3", new Point(32, 32), act => e3 = act).StretchHorizontally().StretchVertically();
             scene.FlushBuffers();
             uiGroup.ExecuteLayout();
 

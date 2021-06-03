@@ -50,28 +50,6 @@ namespace Machina.Engine
             return new UIWindow(creatingScene, contentSize, this.style);
         }
 
-
-        [Obsolete("Use LayoutGroup's spacer API instead")]
-        public Actor BuildSpacer(LayoutGroup group, Point size, bool stretchHorizontal, bool stretchVertical)
-        {
-            var scene = group.actor.scene;
-            var spacerActor = scene.AddActor("Spacer");
-            spacerActor.transform.SetParent(group.actor);
-            new BoundingRect(spacerActor, size);
-            var e = new LayoutElement(spacerActor);
-            if (stretchHorizontal)
-            {
-                e.StretchHorizontally();
-            }
-            if (stretchVertical)
-            {
-                e.StretchVertically();
-            }
-
-
-            return spacerActor;
-        }
-
         public CheckboxState BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)
         {
             var actor = BuildCheckboxOrRadioButton(uiGroup, labelText, startChecked, true);
