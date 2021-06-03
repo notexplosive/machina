@@ -54,7 +54,7 @@ namespace Machina.Components
         {
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
             this.actor.transform.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
-            this.targetCamera.Position = new Vector2(this.targetCamera.Position.X, CurrentScrollUnits);
+            this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, CurrentScrollUnits);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

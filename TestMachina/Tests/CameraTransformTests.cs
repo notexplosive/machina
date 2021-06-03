@@ -28,6 +28,12 @@ namespace TestMachina.Tests
             Assert.Equal(new Rectangle(0, 83, 500, 333), gameCanvas.CanvasRect);
         }
 
+        /// <summary>
+        /// Basically a really bad worst-case-scenario for mouse position, we're at an awkward aspect ratio, we're zoomed in and panned.
+        /// The test is "did we get the right mouse position" within one pixel
+        /// 
+        /// This test is brittle on purpose. The calculations involved can be quite easy to screw up
+        /// </summary>
         [Fact]
         public void mouse_position_transform_integration()
         {
@@ -35,7 +41,7 @@ namespace TestMachina.Tests
             var sceneLayers = new SceneLayers(false, gameCanvas, new EmptyFrameStep());
             var scene = sceneLayers.AddNewScene();
             scene.camera.Zoom = 2.6f;
-            scene.camera.Position = new Vector2(120, 240);
+            scene.camera.PositionOffset = new Vector2(120, 240);
 
             Vector2 savedPosition = Vector2.Zero;
             Vector2 savedPositionDelta = Vector2.Zero;
@@ -57,7 +63,7 @@ namespace TestMachina.Tests
                 new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, new Point(200, 200), Vector2.Zero, 0)));
             sceneLayers.Update(0, Matrix.Identity, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, new Point(220, 250), mouseDelta, 0)));
 
-            Assert.Equal(new Vector2(361.88037f, 478.03424f), savedPosition); // Mouse Postion
+            Assert.Equal(new Point(361, 478), savedPosition.ToPoint()); // Mouse Postion
             Assert.Equal(new Vector2(4.2735047f, 10.683762f), savedPositionDelta); // Mouse Position Delta
             Assert.Equal(new Vector2(20, 50), savedRawDelta); // Mouse raw delta
         }

@@ -14,10 +14,13 @@ namespace Machina.Engine
         {
             Zoom = 1.0f;
             this.gameCanvas = gameCanvas;
-            ZoomTarget = () => { return ViewportCenter; };
+            ZoomTarget = () => { return UnscaledViewportCenter; };
         }
 
-        public Vector2 Position
+        /// <summary>
+        /// How offset the camera is from its initial position
+        /// </summary>
+        public Vector2 PositionOffset
         {
             get; set;
         }
@@ -41,22 +44,30 @@ namespace Machina.Engine
             get; set;
         }
 
+        [Obsolete("Use UnscaledViewportSize.X instead", false)]
         public int ViewportWidth
         {
-            get => gameCanvas.ViewportSize.X;
+            get => UnscaledViewportSize.X;
         }
+        [Obsolete("Use UnscaledViewportSize.Y instead", false)]
         public int ViewportHeight
         {
-            get => gameCanvas.ViewportSize.Y;
+            get => UnscaledViewportSize.Y;
         }
-
+        public Point UnscaledViewportSize => (gameCanvas.ViewportSize.ToVector2()).ToPoint();
+        public Vector2 ScaledViewportSize => gameCanvas.ViewportSize.ToVector2() / this.zoom;
+        public Vector2 WorldTopLeft => ScreenToWorld(CanvasTopLeft);
         public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();
-        public Func<Vector2> ZoomTarget;
-        public Vector2 ViewportCenter
+        public Func<Vector2> ZoomTarget
+        {
+            get; set;
+        }
+        public Vector2 ViewportCenter => ScaledViewportSize / 2f;
+        public Vector2 UnscaledViewportCenter
         {
             get
             {
-                return new Vector2(ViewportWidth * 0.5f, ViewportHeight * 0.5f);
+                return UnscaledViewportSize.ToVector2() / 2f;
             }
         }
 
@@ -78,7 +89,7 @@ namespace Machina.Engine
         /// this isn't quite enough.
         /// </summary>
         public Matrix GraphicsTransformMatrix =>
-            Matrix.CreateTranslation(-(int) Position.X, -(int) Position.Y, 0)
+            Matrix.CreateTranslation(-(int) PositionOffset.X, -(int) PositionOffset.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ZoomTarget(), 0))
             * RotationAndZoomMatrix
             * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0))
@@ -103,9 +114,9 @@ namespace Machina.Engine
         public void AdjustZoom(float amount)
         {
             Zoom += amount;
-            if (Zoom < 0.25f)
+            if (Zoom <= 0f)
             {
-                Zoom = 0.25f;
+                Zoom = 0.0001f;
             }
         }
 
