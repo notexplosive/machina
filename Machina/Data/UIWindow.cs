@@ -40,7 +40,7 @@ namespace Machina.Data
                 {
                     new Canvas(viewActor);
                     new Hoverable(viewActor);
-                    sceneRenderer_local = new SceneRenderer(viewActor, () => { return false; });
+                    sceneRenderer_local = new SceneRenderer(viewActor);
                 });
             });
 

@@ -287,7 +287,7 @@ namespace Machina.Engine
                 new LayoutElement(view).StretchHorizontally().StretchVertically();
                 new Canvas(view);
                 new Hoverable(view);
-                var sceneRenderer = new SceneRenderer(view, () => { return false; });
+                var sceneRenderer = new SceneRenderer(view);
                 var sceneGraphContent = sceneRenderer.primaryScene;
 
 

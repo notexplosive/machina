@@ -14,12 +14,12 @@ namespace Machina.Components
         private readonly BoundingRect boundingRect;
         private readonly Hoverable hoverable;
         private readonly SceneLayers sceneLayers;
-        private readonly Func<bool> shouldAllowKeyboardEvents;
+        private Func<bool> shouldAllowKeyboardEvents;
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         public Func<bool> bypassHoverConstraint;
         public readonly Scene primaryScene;
 
-        public SceneRenderer(Actor actor, Func<bool> shouldAllowKeyboardEvents) : base(actor)
+        public SceneRenderer(Actor actor) : base(actor)
         {
             this.canvas = RequireComponent<Canvas>();
             this.boundingRect = RequireComponent<BoundingRect>();
@@ -30,8 +30,20 @@ namespace Machina.Components
 
             this.primaryScene = sceneLayers.AddNewScene();
 
+            this.shouldAllowKeyboardEvents = () => false;
+            this.bypassHoverConstraint = () => false;
+        }
+
+        public SceneRenderer SetShouldAllowKeyboardEventsLambda(Func<bool> shouldAllowKeyboardEvents)
+        {
             this.shouldAllowKeyboardEvents = shouldAllowKeyboardEvents;
-            this.bypassHoverConstraint = () => { return false; };
+            return this;
+        }
+
+        public SceneRenderer SetBypassHoverConstraintLambda(Func<bool> canBypassHoverConstraint)
+        {
+            this.bypassHoverConstraint = canBypassHoverConstraint;
+            return this;
         }
 
         private void DrawInnerScene(SpriteBatch spriteBatch)
