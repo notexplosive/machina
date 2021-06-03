@@ -56,7 +56,7 @@ namespace Machina.Engine
         }
         public Point UnscaledViewportSize => (gameCanvas.ViewportSize.ToVector2()).ToPoint();
         public Vector2 ScaledViewportSize => gameCanvas.ViewportSize.ToVector2() / this.zoom;
-        public Vector2 WorldTopLeft => ScreenToWorld(CanvasTopLeft);
+        public Vector2 ScaledViewportTopLeft => ScreenToWorld(CanvasTopLeft);
         public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();
         public Func<Vector2> ZoomTarget
         {
