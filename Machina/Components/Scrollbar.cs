@@ -122,11 +122,10 @@ namespace Machina.Components
 
         public void ApplyScrollDelta(int scrollDelta)
         {
-            // CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
-            this.targetCamera.PositionOffset -= new Vector2(0, Convert_Something(scrollDelta));
+            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
         }
 
-        private float Convert_Something(int scrollDelta)
+        private float ConvertFromInputScrollDeltaToCameraDelta(int scrollDelta)
         {
             return (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
         }
@@ -179,6 +178,9 @@ namespace Machina.Components
             }
         }
 
+        /// <summary>
+        /// How many pixels we have moved the camera
+        /// </summary>
         private float currentScrollUnits;
         public float CurrentScrollUnits
         {
@@ -203,10 +205,10 @@ namespace Machina.Components
 
         public float CurrentScrollPercent
         {
-            get => (this.currentScrollUnits - this.worldBounds.min) / this.TotalWorldUnits;
+            get => (this.currentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
             set
             {
-                CurrentScrollUnits = value * this.TotalWorldUnits;
+                CurrentScrollUnits = value * TotalWorldUnits;
             }
         }
     }
