@@ -136,7 +136,7 @@ namespace Machina.Components
 
         private void OnUpdateZoom(float oldZoom, float newZoom)
         {
-            SetClampedScrollUnits(CurrentScrollUnits);
+            SetScrolledUnits(CurrentScrollUnits);
         }
 
         private float CalculateDeltaPercent(float deltaWorldUnits)
@@ -178,11 +178,6 @@ namespace Machina.Components
         }
 
         public void SetScrolledUnits(float value)
-        {
-            SetClampedScrollUnits(value);
-        }
-
-        private void SetClampedScrollUnits(float value)
         {
             if (IsScrollbarNeeded)
             {
