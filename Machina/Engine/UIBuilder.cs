@@ -10,7 +10,7 @@ namespace Machina.Engine
 {
     public class UIBuilder
     {
-        private UIStyle style;
+        private readonly UIStyle style;
 
         public UIBuilder(UIStyle style)
         {
@@ -43,6 +43,11 @@ namespace Machina.Engine
 
 
             return buttonActor;
+        }
+
+        public UIWindow BuildWindowWithoutScrollbar(Scene creatingScene, Point windowSize)
+        {
+            return new UIWindow(creatingScene, windowSize, this.style);
         }
 
         public Actor BuildSpacer(LayoutGroup group, Point size, bool stretchHorizontal, bool stretchVertical)
