@@ -53,7 +53,6 @@ namespace Machina.Components
         public override void Update(float dt)
         {
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
-            this.actor.transform.LocalPosition = new Vector2(this.containerBoundingRect.Width - this.containerBoundingRect.Offset.X, -this.containerBoundingRect.Offset.Y);
             this.targetCamera.PositionOffset = new Vector2(this.targetCamera.PositionOffset.X, CurrentScrollUnits);
         }
 

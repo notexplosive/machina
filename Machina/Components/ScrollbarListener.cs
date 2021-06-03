@@ -1,6 +1,7 @@
 ﻿using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,16 +15,25 @@ namespace Machina.Components
     public class ScrollbarListener : BaseComponent
     {
         private readonly Scrollbar scrollbar;
+        private ModifierKeys latestModifiers;
 
         public ScrollbarListener(Actor actor, Scrollbar scrollbar) : base(actor)
         {
             this.scrollbar = scrollbar;
         }
 
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            this.latestModifiers = modifiers;
+        }
+
         public override void OnScroll(int scrollDelta)
         {
             // todo: if(this.actor.scene.NothingHovered)
-            this.scrollbar.ApplyScrollDelta(scrollDelta);
+            if (this.latestModifiers.None)
+            {
+                this.scrollbar.ApplyScrollDelta(scrollDelta);
+            }
         }
     }
 }

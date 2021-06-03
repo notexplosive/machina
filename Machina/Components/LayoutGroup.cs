@@ -157,19 +157,19 @@ namespace Machina.Components
             return result;
         }
 
-        public LayoutGroup HorizontallyStretchedSpacer()
+        public LayoutGroup HorizontallyStretchedSpacer(int size = 0)
         {
             var spacer = transform.AddActorAsChild("horizontal-spacer");
-            new BoundingRect(spacer, new Point());
+            new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchHorizontally();
 
             return this;
         }
 
-        public LayoutGroup VerticallyStretchedSpacer()
+        public LayoutGroup VerticallyStretchedSpacer(int size = 0)
         {
             var spacer = transform.AddActorAsChild("vertical-spacer");
-            new BoundingRect(spacer, new Point());
+            new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchVertically();
 
             return this;
