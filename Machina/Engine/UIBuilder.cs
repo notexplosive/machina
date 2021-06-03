@@ -45,11 +45,13 @@ namespace Machina.Engine
             return buttonActor;
         }
 
-        public UIWindow BuildWindowWithoutScrollbar(Scene creatingScene, Point windowSize)
+        public UIWindow BuildWindowWithoutScrollbar(Scene creatingScene, Point contentSize)
         {
-            return new UIWindow(creatingScene, windowSize, this.style);
+            return new UIWindow(creatingScene, contentSize, this.style);
         }
 
+
+        [Obsolete("Use LayoutGroup's spacer API instead")]
         public Actor BuildSpacer(LayoutGroup group, Point size, bool stretchHorizontal, bool stretchVertical)
         {
             var scene = group.actor.scene;

@@ -19,17 +19,18 @@ namespace Machina.Data
         /// </summary>
         public readonly Transform RootTransform;
 
-        public UIWindow(Scene creatingScene, Point windowSize, UIStyle style)
+        public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
         {
+            var headerSize = 32;
             var windowRoot = creatingScene.AddActor("Window");
-            new BoundingRect(windowRoot, windowSize);
+            new BoundingRect(windowRoot, contentSize + new Point(0, headerSize));
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
             new Hoverable(windowRoot);
             new Draggable(windowRoot);
             new MoveOnDrag(windowRoot);
             new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Outer);
 
-            rootGroup.PixelSpacer(32);
+            rootGroup.PixelSpacer(headerSize);
 
             SceneRenderer sceneRenderer_local = null;
 
