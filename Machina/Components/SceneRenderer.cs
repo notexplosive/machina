@@ -16,7 +16,7 @@ namespace Machina.Components
         private readonly SceneLayers sceneLayers;
         private Func<bool> shouldAllowKeyboardEvents;
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
-        public Func<bool> bypassHoverConstraint;
+        private Func<bool> bypassHoverConstraint;
         public readonly Scene primaryScene;
 
         public SceneRenderer(Actor actor) : base(actor)

@@ -17,7 +17,11 @@ namespace Machina.Data
         /// <summary>
         /// Transform of the parent-most actor
         /// </summary>
-        public readonly Transform RootTransform;
+        public readonly Transform rootTransform;
+        /// <summary>
+        /// Actor for the "Content" portion of the window
+        /// </summary>
+        public readonly Actor contentActor;
 
         public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
         {
@@ -33,9 +37,11 @@ namespace Machina.Data
             rootGroup.PixelSpacer(headerSize);
 
             SceneRenderer sceneRenderer_local = null;
+            Actor contentActor_local = null;
 
             rootGroup.AddBothStretchedElement("ContentGroup", contentActor =>
             {
+                contentActor_local = contentActor;
                 var contentGroup = new LayoutGroup(contentActor, Orientation.Horizontal);
                 contentGroup.AddBothStretchedElement("View", viewActor =>
                 {
@@ -46,18 +52,19 @@ namespace Machina.Data
             });
 
             this.sceneRenderer = sceneRenderer_local;
+            this.contentActor = contentActor_local;
             this.scene = this.sceneRenderer.primaryScene;
-            this.RootTransform = windowRoot.transform;
+            this.rootTransform = windowRoot.transform;
         }
 
         public void Destroy()
         {
-            RootTransform.actor.Destroy();
+            rootTransform.actor.Destroy();
         }
 
         public void Delete()
         {
-            RootTransform.actor.Delete();
+            rootTransform.actor.Delete();
         }
     }
 }
