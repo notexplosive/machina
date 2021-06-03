@@ -35,9 +35,9 @@ namespace Machina.Components
             this.worldBounds = scrollRange;
             this.scrollIncrement = scrollIncrement;
             this.thumbSheet = thumbSheet;
-            CurrentScrollUnits = 0;
+            SetScrolledUnits(0);
 
-            this.targetCamera.OnChangeZoom += UpdateScrollReflexive;
+            this.targetCamera.OnChangeZoom += OnUpdateZoom;
         }
 
         public void SetWorldBounds(MinMax<int> scrollRange)
@@ -47,7 +47,7 @@ namespace Machina.Components
 
         public override void OnDeleteFinished()
         {
-            this.targetCamera.OnChangeZoom -= UpdateScrollReflexive;
+            this.targetCamera.OnChangeZoom -= OnUpdateZoom;
         }
 
         public override void Update(float dt)
@@ -121,12 +121,7 @@ namespace Machina.Components
 
         public void ApplyScrollDelta(int scrollDelta)
         {
-            CurrentScrollUnits -= (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
-        }
-
-        private float ConvertFromInputScrollDeltaToCameraDelta(int scrollDelta)
-        {
-            return (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom);
+            SetScrolledUnits(CurrentScrollUnits - (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom));
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -139,7 +134,7 @@ namespace Machina.Components
             }
         }
 
-        private void UpdateScrollReflexive(float oldZoom, float newZoom)
+        private void OnUpdateZoom(float oldZoom, float newZoom)
         {
             SetClampedScrollUnits(CurrentScrollUnits);
         }
@@ -180,10 +175,11 @@ namespace Machina.Components
         public float CurrentScrollUnits
         {
             get => this.targetCamera.PositionOffset.Y;
-            set
-            {
-                SetClampedScrollUnits(value);
-            }
+        }
+
+        public void SetScrolledUnits(float value)
+        {
+            SetClampedScrollUnits(value);
         }
 
         private void SetClampedScrollUnits(float value)
@@ -200,10 +196,10 @@ namespace Machina.Components
 
         public float CurrentScrollPercent
         {
-            get => (this.CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
+            get => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
             set
             {
-                CurrentScrollUnits = value * TotalWorldUnits;
+                SetScrolledUnits(value * TotalWorldUnits);
             }
         }
     }
