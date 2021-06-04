@@ -92,7 +92,6 @@ namespace Machina.Components
                 // Click along the bar
                 else if (wasPressed && !isCursorWithinThumb && this.hoverable.IsHovered)
                 {
-                    /*
                     this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;
 
@@ -102,7 +101,6 @@ namespace Machina.Components
                     SetScrollPercent(CurrentScrollPercent + scrollDeltaPercent);
 
                     this.scrollPercentOnGrab = CurrentScrollPercent;
-                    */
                 }
                 else if (!wasPressed)
                 {
