@@ -56,14 +56,19 @@ namespace Machina.Engine
         }
         public Point UnscaledViewportSize => (gameCanvas.ViewportSize.ToVector2()).ToPoint();
         public Vector2 ScaledViewportSize => gameCanvas.ViewportSize.ToVector2() / this.zoom;
-        public Vector2 ScaledPosition
+        public Point ScaledPosition
         {
-            get => ScreenToWorld(CanvasTopLeft);
+            get
+            {
+                var scaledPosVec = ScreenToWorld(CanvasTopLeft);
+                scaledPosVec.Round();
+                return scaledPosVec.ToPoint();
+            }
             set
             {
                 var old = ScaledPosition;
                 var offset = value - old;
-                UnscaledPosition += offset;
+                UnscaledPosition += offset.ToVector2();
             }
         }
         public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();

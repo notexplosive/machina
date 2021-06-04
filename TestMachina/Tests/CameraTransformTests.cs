@@ -41,7 +41,7 @@ namespace TestMachina.Tests
             var gameCanvas = new GameCanvas(new Point(800, 600), ResizeBehavior.MaintainDesiredResolution);
             var sceneLayers = new SceneLayers(false, gameCanvas, new EmptyFrameStep());
             var scene = sceneLayers.AddNewScene();
-            scene.camera.ScaledPosition = new Vector2(120, 240);
+            scene.camera.ScaledPosition = new Point(120, 240);
             scene.camera.Zoom = 2.6f;
 
             Vector2 savedPosition = Vector2.Zero;
@@ -77,9 +77,9 @@ namespace TestMachina.Tests
             var scene = sceneLayers.AddNewScene();
             scene.camera.Zoom = 2.6f;
 
-            scene.camera.ScaledPosition = new Vector2(scene.camera.ScaledPosition.X, 0);
+            scene.camera.ScaledPosition = new Point(scene.camera.ScaledPosition.X, 237);
 
-            scene.camera.ScaledPosition.Y.Should().Be(0);
+            scene.camera.ScaledPosition.Y.Should().Be(237);
         }
     }
 }

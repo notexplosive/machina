@@ -95,7 +95,6 @@ namespace Machina.Components
                     this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;
 
-
                     var thumbCenterY = thumbRect.Y + thumbRect.Height / 2;
                     var deltaFromThumb = currentPosition.Y - thumbCenterY;
                     var scrollDeltaPercent = CalculateDeltaPercent(deltaFromThumb);
@@ -141,7 +140,7 @@ namespace Machina.Components
 
         private float CalculateDeltaPercent(float deltaWorldUnits)
         {
-            return deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
+            return -deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
         }
 
         private bool ThumbIsSmallEnoughToRender => OnScreenPercent < 1f;
@@ -179,11 +178,11 @@ namespace Machina.Components
         {
             if (ThumbIsSmallEnoughToRender)
             {
-                this.targetCamera.ScaledPosition = new Vector2(this.targetCamera.ScaledPosition.X, Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
+                this.targetCamera.ScaledPosition = new Point(this.targetCamera.ScaledPosition.X, (int) Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
             }
             else
             {
-                this.targetCamera.ScaledPosition = new Vector2(this.targetCamera.ScaledPosition.X, 0);
+                this.targetCamera.ScaledPosition = new Point(this.targetCamera.ScaledPosition.X, 0);
             }
         }
 
