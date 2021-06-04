@@ -32,7 +32,7 @@ namespace Machina.Components
             // todo: if(this.actor.scene.NothingHovered)
             if (this.latestModifiers.None)
             {
-                this.scrollbar.ApplyScrollDelta(scrollDelta);
+                this.scrollbar.ApplyScrollWheelDelta(scrollDelta);
             }
         }
     }

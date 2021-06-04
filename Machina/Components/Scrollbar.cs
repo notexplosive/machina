@@ -92,6 +92,7 @@ namespace Machina.Components
                 // Click along the bar
                 else if (wasPressed && !isCursorWithinThumb && this.hoverable.IsHovered)
                 {
+                    /*
                     this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;
 
@@ -101,6 +102,7 @@ namespace Machina.Components
                     SetScrollPercent(CurrentScrollPercent + scrollDeltaPercent);
 
                     this.scrollPercentOnGrab = CurrentScrollPercent;
+                    */
                 }
                 else if (!wasPressed)
                 {
@@ -113,22 +115,31 @@ namespace Machina.Components
         {
             if (this.hoverable.IsHovered)
             {
-                ApplyScrollDelta(scrollDelta);
+                ApplyScrollWheelDelta(scrollDelta);
+                MachinaGame.Print("Scrolled to:", CurrentScrollPercent);
             }
         }
 
-        public void ApplyScrollDelta(int scrollDelta)
+        public void ApplyScrollWheelDelta(int scrollDelta)
         {
             SetScrolledUnits(CurrentScrollUnits - (int) (scrollDelta * this.scrollIncrement / this.targetCamera.Zoom));
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            var totalDelta = currentPosition.Y - this.mouseYOnGrab;
-            var totalScrollDeltaPercent = CalculateDeltaPercent(totalDelta);
+            var deltaFromGrab = currentPosition.Y - this.mouseYOnGrab;
+            var deltaPercent = CalculateDeltaPercent(deltaFromGrab);
             if (this.isGrabbed)
             {
-                SetScrollPercent(totalScrollDeltaPercent + scrollPercentOnGrab);
+                SetScrollPercent(scrollPercentOnGrab + deltaPercent);
+            }
+        }
+
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            if (key == Keys.G && state == ButtonState.Pressed)
+            {
+                SetScrollPercent(CurrentScrollPercent);
             }
         }
 
@@ -139,7 +150,8 @@ namespace Machina.Components
 
         private float CalculateDeltaPercent(float deltaWorldUnits)
         {
-            return -deltaWorldUnits / (ScrollbarHeight - ThumbHeight);
+            var result = deltaWorldUnits / (ScrollbarHeight - ThumbHeight);
+            return result;
         }
 
         private float ScrollbarHeight => this.containerBoundingRect.Height;
@@ -148,7 +160,7 @@ namespace Machina.Components
         /// <summary>
         /// Total height of scrollable area
         /// </summary>
-        private float TotalWorldUnits => (OnScreenUnits - this.worldBounds.max) - this.worldBounds.min;
+        private float TotalWorldUnits => (this.worldBounds.max - OnScreenUnits) - this.worldBounds.min;
         /// <summary>
         /// How many scrollable units are represented on screen?
         /// </summary>
@@ -178,7 +190,8 @@ namespace Machina.Components
         {
             if (ThumbIsSmallEnoughToRender)
             {
-                this.targetCamera.ScaledPosition = new Point(this.targetCamera.ScaledPosition.X, (int) Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
+                var clamped = (int) Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits);
+                this.targetCamera.ScaledPosition = new Point(this.targetCamera.ScaledPosition.X, clamped);
             }
             else
             {
@@ -186,7 +199,7 @@ namespace Machina.Components
             }
         }
 
-        public float CurrentScrollPercent => (this.worldBounds.min - CurrentScrollUnits) / TotalWorldUnits;
+        public float CurrentScrollPercent => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
 
         public void SetScrollPercent(float percent)
         {
