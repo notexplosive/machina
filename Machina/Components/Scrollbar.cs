@@ -98,7 +98,6 @@ namespace Machina.Components
                     var thumbCenterY = thumbRect.Y + thumbRect.Height / 2;
                     var deltaFromThumb = currentPosition.Y - thumbCenterY;
                     var scrollDeltaPercent = CalculateDeltaPercent(deltaFromThumb);
-
                     SetScrollPercent(CurrentScrollPercent + scrollDeltaPercent);
 
                     this.scrollPercentOnGrab = CurrentScrollPercent;
@@ -140,9 +139,10 @@ namespace Machina.Components
 
         private float CalculateDeltaPercent(float deltaWorldUnits)
         {
-            return -deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
+            return -deltaWorldUnits / (ScrollbarHeight - ThumbHeight);
         }
 
+        private float ScrollbarHeight => this.containerBoundingRect.Height;
         private bool ThumbIsSmallEnoughToRender => OnScreenPercent < 1f;
         private bool HasValidThumb => ThumbIsSmallEnoughToRender && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
         /// <summary>
@@ -152,7 +152,7 @@ namespace Machina.Components
         /// <summary>
         /// How many scrollable units are represented on screen?
         /// </summary>
-        private float OnScreenUnits => this.containerBoundingRect.Height / this.targetCamera.Zoom;
+        private float OnScreenUnits => ScrollbarHeight / this.targetCamera.Zoom;
         /// <summary>
         /// What percentage of the total scrollable height is visible on screen
         /// </summary>
@@ -160,13 +160,13 @@ namespace Machina.Components
         /// <summary>
         /// How many pixels tall should the scrollbar thumb be
         /// </summary>
-        private int ThumbHeight => (int) (this.containerBoundingRect.Height * OnScreenPercent);
+        private int ThumbHeight => (int) (ScrollbarHeight * OnScreenPercent);
         private Rectangle ThumbRect
         {
             get
             {
                 float scrollPercent = CurrentScrollPercent;
-                int thumbYPosition = (int) ((this.containerBoundingRect.Height - ThumbHeight) * scrollPercent);
+                int thumbYPosition = (int) ((ScrollbarHeight - ThumbHeight) * scrollPercent);
                 return new Rectangle(this.myBoundingRect.Rect.Location + new Point(0, thumbYPosition),
                             new Point(this.myBoundingRect.Width, ThumbHeight));
             }
