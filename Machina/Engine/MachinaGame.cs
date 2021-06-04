@@ -290,7 +290,6 @@ namespace Machina.Engine
                 var sceneRenderer = new SceneRenderer(view);
                 var sceneGraphContent = sceneRenderer.primaryScene;
 
-
                 var scrollbarActor = content.transform.AddActorAsChild("Scrollbar");
                 scrollbarActor.transform.LocalDepth = new Depth(-1);
                 new BoundingRect(scrollbarActor, new Point(32, 0));
@@ -381,6 +380,7 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
+            Mouse.SetCursor(MouseCursor.Arrow);
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)

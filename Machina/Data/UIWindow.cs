@@ -31,6 +31,16 @@ namespace Machina.Data
         public readonly Transform rootTransform;
         private readonly BoundingRect rootBoundingRect;
 
+        public void AddResizer(Point minSize, Point maxSize)
+        {
+            var resizer = rootTransform.AddActorAsChild("Resizer");
+            rootTransform.FlushBuffers();
+            resizer.transform.LocalDepth = 1; // BEHIND the root
+            new BoundingRect(resizer, Point.Zero);
+            new Hoverable(resizer);
+            new BoundingRectResizer(resizer, minSize, maxSize);
+        }
+
         /// <summary>
         /// LayoutGroup of the "Content" area of the window
         /// </summary>

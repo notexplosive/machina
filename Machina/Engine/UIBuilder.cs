@@ -45,7 +45,7 @@ namespace Machina.Engine
             return buttonActor;
         }
 
-        public UIWindow BuildWindowWithoutScrollbar(Scene creatingScene, Point contentSize)
+        public UIWindow BuildWindow(Scene creatingScene, Point contentSize)
         {
             return new UIWindow(creatingScene, contentSize, this.style);
         }
