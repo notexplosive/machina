@@ -114,7 +114,6 @@ namespace Machina.Components
             if (this.hoverable.IsHovered)
             {
                 ApplyScrollWheelDelta(scrollDelta);
-                MachinaGame.Print("Scrolled to:", CurrentScrollPercent);
             }
         }
 

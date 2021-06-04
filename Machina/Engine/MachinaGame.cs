@@ -298,13 +298,11 @@ namespace Machina.Engine
                 new Hoverable(scrollbarActor);
                 new NinepatchRenderer(scrollbarActor, defaultStyle.buttonDefault, NinepatchSheet.GenerationDirection.Inner);
 
-                /*
                 var scrollbar = new Scrollbar(scrollbarActor, view.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900), defaultStyle.buttonHover);
 
                 var sceneGraphActor = sceneGraphContent.AddActor("SceneGraphActor");
                 new SceneGraphRenderer(sceneGraphActor, this.sceneLayers, scrollbar);
                 new ScrollbarListener(sceneGraphActor, scrollbar);
-                */
             }
 
             DebugLevel = DebugLevel.Passive;
