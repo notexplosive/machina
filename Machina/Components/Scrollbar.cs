@@ -144,11 +144,12 @@ namespace Machina.Components
             return deltaWorldUnits / (this.containerBoundingRect.Height - ThumbHeight);
         }
 
-        private bool HasValidThumb => OnScreenPercent < 1f && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
+        private bool ThumbIsSmallEnoughToRender => OnScreenPercent < 1f;
+        private bool HasValidThumb => ThumbIsSmallEnoughToRender && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
         /// <summary>
         /// Total height of scrollable area
         /// </summary>
-        private float TotalWorldUnits => (this.worldBounds.max - OnScreenUnits) - this.worldBounds.min;
+        private float TotalWorldUnits => (OnScreenUnits - this.worldBounds.max) - this.worldBounds.min;
         /// <summary>
         /// How many scrollable units are represented on screen?
         /// </summary>
@@ -176,7 +177,7 @@ namespace Machina.Components
 
         public void SetScrolledUnits(float value)
         {
-            if (HasValidThumb)
+            if (ThumbIsSmallEnoughToRender)
             {
                 this.targetCamera.ScaledPosition = new Vector2(this.targetCamera.ScaledPosition.X, Math.Clamp(value, this.worldBounds.min, this.worldBounds.max - OnScreenUnits));
             }
@@ -186,7 +187,7 @@ namespace Machina.Components
             }
         }
 
-        public float CurrentScrollPercent => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
+        public float CurrentScrollPercent => (this.worldBounds.min - CurrentScrollUnits) / TotalWorldUnits;
 
         public void SetScrollPercent(float percent)
         {

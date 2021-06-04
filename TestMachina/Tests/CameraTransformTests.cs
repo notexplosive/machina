@@ -1,4 +1,5 @@
-﻿using Machina.Data;
+﻿using FluentAssertions;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using System;
@@ -66,6 +67,19 @@ namespace TestMachina.Tests
             Assert.Equal(new Point(361, 478), savedPosition.ToPoint()); // Mouse Postion
             Assert.Equal(new Vector2(4.2735047f, 10.683762f), savedPositionDelta); // Mouse Position Delta
             Assert.Equal(new Vector2(20, 50), savedRawDelta); // Mouse raw delta
+        }
+
+        [Fact]
+        public void scaled_position_assignment()
+        {
+            var gameCanvas = new GameCanvas(new Point(800, 600), ResizeBehavior.MaintainDesiredResolution);
+            var sceneLayers = new SceneLayers(false, gameCanvas, new EmptyFrameStep());
+            var scene = sceneLayers.AddNewScene();
+            scene.camera.Zoom = 2.6f;
+
+            scene.camera.ScaledPosition = new Vector2(scene.camera.ScaledPosition.X, 0);
+
+            scene.camera.ScaledPosition.Y.Should().Be(0);
         }
     }
 }
