@@ -335,6 +335,10 @@ namespace Machina.Engine
                     case "playback":
                         DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
                         break;
+                    case "playback-nogui":
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        demoPlaybackComponent.ShowGui = false;
+                        break;
                     default:
                         MachinaGame.Print("Unknown demo mode", arg);
                         break;
