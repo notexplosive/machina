@@ -24,6 +24,12 @@ namespace Machina.Components
             return this;
         }
 
+        public TextureRenderer SetOffset(Vector2 offset)
+        {
+            this.offset = offset;
+            return this;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
