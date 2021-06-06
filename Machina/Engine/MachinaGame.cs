@@ -69,6 +69,16 @@ namespace Machina.Engine
             private set;
         }
 
+        /// <summary>
+        /// TEST ONLY!!
+        /// </summary>
+        public static void SetSeededRandom(int seed)
+        {
+            var random = new SeededRandom();
+            random.Seed = seed;
+            Random = random;
+        }
+
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
             if (rect.Width * rect.Height == 0)
@@ -470,7 +480,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Current.logger.Log(objects);
+            Current?.logger.Log(objects);
         }
     }
 }
