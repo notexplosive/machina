@@ -1,6 +1,7 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -33,6 +34,14 @@ namespace Machina.Components
             float drawFps = 1 / drawDt;
             var text = ((int) this.fps).ToString() + "/" + Math.Round(drawFps, MidpointRounding.ToEven);
             spriteBatch.DrawString(this.font, text, new Vector2(screenWidth - this.font.MeasureString(text).X - 5, 0), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+        }
+
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            if (key == Keys.O && modifiers.Control && state == ButtonState.Pressed)
+            {
+                this.actor.Visible = !this.actor.Visible;
+            }
         }
     }
 }
