@@ -45,14 +45,15 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-            if (IsHovered && !this.wasHovered)
-            {
-                OnHoverStart?.Invoke();
-            }
-
+            // Order matters. We unhover the previous hovered, THEN hover the new hovered
             if (!IsHovered && this.wasHovered)
             {
                 OnHoverEnd?.Invoke();
+            }
+
+            if (IsHovered && !this.wasHovered)
+            {
+                OnHoverStart?.Invoke();
             }
 
             this.wasHovered = IsHovered;
