@@ -74,8 +74,10 @@ namespace Machina.Engine
         /// </summary>
         public static void SetSeededRandom(int seed)
         {
-            var random = new SeededRandom();
-            random.Seed = seed;
+            var random = new SeededRandom
+            {
+                Seed = seed
+            };
             Random = random;
         }
 
