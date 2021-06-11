@@ -10,7 +10,17 @@ namespace Machina.Components
     public class LayoutGroup : BaseComponent
     {
         private readonly BoundingRect boundingRect;
-        public int PaddingBetweenElements;
+
+        [Obsolete]
+        public int PaddingBetweenElements
+        {
+            set
+            {
+                this.padding = value;
+                ExecuteLayout();
+            }
+        }
+        private int padding;
         private int margin;
 
         public readonly Orientation orientation;
@@ -66,7 +76,7 @@ namespace Machina.Components
 
                 if (index != last)
                 {
-                    remainingAlongSize -= PaddingBetweenElements;
+                    remainingAlongSize -= this.padding;
                 }
 
                 index++;
@@ -117,11 +127,11 @@ namespace Machina.Components
                 element.actor.transform.Position = nextLocation.ToVector2() + element.boundingRect.Offset;
                 if (isVertical)
                 {
-                    nextLocation += new Point(0, element.Rect.Height + this.PaddingBetweenElements);
+                    nextLocation += new Point(0, element.Rect.Height + this.padding);
                 }
                 else
                 {
-                    nextLocation += new Point(element.Rect.Width + this.PaddingBetweenElements, 0);
+                    nextLocation += new Point(element.Rect.Width + this.padding, 0);
                 }
             }
 
@@ -139,6 +149,13 @@ namespace Machina.Components
         public LayoutGroup SetMargin(int margin)
         {
             this.margin = margin;
+            ExecuteLayout();
+            return this;
+        }
+
+        public LayoutGroup SetPaddingBetweenElements(int padding)
+        {
+            this.padding = padding;
             ExecuteLayout();
             return this;
         }
@@ -204,18 +221,21 @@ namespace Machina.Components
             return element;
         }
 
-        public LayoutElement AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public LayoutGroup AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
-            return AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
+            AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
+            return this;
         }
 
-        public LayoutElement AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public LayoutGroup AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
-            return AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
+            AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
+            return this;
         }
-        public LayoutElement AddBothStretchedElement(string name, Action<Actor> onPostCreate)
+        public LayoutGroup AddBothStretchedElement(string name, Action<Actor> onPostCreate)
         {
-            return AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
+            AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
+            return this;
         }
     }
 }

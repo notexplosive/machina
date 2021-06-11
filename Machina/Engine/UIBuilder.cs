@@ -88,7 +88,7 @@ namespace Machina.Engine
                 stateProvider = new RadioButtonState(checkboxContainer, radioButtonGroup, startChecked);
 
             new LayoutElement(checkboxContainer).StretchHorizontally();
-            new LayoutGroup(checkboxContainer, Orientation.Horizontal).PaddingBetweenElements = 5;
+            new LayoutGroup(checkboxContainer, Orientation.Horizontal).SetPaddingBetweenElements(5);
 
             var checkboxBox = scene.AddActor("Checkbox-Box");
             checkboxBox.transform.SetParent(checkboxContainer);
