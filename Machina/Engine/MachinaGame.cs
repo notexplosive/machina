@@ -401,11 +401,8 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                foreach (var frameState in frameStates)
-                {
-                    sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
-                }
+                var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                sceneLayers.Update(dt, Matrix.Identity, frameState);
             }
             else
             {
