@@ -125,6 +125,12 @@ namespace Machina.Data
             }
         }
 
+        public bool IsDone()
+        {
+            return this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
+        }
+
+        [Obsolete("Use IsDone() instead")]
         public bool IsFinished => this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
 
         /// <summary>
@@ -184,7 +190,7 @@ namespace Machina.Data
                 {
                     foreach (var chain in this.chains)
                     {
-                        if (!chain.IsFinished)
+                        if (!chain.IsDone())
                         {
                             return false;
                         }
