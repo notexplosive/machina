@@ -72,6 +72,11 @@ namespace Machina.Engine
             return scene;
         }
 
+        public void RemoveScene(Scene scene)
+        {
+            this.sceneList.Remove(scene);
+        }
+
         /// <summary>
         /// This is private intentionally, you should only add a scene to the SceneLayers as a new scene via AddNewScene
         /// </summary>
