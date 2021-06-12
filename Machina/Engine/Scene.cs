@@ -159,7 +159,7 @@ namespace Machina.Engine
                 AlphaDestinationBlend = Blend.DestinationAlpha,
                 AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction
             };
-            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, this.sceneLayers.SamplerState, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
 
             base.Draw(spriteBatch);
 
@@ -167,7 +167,7 @@ namespace Machina.Engine
         }
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointWrap, DepthStencilState.Default, null, null, camera.GraphicsTransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, this.sceneLayers.SamplerState, DepthStencilState.Default, null, null, camera.GraphicsTransformMatrix);
 
             base.DebugDraw(spriteBatch);
 

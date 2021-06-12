@@ -18,7 +18,7 @@ namespace Machina.Components
         {
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
             this.past = DateTime.Now;
-            this.actor.Visible = false;
+            this.actor.Visible = true;
         }
 
         public override void Update(float dt)

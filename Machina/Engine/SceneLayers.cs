@@ -15,6 +15,7 @@ namespace Machina.Engine
         public readonly IFrameStep frameStep;
         public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
+        public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
         public InputFrameState CurrentInputFrameState
         {

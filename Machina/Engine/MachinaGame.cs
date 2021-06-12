@@ -150,6 +150,12 @@ namespace Machina.Engine
             get => Graphics.IsFullScreen;
         }
 
+        public static SamplerState SamplerState
+        {
+            get;
+            set;
+        } = SamplerState.PointClamp;
+
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
 
@@ -446,7 +452,7 @@ namespace Machina.Engine
         {
             var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
-            var desiredWidth = 400;
+            var desiredWidth = 1920 / 4;
             float ratio = (float) windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);

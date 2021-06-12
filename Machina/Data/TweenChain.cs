@@ -77,6 +77,16 @@ namespace Machina.Data
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
+        public TweenChain AppendVectorTween(Point targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Point> accessors)
+        {
+            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
+        }
+
+        private static Point PointLerp(Point p1, Point p2, float amount)
+        {
+            return Vector2.Lerp(p1.ToVector2(), p2.ToVector2(), amount).ToPoint();
+        }
+
         public MultiChainItem AppendMulticastTween()
         {
             var multiChainItem = new MultiChainItem();
