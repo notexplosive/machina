@@ -77,7 +77,7 @@ namespace Machina.Data
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
-        public TweenChain AppendVectorTween(Point targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Point> accessors)
+        public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Point> accessors)
         {
             return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
         }
