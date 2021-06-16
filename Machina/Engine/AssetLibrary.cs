@@ -40,11 +40,12 @@ namespace Machina.Engine
         {
             var result = new List<string>();
 
-            DirectoryInfo dir = new DirectoryInfo(this.content.RootDirectory + "\\" + contentFolder);
+            var path = Path.Join(this.content.RootDirectory, contentFolder);
+            DirectoryInfo dir = new DirectoryInfo(path);
             if (!dir.Exists)
             {
                 // You need to add MachinaAssets as a project dependency to your game
-                throw new DirectoryNotFoundException("Content folder missing, most likely missing MachinaAssets");
+                throw new DirectoryNotFoundException("Content folder missing, most likely missing MachinaAssets\ntried:" + path);
             }
 
             FileInfo[] files = dir.GetFiles("*." + extension);
