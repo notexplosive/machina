@@ -8,12 +8,12 @@ using System.Text;
 
 namespace Machina.Components
 {
-    public class BoundingBoxFill : BaseComponent
+    public class BoundingRectFill : BaseComponent
     {
         private readonly BoundingRect boundingRect;
         private readonly Color color;
 
-        public BoundingBoxFill(Actor actor, Color color) : base(actor)
+        public BoundingRectFill(Actor actor, Color color) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.color = color;
