@@ -31,16 +31,18 @@ namespace Machina.Engine
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
+        private readonly string contentPath;
 
-        public AssetLibrary(Game game)
+        public AssetLibrary(MachinaGame game)
         {
             this.content = game.Content;
+            this.contentPath = game.localContentPath;
         }
         private List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
         {
             var result = new List<string>();
 
-            var path = Path.Join(this.content.RootDirectory, contentFolder);
+            var path = Path.Join(this.contentPath, contentFolder);
             DirectoryInfo dir = new DirectoryInfo(path);
             if (!dir.Exists)
             {
