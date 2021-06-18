@@ -31,16 +31,6 @@ namespace Machina.Data
         public readonly Transform rootTransform;
         private readonly BoundingRect rootBoundingRect;
 
-        public void AddResizer(Point minSize, Point maxSize)
-        {
-            var resizer = rootTransform.AddActorAsChild("Resizer");
-            rootTransform.FlushBuffers();
-            resizer.transform.LocalDepth = 1; // BEHIND the root
-            new BoundingRect(resizer, Point.Zero);
-            new Hoverable(resizer);
-            new BoundingRectResizer(resizer, minSize, maxSize);
-        }
-
         /// <summary>
         /// LayoutGroup of the "Content" area of the window
         /// </summary>
@@ -61,9 +51,10 @@ namespace Machina.Data
             new Hoverable(windowRoot);
             new Draggable(windowRoot);
             new MoveOnDrag(windowRoot);
-            new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Outer);
+            new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Inner);
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
+            rootGroup.SetMargin(5);
             rootGroup.HorizontallyStretchedSpacer(32);
 
             SceneRenderer sceneRenderer_local = null;
@@ -106,6 +97,17 @@ namespace Machina.Data
                 new ScrollbarListener(scene.AddActor("Scrollbar Listener"), scrollbar);
             });
         }
+
+        public void AddResizer(Point minSize, Point maxSize)
+        {
+            var resizer = rootTransform.AddActorAsChild("Resizer");
+            rootTransform.FlushBuffers();
+            resizer.transform.LocalDepth = 1; // BEHIND the root so hoverable doesn't overlap
+            new BoundingRect(resizer, Point.Zero);
+            new Hoverable(resizer);
+            new BoundingRectResizer(resizer, minSize, maxSize);
+        }
+
 
         public void Destroy()
         {
