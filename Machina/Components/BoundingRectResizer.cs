@@ -95,16 +95,16 @@ namespace Machina.Components
         private void SetCursorBasedOnEdge(RectEdge edge)
         {
             if (edge == RectEdge.BottomLeftCorner || edge == RectEdge.TopRightCorner)
-                Mouse.SetCursor(MouseCursor.SizeNESW);
+                MachinaGame.SetCursor(MouseCursor.SizeNESW);
 
             if (edge == RectEdge.TopLeftCorner || edge == RectEdge.BottomRightCorner)
-                Mouse.SetCursor(MouseCursor.SizeNWSE);
+                MachinaGame.SetCursor(MouseCursor.SizeNWSE);
 
             if (edge == RectEdge.Right || edge == RectEdge.Left)
-                Mouse.SetCursor(MouseCursor.SizeWE);
+                MachinaGame.SetCursor(MouseCursor.SizeWE);
 
             if (edge == RectEdge.Bottom || edge == RectEdge.Top)
-                Mouse.SetCursor(MouseCursor.SizeNS);
+                MachinaGame.SetCursor(MouseCursor.SizeNS);
         }
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)

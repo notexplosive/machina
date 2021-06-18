@@ -63,6 +63,8 @@ namespace Machina.Engine
         private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
+        private static MouseCursor pendingCursor;
+
         public static SeededRandom Random
         {
             get;
@@ -106,6 +108,11 @@ namespace Machina.Engine
         public static IAssetLibrary Assets
         {
             get; private set;
+        }
+
+        public static void SetCursor(MouseCursor cursor)
+        {
+            pendingCursor = cursor;
         }
 
         /// <summary>
@@ -398,7 +405,8 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
-            Mouse.SetCursor(MouseCursor.Arrow);
+            pendingCursor = MouseCursor.Arrow;
+
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
@@ -413,7 +421,7 @@ namespace Machina.Engine
                 sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
             }
 
-
+            Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
         }
 
