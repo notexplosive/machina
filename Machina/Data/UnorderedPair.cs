@@ -21,6 +21,11 @@ namespace Machina.Data
             return set.Contains(c);
         }
 
+        public bool IsEmpty()
+        {
+            return set.Count == 0;
+        }
+
         public bool Equals(UnorderedPair<T> other)
         {
             return this.set.SetEquals(other.set);

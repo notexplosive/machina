@@ -65,6 +65,8 @@ namespace Machina.Components
             }
         }
         public Rectangle Rect => new Rectangle((this.actor.transform.Position - Offset).ToPoint(), this.size);
+        public RectangleF RectF => new RectangleF(this.actor.transform.Position - Offset, this.size);
+
 
         public Vector2 NormalizedOffset
         {
@@ -98,7 +100,7 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(Rect, Color.Pink, 1f, transform.Depth);
+            spriteBatch.DrawRectangle(RectF, Color.Pink, 1f, transform.Depth);
         }
 
         public BoundingRect SetOffset(Vector2 point)
