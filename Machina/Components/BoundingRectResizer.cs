@@ -4,6 +4,7 @@ using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,7 +32,8 @@ namespace Machina.Components
         private readonly BoundingRect parentBoundingRect;
         private readonly XYPair<MinMax<int>> sizeRanges;
         private readonly XYPair<int> padding;
-        private RectEdge grabbedEdge;
+        private GrabState grabState;
+        private Vector2 currentMousePosition;
 
         public BoundingRectResizer(Actor actor, Point minSize, Point maxSize) : base(actor)
         {
@@ -41,7 +43,7 @@ namespace Machina.Components
             Debug.Assert(this.parentBoundingRect != null);
 
             this.sizeRanges = new XYPair<MinMax<int>>(new MinMax<int>(minSize.X, maxSize.X), new MinMax<int>(minSize.Y, maxSize.Y));
-            this.padding = new XYPair<int>(20, 20);
+            this.padding = new XYPair<int>(24, 24);
 
             ClampParentBoundingRectAndUpdateSelf();
         }
@@ -57,8 +59,19 @@ namespace Machina.Components
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            var edge = GetEdgeAtPoint(currentPosition);
-            SetCursorBasedOnEdge(edge);
+            if (this.grabState.edge == RectEdge.None)
+            {
+                var edge = GetEdgeAtPoint(currentPosition);
+                if (edge != RectEdge.None)
+                {
+                    SetCursorBasedOnEdge(edge);
+                }
+            }
+            else
+            {
+                SetCursorBasedOnEdge(this.grabState.edge);
+                this.currentMousePosition = currentPosition;
+            }
         }
 
         private void SetCursorBasedOnEdge(RectEdge edge)
@@ -82,11 +95,11 @@ namespace Machina.Components
             {
                 if (state == ButtonState.Pressed)
                 {
-                    this.grabbedEdge = GetEdgeAtPoint(currentPosition);
+                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition);
                 }
                 else
                 {
-                    this.grabbedEdge = RectEdge.None;
+                    this.grabState = new GrabState(RectEdge.None, Vector2.Zero);
                 }
             }
         }
@@ -146,14 +159,97 @@ namespace Machina.Components
             return RectEdge.None;
         }
 
-        public override void Update(float dt)
-        {
-
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (this.grabState.edge != RectEdge.None)
+            {
+                var rect = this.parentBoundingRect.Rect;
+                var sizeDelta = this.grabState.GetSizeDelta(this.currentMousePosition);
+                var offsetDelta = this.grabState.GetOffsetDelta(this.currentMousePosition);
+                rect.Inflate(sizeDelta.X, sizeDelta.Y);
+                rect.Offset(offsetDelta);
+                spriteBatch.DrawRectangle(rect, Color.White, 1f, transform.Depth - 10);
+            }
+        }
 
+        private struct GrabState
+        {
+            public readonly RectEdge edge;
+            private readonly Vector2 positionOfGrab;
+
+            public GrabState(RectEdge edge, Vector2 positionOfGrab)
+            {
+                this.edge = edge;
+                this.positionOfGrab = positionOfGrab;
+            }
+
+            public Vector2 GetDelta(Vector2 currentPosition)
+            {
+                return currentPosition - positionOfGrab;
+            }
+
+            public Vector2 GetOffsetDelta(Vector2 currentPosition)
+            {
+                var delta = GetDelta(currentPosition);
+
+                if (this.edge == RectEdge.Right || this.edge == RectEdge.Bottom || this.edge == RectEdge.BottomRightCorner)
+                {
+                    return GetSizeDelta(currentPosition);
+                }
+
+                if (this.edge == RectEdge.Top)
+                {
+                    delta.X = 0;
+                }
+
+                if (this.edge == RectEdge.Left)
+                {
+                    delta.Y = 0;
+                }
+
+                if (IsAlongTop || this.edge == RectEdge.BottomLeftCorner)
+                {
+                    delta.Y /= 2;
+                }
+
+                if (this.edge == RectEdge.TopRightCorner || IsAlongLeft)
+                {
+                    delta.X /= 2;
+                }
+
+                return delta;
+            }
+
+            public Vector2 GetSizeDelta(Vector2 currentPosition)
+            {
+                var sizeDelta = GetDelta(currentPosition) / 2;
+
+                if (IsAlongLeft)
+                {
+                    sizeDelta.X = -sizeDelta.X;
+                }
+
+                if (IsLeftOrRight)
+                {
+                    sizeDelta.Y = 0;
+                }
+
+                if (this.edge == RectEdge.Bottom || this.edge == RectEdge.Top)
+                {
+                    sizeDelta.X = 0;
+                }
+
+                if (IsAlongTop)
+                {
+                    sizeDelta.Y = -sizeDelta.Y;
+                }
+
+                return sizeDelta;
+            }
+
+            public bool IsAlongTop => this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.TopRightCorner || this.edge == RectEdge.Top;
+            public bool IsLeftOrRight => this.edge == RectEdge.Left || this.edge == RectEdge.Right;
+            public bool IsAlongLeft => this.edge == RectEdge.Left || this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.BottomLeftCorner;
         }
     }
 }
