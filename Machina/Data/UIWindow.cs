@@ -41,6 +41,8 @@ namespace Machina.Data
         /// </summary>
         public readonly Actor canvasActor;
         private readonly UIStyle style;
+        private readonly int margin = 10;
+
         public event Action Closed;
 
         public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
@@ -53,69 +55,73 @@ namespace Machina.Data
             new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Inner);
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
-            var margin = 5;
-            var headerThickness = 32 - margin;
-            rootGroup.SetMargin(margin);
-            rootGroup.AddHorizontallyStretchedElement("Header", headerThickness, headerActor =>
-            {
-                new Hoverable(headerActor);
-                new Draggable(headerActor);
-                new MoveOnDrag(headerActor, windowRoot.transform);
+            var headerThickness = 32 - this.margin;
+            rootGroup.SetMargin(this.margin);
 
-                new LayoutGroup(headerActor, Orientation.Horizontal)
-                    .AddVerticallyStretchedElement("Icon", headerThickness, iconActor =>
-                    {
-                        new SpriteRenderer(iconActor, style.uiSpriteSheet)
-                            .SetAnimation(new ChooseFrameAnimation(1))
-                            .SetupBoundingRect();
-                    })
-                    .PixelSpacer(5)
-                    .AddBothStretchedElement("Title", titleActor =>
-                    {
-                        new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center).EnableDropShadow(Color.Black);
-                    })
-                    .HorizontallyStretchedSpacer()
-                    .AddVerticallyStretchedElement("CloseButton", headerThickness, closeButtonActor =>
-                    {
-                        new Hoverable(closeButtonActor);
-                        var clickable = new Clickable(closeButtonActor);
-                        new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
-                        clickable.onClick += mouseButton =>
-                        {
-                            if (mouseButton == MouseButton.Left)
-                            {
-                                Closed?.Invoke();
-                                windowRoot.Destroy();
-                            }
-                        };
-                    })
-                    ;
+            rootGroup.AddHorizontallyStretchedElement("HeaderContent", headerThickness, headerContentActor =>
+             {
+                 new Hoverable(headerContentActor);
+                 new Draggable(headerContentActor);
+                 new MoveOnDrag(headerContentActor, windowRoot.transform);
 
-            });
+                 new LayoutGroup(headerContentActor, Orientation.Horizontal)
+                 .AddVerticallyStretchedElement("Icon", headerThickness, iconActor =>
+                 {
+                     new SpriteRenderer(iconActor, style.uiSpriteSheet)
+                         .SetAnimation(new ChooseFrameAnimation(1))
+                         .SetupBoundingRect();
+                 })
+                 .PixelSpacer(5) // Spacing between icon and title
+                 .AddBothStretchedElement("Title", titleActor =>
+                 {
+                     new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Bottom).EnableDropShadow(Color.Black);
+                 })
+                 .AddVerticallyStretchedElement("CloseButton", headerThickness, closeButtonActor =>
+                 {
+                     new Hoverable(closeButtonActor);
+                     var clickable = new Clickable(closeButtonActor);
+                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                     clickable.onClick += mouseButton =>
+                     {
+                         if (mouseButton == MouseButton.Left)
+                         {
+                             Closed?.Invoke();
+                             windowRoot.Destroy();
+                         }
+                     };
+                 });
+             });
 
+
+            // These variables with _local at the end of their name are later assigned to readonly values
+            // The locals are assigned in lambdas which is illegal for readonly assignment
             SceneRenderer sceneRenderer_local = null;
             Actor canvasActor_local = null;
-            LayoutGroup contentGroup = null;
+            LayoutGroup contentGroup_local = null;
 
             // "Content" means everything below the header
             rootGroup.AddBothStretchedElement("ContentGroup", contentActor =>
-            {
-                contentGroup = new LayoutGroup(contentActor, Orientation.Horizontal);
-                contentGroup.AddBothStretchedElement("Canvas", viewActor =>
                 {
-                    canvasActor_local = viewActor;
-                    new Canvas(viewActor);
-                    new Hoverable(viewActor);
-                    sceneRenderer_local = new SceneRenderer(viewActor);
-                });
-            });
+                    contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
+                        .SetPaddingBetweenElements(2)
+                        .SetMargin(2)
+                        .AddBothStretchedElement("Canvas", viewActor =>
+                        {
+                            canvasActor_local = viewActor;
+                            new Canvas(viewActor);
+                            new Hoverable(viewActor);
+                            sceneRenderer_local = new SceneRenderer(viewActor);
+                        })
+                        ;
+                })
+                ;
 
             this.sceneRenderer = sceneRenderer_local;
             this.canvasActor = canvasActor_local;
             this.scene = this.sceneRenderer.primaryScene;
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
-            this.contentGroup = contentGroup;
+            this.contentGroup = contentGroup_local;
         }
 
         public void AddScrollbar(int maxScrollPos)
@@ -137,7 +143,7 @@ namespace Machina.Data
         public BoundingRectResizer AddResizer(Point minSize, Point maxSize)
         {
             new Hoverable(rootTransform.actor);
-            return new BoundingRectResizer(rootTransform.actor, minSize, maxSize);
+            return new BoundingRectResizer(rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize, maxSize);
         }
 
 

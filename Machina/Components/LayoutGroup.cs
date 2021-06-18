@@ -11,15 +11,6 @@ namespace Machina.Components
     {
         private readonly BoundingRect boundingRect;
 
-        [Obsolete]
-        public int PaddingBetweenElements
-        {
-            set
-            {
-                this.padding = value;
-                ExecuteLayout();
-            }
-        }
         private int padding;
         private int margin;
 

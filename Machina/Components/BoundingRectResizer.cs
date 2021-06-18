@@ -41,21 +41,21 @@ namespace Machina.Components
 
         private readonly Hoverable hoverable;
         private readonly BoundingRect boundingRect;
-        private readonly XYPair<int> padding;
+        private readonly XYPair<int> grabHandleThickness;
         private GrabState grabState;
         private Vector2 currentMousePosition;
         private readonly Point? minSize;
         private readonly Point? maxSize;
         public event EventHandler<ResizeEventArgs> Resized;
 
-        public BoundingRectResizer(Actor actor, Point? minSize, Point? maxSize) : base(actor)
+        public BoundingRectResizer(Actor actor, XYPair<int> grabHandleThickness, Point? minSize, Point? maxSize) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
 
             this.minSize = minSize;
             this.maxSize = maxSize;
-            this.padding = new XYPair<int>(24, 24);
+            this.grabHandleThickness = grabHandleThickness;
 
             if (minSize.HasValue && maxSize.HasValue)
                 ClampParentBoundingRectAndUpdateSelf();
@@ -143,10 +143,10 @@ namespace Machina.Components
             var topLeft = this.boundingRect.TopLeft;
             var bottomRight = this.boundingRect.TopLeft + this.boundingRect.Size.ToVector2();
 
-            var isAlongTop = currentPosition.Y < topLeft.Y + this.padding.Y;
-            var isAlongLeft = currentPosition.X < topLeft.X + this.padding.X;
-            var isAlongRight = currentPosition.X > bottomRight.X - this.padding.X;
-            var isAlongBottom = currentPosition.Y > bottomRight.Y - this.padding.Y;
+            var isAlongTop = currentPosition.Y < topLeft.Y + this.grabHandleThickness.Y;
+            var isAlongLeft = currentPosition.X < topLeft.X + this.grabHandleThickness.X;
+            var isAlongRight = currentPosition.X > bottomRight.X - this.grabHandleThickness.X;
+            var isAlongBottom = currentPosition.Y > bottomRight.Y - this.grabHandleThickness.Y;
 
             if (isAlongTop)
             {

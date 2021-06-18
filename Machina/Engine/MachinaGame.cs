@@ -240,7 +240,7 @@ namespace Machina.Engine
             Assets.AddMachinaAsset("ui-textbox-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
             Assets.AddMachinaAsset("ui-window-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(29, 101, 14, 14)));
+                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(34, 106, 4, 4)));
 
             var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
 
