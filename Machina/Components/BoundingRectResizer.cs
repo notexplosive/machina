@@ -143,38 +143,49 @@ namespace Machina.Components
             var topLeft = this.boundingRect.TopLeft;
             var bottomRight = this.boundingRect.TopLeft + this.boundingRect.Size.ToVector2();
 
+            var isAlongTop2x = currentPosition.Y < topLeft.Y + this.grabHandleThickness.Y * 3;
+            var isAlongLeft2x = currentPosition.X < topLeft.X + this.grabHandleThickness.X * 3;
+            var isAlongRight2x = currentPosition.X > bottomRight.X - this.grabHandleThickness.X * 3;
+            var isAlongBottom2x = currentPosition.Y > bottomRight.Y - this.grabHandleThickness.Y * 3;
+
             var isAlongTop = currentPosition.Y < topLeft.Y + this.grabHandleThickness.Y;
             var isAlongLeft = currentPosition.X < topLeft.X + this.grabHandleThickness.X;
             var isAlongRight = currentPosition.X > bottomRight.X - this.grabHandleThickness.X;
             var isAlongBottom = currentPosition.Y > bottomRight.Y - this.grabHandleThickness.Y;
 
-            if (isAlongTop)
+            if (isAlongTop2x)
             {
-                if (isAlongLeft)
+                if (isAlongLeft2x)
                 {
                     return RectEdge.TopLeftCorner;
                 }
 
-                if (isAlongRight)
+                if (isAlongRight2x)
                 {
                     return RectEdge.TopRightCorner;
                 }
 
-                return RectEdge.Top;
+                if (isAlongTop)
+                {
+                    return RectEdge.Top;
+                }
             }
-            else if (isAlongBottom)
+            else if (isAlongBottom2x)
             {
-                if (isAlongLeft)
+                if (isAlongLeft2x)
                 {
                     return RectEdge.BottomLeftCorner;
                 }
 
-                if (isAlongRight)
+                if (isAlongRight2x)
                 {
                     return RectEdge.BottomRightCorner;
                 }
 
-                return RectEdge.Bottom;
+                if (isAlongBottom)
+                {
+                    return RectEdge.Bottom;
+                }
             }
             else if (isAlongLeft)
             {
