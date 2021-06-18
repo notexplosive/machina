@@ -65,6 +65,14 @@ namespace Machina.Engine
             }
         }
 
+        public void Delete()
+        {
+            while (this.sceneList.Count > 0)
+            {
+                this.sceneList.RemoveAt(0);
+            }
+        }
+
         public Scene AddNewScene()
         {
             var scene = new Scene(this, this.frameStep);

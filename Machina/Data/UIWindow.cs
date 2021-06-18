@@ -41,6 +41,7 @@ namespace Machina.Data
         /// </summary>
         public readonly Actor canvasActor;
         private readonly UIStyle style;
+        public event Action Closed;
 
         public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
         {
@@ -77,8 +78,16 @@ namespace Machina.Data
                     .AddVerticallyStretchedElement("CloseButton", headerThickness, closeButtonActor =>
                     {
                         new Hoverable(closeButtonActor);
-                        new Clickable(closeButtonActor);
+                        var clickable = new Clickable(closeButtonActor);
                         new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                        clickable.onClick += mouseButton =>
+                        {
+                            if (mouseButton == MouseButton.Left)
+                            {
+                                Closed?.Invoke();
+                                windowRoot.Destroy();
+                            }
+                        };
                     })
                     ;
 

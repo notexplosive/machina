@@ -208,6 +208,8 @@ namespace Machina.Engine
             {
                 actor.Delete();
             }
+
+            FlushBuffers();
         }
     }
 }

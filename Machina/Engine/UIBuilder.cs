@@ -10,7 +10,7 @@ namespace Machina.Engine
 {
     public class UIBuilder
     {
-        private readonly UIStyle style;
+        public readonly UIStyle style;
 
         public UIBuilder(UIStyle style)
         {
@@ -43,11 +43,6 @@ namespace Machina.Engine
 
 
             return buttonActor;
-        }
-
-        public UIWindow BuildWindow(Scene creatingScene, Point contentSize)
-        {
-            return new UIWindow(creatingScene, contentSize, this.style);
         }
 
         public CheckboxState BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)

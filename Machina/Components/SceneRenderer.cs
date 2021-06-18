@@ -55,6 +55,7 @@ namespace Machina.Components
         {
             this.canvas.DrawAdditionalContent -= DrawInnerScene;
             this.hoverable.OnHoverEnd -= ClearHitTesters;
+            this.sceneLayers.Delete();
         }
 
         private void ClearHitTesters()
