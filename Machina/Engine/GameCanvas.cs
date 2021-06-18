@@ -133,7 +133,7 @@ namespace Machina.Engine
             public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D canvas, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, SamplerState.PointWrap, DepthStencilState.DepthRead, null, null);
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.SamplerState, DepthStencilState.DepthRead, null, null);
                 spriteBatch.Draw(canvas,
                     canvasRect,
                     null, Color.White);

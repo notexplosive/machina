@@ -40,6 +40,9 @@
 #begin fonts/pointfree.ttf
 /copy:fonts/pointfree.ttf
 
+#begin fonts/Roboto-Regular.ttf
+/copy:fonts/Roboto-Regular.ttf
+
 #begin fonts/TinyFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

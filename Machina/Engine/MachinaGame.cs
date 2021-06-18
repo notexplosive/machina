@@ -69,6 +69,18 @@ namespace Machina.Engine
             private set;
         }
 
+        /// <summary>
+        /// TEST ONLY!!
+        /// </summary>
+        public static void SetSeededRandom(int seed)
+        {
+            var random = new SeededRandom
+            {
+                Seed = seed
+            };
+            Random = random;
+        }
+
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
             if (rect.Width * rect.Height == 0)
@@ -137,6 +149,12 @@ namespace Machina.Engine
 
             get => Graphics.IsFullScreen;
         }
+
+        public static SamplerState SamplerState
+        {
+            get;
+            set;
+        } = SamplerState.PointClamp;
 
         private readonly KeyTracker keyTracker;
         private readonly MouseTracker mouseTracker;
@@ -334,6 +352,10 @@ namespace Machina.Engine
                     case "playback":
                         DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
                         break;
+                    case "playback-nogui":
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        demoPlaybackComponent.ShowGui = false;
+                        break;
                     default:
                         MachinaGame.Print("Unknown demo mode", arg);
                         break;
@@ -385,11 +407,8 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var frameStates = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                foreach (var frameState in frameStates)
-                {
-                    sceneLayers.Update(dt / frameStates.Length, Matrix.Identity, frameState);
-                }
+                var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                sceneLayers.Update(dt, Matrix.Identity, frameState);
             }
             else
             {
@@ -433,7 +452,7 @@ namespace Machina.Engine
         {
             var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
-            var desiredWidth = 400;
+            var desiredWidth = 1920 / 4;
             float ratio = (float) windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
@@ -466,7 +485,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Current.logger.Log(objects);
+            Current?.logger.Log(objects);
         }
     }
 }

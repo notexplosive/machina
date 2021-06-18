@@ -156,6 +156,7 @@ namespace Machina.Components
             {
                 var pos = new Vector2(line.positionX, line.positionY + localPos.Y) + Offset.ToVector2();
                 var depth = transform.Depth + this.depthOffset;
+                pos.Floor();
 
                 spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)

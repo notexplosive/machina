@@ -15,6 +15,7 @@ namespace Machina.Engine
         public readonly IFrameStep frameStep;
         public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
+        public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
         public InputFrameState CurrentInputFrameState
         {
@@ -69,6 +70,11 @@ namespace Machina.Engine
             var scene = new Scene(this, this.frameStep);
             Add(scene);
             return scene;
+        }
+
+        public void RemoveScene(Scene scene)
+        {
+            this.sceneList.Remove(scene);
         }
 
         /// <summary>

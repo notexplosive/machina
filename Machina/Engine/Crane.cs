@@ -24,12 +24,12 @@ namespace Machina.Engine
         public void Start();
 
         /// <summary>
-        /// Called on every scene BEFORE any real drawing happens, does not imply spriteBatch.Start
+        /// Called on every scene BEFORE any real drawing happens, does not imply spriteBatch.Begin
         /// </summary>
         /// <param name="spriteBatch"></param>
         public void PreDraw(SpriteBatch spriteBatch);
         /// <summary>
-        /// Called every visual frame, spriteBatch.Start has already been called.
+        /// Called every visual frame, spriteBatch.Begin has already been called.
         /// </summary>
         /// <param name="spriteBatch"></param>
         public void Draw(SpriteBatch spriteBatch);

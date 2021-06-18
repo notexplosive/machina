@@ -77,6 +77,16 @@ namespace Machina.Data
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
+        public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Point> accessors)
+        {
+            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
+        }
+
+        private static Point PointLerp(Point p1, Point p2, float amount)
+        {
+            return Vector2.Lerp(p1.ToVector2(), p2.ToVector2(), amount).ToPoint();
+        }
+
         public MultiChainItem AppendMulticastTween()
         {
             var multiChainItem = new MultiChainItem();
@@ -115,6 +125,12 @@ namespace Machina.Data
             }
         }
 
+        public bool IsDone()
+        {
+            return this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
+        }
+
+        [Obsolete("Use IsDone() instead")]
         public bool IsFinished => this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
 
         /// <summary>
@@ -174,7 +190,7 @@ namespace Machina.Data
                 {
                     foreach (var chain in this.chains)
                     {
-                        if (!chain.IsFinished)
+                        if (!chain.IsDone())
                         {
                             return false;
                         }

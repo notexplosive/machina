@@ -29,10 +29,11 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (this.playback == null)
+            if (this.playback == null || ShowGui == false)
             {
                 return;
             }
+
             var windowSize = this.actor.scene.sceneLayers.gameCanvas.WindowSize;
             var borderRect = new Rectangle(new Point(0, 0), windowSize);
             var padding = 2;
@@ -78,6 +79,12 @@ namespace Machina.Components
                 spriteBatch.DrawLine(mousePos.ToVector2(), mousePos.ToVector2() - mouse.PositionDelta, Color.Lime, 1f, new Depth(5));
             }
         }
+
+        public bool ShowGui
+        {
+            get;
+            set;
+        } = true;
 
         public override void Update(float dt)
         {

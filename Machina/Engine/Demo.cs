@@ -174,26 +174,32 @@ namespace Machina.Engine
                 private set;
             }
 
-            public InputFrameState[] UpdateAndGetInputFrameStates(float dt)
+            public InputFrameState UpdateAndGetInputFrameStates(float dt)
             {
                 this.time += dt;
-                var finalIndex = this.demo.GetIndexAtTime(this.currentIndex, this.time);
-                var size = finalIndex - this.currentIndex;
-                var result = new InputFrameState[size];
+                this.currentIndex++;
 
-                for (int i = this.currentIndex; i < finalIndex; i++)
+                if (this.currentIndex < this.demo.records.Count)
                 {
-                    var record = this.demo.records[i];
-                    result[i - this.currentIndex] = record.BuildInputFrameState();
+                    var record = this.demo.records[this.currentIndex];
+                    var result = record.BuildInputFrameState();
+                    this.LatestFrameState = result;
+                    return result;
                 }
-                this.currentIndex = finalIndex;
-
-                if (size > 0)
+                else
                 {
-                    this.LatestFrameState = result[size - 1];
+                    // Unpress any pressed buttons (this doesn't work because it doesn't work that way)
+                    var result =
+                        new InputFrameState(
+                            new KeyboardFrameState(Array.Empty<Keys>(), LatestFrameState.keyboardFrameState.Pressed, ModifierKeys.NoModifiers)
+                            ,
+                        new MouseFrameState(
+                            new MouseButtonList(),
+                            new MouseButtonList(LatestFrameState.mouseFrameState.ButtonsPressedThisFrame.EncodedInt), LatestFrameState.mouseFrameState.RawWindowPosition,
+                            Vector2.Zero, 0));
+                    this.LatestFrameState = result;
+                    return result;
                 }
-
-                return result;
             }
         }
 
