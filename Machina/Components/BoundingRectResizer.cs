@@ -58,7 +58,7 @@ namespace Machina.Components
             this.grabHandleThickness = grabHandleThickness;
 
             if (minSize.HasValue && maxSize.HasValue)
-                ClampParentBoundingRectAndUpdateSelf();
+                ClampRect();
 
             Resized += OnResizeDefault;
         }
@@ -69,7 +69,7 @@ namespace Machina.Components
             this.boundingRect.SetSize(e.NewSize.ToPoint());
         }
 
-        private void ClampParentBoundingRectAndUpdateSelf()
+        private void ClampRect()
         {
             this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.minSize.Value.X, this.maxSize.Value.X);
             this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
@@ -90,9 +90,6 @@ namespace Machina.Components
                 SetCursorBasedOnEdge(this.grabState.edge);
                 this.currentMousePosition = currentPosition;
             }
-
-            if (minSize.HasValue && maxSize.HasValue)
-                ClampParentBoundingRectAndUpdateSelf();
         }
 
         private void SetCursorBasedOnEdge(RectEdge edge)
@@ -288,7 +285,6 @@ namespace Machina.Components
                 {
                     return sizeDelta;
                 }
-
             }
 
             public bool IsAlongTop => this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.TopRightCorner || this.edge == RectEdge.Top;
