@@ -136,12 +136,8 @@ namespace Machina.Data
 
         public BoundingRectResizer AddResizer(Point minSize, Point maxSize)
         {
-            var resizer = rootTransform.AddActorAsChild("Resizer");
-            rootTransform.FlushBuffers();
-            resizer.transform.LocalDepth = 1; // BEHIND the root so hoverable doesn't overlap
-            new BoundingRect(resizer, Point.Zero);
-            new Hoverable(resizer);
-            return new BoundingRectResizer(resizer, minSize, maxSize);
+            new Hoverable(rootTransform.actor);
+            return new BoundingRectResizer(rootTransform.actor, minSize, maxSize);
         }
 
 

@@ -40,8 +40,7 @@ namespace Machina.Components
         }
 
         private readonly Hoverable hoverable;
-        private readonly BoundingRect myBoundingRect;
-        private readonly BoundingRect parentBoundingRect;
+        private readonly BoundingRect boundingRect;
         private readonly XYPair<int> padding;
         private GrabState grabState;
         private Vector2 currentMousePosition;
@@ -51,10 +50,8 @@ namespace Machina.Components
 
         public BoundingRectResizer(Actor actor, Point? minSize, Point? maxSize) : base(actor)
         {
-            this.myBoundingRect = RequireComponent<BoundingRect>();
+            this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
-            this.parentBoundingRect = this.actor.GetComponentInImmediateParent<BoundingRect>();
-            Debug.Assert(this.parentBoundingRect != null);
 
             this.minSize = minSize;
             this.maxSize = maxSize;
@@ -68,16 +65,14 @@ namespace Machina.Components
 
         private void OnResizeDefault(object sender, ResizeEventArgs e)
         {
-            this.parentBoundingRect.transform.Position += e.PositionOffset;
-            this.parentBoundingRect.SetSize(e.NewSize.ToPoint());
+            this.boundingRect.transform.Position += e.PositionOffset;
+            this.boundingRect.SetSize(e.NewSize.ToPoint());
         }
 
         private void ClampParentBoundingRectAndUpdateSelf()
         {
-            this.parentBoundingRect.Width = Math.Clamp(this.parentBoundingRect.Width, this.minSize.Value.X, this.maxSize.Value.X);
-            this.parentBoundingRect.Height = Math.Clamp(this.parentBoundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
-            this.myBoundingRect.Width = this.parentBoundingRect.Width + this.padding.X;
-            this.myBoundingRect.Height = this.parentBoundingRect.Height + this.padding.Y;
+            this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.minSize.Value.X, this.maxSize.Value.X);
+            this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -121,7 +116,7 @@ namespace Machina.Components
             {
                 if (state == ButtonState.Pressed)
                 {
-                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition, this.parentBoundingRect.Rect, this.minSize, this.maxSize);
+                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition, this.boundingRect.Rect, this.minSize, this.maxSize);
                 }
                 else
                 {
@@ -130,7 +125,7 @@ namespace Machina.Components
                         Resized?.Invoke(this, new ResizeEventArgs
                         {
                             PositionOffset = this.grabState.GetPositionDelta(this.currentMousePosition),
-                            NewSize = this.parentBoundingRect.Size.ToVector2() + this.grabState.GetSizeDelta(this.currentMousePosition),
+                            NewSize = this.boundingRect.Size.ToVector2() + this.grabState.GetSizeDelta(this.currentMousePosition),
                         });
                     }
                     this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, null, null);
@@ -145,8 +140,8 @@ namespace Machina.Components
                 return RectEdge.None;
             }
 
-            var topLeft = this.myBoundingRect.TopLeft;
-            var bottomRight = this.myBoundingRect.TopLeft + this.myBoundingRect.Size.ToVector2();
+            var topLeft = this.boundingRect.TopLeft;
+            var bottomRight = this.boundingRect.TopLeft + this.boundingRect.Size.ToVector2();
 
             var isAlongTop = currentPosition.Y < topLeft.Y + this.padding.Y;
             var isAlongLeft = currentPosition.X < topLeft.X + this.padding.X;
@@ -200,7 +195,7 @@ namespace Machina.Components
                 var sizeDelta = this.grabState.GetSizeDelta(this.currentMousePosition);
                 var posDelta = this.grabState.GetPositionDelta(this.currentMousePosition);
 
-                var rect = new Rectangle((posDelta + this.parentBoundingRect.transform.Position).ToPoint(), this.parentBoundingRect.Rect.Size + sizeDelta.ToPoint());
+                var rect = new Rectangle((posDelta + this.transform.Position).ToPoint(), this.boundingRect.Rect.Size + sizeDelta.ToPoint());
                 spriteBatch.DrawRectangle(rect, Color.White, 1f, transform.Depth - 10);
             }
         }
