@@ -48,14 +48,41 @@ namespace Machina.Data
             var headerSize = 32;
             var windowRoot = creatingScene.AddActor("Window");
             new BoundingRect(windowRoot, contentSize + new Point(0, headerSize));
-            new Hoverable(windowRoot);
-            new Draggable(windowRoot);
-            new MoveOnDrag(windowRoot);
+
             new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Inner);
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
-            rootGroup.SetMargin(5);
-            rootGroup.HorizontallyStretchedSpacer(32);
+            var margin = 5;
+            var headerThickness = 32 - margin;
+            rootGroup.SetMargin(margin);
+            rootGroup.AddHorizontallyStretchedElement("Header", headerThickness, headerActor =>
+            {
+                new Hoverable(headerActor);
+                new Draggable(headerActor);
+                new MoveOnDrag(headerActor, windowRoot.transform);
+
+                new LayoutGroup(headerActor, Orientation.Horizontal)
+                    .AddVerticallyStretchedElement("Icon", headerThickness, iconActor =>
+                    {
+                        new SpriteRenderer(iconActor, style.uiSpriteSheet)
+                            .SetAnimation(new ChooseFrameAnimation(1))
+                            .SetupBoundingRect();
+                    })
+                    .PixelSpacer(5)
+                    .AddBothStretchedElement("Title", titleActor =>
+                    {
+                        new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center).EnableDropShadow(Color.Black);
+                    })
+                    .HorizontallyStretchedSpacer()
+                    .AddVerticallyStretchedElement("CloseButton", headerThickness, closeButtonActor =>
+                    {
+                        new Hoverable(closeButtonActor);
+                        new Clickable(closeButtonActor);
+                        new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                    })
+                    ;
+
+            });
 
             SceneRenderer sceneRenderer_local = null;
             Actor canvasActor_local = null;
@@ -98,14 +125,14 @@ namespace Machina.Data
             });
         }
 
-        public void AddResizer(Point minSize, Point maxSize)
+        public BoundingRectResizer AddResizer(Point minSize, Point maxSize)
         {
             var resizer = rootTransform.AddActorAsChild("Resizer");
             rootTransform.FlushBuffers();
             resizer.transform.LocalDepth = 1; // BEHIND the root so hoverable doesn't overlap
             new BoundingRect(resizer, Point.Zero);
             new Hoverable(resizer);
-            new BoundingRectResizer(resizer, minSize, maxSize);
+            return new BoundingRectResizer(resizer, minSize, maxSize);
         }
 
 

@@ -240,7 +240,7 @@ namespace Machina.Engine
             Assets.AddMachinaAsset("ui-textbox-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
             Assets.AddMachinaAsset("ui-window-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(32, 104, 8, 8)));
+                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(27, 104, 8, 8)));
 
             var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
 
@@ -254,11 +254,7 @@ namespace Machina.Engine
                 defaultFont,
                 Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
                 Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                Assets.GetMachinaAsset<Image>("ui-radio-fill-image"),
-                new LinearFrameAnimation(0, 3),
-                new LinearFrameAnimation(3, 3),
-                new LinearFrameAnimation(9, 3),
-                new LinearFrameAnimation(15, 3)
+                Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
 #if DEBUG

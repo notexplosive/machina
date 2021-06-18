@@ -188,12 +188,13 @@ namespace Machina.Engine
         /// <summary>
         /// Should only be used in tests
         /// </summary>
-        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, null, null, null, new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3), new LinearFrameAnimation(0, 3));
+        public static readonly UIStyle Empty = new UIStyle(null, null, null, null, null, null, null, null, null, null);
 
         public readonly IFrameAnimation checkboxFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation sliderThumbFrames;
         public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation dropdownFrames = new LinearFrameAnimation(0, 3);
+        public readonly IFrameAnimation closeButtonFrames = new LinearFrameAnimation(21, 23);
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;
@@ -215,11 +216,7 @@ namespace Machina.Engine
             SpriteFont buttonFont,
             SpriteSheet uiSpriteSheet,
             Image checkboxImage,
-            Image radioImage,
-            IFrameAnimation checkboxFrames,
-            IFrameAnimation radioFrames,
-            IFrameAnimation dropdownFrames,
-            IFrameAnimation sliderFrames)
+            Image radioImage)
         {
             buttonDefault = defaultButtonSheet;
             buttonHover = hoverButtonSheet;
@@ -231,10 +228,6 @@ namespace Machina.Engine
             this.uiSpriteSheet = uiSpriteSheet;
             this.checkboxImage = checkboxImage;
             this.radioImage = radioImage;
-            this.radioFrames = radioFrames;
-            this.dropdownFrames = dropdownFrames;
-            this.checkboxFrames = checkboxFrames;
-            this.sliderThumbFrames = sliderFrames;
         }
     }
 }

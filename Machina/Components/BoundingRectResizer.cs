@@ -30,28 +30,31 @@ namespace Machina.Components
         private readonly Hoverable hoverable;
         private readonly BoundingRect myBoundingRect;
         private readonly BoundingRect parentBoundingRect;
-        private readonly XYPair<MinMax<int>> sizeRanges;
         private readonly XYPair<int> padding;
         private GrabState grabState;
         private Vector2 currentMousePosition;
+        private readonly Point? minSize;
+        private readonly Point? maxSize;
 
-        public BoundingRectResizer(Actor actor, Point minSize, Point maxSize) : base(actor)
+        public BoundingRectResizer(Actor actor, Point? minSize, Point? maxSize) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
             this.parentBoundingRect = this.actor.GetComponentInImmediateParent<BoundingRect>();
             Debug.Assert(this.parentBoundingRect != null);
 
-            this.sizeRanges = new XYPair<MinMax<int>>(new MinMax<int>(minSize.X, maxSize.X), new MinMax<int>(minSize.Y, maxSize.Y));
+            this.minSize = minSize;
+            this.maxSize = maxSize;
             this.padding = new XYPair<int>(24, 24);
 
-            ClampParentBoundingRectAndUpdateSelf();
+            if (minSize.HasValue && maxSize.HasValue)
+                ClampParentBoundingRectAndUpdateSelf();
         }
 
         private void ClampParentBoundingRectAndUpdateSelf()
         {
-            this.parentBoundingRect.Width = Math.Clamp(this.parentBoundingRect.Width, this.sizeRanges.X.min, this.sizeRanges.X.max);
-            this.parentBoundingRect.Height = Math.Clamp(this.parentBoundingRect.Height, this.sizeRanges.Y.min, this.sizeRanges.Y.max);
+            this.parentBoundingRect.Width = Math.Clamp(this.parentBoundingRect.Width, this.minSize.Value.X, this.maxSize.Value.X);
+            this.parentBoundingRect.Height = Math.Clamp(this.parentBoundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
             this.myBoundingRect.Width = this.parentBoundingRect.Width + this.padding.X;
             this.myBoundingRect.Height = this.parentBoundingRect.Height + this.padding.Y;
             this.myBoundingRect.SetOffset(new Vector2(this.padding.X / 2, this.padding.Y / 2));
@@ -95,11 +98,11 @@ namespace Machina.Components
             {
                 if (state == ButtonState.Pressed)
                 {
-                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition);
+                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition, this.parentBoundingRect.Rect, this.minSize, this.maxSize);
                 }
                 else
                 {
-                    this.grabState = new GrabState(RectEdge.None, Vector2.Zero);
+                    this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, null, null);
                 }
             }
         }
@@ -176,16 +179,34 @@ namespace Machina.Components
         {
             public readonly RectEdge edge;
             private readonly Vector2 positionOfGrab;
+            private readonly Rectangle currentRect;
+            private readonly Point? minSize;
+            private readonly Point? maxSize;
 
-            public GrabState(RectEdge edge, Vector2 positionOfGrab)
+            public GrabState(RectEdge edge, Vector2 positionOfGrab, Rectangle currentRect, Point? minSize, Point? maxSize)
             {
                 this.edge = edge;
                 this.positionOfGrab = positionOfGrab;
+                this.currentRect = currentRect;
+                this.minSize = minSize;
+                this.maxSize = maxSize;
             }
 
             public Vector2 GetDelta(Vector2 currentPosition)
             {
-                return currentPosition - positionOfGrab;
+                var totalDelta = currentPosition - positionOfGrab;
+
+                if (this.minSize.HasValue && this.maxSize.HasValue)
+                {
+                    var currentSize = currentRect.Size;
+                    var deltaX = Math.Clamp(totalDelta.X, this.minSize.Value.X - currentSize.X, this.maxSize.Value.X - currentSize.X);
+                    var deltaY = Math.Clamp(totalDelta.Y, this.minSize.Value.Y - currentSize.Y, this.maxSize.Value.Y - currentSize.Y);
+                    return new Vector2(deltaX, deltaY);
+                }
+                else
+                {
+                    return totalDelta;
+                }
             }
 
             public Vector2 GetOffsetDelta(Vector2 currentPosition)
