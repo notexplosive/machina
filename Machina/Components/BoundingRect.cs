@@ -20,6 +20,7 @@ namespace Machina.Components
         public BoundingRect SetSize(Point size)
         {
             this.size = size;
+            onSizeChange?.Invoke(size);
             return this;
         }
 

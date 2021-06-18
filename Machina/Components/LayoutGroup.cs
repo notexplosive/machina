@@ -29,6 +29,8 @@ namespace Machina.Components
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.orientation = orientation;
+
+            this.boundingRect.onSizeChange += size => ExecuteLayout();
         }
 
         public override void Start()

@@ -12,6 +12,18 @@ using System.Text;
 
 namespace Machina.Components
 {
+    public class ResizeEventArgs : EventArgs
+    {
+        public Vector2 PositionOffset
+        {
+            get; set;
+        }
+        public Vector2 NewSize
+        {
+            get; set;
+        }
+    }
+
     public class BoundingRectResizer : BaseComponent
     {
         private enum RectEdge
@@ -35,6 +47,7 @@ namespace Machina.Components
         private Vector2 currentMousePosition;
         private readonly Point? minSize;
         private readonly Point? maxSize;
+        public event EventHandler<ResizeEventArgs> Resized;
 
         public BoundingRectResizer(Actor actor, Point? minSize, Point? maxSize) : base(actor)
         {
@@ -49,6 +62,14 @@ namespace Machina.Components
 
             if (minSize.HasValue && maxSize.HasValue)
                 ClampParentBoundingRectAndUpdateSelf();
+
+            Resized += OnResizeDefault;
+        }
+
+        private void OnResizeDefault(object sender, ResizeEventArgs e)
+        {
+            this.parentBoundingRect.transform.Position += e.PositionOffset;
+            this.parentBoundingRect.SetSize(e.NewSize.ToPoint());
         }
 
         private void ClampParentBoundingRectAndUpdateSelf()
@@ -57,7 +78,6 @@ namespace Machina.Components
             this.parentBoundingRect.Height = Math.Clamp(this.parentBoundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
             this.myBoundingRect.Width = this.parentBoundingRect.Width + this.padding.X;
             this.myBoundingRect.Height = this.parentBoundingRect.Height + this.padding.Y;
-            this.myBoundingRect.SetOffset(new Vector2(this.padding.X / 2, this.padding.Y / 2));
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -75,6 +95,9 @@ namespace Machina.Components
                 SetCursorBasedOnEdge(this.grabState.edge);
                 this.currentMousePosition = currentPosition;
             }
+
+            if (minSize.HasValue && maxSize.HasValue)
+                ClampParentBoundingRectAndUpdateSelf();
         }
 
         private void SetCursorBasedOnEdge(RectEdge edge)
@@ -102,6 +125,14 @@ namespace Machina.Components
                 }
                 else
                 {
+                    if (this.grabState.edge != RectEdge.None)
+                    {
+                        Resized?.Invoke(this, new ResizeEventArgs
+                        {
+                            PositionOffset = this.grabState.GetPositionDelta(this.currentMousePosition),
+                            NewSize = this.parentBoundingRect.Size.ToVector2() + this.grabState.GetSizeDelta(this.currentMousePosition),
+                        });
+                    }
                     this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, null, null);
                 }
             }
@@ -166,11 +197,10 @@ namespace Machina.Components
         {
             if (this.grabState.edge != RectEdge.None)
             {
-                var rect = this.parentBoundingRect.Rect;
                 var sizeDelta = this.grabState.GetSizeDelta(this.currentMousePosition);
-                var offsetDelta = this.grabState.GetOffsetDelta(this.currentMousePosition);
-                rect.Inflate(sizeDelta.X, sizeDelta.Y);
-                rect.Offset(offsetDelta);
+                var posDelta = this.grabState.GetPositionDelta(this.currentMousePosition);
+
+                var rect = new Rectangle((posDelta + this.parentBoundingRect.transform.Position).ToPoint(), this.parentBoundingRect.Rect.Size + sizeDelta.ToPoint());
                 spriteBatch.DrawRectangle(rect, Color.White, 1f, transform.Depth - 10);
             }
         }
@@ -192,50 +222,26 @@ namespace Machina.Components
                 this.maxSize = maxSize;
             }
 
-            public Vector2 GetDelta(Vector2 currentPosition)
+            private Vector2 GetTotalDelta(Vector2 currentPosition)
             {
-                var totalDelta = currentPosition - positionOfGrab;
-
-                if (this.minSize.HasValue && this.maxSize.HasValue)
-                {
-                    var currentSize = currentRect.Size;
-                    var deltaX = Math.Clamp(totalDelta.X, this.minSize.Value.X - currentSize.X, this.maxSize.Value.X - currentSize.X);
-                    var deltaY = Math.Clamp(totalDelta.Y, this.minSize.Value.Y - currentSize.Y, this.maxSize.Value.Y - currentSize.Y);
-                    return new Vector2(deltaX, deltaY);
-                }
-                else
-                {
-                    return totalDelta;
-                }
+                return currentPosition - positionOfGrab;
             }
 
-            public Vector2 GetOffsetDelta(Vector2 currentPosition)
+            public Vector2 GetPositionDelta(Vector2 currentPosition)
             {
-                var delta = GetDelta(currentPosition);
-
                 if (this.edge == RectEdge.Right || this.edge == RectEdge.Bottom || this.edge == RectEdge.BottomRightCorner)
-                {
-                    return GetSizeDelta(currentPosition);
-                }
+                    return Vector2.Zero;
 
-                if (this.edge == RectEdge.Top)
-                {
-                    delta.X = 0;
-                }
+                var delta = -GetSizeDelta(currentPosition);
 
-                if (this.edge == RectEdge.Left)
+                if (this.edge == RectEdge.BottomLeftCorner || this.edge == RectEdge.Left)
                 {
                     delta.Y = 0;
                 }
 
-                if (IsAlongTop || this.edge == RectEdge.BottomLeftCorner)
+                if (this.edge == RectEdge.TopRightCorner)
                 {
-                    delta.Y /= 2;
-                }
-
-                if (this.edge == RectEdge.TopRightCorner || IsAlongLeft)
-                {
-                    delta.X /= 2;
+                    delta.X = 0;
                 }
 
                 return delta;
@@ -243,7 +249,7 @@ namespace Machina.Components
 
             public Vector2 GetSizeDelta(Vector2 currentPosition)
             {
-                var sizeDelta = GetDelta(currentPosition) / 2;
+                var sizeDelta = GetTotalDelta(currentPosition);
 
                 if (IsAlongLeft)
                 {
@@ -265,7 +271,18 @@ namespace Machina.Components
                     sizeDelta.Y = -sizeDelta.Y;
                 }
 
-                return sizeDelta;
+                if (this.minSize.HasValue && this.maxSize.HasValue)
+                {
+                    var currentSize = currentRect.Size;
+                    var deltaX = Math.Clamp(currentSize.X + sizeDelta.X, this.minSize.Value.X, this.maxSize.Value.X) - currentSize.X;
+                    var deltaY = Math.Clamp(currentSize.Y + sizeDelta.Y, this.minSize.Value.Y, this.maxSize.Value.Y) - currentSize.Y;
+                    return new Vector2(deltaX, deltaY);
+                }
+                else
+                {
+                    return sizeDelta;
+                }
+
             }
 
             public bool IsAlongTop => this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.TopRightCorner || this.edge == RectEdge.Top;
