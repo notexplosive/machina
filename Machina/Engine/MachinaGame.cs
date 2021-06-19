@@ -248,7 +248,7 @@ namespace Machina.Engine
             Assets.AddMachinaAsset("ui-textbox-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
             Assets.AddMachinaAsset("ui-window-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(24, 96, 24, 24), new Rectangle(34, 106, 4, 4)));
+                new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
 
             var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
 
@@ -266,65 +266,10 @@ namespace Machina.Engine
             );
 
 #if DEBUG
-            {
-                var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
-                new FrameRateCounter(framerateCounterActor);
-            }
-
-            // Framestep
-            {
-                var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
-                var tool = new InvokableDebugTool(frameStepActor, new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
-                new FrameStepRenderer(frameStepActor, this.sceneLayers.frameStep, this.sceneLayers, tool);
-                new BoundingRect(frameStepActor, new Point(64, 64));
-                new Hoverable(frameStepActor);
-                new Draggable(frameStepActor);
-                new MoveOnDrag(frameStepActor);
-            }
-
-            // Scene graph renderer
-            {
-                var sceneGraphContainer = sceneLayers.debugScene.AddActor("SceneGraphContainer");
-                new BoundingRect(sceneGraphContainer, new Point(350, 350));
-                new LayoutGroup(sceneGraphContainer, Orientation.Vertical);
-                var tool = new InvokableDebugTool(sceneGraphContainer, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
-                new Hoverable(sceneGraphContainer);
-                new Draggable(sceneGraphContainer);
-                new MoveOnDrag(sceneGraphContainer);
-                new NinepatchRenderer(sceneGraphContainer, defaultStyle.windowSheet, NinepatchSheet.GenerationDirection.Outer);
-
-                var spacer = sceneGraphContainer.transform.AddActorAsChild("Spacer");
-                new BoundingRect(spacer, new Point(32, 32));
-                new LayoutElement(spacer).StretchHorizontally();
-
-                var content = sceneGraphContainer.transform.AddActorAsChild("Content");
-                content.transform.LocalDepth = new Depth(-1);
-                new BoundingRect(content, Point.Zero);
-                new LayoutElement(content).StretchHorizontally().StretchVertically();
-                new LayoutGroup(content, Orientation.Horizontal);
-
-                var view = content.transform.AddActorAsChild("SceneGraphRendererView");
-                view.transform.LocalDepth = new Depth(-1);
-                new BoundingRect(view, Point.Zero).SetOffsetToTopLeft();
-                new LayoutElement(view).StretchHorizontally().StretchVertically();
-                new Canvas(view);
-                new Hoverable(view);
-                var sceneRenderer = new SceneRenderer(view);
-                var sceneGraphContent = sceneRenderer.primaryScene;
-
-                var scrollbarActor = content.transform.AddActorAsChild("Scrollbar");
-                scrollbarActor.transform.LocalDepth = new Depth(-1);
-                new BoundingRect(scrollbarActor, new Point(32, 0));
-                new LayoutElement(scrollbarActor).StretchVertically();
-                new Hoverable(scrollbarActor);
-                new NinepatchRenderer(scrollbarActor, defaultStyle.buttonDefault, NinepatchSheet.GenerationDirection.Inner);
-
-                var scrollbar = new Scrollbar(scrollbarActor, view.GetComponent<BoundingRect>(), sceneGraphContent.camera, new MinMax<int>(0, 900), defaultStyle.buttonHover);
-
-                var sceneGraphActor = sceneGraphContent.AddActor("SceneGraphActor");
-                new SceneGraphRenderer(sceneGraphActor, this.sceneLayers, scrollbar);
-                new ScrollbarListener(sceneGraphActor, scrollbar);
-            }
+            var windowManager = new WindowManager(defaultStyle, Depth.Middle);
+            DebugBuilder.CreateFramerateCounter(sceneLayers);
+            DebugBuilder.CreateFramestep(sceneLayers);
+            DebugBuilder.CreateSceneGraphRenderer(sceneLayers, windowManager);
 
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
