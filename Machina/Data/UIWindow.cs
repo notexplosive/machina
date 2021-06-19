@@ -44,6 +44,7 @@ namespace Machina.Data
         private readonly int margin = 10;
 
         public event Action Closed;
+        public event Action AnyPartOfWindowClicked;
 
         public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
         {
@@ -61,7 +62,7 @@ namespace Machina.Data
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", headerThickness, headerContentActor =>
              {
                  new Hoverable(headerContentActor);
-                 new Draggable(headerContentActor);
+                 new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke();
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
                  new LayoutGroup(headerContentActor, Orientation.Horizontal)
@@ -81,6 +82,7 @@ namespace Machina.Data
                      new Hoverable(closeButtonActor);
                      var clickable = new Clickable(closeButtonActor);
                      new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
                      clickable.onClick += mouseButton =>
                      {
                          if (mouseButton == MouseButton.Left)
@@ -103,13 +105,12 @@ namespace Machina.Data
             rootGroup.AddBothStretchedElement("ContentGroup", contentActor =>
                 {
                     contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
-                        .SetPaddingBetweenElements(2)
-                        .SetMargin(2)
                         .AddBothStretchedElement("Canvas", viewActor =>
                         {
                             canvasActor_local = viewActor;
                             new Canvas(viewActor);
                             new Hoverable(viewActor);
+                            new Clickable(viewActor).ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
                             sceneRenderer_local = new SceneRenderer(viewActor);
                         })
                         ;
@@ -122,6 +123,8 @@ namespace Machina.Data
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
             this.contentGroup = contentGroup_local;
+
+            this.rootTransform.FlushBuffers();
         }
 
         public void AddScrollbar(int maxScrollPos)

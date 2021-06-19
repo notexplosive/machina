@@ -8,7 +8,8 @@ namespace Machina.Components
 {
     public class Clickable : BaseComponent
     {
-        public Action<MouseButton> onClick;
+        public event Action<MouseButton> onClick;
+        public event Action ClickStarted;
         private bool leftButtonDown;
         private bool rightButtonDown;
         private bool middleButtonDown;
@@ -38,6 +39,7 @@ namespace Machina.Components
             {
                 if (buttonState == ButtonState.Pressed)
                 {
+                    ClickStarted?.Invoke();
                     if (button == MouseButton.Left)
                     {
                         leftButtonDown = true;
