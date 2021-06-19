@@ -46,11 +46,11 @@ namespace Machina.Data
         public event Action Closed;
         public event Action AnyPartOfWindowClicked;
 
-        public UIWindow(Scene creatingScene, Point contentSize, UIStyle style)
+        public UIWindow(Scene managerScene, Point contentSize, UIStyle style)
         {
             this.style = style;
             var headerSize = 32;
-            var windowRoot = creatingScene.AddActor("Window");
+            var windowRoot = managerScene.AddActor("Window");
             new BoundingRect(windowRoot, contentSize + new Point(0, headerSize));
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
@@ -74,36 +74,6 @@ namespace Machina.Data
                  .AddBothStretchedElement("Title", titleActor =>
                  {
                      new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
-                 })
-                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
-                 {
-                     new Hoverable(closeButtonActor);
-                     var clickable = new Clickable(closeButtonActor);
-                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
-                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
-                     clickable.onClick += mouseButton =>
-                     {
-                         if (mouseButton == MouseButton.Left)
-                         {
-                             Closed?.Invoke();
-                             windowRoot.Destroy();
-                         }
-                     };
-                 })
-                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
-                 {
-                     new Hoverable(closeButtonActor);
-                     var clickable = new Clickable(closeButtonActor);
-                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
-                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
-                     clickable.onClick += mouseButton =>
-                     {
-                         if (mouseButton == MouseButton.Left)
-                         {
-                             Closed?.Invoke();
-                             windowRoot.Destroy();
-                         }
-                     };
                  })
                  .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
                  {
