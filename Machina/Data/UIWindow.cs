@@ -53,31 +53,59 @@ namespace Machina.Data
             var windowRoot = creatingScene.AddActor("Window");
             new BoundingRect(windowRoot, contentSize + new Point(0, headerSize));
 
-            new NinepatchRenderer(windowRoot, style.windowSheet, NinepatchSheet.GenerationDirection.Inner);
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
-            var headerThickness = 32 - this.margin;
             rootGroup.SetMargin(this.margin);
-
-            rootGroup.AddHorizontallyStretchedElement("HeaderContent", headerThickness, headerContentActor =>
+            rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
              {
                  new Hoverable(headerContentActor);
                  new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke();
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
                  new LayoutGroup(headerContentActor, Orientation.Horizontal)
-                 .AddVerticallyStretchedElement("Icon", headerThickness, iconActor =>
+                 .AddVerticallyStretchedElement("Icon", 32, iconActor =>
                  {
                      new SpriteRenderer(iconActor, style.uiSpriteSheet)
-                         .SetAnimation(new ChooseFrameAnimation(1))
-                         .SetupBoundingRect();
+                         .SetAnimation(new ChooseFrameAnimation(1));
+
+                     iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
                  })
                  .PixelSpacer(5) // Spacing between icon and title
                  .AddBothStretchedElement("Title", titleActor =>
                  {
-                     new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Bottom).EnableDropShadow(Color.Black);
+                     new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
                  })
-                 .AddVerticallyStretchedElement("CloseButton", headerThickness, closeButtonActor =>
+                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
+                 {
+                     new Hoverable(closeButtonActor);
+                     var clickable = new Clickable(closeButtonActor);
+                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
+                     clickable.onClick += mouseButton =>
+                     {
+                         if (mouseButton == MouseButton.Left)
+                         {
+                             Closed?.Invoke();
+                             windowRoot.Destroy();
+                         }
+                     };
+                 })
+                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
+                 {
+                     new Hoverable(closeButtonActor);
+                     var clickable = new Clickable(closeButtonActor);
+                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
+                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
+                     clickable.onClick += mouseButton =>
+                     {
+                         if (mouseButton == MouseButton.Left)
+                         {
+                             Closed?.Invoke();
+                             windowRoot.Destroy();
+                         }
+                     };
+                 })
+                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
                  {
                      new Hoverable(closeButtonActor);
                      var clickable = new Clickable(closeButtonActor);
@@ -102,8 +130,11 @@ namespace Machina.Data
             LayoutGroup contentGroup_local = null;
 
             // "Content" means everything below the header
+
             rootGroup.AddBothStretchedElement("ContentGroup", contentActor =>
                 {
+                    new NinepatchRenderer(contentActor, style.windowSheet, NinepatchSheet.GenerationDirection.Outer);
+
                     contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
                         .AddBothStretchedElement("Canvas", viewActor =>
                         {
