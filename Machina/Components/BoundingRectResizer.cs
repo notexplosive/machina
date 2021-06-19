@@ -44,6 +44,7 @@ namespace Machina.Components
         private readonly XYPair<int> grabHandleThickness;
         private GrabState grabState;
         private Vector2 currentMousePosition;
+        private bool isDraggingSomething;
         private readonly Point? minSize;
         private readonly Point? maxSize;
         public event EventHandler<ResizeEventArgs> Resized;
@@ -79,10 +80,13 @@ namespace Machina.Components
         {
             if (this.grabState.edge == RectEdge.None)
             {
-                var edge = GetEdgeAtPoint(currentPosition);
-                if (edge != RectEdge.None)
+                if (!this.isDraggingSomething)
                 {
-                    SetCursorBasedOnEdge(edge);
+                    var edge = GetEdgeAtPoint(currentPosition);
+                    if (edge != RectEdge.None)
+                    {
+                        SetCursorBasedOnEdge(edge);
+                    }
                 }
             }
             else
@@ -109,6 +113,15 @@ namespace Machina.Components
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
+            if (state == ButtonState.Pressed)
+            {
+                this.isDraggingSomething = true;
+            }
+            else
+            {
+                this.isDraggingSomething = false;
+            }
+
             if (button == MouseButton.Left)
             {
                 if (state == ButtonState.Pressed)
