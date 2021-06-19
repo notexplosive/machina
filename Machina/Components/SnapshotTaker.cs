@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
