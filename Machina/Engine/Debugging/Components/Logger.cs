@@ -1,5 +1,6 @@
-﻿using Machina.Engine;
-using Machina.Engine.Debugging;
+﻿using Machina.Components;
+using Machina.Engine;
+using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -8,10 +9,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Machina.Components
+namespace Machina.Engine.Debugging.Components
 {
 
-    class Logger : BaseComponent, ILogger
+    public class Logger : BaseComponent, ILogger
     {
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
         private IDebugOutputRenderer renderer;

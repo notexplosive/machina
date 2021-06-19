@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Machina.Data;
-using Machina.Engine.Debugging;
+using Machina.Engine.Debugging.Data;
 
 namespace Machina.Engine
 {

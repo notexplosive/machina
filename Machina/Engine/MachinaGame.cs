@@ -1,6 +1,7 @@
 ﻿using Machina.Components;
 using Machina.Data;
-using Machina.Engine.Debugging;
+using Machina.Engine.Debugging.Components;
+using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -232,10 +233,7 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            var consoleFont = Assets.GetSpriteFont("DefaultFont");
-            var debugActor = sceneLayers.debugScene.AddActor("DebugActor", depthAsInt: 100);
-            this.logger = new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont));
-            new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
+            this.logger = DebugBuilder.BuildOutputConsole(sceneLayers);
 
             // Load initial assets
             Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
@@ -277,6 +275,7 @@ namespace Machina.Engine
 #else
             DebugLevel = DebugLevel.Off;
 #endif
+            var debugActor = sceneLayers.debugScene.AddActor("DemoActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
 

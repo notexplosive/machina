@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Machina.Engine.Debugging
+namespace Machina.Engine.Debugging.Data
 {
     interface ILogger
     {

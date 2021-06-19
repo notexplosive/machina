@@ -1,4 +1,5 @@
-﻿using Machina.Data;
+﻿using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
@@ -9,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Machina.Components
+namespace Machina.Engine.Debugging.Components
 {
     class ConsoleOverlay : BaseComponent, IDebugOutputRenderer
     {

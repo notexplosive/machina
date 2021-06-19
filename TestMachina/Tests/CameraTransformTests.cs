@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Machina.Data;
 using Machina.Engine;
-using Machina.Engine.Debugging;
+using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;

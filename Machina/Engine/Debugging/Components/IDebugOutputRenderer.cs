@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Machina.Components
 {
-    interface IDebugOutputRenderer
+    public interface IDebugOutputRenderer
     {
         public void OnMessageLog(string line);
     }
