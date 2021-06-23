@@ -64,5 +64,18 @@ namespace Machina.Engine
                 Seed = total;
             }
         }
+
+        public void CleanShuffle<T>(IList<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = Clean.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
     }
 }
