@@ -13,24 +13,24 @@ namespace Machina.Engine
             get => this.seed_impl;
             set
             {
-                this.CleanRandom = new Random(value);
+                Clean = new Random(value);
                 MachinaGame.Print("seed set: ", value);
                 this.seed_impl = value;
             }
         }
-        public Random CleanRandom
+        public Random Clean
         {
             get; private set;
         }
-        public Random DirtyRandom
+        public Random Dirty
         {
             get;
         }
 
         public SeededRandom()
         {
-            this.Seed = GenerateSeed();
-            this.DirtyRandom = new Random();
+            Seed = GenerateSeed();
+            Dirty = new Random();
         }
 
         public static int GenerateSeed()
