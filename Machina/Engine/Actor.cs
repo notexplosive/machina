@@ -214,7 +214,11 @@ namespace Machina.Engine
 
                 if (child.transform.ChildCount > 0)
                 {
-                    return child.GetFirstComponentInProgeny<T>();
+                    var comp2 = child.GetFirstComponentInProgeny<T>();
+                    if (comp2 != null)
+                    {
+                        return comp2;
+                    }
                 }
             }
 
