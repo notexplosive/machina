@@ -20,9 +20,9 @@ namespace Machina.Components
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
         }
 
-        public Demo.Playback SetDemo(Demo demo, string demoName)
+        public Demo.Playback SetDemo(Demo demo, string demoName, int playbackSpeed)
         {
-            this.playback = new Demo.Playback(demo);
+            this.playback = new Demo.Playback(demo, playbackSpeed);
             this.text = "Playback " + demoName;
             return this.playback;
         }

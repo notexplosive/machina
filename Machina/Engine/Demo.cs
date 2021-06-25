@@ -152,19 +152,20 @@ namespace Machina.Engine
             private readonly Demo demo;
             private float time;
             private int currentIndex;
+            private readonly int demoLength;
+            public readonly int playbackSpeed;
 
-            public Playback(Demo demo)
+            public Playback(Demo demo, int playbackSpeed)
             {
                 this.demo = demo;
                 this.time = 0f;
                 this.currentIndex = 0;
                 this.demoLength = this.demo.records.Count;
+                this.playbackSpeed = playbackSpeed;
                 MachinaGame.Random.Seed = demo.seedAtStart;
             }
 
-            public bool IsFinished => this.currentIndex == demoLength;
-
-            private readonly int demoLength;
+            public bool IsFinished => this.currentIndex >= demoLength;
 
             public float Progress => this.currentIndex / (float) demoLength;
 

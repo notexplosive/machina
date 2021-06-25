@@ -342,6 +342,12 @@ namespace Machina.Engine
                 demoName = arg;
             });
 
+            var demoSpeed = 1;
+            CommandLineArgs.RegisterValueArg("demospeed", arg =>
+            {
+                demoSpeed = int.Parse(arg);
+            });
+
             CommandLineArgs.RegisterValueArg("demo", arg =>
             {
                 switch (arg)
@@ -350,10 +356,10 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
@@ -407,8 +413,11 @@ namespace Machina.Engine
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                sceneLayers.Update(dt, Matrix.Identity, frameState);
+                for (int i = 0; i < DemoPlayback.playbackSpeed; i++)
+                {
+                    var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                    sceneLayers.Update(dt, Matrix.Identity, frameState);
+                }
             }
             else
             {
