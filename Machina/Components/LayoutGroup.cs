@@ -194,7 +194,7 @@ namespace Machina.Components
 
         public LayoutGroup PixelSpacer(int size)
         {
-            var spacer = transform.AddActorAsChild("ps");
+            var spacer = transform.AddActorAsChild("ps" + size);
             new BoundingRect(spacer, new Point(size, size));
             new LayoutElement(spacer);
 
@@ -203,7 +203,7 @@ namespace Machina.Components
 
         public LayoutGroup PixelSpacer(int width, int height)
         {
-            var spacer = transform.AddActorAsChild("ps");
+            var spacer = transform.AddActorAsChild("ps" + width + "x" + height);
             new BoundingRect(spacer, new Point(width, height));
             new LayoutElement(spacer);
 
