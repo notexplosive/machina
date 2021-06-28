@@ -166,9 +166,19 @@ namespace Machina.Engine
 
 
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
-            this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
-            this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
-            this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
+            if (GamePlatform.IsDesktop)
+            {
+                this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
+                this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
+                this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
+            }
+            else
+            {
+                this.localContentPath = Path.Combine("/", "Assets");
+                this.devContentPath = Path.Combine("/", "Assets");
+                this.devScreenshotPath = Path.Combine("/", "Assets");
+            }
+
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
@@ -194,7 +204,11 @@ namespace Machina.Engine
 
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
-            Window.TextInput += this.sceneLayers.AddPendingTextInput;
+
+            if (GamePlatform.IsDesktop)
+            {
+                Window.TextInput += this.sceneLayers.AddPendingTextInput;
+            }
 
             this.keyTracker = new KeyTracker();
             this.mouseTracker = new MouseTracker();
