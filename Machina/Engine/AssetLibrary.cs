@@ -31,47 +31,26 @@ namespace Machina.Engine
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
-        private readonly string contentPath;
 
         public AssetLibrary(MachinaGame game)
         {
             this.content = game.Content;
-            this.contentPath = game.localContentPath;
         }
-        private List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
-        {
-            var result = new List<string>();
 
-            var path = Path.Join(this.contentPath, contentFolder);
-            DirectoryInfo dir = new DirectoryInfo(path);
-            if (!dir.Exists)
-            {
-                // You need to add MachinaAssets as a project dependency to your game
-                throw new DirectoryNotFoundException("Content folder missing, most likely missing MachinaAssets\ntried:" + path);
-            }
-
-            FileInfo[] files = dir.GetFiles("*." + extension);
-            foreach (FileInfo file in files)
-            {
-                result.Add(Path.GetFileNameWithoutExtension(file.FullName));
-            }
-
-            return result;
-        }
 
         public void LoadAllContent()
         {
-            foreach (var imageName in GetFilesAtContentDirectory("images"))
+            foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
                 LoadTexture("images/" + imageName);
             }
 
-            foreach (var spriteFont in GetFilesAtContentDirectory("fonts", "xnb"))
+            foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("fonts", "xnb"))
             {
                 LoadSpriteFont("fonts/" + spriteFont);
             }
 
-            foreach (var spriteFont in GetFilesAtContentDirectory("sounds", "xnb"))
+            foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
             {
                 LoadSoundEffect("sounds/" + spriteFont);
             }

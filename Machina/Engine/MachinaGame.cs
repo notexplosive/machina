@@ -207,7 +207,7 @@ namespace Machina.Engine
 
             if (GamePlatform.IsDesktop)
             {
-                Window.TextInput += this.sceneLayers.AddPendingTextInput;
+                // Window.TextInput += this.sceneLayers.AddPendingTextInput;
             }
 
             this.keyTracker = new KeyTracker();
@@ -338,12 +338,10 @@ namespace Machina.Engine
 
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
-
 #else
             DebugLevel = DebugLevel.Off;
 #endif
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
-
 
             CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
             {
@@ -388,15 +386,14 @@ namespace Machina.Engine
                 shouldSkipSnapshot = true;
             });
 
-
-
 #if DEBUG
             LoadGame();
 #else
             PlayIntroAndLoadGame();
 #endif
 
-            new SnapshotTaker(debugActor, shouldSkipSnapshot);
+            if (GamePlatform.IsDesktop)
+                new SnapshotTaker(debugActor, shouldSkipSnapshot);
         }
 
         private void LoadGame()
@@ -439,7 +436,6 @@ namespace Machina.Engine
                 var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState, inputState.gamepadState), mouseTracker.Calculate(inputState.mouseState));
                 sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
             }
-
 
             base.Update(gameTime);
         }
