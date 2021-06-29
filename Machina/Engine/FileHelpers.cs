@@ -15,11 +15,13 @@ namespace Machina.Engine
             await File.WriteAllTextAsync(fullPath, data);
 
 #if DEBUG
+            // In development mode we do this wacky thing where we want to write the file to the repo, no other scenario needs to worry about this
             if (GamePlatform.IsDesktop)
             {
                 if (!skipDevPath)
                 {
-                    fullPath = Path.Combine(MachinaGame.Current.devContentPath, path);
+                    var devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
+                    fullPath = Path.Combine(devContentPath, path);
                     Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
                     await File.WriteAllTextAsync(fullPath, data);
                 }

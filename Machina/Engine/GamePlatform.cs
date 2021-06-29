@@ -68,7 +68,7 @@ namespace Machina.Engine
 
         private static async Task<string> ReadFileInContentDirectory_Desktop(string pathInContent)
         {
-            var local = Path.Combine(MachinaGame.Current.localContentPath, pathInContent);
+            var local = Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content"), pathInContent);
             if (File.Exists(local))
             {
                 var result = await File.ReadAllTextAsync(local);

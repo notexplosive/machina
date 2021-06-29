@@ -14,7 +14,8 @@ namespace Machina.Components
         private DateTime lastSnapshotTime;
         private bool pendingSnapshot;
         private double waitDuration;
-        private bool doNotUseTimer;
+        private readonly bool doNotUseTimer;
+        private readonly string screenshotPath;
 
         public SnapshotTaker(Actor actor, bool doNotUseTimer) : base(actor)
         {
@@ -22,6 +23,11 @@ namespace Machina.Components
             this.waitDuration = 5;
             this.doNotUseTimer = doNotUseTimer;
             this.pendingSnapshot = !doNotUseTimer;
+#if DEBUG
+            this.screenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
+#else
+            this.screenshotPath = MachinaGame.Current.appDataPath;
+#endif
         }
 
         public override void Update(float dt)
@@ -62,8 +68,8 @@ namespace Machina.Components
             var texture = MachinaGame.Current.SceneLayers.RenderToTexture(spriteBatch);
             var currentTime = DateTime.Now;
 
-            Directory.CreateDirectory(MachinaGame.Current.devScreenshotPath);
-            using (FileStream destStream = File.Create(Path.Combine(MachinaGame.Current.devScreenshotPath, currentTime.ToFileTimeUtc().ToString() + ".png")))
+            Directory.CreateDirectory(this.screenshotPath);
+            using (FileStream destStream = File.Create(Path.Combine(this.screenshotPath, currentTime.ToFileTimeUtc().ToString() + ".png")))
             {
                 texture.SaveAsPng(destStream, texture.Width, texture.Height);
             }

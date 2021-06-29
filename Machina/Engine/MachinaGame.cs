@@ -34,18 +34,6 @@ namespace Machina.Engine
         /// Path to users AppData folder (or platform equivalent)
         /// </summary>
         public readonly string appDataPath;
-        /// <summary>
-        /// Path of the "Content" folder for the built Exectuable
-        /// </summary>
-        public readonly string localContentPath;
-        /// <summary>
-        /// (brittle) Path of the "Content" folder in the dev environment
-        /// </summary>
-        public readonly string devContentPath;
-        /// <summary>
-        /// (brittle) Path to the screenshots folder in the dev environment
-        /// </summary>
-        public readonly string devScreenshotPath;
 
         protected readonly Point startingWindowSize;
         private SceneLayers sceneLayers;
@@ -167,18 +155,6 @@ namespace Machina.Engine
 
             // TODO: These "Path" things should just live in the GamePlatform class.
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
-            if (GamePlatform.IsDesktop)
-            {
-                this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
-                this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
-                this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
-            }
-            else if (GamePlatform.IsAndroid)
-            {
-                this.localContentPath = Path.Combine("/", "Assets", "Content");
-                this.devContentPath = Path.Combine("/", "Assets"); // doesn't apply on android
-                this.devScreenshotPath = Path.Combine("/", "Assets");
-            }
 
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
