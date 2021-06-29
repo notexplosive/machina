@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Machina.Engine
 {
@@ -20,10 +21,11 @@ namespace Machina.Engine
     {
         private static PlatformType platformType = PlatformType.PC;
 
-        public static void Set(PlatformType platformType, Func<string, string, List<string>> getFilesAtContentDirectory)
+        public static void Set(PlatformType platformType, Func<string, string, List<string>> getFilesAtContentDirectory, Func<string, Task<string>> readFileInContentDirectory)
         {
             GamePlatform.platformType = platformType;
             GetFilesAtContentDirectoryFunc = getFilesAtContentDirectory;
+            ReadFileInContentDirectoryFunc = readFileInContentDirectory;
         }
 
         /// <summary>
@@ -40,6 +42,7 @@ namespace Machina.Engine
         public static bool IsAndroid => platformType == PlatformType.Android;
 
         private static Func<string, string, List<string>> GetFilesAtContentDirectoryFunc = GetFilesAtContentDirectory_Desktop;
+        private static Func<string, Task<string>> ReadFileInContentDirectoryFunc = ReadFileInContentDirectory_Desktop;
 
         private static List<string> GetFilesAtContentDirectory_Desktop(string contentSubFolder, string extension = "*")
         {
@@ -57,9 +60,32 @@ namespace Machina.Engine
             FileInfo[] files = dir.GetFiles("*." + extension);
             foreach (FileInfo file in files)
             {
-                result.Add(Path.GetFileNameWithoutExtension(file.FullName));
+                result.Add(file.FullName);
             }
             return result;
+        }
+
+
+        private static async Task<string> ReadFileInContentDirectory_Desktop(string pathInContent)
+        {
+            var local = Path.Combine(MachinaGame.Current.localContentPath, pathInContent);
+            if (File.Exists(local))
+            {
+                var result = await File.ReadAllTextAsync(local);
+                return result;
+            }
+
+            throw new FileNotFoundException();
+        }
+
+        public static async Task<string> ReadFileInContentDirectory(string path)
+        {
+            return await ReadFileInContentDirectoryFunc(path);
+        }
+
+        public static string ReadFileInContentDirectory_Sync(string path)
+        {
+            return ReadFileInContentDirectoryFunc(path).Result;
         }
 
         public static List<string> GetFilesAtContentDirectory(string contentSubFolder, string extension = "*")

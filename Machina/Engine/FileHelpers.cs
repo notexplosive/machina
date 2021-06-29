@@ -15,11 +15,14 @@ namespace Machina.Engine
             await File.WriteAllTextAsync(fullPath, data);
 
 #if DEBUG
-            if (!skipDevPath)
+            if (GamePlatform.IsDesktop)
             {
-                fullPath = Path.Combine(MachinaGame.Current.devContentPath, path);
-                Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-                await File.WriteAllTextAsync(fullPath, data);
+                if (!skipDevPath)
+                {
+                    fullPath = Path.Combine(MachinaGame.Current.devContentPath, path);
+                    Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+                    await File.WriteAllTextAsync(fullPath, data);
+                }
             }
 #endif
             MachinaGame.Print("Saved:", fullPath);
@@ -30,20 +33,25 @@ namespace Machina.Engine
             onComplete?.Invoke();
         }
 
-        public static IEnumerable<string> GetFilesAt(string path, string searchPattern)
+        public static IEnumerable<string> GetFilesAt(string path, string suffix)
         {
             var result = new List<string>();
             var foundNames = new HashSet<string>();
 
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.localContentPath, path), searchPattern))
+            var contentFiles = GamePlatform.GetFilesAtContentDirectory(path);
+
+            foreach (var file in contentFiles)
             {
-                foundNames.Add(Path.GetFileName(file));
-                result.Add(file);
+                if (file.EndsWith(suffix))
+                {
+                    foundNames.Add(Path.GetFileName(file));
+                    result.Add(file);
+                }
             }
 
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.appDataPath, path), searchPattern))
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.appDataPath, path), "*"))
             {
-                if (!foundNames.Contains(Path.GetFileName(file)))
+                if (file.EndsWith(suffix) && !foundNames.Contains(Path.GetFileName(file)))
                 {
                     result.Add(file);
                 }
@@ -67,12 +75,7 @@ namespace Machina.Engine
                 return result;
             }
 
-            var local = Path.Combine(MachinaGame.Current.localContentPath, path);
-            if (File.Exists(local))
-            {
-                var result = await File.ReadAllTextAsync(local);
-                return result;
-            }
+            return await GamePlatform.ReadFileInContentDirectory(path);
 
             throw new FileNotFoundException();
         }

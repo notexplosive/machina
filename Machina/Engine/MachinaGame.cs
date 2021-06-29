@@ -165,7 +165,6 @@ namespace Machina.Engine
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
 
-
             // TODO: These "Path" things should just live in the GamePlatform class.
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             if (GamePlatform.IsDesktop)
@@ -176,8 +175,8 @@ namespace Machina.Engine
             }
             else if (GamePlatform.IsAndroid)
             {
-                this.localContentPath = Path.Combine("/", "Assets");
-                this.devContentPath = Path.Combine("/", "Assets");
+                this.localContentPath = Path.Combine("/", "Assets", "Content");
+                this.devContentPath = Path.Combine("/", "Assets"); // doesn't apply on android
                 this.devScreenshotPath = Path.Combine("/", "Assets");
             }
 

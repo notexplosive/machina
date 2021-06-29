@@ -42,17 +42,17 @@ namespace Machina.Engine
         {
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
-                LoadTexture("images/" + imageName);
+                LoadTexture("images/" + Path.GetFileNameWithoutExtension(imageName));
             }
 
             foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("fonts", "xnb"))
             {
-                LoadSpriteFont("fonts/" + spriteFont);
+                LoadSpriteFont("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
 
             foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
             {
-                LoadSoundEffect("sounds/" + spriteFont);
+                LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
         }
 
