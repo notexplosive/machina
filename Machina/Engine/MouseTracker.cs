@@ -20,7 +20,7 @@ namespace Machina.Engine
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public MouseFrameState Calculate(MouseState currentState)
+        public MouseFrameState CalculateFrameState(MouseState currentState)
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,

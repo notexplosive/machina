@@ -156,8 +156,9 @@ namespace Machina.Engine
             set;
         } = SamplerState.PointClamp;
 
-        private readonly KeyTracker keyTracker;
-        private readonly MouseTracker mouseTracker;
+        private readonly KeyTracker keyTracker = new KeyTracker();
+        private readonly MouseTracker mouseTracker = new MouseTracker();
+        private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
@@ -165,6 +166,7 @@ namespace Machina.Engine
             CommandLineArgs = new CommandLineArgs(args);
 
 
+            // TODO: These "Path" things should just live in the GamePlatform class.
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
             if (GamePlatform.IsDesktop)
             {
@@ -172,7 +174,7 @@ namespace Machina.Engine
                 this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
                 this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
             }
-            else
+            else if (GamePlatform.IsAndroid)
             {
                 this.localContentPath = Path.Combine("/", "Assets");
                 this.devContentPath = Path.Combine("/", "Assets");
@@ -210,8 +212,6 @@ namespace Machina.Engine
                 // Window.TextInput += this.sceneLayers.AddPendingTextInput;
             }
 
-            this.keyTracker = new KeyTracker();
-            this.mouseTracker = new MouseTracker();
             Random = new SeededRandom();
         }
 
@@ -433,7 +433,15 @@ namespace Machina.Engine
             else
             {
                 var inputState = InputState.RawHumanInput;
-                var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState, inputState.gamepadState), mouseTracker.Calculate(inputState.mouseState));
+
+                MouseFrameState mouseFrameState;
+
+                if (GamePlatform.IsMobile)
+                    mouseFrameState = this.touchTracker.CalculateFrameState(inputState.touches);
+                else
+                    mouseFrameState = this.mouseTracker.CalculateFrameState(inputState.mouseState);
+
+                var humanInputFrameState = new InputFrameState(keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState), mouseFrameState);
                 sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
             }
 

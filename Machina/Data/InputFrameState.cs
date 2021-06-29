@@ -76,6 +76,32 @@ namespace Machina.Data
     }
 
     [Serializable]
+    public struct SingleTouchFrameState
+    {
+        public readonly bool TouchDown;
+        public readonly bool TouchUp;
+        public readonly Point TouchPos;
+        public readonly Vector2 TouchDelta;
+
+        public SingleTouchFrameState(bool touchDown, bool touchUp, Point touchPos, Vector2 touchDelta)
+        {
+            this.TouchDown = touchDown;
+            this.TouchUp = touchUp;
+            this.TouchPos = touchPos;
+            this.TouchDelta = touchDelta;
+        }
+
+        public static implicit operator MouseFrameState(SingleTouchFrameState touchFrameState)
+        {
+            return new MouseFrameState(
+                new MouseButtonList(touchFrameState.TouchDown, false, false),
+                new MouseButtonList(touchFrameState.TouchUp, false, false),
+                touchFrameState.TouchPos, touchFrameState.TouchDelta, 0);
+
+        }
+    }
+
+    [Serializable]
     public struct KeyboardFrameState
     {
         public readonly Keys[] Released;
