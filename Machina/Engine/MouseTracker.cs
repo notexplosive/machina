@@ -34,9 +34,6 @@ namespace Machina.Engine
                 currentState.RightButton,
             };
 
-            var pressedThisFrameList = new List<MouseButton>();
-            var releasedThisFrameList = new List<MouseButton>();
-
             bool leftPressed = false;
             bool middlePressed = false;
             bool rightPressed = false;

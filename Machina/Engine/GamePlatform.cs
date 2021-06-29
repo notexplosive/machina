@@ -18,7 +18,7 @@ namespace Machina.Engine
 
     public static class GamePlatform
     {
-        private static PlatformType platformType;
+        private static PlatformType platformType = PlatformType.PC;
 
         public static void Set(PlatformType platformType, Func<string, string, List<string>> getFilesAtContentDirectory)
         {
@@ -27,7 +27,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Platform is Desktop (Mac, PC, or Linux)
+        /// Platform is Desktop (Mac, PC, or Linux). This means we have a mouse cursor
         /// </summary>
         public static bool IsDesktop => platformType == PlatformType.PC || platformType == PlatformType.Mac || platformType == PlatformType.Linux;
         /// <summary>

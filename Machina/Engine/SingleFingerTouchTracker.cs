@@ -23,12 +23,11 @@ namespace Machina.Engine
                 var currTouch = this.currentMainTouch.Value;
                 if (this.prevTouches.FindById(currTouch.Id, out TouchLocation prevTouch))
                 {
-                    // Hit! We have a current touch and a prev touch
-                    var touchUp = currTouch.State == TouchLocationState.Released && prevTouch.State == TouchLocationState.Pressed;
-                    result = new SingleTouchFrameState(false, touchUp, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
+                    result = new SingleTouchFrameState(false, false, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
                 }
                 else
                 {
+                    result = new SingleTouchFrameState(false, true, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
                     this.currentMainTouch = null;
                 }
             }
