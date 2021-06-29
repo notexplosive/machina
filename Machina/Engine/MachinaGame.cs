@@ -51,6 +51,8 @@ namespace Machina.Engine
         private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
+        private bool hasDoneFirstUpdate;
+
         public static SeededRandom Random
         {
             get;
@@ -117,22 +119,21 @@ namespace Machina.Engine
         {
             set
             {
-                if (Graphics.IsFullScreen != value)
+                if (value)
                 {
-                    if (value)
-                    {
-                        Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
-                        Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
-                        Graphics.IsFullScreen = true;
-                    }
-                    else
-                    {
-                        Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
-                        Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
-                        Graphics.IsFullScreen = false;
-                    }
-                    Graphics.ApplyChanges();
+                    MachinaGame.Print("Became fullscreen");
+                    Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
+                    Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
+                    Graphics.IsFullScreen = true;
                 }
+                else
+                {
+                    MachinaGame.Print("Became window");
+                    Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
+                    Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
+                    Graphics.IsFullScreen = false;
+                }
+                Graphics.ApplyChanges();
             }
 
             get => Graphics.IsFullScreen;
@@ -394,6 +395,8 @@ namespace Machina.Engine
 
         protected override void Update(GameTime gameTime)
         {
+            DoFirstUpdate();
+
             Mouse.SetCursor(MouseCursor.Arrow);
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -421,6 +424,19 @@ namespace Machina.Engine
             }
 
             base.Update(gameTime);
+        }
+
+        private void DoFirstUpdate()
+        {
+            if (!this.hasDoneFirstUpdate)
+            {
+                this.hasDoneFirstUpdate = true;
+
+                if (GamePlatform.IsMobile)
+                {
+                    Fullscreen = true;
+                }
+            }
         }
 
         protected override void Draw(GameTime gameTime)
