@@ -121,16 +121,12 @@ namespace Machina.Engine
             {
                 if (value)
                 {
-                    MachinaGame.Print("Became fullscreen");
-                    Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
-                    Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
+                    SetWindowSize(new Point(MachinaGame.Current.GraphicsDevice.DisplayMode.Width, MachinaGame.Current.GraphicsDevice.DisplayMode.Height));
                     Graphics.IsFullScreen = true;
                 }
                 else
                 {
-                    MachinaGame.Print("Became window");
-                    Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
-                    Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
+                    SetWindowSize(Current.startingWindowSize);
                     Graphics.IsFullScreen = false;
                 }
                 Graphics.ApplyChanges();
@@ -151,10 +147,12 @@ namespace Machina.Engine
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
+            Current = this;
+
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
 
-            // TODO: These "Path" things should just live in the GamePlatform class.
+            // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
 
             this.logger = new StdOutConsoleLogger();
@@ -162,7 +160,6 @@ namespace Machina.Engine
             this.currentWindowSize = startingWindowSize;
 
             Window.Title = gameTitle;
-            Current = this;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -191,13 +188,13 @@ namespace Machina.Engine
             Random = new SeededRandom();
         }
 
-        protected void SetWindowSize(Point windowSize)
+        protected static void SetWindowSize(Point windowSize)
         {
             Print("Window size changed to", windowSize);
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
-            CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
+            Current.CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
         }
 
         protected override void Initialize()
