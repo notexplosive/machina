@@ -10,25 +10,34 @@ namespace Machina.Engine
     public class SingleFingerTouchTracker
     {
         private TouchCollection prevTouches;
-        private TouchLocation? currentMainTouch;
+        private int? currentMainTouchId;
+        private bool touchCommitted = false;
 
-        public MouseFrameState CalculateFrameState(TouchCollection touches)
+        public MouseFrameState CalculateFrameState(TouchCollection currentTouches)
         {
-            var currentTouches = touches;
             SingleTouchFrameState result = new SingleTouchFrameState();
 
 
-            if (this.currentMainTouch.HasValue)
+            if (this.currentMainTouchId.HasValue)
             {
-                var currTouch = this.currentMainTouch.Value;
+                currentTouches.FindById(this.currentMainTouchId.Value, out TouchLocation currTouch);
                 if (this.prevTouches.FindById(currTouch.Id, out TouchLocation prevTouch))
                 {
-                    result = new SingleTouchFrameState(false, false, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
+                    if (!this.touchCommitted)
+                    {
+                        result = new SingleTouchFrameState(true, false, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
+                        this.touchCommitted = true;
+                    }
+                    else
+                    {
+                        result = new SingleTouchFrameState(false, false, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
+                    }
                 }
                 else
                 {
                     result = new SingleTouchFrameState(false, true, currTouch.Position.ToPoint(), currTouch.Position - prevTouch.Position);
-                    this.currentMainTouch = null;
+                    this.currentMainTouchId = null;
+                    this.touchCommitted = false;
                 }
             }
             else
@@ -42,9 +51,11 @@ namespace Machina.Engine
                     }
                     else
                     {
-                        // Pick a current touch that hasn't been seen before, he's now our main touch
-                        this.currentMainTouch = currentTouch;
-                        result = new SingleTouchFrameState(true, false, currentTouch.Position.ToPoint(), Vector2.Zero);
+                        // Pick a current touch that hasn't been seen before, they are now our main touch
+                        this.currentMainTouchId = currentTouch.Id;
+                        this.touchCommitted = false;
+                        result = new SingleTouchFrameState(false, false, currentTouch.Position.ToPoint(), Vector2.Zero);
+                        break;
                     }
                 }
             }

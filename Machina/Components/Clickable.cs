@@ -36,48 +36,38 @@ namespace Machina.Components
         {
             if (this.hoverable.IsHovered)
             {
-                if (GamePlatform.IsDesktop)
-                {
-                    if (buttonState == ButtonState.Pressed)
-                    {
-                        if (button == MouseButton.Left)
-                        {
-                            leftButtonDown = true;
-                        }
-
-                        if (button == MouseButton.Right)
-                        {
-                            rightButtonDown = true;
-                        }
-
-                        if (button == MouseButton.Middle)
-                        {
-                            middleButtonDown = true;
-                        }
-                    }
-                    else
-                    {
-                        if (leftButtonDown && button == MouseButton.Left)
-                        {
-                            onClick?.Invoke(MouseButton.Left);
-                        }
-
-                        if (rightButtonDown && button == MouseButton.Right)
-                        {
-                            onClick?.Invoke(MouseButton.Right);
-                        }
-
-                        if (middleButtonDown && button == MouseButton.Middle)
-                        {
-                            onClick?.Invoke(MouseButton.Middle);
-                        }
-                    }
-                }
-                else if (GamePlatform.IsMobile)
+                if (buttonState == ButtonState.Pressed)
                 {
                     if (button == MouseButton.Left)
                     {
+                        leftButtonDown = true;
+                    }
+
+                    if (button == MouseButton.Right)
+                    {
+                        rightButtonDown = true;
+                    }
+
+                    if (button == MouseButton.Middle)
+                    {
+                        middleButtonDown = true;
+                    }
+                }
+                else
+                {
+                    if (leftButtonDown && button == MouseButton.Left)
+                    {
                         onClick?.Invoke(MouseButton.Left);
+                    }
+
+                    if (rightButtonDown && button == MouseButton.Right)
+                    {
+                        onClick?.Invoke(MouseButton.Right);
+                    }
+
+                    if (middleButtonDown && button == MouseButton.Middle)
+                    {
+                        onClick?.Invoke(MouseButton.Middle);
                     }
                 }
             }
