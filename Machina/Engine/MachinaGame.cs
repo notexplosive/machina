@@ -182,7 +182,7 @@ namespace Machina.Engine
 
             if (GamePlatform.IsDesktop)
             {
-                // Window.TextInput += this.sceneLayers.AddPendingTextInput;
+                Window.TextInput += this.sceneLayers.AddPendingTextInput;
             }
 
             Random = new SeededRandom();
