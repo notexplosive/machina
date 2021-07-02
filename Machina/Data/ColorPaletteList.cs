@@ -7,6 +7,10 @@ using System.Text;
 
 namespace Machina.Data
 {
+    /// <summary>
+    /// Expects a texture that is just rows of pixels describing a color palette.
+    /// Each row of pixels is one "palette"
+    /// </summary>
     public class ColorPaletteList
     {
         public readonly int rowCount;

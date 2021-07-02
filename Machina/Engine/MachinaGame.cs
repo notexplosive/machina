@@ -52,6 +52,7 @@ namespace Machina.Engine
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
         private bool hasDoneFirstUpdate;
+        private bool hasDoneFirstDraw;
 
         public static SeededRandom Random
         {
@@ -438,6 +439,12 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
+            if (!this.hasDoneFirstDraw)
+            {
+                this.hasDoneFirstDraw = true;
+                OnFirstPreDraw(spriteBatch);
+            }
+
             sceneLayers.PreDraw(spriteBatch);
             CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
             GraphicsDevice.Clear(sceneLayers.BackgroundColor);
@@ -447,6 +454,8 @@ namespace Machina.Engine
             sceneLayers.DrawDebugScene(spriteBatch);
             base.Draw(gameTime);
         }
+
+        protected abstract void OnFirstPreDraw(SpriteBatch spriteBatch);
 
         private void OnResize(object sender, EventArgs e)
         {
