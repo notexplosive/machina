@@ -22,7 +22,7 @@ namespace Machina.Data
             this.frames = listOfFrames;
         }
 
-        public int Length => frames.Length;
+        public int Length => this.frames.Length;
 
         public LoopType LoopType => this.loopType;
 
