@@ -51,8 +51,11 @@ namespace Machina.Engine
         private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
+
+        // TODO: consider moving hasDoneFirstUpdate and hasDoneFirstDraw to SceneLayers (and remove hasLoaded)
         private bool hasDoneFirstUpdate;
         private bool hasDoneFirstDraw;
+        private bool hasLoaded;
 
         public static SeededRandom Random
         {
@@ -374,6 +377,7 @@ namespace Machina.Engine
         {
             CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
+            this.hasLoaded = true;
             CommandLineArgs.ExecuteArgs();
         }
 
@@ -426,7 +430,7 @@ namespace Machina.Engine
 
         private void DoFirstUpdate()
         {
-            if (!this.hasDoneFirstUpdate)
+            if (!this.hasDoneFirstUpdate && this.hasLoaded)
             {
                 this.hasDoneFirstUpdate = true;
 
@@ -439,7 +443,7 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!this.hasDoneFirstDraw)
+            if (!this.hasDoneFirstDraw && this.hasLoaded)
             {
                 this.hasDoneFirstDraw = true;
                 OnFirstPreDraw(spriteBatch);

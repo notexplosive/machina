@@ -58,33 +58,29 @@ namespace Machina.Engine
 
         private void LoadTexture(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
-
+            var name = Path.GetFileName(fullName);
             var texture = this.content.Load<Texture2D>(fullName);
             textures.Add(name, texture);
-            Console.WriteLine(string.Format("Loaded Texture: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded Texture: {0} {1}", name, textures[name].GetHashCode()));
         }
 
         private void LoadSpriteFont(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
+            var name = Path.GetFileName(fullName);
 
             var spriteFont = this.content.Load<SpriteFont>(fullName);
             spriteFonts.Add(name, spriteFont);
-            Console.WriteLine(string.Format("Loaded SpriteFont: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded SpriteFont: {0}", name));
         }
 
         private void LoadSoundEffect(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
+            var name = Path.GetFileName(fullName);
 
             var soundEffect = this.content.Load<SoundEffect>(fullName);
             soundEffects.Add(name, soundEffect);
             soundEffectInstances.Add(name, soundEffect.CreateInstance());
-            Console.WriteLine(string.Format("Loaded SoundEffect: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded SoundEffect: {0}", name));
         }
 
         public void UnloadAssets()
@@ -149,6 +145,7 @@ namespace Machina.Engine
         {
             Debug.Assert(!assets.ContainsKey(name), "Duplicate MachinaAsset: `" + name + "`");
             assets[name] = asset;
+            Console.WriteLine("Added Machina Asset {0}", name);
             return asset;
         }
     }
