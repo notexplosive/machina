@@ -41,9 +41,9 @@ namespace Machina.Data
 
         public MouseButtonList(int encoded)
         {
-            this.left = (encoded & 1) == 1;
-            this.middle = (encoded & (1 << 1)) == 1;
-            this.right = (encoded & (1 << 2)) == 1;
+            this.left = (encoded & 1) > 0;
+            this.middle = (encoded & (1 << 1)) > 0;
+            this.right = (encoded & (1 << 2)) > 0;
         }
 
         public int EncodedInt

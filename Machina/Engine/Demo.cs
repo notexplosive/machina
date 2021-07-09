@@ -12,7 +12,7 @@ namespace Machina.Engine
     public class Demo
     {
         public readonly static string MostRecentlySavedDemoPath = "saved.demo";
-        public readonly List<SerializableEntry> records = new List<SerializableEntry>();
+        public readonly List<DemoSerializableEntry> records = new List<DemoSerializableEntry>();
         private readonly int seedAtStart;
 
         public Demo(int randomSeed)
@@ -20,7 +20,7 @@ namespace Machina.Engine
             this.seedAtStart = randomSeed;
         }
 
-        public void Append(SerializableEntry record)
+        public void Append(DemoSerializableEntry record)
         {
             records.Add(record);
         }
@@ -37,7 +37,7 @@ namespace Machina.Engine
 
             foreach (var entry in content.entries)
             {
-                demo.Append(new SerializableEntry(entry.time, entry.BuildInputFrameState()));
+                demo.Append(new DemoSerializableEntry(entry.time, entry.BuildInputFrameState()));
             }
             return demo;
         }
@@ -59,9 +59,9 @@ namespace Machina.Engine
         [Serializable]
         public class DemoContent
         {
-            public SerializableEntry[] entries;
+            public DemoSerializableEntry[] entries;
             public readonly int randomSeed;
-            public DemoContent(List<SerializableEntry> entries, int randomSeed)
+            public DemoContent(List<DemoSerializableEntry> entries, int randomSeed)
             {
                 this.randomSeed = randomSeed;
                 this.entries = entries.ToArray();
@@ -69,7 +69,7 @@ namespace Machina.Engine
         }
 
         [Serializable]
-        public class SerializableEntry
+        public class DemoSerializableEntry
         {
             public float time;
             public int mouseX;
@@ -83,7 +83,7 @@ namespace Machina.Engine
             public Keys[] pressedKeys = Array.Empty<Keys>();
             public Keys[] releasedKeys = Array.Empty<Keys>();
 
-            public SerializableEntry(float time, InputFrameState inputState)
+            public DemoSerializableEntry(float time, InputFrameState inputState)
             {
                 this.time = time;
 
@@ -99,7 +99,7 @@ namespace Machina.Engine
                 this.keyboardModifiersAsInt = inputState.keyboardFrameState.Modifiers.EncodedInt;
             }
 
-            public SerializableEntry()
+            public DemoSerializableEntry()
             {
                 // DO NOT DELETE!! Used by the Json Decoder
             }
@@ -137,7 +137,7 @@ namespace Machina.Engine
             public void AddEntry(float dt, InputFrameState inputState)
             {
                 this.totalTime += dt;
-                this.demo.Append(new SerializableEntry(this.totalTime, inputState));
+                this.demo.Append(new DemoSerializableEntry(this.totalTime, inputState));
             }
 
             public void WriteDemoToDisk()
@@ -185,6 +185,8 @@ namespace Machina.Engine
                     var record = this.demo.records[this.currentIndex];
                     var result = record.BuildInputFrameState();
                     this.LatestFrameState = result;
+                    if (result.mouseFrameState.ButtonsPressedThisFrame.EncodedInt > 0)
+                        Console.WriteLine(result.mouseFrameState.ButtonsPressedThisFrame.EncodedInt);
                     return result;
                 }
                 else
