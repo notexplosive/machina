@@ -185,8 +185,6 @@ namespace Machina.Engine
                     var record = this.demo.records[this.currentIndex];
                     var result = record.BuildInputFrameState();
                     this.LatestFrameState = result;
-                    if (result.mouseFrameState.ButtonsPressedThisFrame.EncodedInt > 0)
-                        Console.WriteLine(result.mouseFrameState.ButtonsPressedThisFrame.EncodedInt);
                     return result;
                 }
                 else
