@@ -44,10 +44,16 @@ namespace Machina.Data
         public readonly Actor canvasActor;
         private readonly UIStyle style;
         private readonly int margin = 10;
+        private BoundedTextRenderer titleTextRenderer;
 
         public Scrollbar Scrollbar
         {
             get; private set;
+        }
+        public string Title
+        {
+            get => this.titleTextRenderer.Text;
+            set => this.titleTextRenderer.Text = value;
         }
 
         public event WindowAction Closed;
@@ -80,7 +86,7 @@ namespace Machina.Data
                  .PixelSpacer(5) // Spacing between icon and title
                  .AddBothStretchedElement("Title", titleActor =>
                  {
-                     new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
+                     this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
                  })
                  .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
                  {

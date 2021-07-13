@@ -10,29 +10,38 @@ namespace Machina.Data
     public class WindowBuilder
     {
         private string title = string.Empty;
-        private Point? minSize;
-        private Point? maxSize;
+        private Point minSize;
+        private Point maxSize;
         private bool canBeResized;
         private WindowAction onMinimized;
         private bool canBeMinimized;
         private WindowAction onMaximize;
         private bool canBeMaximized;
+        private WindowAction onClosed;
+        private bool canBeClosed;
         private bool isScrollable;
         private int maxScrollPos;
         private Vector2 startingPosition;
+
+        private readonly Point contentSize;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
 
-        public UIWindow Build(Scene creatingScene, Point contentSize, UIStyle style)
+        public WindowBuilder(Point contentSize)
         {
-            var window = new UIWindow(creatingScene, contentSize, style);
+            this.contentSize = contentSize;
+        }
+
+        public UIWindow Build(Scene creatingScene, UIStyle style)
+        {
+            var window = new UIWindow(creatingScene, this.contentSize, style);
 
             if (this.isScrollable)
                 window.AddScrollbar(this.maxScrollPos);
 
             if (this.canBeResized)
-                window.BecomeResizable(new Point(300, 200), new Point(800, 600));
+                window.BecomeResizable(this.minSize, this.maxSize);
 
-
+            window.Title = this.title;
             window.rootTransform.Position = this.startingPosition;
 
             return window;
@@ -44,7 +53,7 @@ namespace Machina.Data
             return this;
         }
 
-        public WindowBuilder CanBeResized(Point maxSize, Point minSize)
+        public WindowBuilder CanBeResized(Point minSize, Point maxSize)
         {
             this.minSize = minSize;
             this.maxSize = maxSize;
@@ -55,6 +64,13 @@ namespace Machina.Data
         public WindowBuilder StartingPosition(Vector2 position)
         {
             this.startingPosition = position;
+            return this;
+        }
+
+        public WindowBuilder CanBeClosed(WindowAction onClosed)
+        {
+            this.canBeClosed = true;
+            this.onClosed += onClosed;
             return this;
         }
 

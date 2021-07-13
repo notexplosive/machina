@@ -19,9 +19,9 @@ namespace Machina.Data
             this.baseDepth = baseDepth;
         }
 
-        public UIWindow CreateWindow(Scene creatingScene, Point contentSize, WindowBuilder windowBuilder)
+        public UIWindow CreateWindow(Scene creatingScene, WindowBuilder windowBuilder)
         {
-            var window = windowBuilder.Build(creatingScene, contentSize, this.uiBuilder.style);
+            var window = windowBuilder.Build(creatingScene, this.uiBuilder.style);
             this.windows.Add(window);
             window.Closed += () => { windows.Remove(window); };
             window.AnyPartOfWindowClicked += () => { SelectWindow(window); };
