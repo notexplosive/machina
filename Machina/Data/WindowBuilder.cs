@@ -9,16 +9,29 @@ namespace Machina.Data
 {
     public class WindowBuilder
     {
+        public bool CanBeClosed
+        {
+            get; private set;
+        }
+
+        public bool CanBeMaximized
+        {
+            get; private set;
+        }
+
+        public bool CanBeMinimized
+        {
+            get; private set;
+        }
+
+
         private string title = string.Empty;
         private Point minSize;
         private Point maxSize;
         private bool canBeResized;
         private WindowAction onMinimized;
-        private bool canBeMinimized;
-        private WindowAction onMaximize;
-        private bool canBeMaximized;
+        private WindowAction onMaximized;
         private WindowAction onClosed;
-        private bool canBeClosed;
         private bool isScrollable;
         private int maxScrollPos;
         private Vector2 startingPosition;
@@ -33,7 +46,11 @@ namespace Machina.Data
 
         public UIWindow Build(Scene creatingScene, UIStyle style)
         {
-            var window = new UIWindow(creatingScene, this.contentSize, style);
+            var window = new UIWindow(creatingScene, this.contentSize, this.CanBeClosed, this.CanBeMaximized, this.CanBeMinimized, style);
+
+            window.Closed += onClosed;
+            window.Minimized += onMinimized;
+            window.Maximized += onMaximized;
 
             if (this.isScrollable)
                 window.AddScrollbar(this.maxScrollPos);
@@ -67,24 +84,29 @@ namespace Machina.Data
             return this;
         }
 
-        public WindowBuilder CanBeClosed(WindowAction onClosed)
+        public WindowBuilder OnClose(WindowAction onClosed)
         {
-            this.canBeClosed = true;
+            CanBeClosed = true;
             this.onClosed += onClosed;
             return this;
         }
 
-        public WindowBuilder CanBeMinimized(WindowAction onMinimized)
+        public WindowBuilder DestroyOnClose()
         {
-            this.canBeMinimized = true;
+            return OnClose((win) => { win.Destroy(); });
+        }
+
+        public WindowBuilder OnMinimize(WindowAction onMinimized)
+        {
+            CanBeMinimized = true;
             this.onMinimized += onMinimized;
             return this;
         }
 
-        public WindowBuilder CanBeMaximized(WindowAction onMaximize)
+        public WindowBuilder OnMaximize(WindowAction onMaximize)
         {
-            this.canBeMaximized = true;
-            this.onMaximize += onMaximize;
+            CanBeMaximized = true;
+            this.onMaximized += onMaximize;
             return this;
         }
 

@@ -21,10 +21,14 @@ namespace Machina.Data
 
         public UIWindow CreateWindow(Scene creatingScene, WindowBuilder windowBuilder)
         {
+            if (windowBuilder.CanBeClosed)
+            {
+                windowBuilder.OnClose((win) => { windows.Remove(win); });
+            }
+
             var window = windowBuilder.Build(creatingScene, this.uiBuilder.style);
-            this.windows.Add(window);
-            window.Closed += (win) => { windows.Remove(win); };
             window.AnyPartOfWindowClicked += (win) => { SelectWindow(win); };
+            this.windows.Add(window);
             SelectWindow(window);
 
             return window;

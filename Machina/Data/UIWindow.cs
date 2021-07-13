@@ -57,9 +57,11 @@ namespace Machina.Data
         }
 
         public event WindowAction Closed;
+        public event WindowAction Minimized;
+        public event WindowAction Maximized;
         public event WindowAction AnyPartOfWindowClicked;
 
-        public UIWindow(Scene managerScene, Point contentSize, UIStyle style)
+        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized, bool canbeMinimized, UIStyle style)
         {
             this.style = style;
             var headerSize = 32;
@@ -75,36 +77,35 @@ namespace Machina.Data
                  new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke(this);
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
-                 new LayoutGroup(headerContentActor, Orientation.Horizontal)
-                 .AddVerticallyStretchedElement("Icon", 32, iconActor =>
-                 {
-                     new SpriteRenderer(iconActor, style.uiSpriteSheet)
-                         .SetAnimation(new ChooseFrameAnimation(1));
-
-                     iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
-                 })
-                 .PixelSpacer(5) // Spacing between icon and title
-                 .AddBothStretchedElement("Title", titleActor =>
-                 {
-                     this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
-                 })
-                 .AddVerticallyStretchedElement("CloseButton", 32, closeButtonActor =>
-                 {
-                     new Hoverable(closeButtonActor);
-                     var clickable = new Clickable(closeButtonActor);
-                     new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
-                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
-                     clickable.onClick += mouseButton =>
+                 var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal)
+                     .AddVerticallyStretchedElement("Icon", 32, iconActor =>
                      {
-                         if (mouseButton == MouseButton.Left)
-                         {
-                             Closed?.Invoke(this);
-                             windowRoot.Destroy();
-                         }
-                     };
-                 });
-             });
+                         new SpriteRenderer(iconActor, style.uiSpriteSheet)
+                             .SetAnimation(new ChooseFrameAnimation(1));
 
+                         iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
+                     })
+                     .PixelSpacer(5) // Spacing between icon and title
+                     .AddBothStretchedElement("Title", titleActor =>
+                     {
+                         this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
+                     });
+
+                 if (canbeMinimized)
+                 {
+                     CreateControlButton(headerGroup, windowRoot, (win) => Minimized?.Invoke(win), this.style.closeButtonFrames);
+                 }
+
+                 if (canBeMaximized)
+                 {
+                     CreateControlButton(headerGroup, windowRoot, (win) => Maximized?.Invoke(win), this.style.closeButtonFrames);
+                 }
+
+                 if (canBeClosed)
+                 {
+                     CreateControlButton(headerGroup, windowRoot, (win) => Closed?.Invoke(win), this.style.closeButtonFrames);
+                 }
+             });
 
             // These variables with _local at the end of their name are later assigned to readonly values
             // The locals are assigned in lambdas which is illegal for readonly assignment
@@ -139,6 +140,24 @@ namespace Machina.Data
             this.contentGroup = contentGroup_local;
 
             this.rootTransform.FlushBuffers();
+        }
+
+        private void CreateControlButton(LayoutGroup headerGroup, Actor windowRoot, WindowAction controlButtonEvent, IFrameAnimation frames)
+        {
+            headerGroup.AddVerticallyStretchedElement("ControlButton", 32, closeButtonActor =>
+            {
+                new Hoverable(closeButtonActor);
+                var clickable = new Clickable(closeButtonActor);
+                new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, frames);
+                clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
+                clickable.onClick += mouseButton =>
+                {
+                    if (mouseButton == MouseButton.Left)
+                    {
+                        controlButtonEvent.Invoke(this);
+                    }
+                };
+            });
         }
 
         public void AddScrollbar(int maxScrollPos)
