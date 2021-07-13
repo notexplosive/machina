@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public delegate void WindowAction();
+    public delegate void WindowAction(UIWindow window);
 
     public class UIWindow
     {
@@ -72,7 +72,7 @@ namespace Machina.Data
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
              {
                  new Hoverable(headerContentActor);
-                 new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke();
+                 new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke(this);
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
                  new LayoutGroup(headerContentActor, Orientation.Horizontal)
@@ -93,12 +93,12 @@ namespace Machina.Data
                      new Hoverable(closeButtonActor);
                      var clickable = new Clickable(closeButtonActor);
                      new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, this.style.closeButtonFrames);
-                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
+                     clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
                      clickable.onClick += mouseButton =>
                      {
                          if (mouseButton == MouseButton.Left)
                          {
-                             Closed?.Invoke();
+                             Closed?.Invoke(this);
                              windowRoot.Destroy();
                          }
                      };
@@ -124,7 +124,7 @@ namespace Machina.Data
                             canvasActor_local = viewActor;
                             new Canvas(viewActor);
                             new Hoverable(viewActor);
-                            new Clickable(viewActor).ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(); };
+                            new Clickable(viewActor).ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
                             sceneRenderer_local = new SceneRenderer(viewActor);
                         })
                         ;

@@ -23,8 +23,8 @@ namespace Machina.Data
         {
             var window = windowBuilder.Build(creatingScene, this.uiBuilder.style);
             this.windows.Add(window);
-            window.Closed += () => { windows.Remove(window); };
-            window.AnyPartOfWindowClicked += () => { SelectWindow(window); };
+            window.Closed += (win) => { windows.Remove(win); };
+            window.AnyPartOfWindowClicked += (win) => { SelectWindow(win); };
             SelectWindow(window);
 
             return window;
