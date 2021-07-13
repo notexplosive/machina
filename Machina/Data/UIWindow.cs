@@ -45,6 +45,11 @@ namespace Machina.Data
         private readonly UIStyle style;
         private readonly int margin = 10;
 
+        public Scrollbar Scrollbar
+        {
+            get; private set;
+        }
+
         public event WindowAction Closed;
         public event WindowAction AnyPartOfWindowClicked;
 
@@ -130,23 +135,23 @@ namespace Machina.Data
             this.rootTransform.FlushBuffers();
         }
 
-        public Scrollbar AddScrollbar(int maxScrollPos)
+        public void AddScrollbar(int maxScrollPos)
         {
             var scrollbarWidth = 20;
             rootBoundingRect.Width += scrollbarWidth;
-            Scrollbar scrollbar = null;
+            Scrollbar scrollbar_local = null;
             this.contentGroup.AddVerticallyStretchedElement("scrollbar", scrollbarWidth, scrollbarActor =>
             {
                 new Hoverable(scrollbarActor);
                 new NinepatchRenderer(scrollbarActor, this.style.buttonDefault, NinepatchSheet.GenerationDirection.Inner);
 
-                scrollbar = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(), this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
+                scrollbar_local = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(), this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
 
                 // Scrollbar listener could be applied to any actor, but we'll just create one in this case
-                new ScrollbarListener(scene.AddActor("Scrollbar Listener"), scrollbar);
+                new ScrollbarListener(scene.AddActor("Scrollbar Listener"), scrollbar_local);
             });
 
-            return scrollbar;
+            Scrollbar = scrollbar_local;
         }
 
         public BoundingRectResizer BecomeResizable(Point minSize, Point maxSize)

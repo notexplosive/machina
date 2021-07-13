@@ -30,12 +30,13 @@ namespace Machina.Engine.Debugging.Data
 
         public static UIWindow CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
         {
-            var window = windowManager.CreateWindow(sceneLayers.debugScene, new Point(300, 300));
-            var scrollbar = window.AddScrollbar(300);
-            window.BecomeResizable(new Point(300, 300), new Point(1920, 1080));
+            var window = windowManager.CreateWindow(sceneLayers.debugScene, new Point(300, 300), new WindowBuilder()
+                .CanBeScrolled(300)
+                .CanBeResized(new Point(300, 300), new Point(1920, 1080))
+                );
 
             var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
-            new SceneGraphRenderer(sceneGraphActor, sceneLayers, scrollbar);
+            new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
 
             return window;
         }
