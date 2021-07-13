@@ -28,18 +28,16 @@ namespace Machina.Engine.Debugging.Data
             new MoveOnDrag(frameStepActor);
         }
 
-        public static void CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
+        public static UIWindow CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
         {
-            // Scene graph renderer
-            {
-                var sceneGraphContainer = windowManager.CreateWindow(sceneLayers.debugScene, new Point(300, 300));
-                var scrollbar = sceneGraphContainer.AddScrollbar(300);
-                sceneGraphContainer.AddResizer(new Point(300, 300), new Point(1920, 1080));
-                var tool = new InvokableDebugTool(sceneGraphContainer.rootTransform.actor, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
+            var window = windowManager.CreateWindow(sceneLayers.debugScene, new Point(300, 300));
+            var scrollbar = window.AddScrollbar(300);
+            window.AddResizer(new Point(300, 300), new Point(1920, 1080));
 
-                var sceneGraphActor = sceneGraphContainer.scene.AddActor("SceneGraphActor");
-                new SceneGraphRenderer(sceneGraphActor, sceneLayers, scrollbar);
-            }
+            var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
+            new SceneGraphRenderer(sceneGraphActor, sceneLayers, scrollbar);
+
+            return window;
         }
 
         public static Logger BuildOutputConsole(SceneLayers sceneLayers)
