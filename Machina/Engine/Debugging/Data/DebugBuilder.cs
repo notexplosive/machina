@@ -32,7 +32,7 @@ namespace Machina.Engine.Debugging.Data
         {
             var window = windowManager.CreateWindow(sceneLayers.debugScene, new Point(300, 300));
             var scrollbar = window.AddScrollbar(300);
-            window.AddResizer(new Point(300, 300), new Point(1920, 1080));
+            window.BecomeResizable(new Point(300, 300), new Point(1920, 1080));
 
             var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
             new SceneGraphRenderer(sceneGraphActor, sceneLayers, scrollbar);
