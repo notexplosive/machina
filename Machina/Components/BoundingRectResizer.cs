@@ -42,6 +42,7 @@ namespace Machina.Components
         private readonly Hoverable hoverable;
         private readonly BoundingRect boundingRect;
         private readonly XYPair<int> grabHandleThickness;
+        private readonly Func<Rectangle, Rectangle> adjustRenderRectLambda;
         private GrabState grabState;
         private Vector2 currentMousePosition;
         private bool isDraggingSomething;
@@ -49,7 +50,7 @@ namespace Machina.Components
         private readonly Point? maxSize;
         public event EventHandler<ResizeEventArgs> Resized;
 
-        public BoundingRectResizer(Actor actor, XYPair<int> grabHandleThickness, Point? minSize, Point? maxSize) : base(actor)
+        public BoundingRectResizer(Actor actor, XYPair<int> grabHandleThickness, Point? minSize, Point? maxSize, Func<Rectangle, Rectangle> adjustRenderRectLambda = null) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
@@ -57,6 +58,7 @@ namespace Machina.Components
             this.minSize = minSize;
             this.maxSize = maxSize;
             this.grabHandleThickness = grabHandleThickness;
+            this.adjustRenderRectLambda = adjustRenderRectLambda;
 
             if (minSize.HasValue && maxSize.HasValue)
                 ClampRect();
@@ -217,6 +219,7 @@ namespace Machina.Components
                 var posDelta = this.grabState.GetPositionDelta(this.currentMousePosition);
 
                 var rect = new Rectangle((posDelta + this.transform.Position).ToPoint(), this.boundingRect.Rect.Size + sizeDelta.ToPoint());
+                rect = this.adjustRenderRectLambda(rect);
                 spriteBatch.DrawRectangle(rect, Color.White, 1f, transform.Depth - 10);
             }
         }

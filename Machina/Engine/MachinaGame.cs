@@ -355,10 +355,7 @@ namespace Machina.Engine
         protected override void Update(GameTime gameTime)
         {
             pendingCursor = MouseCursor.Arrow;
-
             DoFirstUpdate();
-
-            Mouse.SetCursor(MouseCursor.Arrow);
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)

@@ -150,7 +150,7 @@ namespace Machina.Data
         public BoundingRectResizer AddResizer(Point minSize, Point maxSize)
         {
             new Hoverable(rootTransform.actor);
-            return new BoundingRectResizer(rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize, maxSize);
+            return new BoundingRectResizer(rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize, maxSize, (rect) => { rect.Y += this.margin; rect.Height -= this.margin; return rect; });
         }
 
 
