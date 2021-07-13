@@ -16,6 +16,8 @@ namespace Machina.Data
         private bool canBeMinimized;
         private WindowAction onMaximize;
         private bool canBeMaximized;
+        private bool isScrollable;
+        private int maxScrollPos;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
 
 
@@ -59,6 +61,13 @@ namespace Machina.Data
         public WindowBuilder AddSceneLayer(Action<Scene> sceneCallback)
         {
             this.perLayerSceneFunctions.Add(sceneCallback);
+            return this;
+        }
+
+        public WindowBuilder IsScrollable(int maxScrollPos)
+        {
+            this.isScrollable = true;
+            this.maxScrollPos = maxScrollPos;
             return this;
         }
     }
