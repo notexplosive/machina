@@ -7,6 +7,8 @@ using System.Text;
 
 namespace Machina.Data
 {
+    public delegate void WindowAction();
+
     public class UIWindow
     {
         /*
@@ -43,8 +45,8 @@ namespace Machina.Data
         private readonly UIStyle style;
         private readonly int margin = 10;
 
-        public event Action Closed;
-        public event Action AnyPartOfWindowClicked;
+        public event WindowAction Closed;
+        public event WindowAction AnyPartOfWindowClicked;
 
         public UIWindow(Scene managerScene, Point contentSize, UIStyle style)
         {
