@@ -169,7 +169,7 @@ namespace Machina.Components
 
         public LayoutGroup HorizontallyStretchedSpacer(int size = 0)
         {
-            var spacer = transform.AddActorAsChild("horizontal-spacer");
+            var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchHorizontally();
 
@@ -178,7 +178,7 @@ namespace Machina.Components
 
         public LayoutGroup VerticallyStretchedSpacer(int size = 0)
         {
-            var spacer = transform.AddActorAsChild("vertical-spacer");
+            var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchVertically();
 
@@ -187,7 +187,7 @@ namespace Machina.Components
 
         public LayoutGroup PixelSpacer(int size)
         {
-            var spacer = transform.AddActorAsChild("spacer");
+            var spacer = transform.AddActorAsChild("ps" + size);
             new BoundingRect(spacer, new Point(size, size));
             new LayoutElement(spacer);
 
@@ -196,7 +196,7 @@ namespace Machina.Components
 
         public LayoutGroup PixelSpacer(int width, int height)
         {
-            var spacer = transform.AddActorAsChild("spacer");
+            var spacer = transform.AddActorAsChild("ps" + width + "x" + height);
             new BoundingRect(spacer, new Point(width, height));
             new LayoutElement(spacer);
 

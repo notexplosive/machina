@@ -36,18 +36,6 @@ namespace Machina.Engine
         /// Path to users AppData folder (or platform equivalent)
         /// </summary>
         public readonly string appDataPath;
-        /// <summary>
-        /// Path of the "Content" folder for the built Exectuable
-        /// </summary>
-        public readonly string localContentPath;
-        /// <summary>
-        /// (brittle) Path of the "Content" folder in the dev environment
-        /// </summary>
-        public readonly string devContentPath;
-        /// <summary>
-        /// (brittle) Path to the screenshots folder in the dev environment
-        /// </summary>
-        public readonly string devScreenshotPath;
 
         protected readonly Point startingWindowSize;
         private SceneLayers sceneLayers;
@@ -66,6 +54,11 @@ namespace Machina.Engine
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
         private static MouseCursor pendingCursor;
+
+        // TODO: consider moving hasDoneFirstUpdate and hasDoneFirstDraw to SceneLayers (and remove hasLoaded)
+        private bool hasDoneFirstUpdate;
+        private bool hasDoneFirstDraw;
+        private bool hasLoaded;
 
         public static SeededRandom Random
         {
@@ -138,22 +131,17 @@ namespace Machina.Engine
         {
             set
             {
-                if (Graphics.IsFullScreen != value)
+                if (value)
                 {
-                    if (value)
-                    {
-                        Graphics.PreferredBackBufferWidth = MachinaGame.Current.GraphicsDevice.DisplayMode.Width;
-                        Graphics.PreferredBackBufferHeight = MachinaGame.Current.GraphicsDevice.DisplayMode.Height;
-                        Graphics.IsFullScreen = true;
-                    }
-                    else
-                    {
-                        Graphics.PreferredBackBufferWidth = Current.startingWindowSize.X;
-                        Graphics.PreferredBackBufferHeight = Current.startingWindowSize.Y;
-                        Graphics.IsFullScreen = false;
-                    }
-                    Graphics.ApplyChanges();
+                    SetWindowSize(new Point(MachinaGame.Current.GraphicsDevice.DisplayMode.Width, MachinaGame.Current.GraphicsDevice.DisplayMode.Height));
+                    Graphics.IsFullScreen = true;
                 }
+                else
+                {
+                    SetWindowSize(Current.startingWindowSize);
+                    Graphics.IsFullScreen = false;
+                }
+                Graphics.ApplyChanges();
             }
 
             get => Graphics.IsFullScreen;
@@ -165,25 +153,25 @@ namespace Machina.Engine
             set;
         } = SamplerState.PointClamp;
 
-        private readonly KeyTracker keyTracker;
-        private readonly MouseTracker mouseTracker;
+        private readonly KeyTracker keyTracker = new KeyTracker();
+        private readonly MouseTracker mouseTracker = new MouseTracker();
+        private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
+            Current = this;
+
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
 
-
+            // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
-            this.localContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
-            this.devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
-            this.devScreenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
+
             this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
 
             Window.Title = gameTitle;
-            Current = this;
 
             IFrameStep frameStep;
 #if DEBUG
@@ -203,20 +191,22 @@ namespace Machina.Engine
 
             Assets = new AssetLibrary(this);
             this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
-            Window.TextInput += this.sceneLayers.AddPendingTextInput;
 
-            this.keyTracker = new KeyTracker();
-            this.mouseTracker = new MouseTracker();
+            if (GamePlatform.IsDesktop)
+            {
+                Window.TextInput += this.sceneLayers.AddPendingTextInput;
+            }
+
             Random = new SeededRandom();
         }
 
-        protected void SetWindowSize(Point windowSize)
+        protected static void SetWindowSize(Point windowSize)
         {
             Print("Window size changed to", windowSize);
             Graphics.PreferredBackBufferWidth = windowSize.X;
             Graphics.PreferredBackBufferHeight = windowSize.Y;
             Graphics.ApplyChanges();
-            CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
+            Current.CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
         }
 
         protected override void Initialize()
@@ -282,12 +272,10 @@ namespace Machina.Engine
 
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
-
 #else
             DebugLevel = DebugLevel.Off;
 #endif
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
-
 
             CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
             {
@@ -300,6 +288,12 @@ namespace Machina.Engine
                 demoName = arg;
             });
 
+            var demoSpeed = 1;
+            CommandLineArgs.RegisterValueArg("demospeed", arg =>
+            {
+                demoSpeed = int.Parse(arg);
+            });
+
             CommandLineArgs.RegisterValueArg("demo", arg =>
             {
                 switch (arg)
@@ -308,10 +302,10 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName);
+                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
@@ -326,21 +320,21 @@ namespace Machina.Engine
                 shouldSkipSnapshot = true;
             });
 
-
-
 #if DEBUG
             LoadGame();
 #else
             PlayIntroAndLoadGame();
 #endif
 
-            new SnapshotTaker(debugActor, shouldSkipSnapshot);
+            if (GamePlatform.IsDesktop)
+                new SnapshotTaker(debugActor, shouldSkipSnapshot);
         }
 
         private void LoadGame()
         {
             CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
+            this.hasLoaded = true;
             CommandLineArgs.ExecuteArgs();
         }
 
@@ -362,17 +356,31 @@ namespace Machina.Engine
         {
             pendingCursor = MouseCursor.Arrow;
 
-            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            DoFirstUpdate();
+
+            Mouse.SetCursor(MouseCursor.Arrow);
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                sceneLayers.Update(dt, Matrix.Identity, frameState);
+                for (int i = 0; i < DemoPlayback.playbackSpeed; i++)
+                {
+                    var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                    sceneLayers.Update(dt, Matrix.Identity, frameState);
+                }
             }
             else
             {
                 var inputState = InputState.RawHumanInput;
-                var humanInputFrameState = new InputFrameState(keyTracker.Calculate(inputState.keyboardState, inputState.gamepadState), mouseTracker.Calculate(inputState.mouseState));
+
+                MouseFrameState mouseFrameState;
+
+                if (GamePlatform.IsMobile)
+                    mouseFrameState = this.touchTracker.CalculateFrameState(inputState.touches);
+                else
+                    mouseFrameState = this.mouseTracker.CalculateFrameState(inputState.mouseState);
+
+                var humanInputFrameState = new InputFrameState(keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState), mouseFrameState);
                 sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
             }
 
@@ -380,8 +388,27 @@ namespace Machina.Engine
             base.Update(gameTime);
         }
 
+        private void DoFirstUpdate()
+        {
+            if (!this.hasDoneFirstUpdate && this.hasLoaded)
+            {
+                this.hasDoneFirstUpdate = true;
+
+                if (GamePlatform.IsMobile)
+                {
+                    Fullscreen = true;
+                }
+            }
+        }
+
         protected override void Draw(GameTime gameTime)
         {
+            if (!this.hasDoneFirstDraw && this.hasLoaded)
+            {
+                this.hasDoneFirstDraw = true;
+                OnFirstPreDraw(spriteBatch);
+            }
+
             sceneLayers.PreDraw(spriteBatch);
             CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
             GraphicsDevice.Clear(sceneLayers.BackgroundColor);
@@ -391,6 +418,8 @@ namespace Machina.Engine
             sceneLayers.DrawDebugScene(spriteBatch);
             base.Draw(gameTime);
         }
+
+        protected abstract void OnFirstPreDraw(SpriteBatch spriteBatch);
 
         private void OnResize(object sender, EventArgs e)
         {
@@ -412,7 +441,7 @@ namespace Machina.Engine
             var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
             var desiredWidth = 1920 / 4;
-            float ratio = (float) windowSize.X / desiredWidth;
+            float ratio = (float)windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());

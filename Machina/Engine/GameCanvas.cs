@@ -58,7 +58,8 @@ namespace Machina.Engine
             get
             {
                 var canvasSize = resizeStrategy.GetCanvasSize(WindowSize, ViewportSize);
-                return new Rectangle((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2, canvasSize.X, canvasSize.Y);
+                var canvasPos = new Point((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2);
+                return new Rectangle(canvasPos.X, canvasPos.Y, canvasSize.X, canvasSize.Y);
             }
         }
 

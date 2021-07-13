@@ -31,81 +31,56 @@ namespace Machina.Engine
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
-        private readonly string contentPath;
 
         public AssetLibrary(MachinaGame game)
         {
             this.content = game.Content;
-            this.contentPath = game.localContentPath;
         }
-        private List<string> GetFilesAtContentDirectory(string contentFolder, string extension = "*")
-        {
-            var result = new List<string>();
 
-            var path = Path.Join(this.contentPath, contentFolder);
-            DirectoryInfo dir = new DirectoryInfo(path);
-            if (!dir.Exists)
-            {
-                // You need to add MachinaAssets as a project dependency to your game
-                throw new DirectoryNotFoundException("Content folder missing, most likely missing MachinaAssets\ntried:" + path);
-            }
-
-            FileInfo[] files = dir.GetFiles("*." + extension);
-            foreach (FileInfo file in files)
-            {
-                result.Add(Path.GetFileNameWithoutExtension(file.FullName));
-            }
-
-            return result;
-        }
 
         public void LoadAllContent()
         {
-            foreach (var imageName in GetFilesAtContentDirectory("images"))
+            foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
-                LoadTexture("images/" + imageName);
+                LoadTexture("images/" + Path.GetFileNameWithoutExtension(imageName));
             }
 
-            foreach (var spriteFont in GetFilesAtContentDirectory("fonts", "xnb"))
+            foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("fonts", "xnb"))
             {
-                LoadSpriteFont("fonts/" + spriteFont);
+                LoadSpriteFont("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
 
-            foreach (var spriteFont in GetFilesAtContentDirectory("sounds", "xnb"))
+            foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
             {
-                LoadSoundEffect("sounds/" + spriteFont);
+                LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
         }
 
         private void LoadTexture(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
-
+            var name = Path.GetFileName(fullName);
             var texture = this.content.Load<Texture2D>(fullName);
             textures.Add(name, texture);
-            Console.WriteLine(string.Format("Loaded Texture: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded Texture: {0} {1}", name, textures[name].GetHashCode()));
         }
 
         private void LoadSpriteFont(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
+            var name = Path.GetFileName(fullName);
 
             var spriteFont = this.content.Load<SpriteFont>(fullName);
             spriteFonts.Add(name, spriteFont);
-            Console.WriteLine(string.Format("Loaded SpriteFont: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded SpriteFont: {0}", name));
         }
 
         private void LoadSoundEffect(string fullName)
         {
-            var splitName = fullName.Split('/');
-            var name = splitName[^1];
+            var name = Path.GetFileName(fullName);
 
             var soundEffect = this.content.Load<SoundEffect>(fullName);
             soundEffects.Add(name, soundEffect);
             soundEffectInstances.Add(name, soundEffect.CreateInstance());
-            Console.WriteLine(string.Format("Loaded SoundEffect: {0}", fullName));
+            Console.WriteLine(string.Format("Loaded SoundEffect: {0}", name));
         }
 
         public void UnloadAssets()
@@ -170,6 +145,7 @@ namespace Machina.Engine
         {
             Debug.Assert(!assets.ContainsKey(name), "Duplicate MachinaAsset: `" + name + "`");
             assets[name] = asset;
+            Console.WriteLine("Added Machina Asset {0}", name);
             return asset;
         }
     }

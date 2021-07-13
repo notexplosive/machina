@@ -15,7 +15,7 @@ namespace Machina.Engine
         private KeyboardState oldKeyState;
         private GamePadState oldGamePadState;
 
-        public KeyboardFrameState Calculate(KeyboardState currentState, GamePadState currentGamePadState)
+        public KeyboardFrameState CalculateFrameState(KeyboardState currentState, GamePadState currentGamePadState)
         {
             var currentPressed = currentState.GetPressedKeys();
             var oldPressed = this.oldKeyState.GetPressedKeys();

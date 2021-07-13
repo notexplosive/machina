@@ -200,6 +200,30 @@ namespace Machina.Engine
 
             return null;
         }
+
+        public T GetFirstComponentInProgeny<T>() where T : BaseComponent
+        {
+            for (int i = 0; i < this.transform.ChildCount; i++)
+            {
+                var child = this.transform.ChildAt(i);
+                var comp = child.GetComponent<T>();
+                if (comp != null)
+                {
+                    return comp;
+                }
+
+                if (child.transform.ChildCount > 0)
+                {
+                    var comp2 = child.GetFirstComponentInProgeny<T>();
+                    if (comp2 != null)
+                    {
+                        return comp2;
+                    }
+                }
+            }
+
+            return null;
+        }
     }
 
 

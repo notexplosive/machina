@@ -208,7 +208,7 @@ namespace Machina.Components
 
         public int ChildCount => iterables.Count;
 
-        public void SetParent(Actor newParent) // TODO: this should take a Transform not an Actor
+        public void SetParent(Actor newParent)
         {
             if (newParent == this.actor)
             {

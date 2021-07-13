@@ -304,7 +304,7 @@ namespace Machina.Components
         public bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
-            return currentY + this.font.LineSpacing * 2 < this.totalAvailableRect.Height;
+            return currentY + this.font.LineSpacing * 2 <= this.totalAvailableRect.Height;
         }
 
         public void Elide()

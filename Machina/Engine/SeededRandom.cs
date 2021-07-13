@@ -13,24 +13,24 @@ namespace Machina.Engine
             get => this.seed_impl;
             set
             {
-                this.CleanRandom = new Random(value);
+                Clean = new Random(value);
                 MachinaGame.Print("seed set: ", value);
                 this.seed_impl = value;
             }
         }
-        public Random CleanRandom
+        public Random Clean
         {
             get; private set;
         }
-        public Random DirtyRandom
+        public Random Dirty
         {
             get;
         }
 
         public SeededRandom()
         {
-            this.Seed = GenerateSeed();
-            this.DirtyRandom = new Random();
+            Seed = GenerateSeed();
+            Dirty = new Random();
         }
 
         public static int GenerateSeed()
@@ -62,6 +62,29 @@ namespace Machina.Engine
                 }
 
                 Seed = total;
+            }
+        }
+
+        public void CleanShuffle<T>(IList<T> list)
+        {
+            Shuffle(list, Clean);
+        }
+
+        public void DirtyShuffle<T>(IList<T> list)
+        {
+            Shuffle(list, Dirty);
+        }
+
+        private void Shuffle<T>(IList<T> list, Random random)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
             }
         }
     }

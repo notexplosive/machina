@@ -20,7 +20,7 @@ namespace Machina.Engine
         private MouseState oldState;
         private bool firstFrame = true;
 
-        public MouseFrameState Calculate(MouseState currentState)
+        public MouseFrameState CalculateFrameState(MouseState currentState)
         {
             var oldMouseButtons = new ButtonState[3] {
                 this.oldState.LeftButton,
@@ -33,9 +33,6 @@ namespace Machina.Engine
                 currentState.MiddleButton,
                 currentState.RightButton,
             };
-
-            var pressedThisFrameList = new List<MouseButton>();
-            var releasedThisFrameList = new List<MouseButton>();
 
             bool leftPressed = false;
             bool middlePressed = false;
