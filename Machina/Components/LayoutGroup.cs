@@ -173,6 +173,7 @@ namespace Machina.Components
             new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchHorizontally();
 
+            transform.FlushBuffers();
             return this;
         }
 
@@ -182,6 +183,7 @@ namespace Machina.Components
             new BoundingRect(spacer, new Point(size));
             new LayoutElement(spacer).StretchVertically();
 
+            transform.FlushBuffers();
             return this;
         }
 
@@ -191,6 +193,7 @@ namespace Machina.Components
             new BoundingRect(spacer, new Point(size, size));
             new LayoutElement(spacer);
 
+            transform.FlushBuffers();
             return this;
         }
 
@@ -200,6 +203,7 @@ namespace Machina.Components
             new BoundingRect(spacer, new Point(width, height));
             new LayoutElement(spacer);
 
+            transform.FlushBuffers();
             return this;
         }
 
@@ -211,6 +215,7 @@ namespace Machina.Components
             var element = new LayoutElement(elementActor);
             onPostCreate?.Invoke(elementActor);
 
+            transform.FlushBuffers();
             return element;
         }
 
