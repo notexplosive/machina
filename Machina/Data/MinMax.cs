@@ -26,5 +26,10 @@ namespace Machina.Data
         {
             return value.CompareTo(min) >= 0 && value.CompareTo(max) <= 0;
         }
+
+        public override string ToString()
+        {
+            return this.min + " - " + this.max;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace Machina.Components
 
                     DrawChildren(targetActor, 1, DrawString);
 
-                    foreach (var component in targetActor.GetComponents<BaseComponent>())
+                    // foreach (var component in targetActor.GetComponentsUnsafe<IComponent>())
                     {
                         // DrawString(component.GetType().Name.ToString(), 2);
                     }

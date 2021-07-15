@@ -83,7 +83,7 @@ namespace Machina.Components
                 var isCursorWithinThumb = thumbRect.Contains(currentPosition) && this.hoverable.IsHovered;
 
                 // Grab the thumb and drag (or release)
-                if ((wasPressed && isCursorWithinThumb))
+                if (wasPressed && isCursorWithinThumb)
                 {
                     this.isGrabbed = true;
                     this.mouseYOnGrab = currentPosition.Y;

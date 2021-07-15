@@ -74,7 +74,7 @@ namespace Machina.Data
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
              {
                  new Hoverable(headerContentActor);
-                 new Draggable(headerContentActor).DragStart += vec => AnyPartOfWindowClicked?.Invoke(this);
+                 new Draggable(headerContentActor).DragStart += vec => OnAnyPartOfWindowClicked(MouseButton.Left);
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
                  var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal)
@@ -138,8 +138,6 @@ namespace Machina.Data
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
             this.contentGroup = contentGroup_local;
-
-            this.rootTransform.FlushBuffers();
         }
 
         private void CreateControlButton(LayoutGroup headerGroup, Actor windowRoot, WindowAction controlButtonEvent, IFrameAnimation frames)

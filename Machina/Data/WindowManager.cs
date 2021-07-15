@@ -55,7 +55,8 @@ namespace Machina.Data
             for (int i = 0; i < this.windows.Count; i++)
             {
                 var window = this.windows[i];
-                window.rootTransform.Depth = this.baseDepth + new Depth(i * 10);
+                var newDepth = this.baseDepth + new Depth(i * 10);
+                window.rootTransform.Depth = newDepth;
             }
         }
     }

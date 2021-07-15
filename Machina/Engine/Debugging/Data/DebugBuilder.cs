@@ -101,10 +101,11 @@ namespace Machina.Engine.Debugging.Data
 
         public static UIWindow CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
         {
-            var window = windowManager.CreateWindow(sceneLayers.debugScene, new WindowBuilder(new Point(300, 300))
-                .CanBeScrolled(300)
-                .CanBeResized(new Point(300, 300), new Point(1920, 1080))
-                .Title("Scene Graph")
+            var window = windowManager.CreateWindow(sceneLayers.debugScene,
+                new WindowBuilder(new Point(300, 300))
+                    .CanBeScrolled(900)
+                    .CanBeResized(new Point(300, 300), new Point(1920, 1080))
+                    .Title("Scene Graph")
                 );
 
             var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
