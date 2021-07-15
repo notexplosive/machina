@@ -189,7 +189,9 @@ namespace Machina.Engine
         public readonly IFrameAnimation sliderThumbFrames;
         public readonly IFrameAnimation radioFrames = new LinearFrameAnimation(0, 3);
         public readonly IFrameAnimation dropdownFrames = new LinearFrameAnimation(0, 3);
-        public readonly IFrameAnimation closeButtonFrames = new LinearFrameAnimation(21, 23);
+        public readonly IFrameAnimation closeButtonFrames = new LinearFrameAnimation(21, 3);
+        public readonly IFrameAnimation maximizeButtonFrames = new LinearFrameAnimation(24, 3);
+        public readonly IFrameAnimation minimizeButtonFrames = new LinearFrameAnimation(27, 3);
         public readonly NinepatchSheet buttonDefault;
         public readonly NinepatchSheet buttonHover;
         public readonly NinepatchSheet buttonPress;

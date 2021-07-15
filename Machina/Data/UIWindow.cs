@@ -93,12 +93,12 @@ namespace Machina.Data
 
                  if (canbeMinimized)
                  {
-                     CreateControlButton(headerGroup, windowRoot, (win) => Minimized?.Invoke(win), this.style.closeButtonFrames);
+                     CreateControlButton(headerGroup, windowRoot, (win) => Minimized?.Invoke(win), this.style.minimizeButtonFrames);
                  }
 
                  if (canBeMaximized)
                  {
-                     CreateControlButton(headerGroup, windowRoot, (win) => Maximized?.Invoke(win), this.style.closeButtonFrames);
+                     CreateControlButton(headerGroup, windowRoot, (win) => Maximized?.Invoke(win), this.style.maximizeButtonFrames);
                  }
 
                  if (canBeClosed)
