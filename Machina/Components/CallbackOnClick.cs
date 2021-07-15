@@ -16,12 +16,12 @@ namespace Machina.Components
             this.callback = callback;
             this.button = button;
             this.clickable = RequireComponent<Clickable>();
-            clickable.onClick += FireCallback;
+            clickable.OnClick += FireCallback;
         }
 
         public override void OnDeleteFinished()
         {
-            clickable.onClick -= FireCallback;
+            clickable.OnClick -= FireCallback;
         }
 
         public void FireCallback(MouseButton button)

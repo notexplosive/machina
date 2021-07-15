@@ -6,10 +6,22 @@ using System.Collections.Generic;
 
 namespace Machina.Components
 {
+    /// <summary>
+    /// ClickAction means an object was clicked (mouse down)
+    /// </summary>
+    /// <param name="button"></param>
+    public delegate void ClickAction(MouseButton button);
+
     public class Clickable : BaseComponent
     {
-        public event Action<MouseButton> onClick;
-        public event Action ClickStarted;
+        /// <summary>
+        /// Mouse was down, then up on the same object
+        /// </summary>
+        public event ClickAction OnClick;
+        /// <summary>
+        /// Mouse was down on an object (not a complete Click)
+        /// </summary>
+        public event ClickAction ClickStarted;
         private bool leftButtonDown;
         private bool rightButtonDown;
         private bool middleButtonDown;
@@ -39,7 +51,7 @@ namespace Machina.Components
             {
                 if (buttonState == ButtonState.Pressed)
                 {
-                    ClickStarted?.Invoke();
+                    ClickStarted?.Invoke(button);
                     if (button == MouseButton.Left)
                     {
                         leftButtonDown = true;
@@ -59,17 +71,17 @@ namespace Machina.Components
                 {
                     if (leftButtonDown && button == MouseButton.Left)
                     {
-                        onClick?.Invoke(MouseButton.Left);
+                        OnClick?.Invoke(MouseButton.Left);
                     }
 
                     if (rightButtonDown && button == MouseButton.Right)
                     {
-                        onClick?.Invoke(MouseButton.Right);
+                        OnClick?.Invoke(MouseButton.Right);
                     }
 
                     if (middleButtonDown && button == MouseButton.Middle)
                     {
-                        onClick?.Invoke(MouseButton.Middle);
+                        OnClick?.Invoke(MouseButton.Middle);
                     }
                 }
             }

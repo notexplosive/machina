@@ -28,7 +28,7 @@ namespace Machina.Components
         public RadioButtonState(Actor actor, RadioButtonGroup radioButtonGroup, bool startFilled) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
-            clickable.onClick += OnClick;
+            clickable.OnClick += OnClick;
             this.group = radioButtonGroup;
 
             this.startFilled = startFilled;
@@ -44,7 +44,7 @@ namespace Machina.Components
 
         public override void OnDeleteFinished()
         {
-            clickable.onClick -= OnClick;
+            clickable.OnClick -= OnClick;
         }
 
         public void OnStateChange(bool newState)

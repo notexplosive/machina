@@ -31,7 +31,7 @@ namespace Machina.Components
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.clickable = clickable;
-            this.clickable.onClick += OnClick;
+            this.clickable.OnClick += OnClick;
             this.cursorColor = cursorColor;
             this.highlightColor = highlightColor;
         }
@@ -244,7 +244,7 @@ namespace Machina.Components
 
         public override void OnDeleteFinished()
         {
-            this.clickable.onClick -= OnClick;
+            this.clickable.OnClick -= OnClick;
         }
 
         struct TextCursor

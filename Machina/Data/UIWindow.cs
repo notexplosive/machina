@@ -125,7 +125,7 @@ namespace Machina.Data
                             canvasActor_local = viewActor;
                             new Canvas(viewActor);
                             new Hoverable(viewActor);
-                            new Clickable(viewActor).ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
+                            new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
                             sceneRenderer_local = new SceneRenderer(viewActor);
                         })
                         ;
@@ -149,8 +149,8 @@ namespace Machina.Data
                 new Hoverable(closeButtonActor);
                 var clickable = new Clickable(closeButtonActor);
                 new ButtonSpriteRenderer(closeButtonActor, this.style.uiSpriteSheet, frames);
-                clickable.ClickStarted += () => { AnyPartOfWindowClicked?.Invoke(this); };
-                clickable.onClick += mouseButton =>
+                clickable.ClickStarted += OnAnyPartOfWindowClicked;
+                clickable.OnClick += mouseButton =>
                 {
                     if (mouseButton == MouseButton.Left)
                     {
@@ -158,6 +158,12 @@ namespace Machina.Data
                     }
                 };
             });
+        }
+
+        public void OnAnyPartOfWindowClicked(MouseButton mouseButton)
+        {
+            // mouseButton arg is ignored on purpose
+            AnyPartOfWindowClicked?.Invoke(this);
         }
 
         public void AddScrollbar(int maxScrollPos)

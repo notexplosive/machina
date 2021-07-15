@@ -25,7 +25,7 @@ namespace Machina.Components
         public DropdownTrigger(Actor actor, DropdownContent content, SpriteSheet spriteSheet, IFrameAnimation frames, NinepatchSheet backgroundSheet) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
-            this.clickable.onClick += OnClick;
+            this.clickable.OnClick += OnClick;
             this.content = content;
             this.content.onOptionSelect += OnOptionSelected;
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
@@ -72,7 +72,7 @@ namespace Machina.Components
 
         public override void OnDeleteFinished()
         {
-            this.clickable.onClick -= OnClick;
+            this.clickable.OnClick -= OnClick;
             this.content.onOptionSelect -= OnOptionSelected;
         }
 

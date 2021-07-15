@@ -28,6 +28,77 @@ namespace Machina.Engine.Debugging.Data
             new MoveOnDrag(frameStepActor);
         }
 
+        public static void CreateDebugDock(SceneLayers sceneLayers)
+        {
+            var rowHeight = 90;
+            var iconWidth = 90;
+            int titleHeight = 32;
+            var dockMargin = 5;
+            int iconPadding = 5;
+
+            var dockActor = sceneLayers.debugScene.AddActor("Debug Dock");
+            new InvokableDebugTool(dockActor, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
+            new BoundingRect(dockActor, new Point(iconWidth * 3 + iconPadding * 2 + dockMargin * 2, rowHeight * 2 + titleHeight + dockMargin * 2));
+            new Hoverable(dockActor);
+            new Draggable(dockActor);
+            new MoveOnDrag(dockActor);
+            new BoundingRectFill(dockActor, new Color(Color.Black, 0.5f));
+            var group = new LayoutGroup(dockActor, Orientation.Vertical)
+                .AddHorizontallyStretchedElement("Title", titleHeight, titleActor =>
+                {
+                    new BoundedTextRenderer(titleActor, "Machina Debug Dock", MachinaGame.defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
+                })
+                .SetMargin(dockMargin)
+            ;
+
+            LayoutGroup AddRow()
+            {
+                LayoutGroup row = null;
+                group.AddHorizontallyStretchedElement("Row", rowHeight, rowActor =>
+                {
+                    row = new LayoutGroup(rowActor, Orientation.Horizontal)
+                        .SetPaddingBetweenElements(iconPadding);
+                });
+                return row;
+            }
+
+            void AddIcon(LayoutGroup row, string iconName, Action callBack)
+            {
+                row.AddVerticallyStretchedElement("IconRootActor", iconWidth, iconActor =>
+                 {
+                     new Hoverable(iconActor);
+                     new Clickable(iconActor);
+                     var doubleClickable = new DoubleClickable(iconActor);
+                     doubleClickable.DoubleClick += (button) =>
+                     {
+                         if (button == MouseButton.Left)
+                         {
+                             callBack?.Invoke();
+                         }
+                     };
+
+                     new DebugIconHoverRenderer(iconActor);
+                     new LayoutGroup(iconActor, Orientation.Vertical)
+                        .SetMargin(5)
+                        .AddHorizontallyStretchedElement("IconImage", 50, iconImageActor =>
+                        {
+                            new BoundingRectFill(iconImageActor, Color.Orange);
+                        })
+                        .AddBothStretchedElement("IconText", iconTextActor =>
+                        {
+                            new BoundedTextRenderer(iconTextActor, iconName, MachinaGame.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center, VerticalAlignment.Top);
+                        });
+                 });
+            }
+
+            var windowManager = new WindowManager(MachinaGame.defaultStyle, dockActor.transform.Depth - 100);
+
+            var row = AddRow();
+            AddIcon(row, "Scene Graph Renderer", () => CreateSceneGraphRenderer(sceneLayers, windowManager));
+            AddIcon(row, "Console Window", null);
+            AddIcon(row, "Asset Viewer", null);
+        }
+
         public static UIWindow CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
         {
             var window = windowManager.CreateWindow(sceneLayers.debugScene, new WindowBuilder(new Point(300, 300))

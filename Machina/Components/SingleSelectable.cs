@@ -15,7 +15,7 @@ namespace Machina.Components
         public SingleSelectable(Actor actor, SingleSelector selector) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
-            this.clickable.onClick += OnClick;
+            this.clickable.OnClick += OnClick;
             this.selector = selector;
 
             onSelect += () => { };
@@ -24,7 +24,7 @@ namespace Machina.Components
 
         public override void OnDeleteFinished()
         {
-            this.clickable.onClick -= OnClick;
+            this.clickable.OnClick -= OnClick;
         }
 
         private void OnClick(MouseButton obj)

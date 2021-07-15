@@ -17,13 +17,13 @@ namespace Machina.Components
         public CheckboxState(Actor actor, bool startingValue = false) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
-            clickable.onClick += OnClick;
+            clickable.OnClick += OnClick;
             this.IsChecked = startingValue;
         }
 
         public override void OnDeleteFinished()
         {
-            clickable.onClick -= OnClick;
+            clickable.OnClick -= OnClick;
         }
 
         public void OnClick(MouseButton mouseButton)

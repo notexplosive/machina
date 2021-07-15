@@ -256,19 +256,9 @@ namespace Machina.Engine
 #if DEBUG
             var debugActor = sceneLayers.debugScene.AddActor("DemoActor");
 
-            var windowManager = new WindowManager(defaultStyle, Depth.Middle);
             DebugBuilder.CreateFramerateCounter(sceneLayers);
             DebugBuilder.CreateFramestep(sceneLayers);
-
-            var debugAdHoc = new AdHoc(debugActor);
-            debugAdHoc.onKey += (Keys key, ButtonState state, ModifierKeys modifiers) =>
-            {
-                if (state == ButtonState.Pressed)
-                {
-                    if (key == Keys.Tab && modifiers.Control)
-                        DebugBuilder.CreateSceneGraphRenderer(sceneLayers, windowManager);
-                }
-            };
+            DebugBuilder.CreateDebugDock(sceneLayers);
 
             DebugLevel = DebugLevel.Passive;
             Print("Debug build detected");
