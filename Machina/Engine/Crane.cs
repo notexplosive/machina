@@ -1,4 +1,5 @@
 ﻿using Machina.Data;
+using Machina.Internals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -150,7 +151,6 @@ namespace Machina.Engine
 
         private void FlushRemovedAndDeletedIterables()
         {
-
             while (this.iterablesDeletedThisFrame.Count > 0)
             {
                 var iterable = iterablesDeletedThisFrame[0];
@@ -177,116 +177,113 @@ namespace Machina.Engine
 
         public virtual void Update(float dt)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.Update(dt);
-            }
-
+            });
             OnPostUpdate();
         }
 
         public void FlushBuffers()
         {
             FlushCreatedIterables();
-
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.FlushBuffers();
-            }
-
+            });
             FlushRemovedAndDeletedIterables();
         }
 
         public virtual void OnPostUpdate()
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnPostUpdate();
-            }
+            });
         }
 
         public virtual void Start()
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.Start();
-            }
+            });
         }
 
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.PreDraw(spriteBatch);
-            }
+            });
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.Draw(spriteBatch);
-            }
+            });
         }
         public virtual void DebugDraw(SpriteBatch spriteBatch)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.DebugDraw(spriteBatch);
-            }
+            });
         }
         public virtual void OnScroll(int scrollDelta)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnScroll(scrollDelta);
-            }
+            });
         }
 
         public virtual void OnDeleteFinished()
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnDeleteFinished();
-            }
+            });
         }
 
         public virtual void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            foreach (var iterable in iterables)
-            {
-                iterable.OnKey(key, state, modifiers);
-            }
+            Functions.ForEach(this.iterables, (iterable) =>
+             {
+                 iterable.OnKey(key, state, modifiers);
+             });
         }
 
         public virtual void OnTextInput(TextInputEventArgs textInputEventArgs)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnTextInput(textInputEventArgs);
-            }
+            });
         }
 
         public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta);
-            }
+            });
         }
         public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnMouseButton(button, currentPosition, state);
-            }
+            });
         }
 
         public void OnDeleteImmediate()
         {
-            foreach (var iterable in iterables)
+            Functions.ForEach(this.iterables, (iterable) =>
             {
                 iterable.OnDeleteImmediate();
-            }
+            });
         }
     }
 
