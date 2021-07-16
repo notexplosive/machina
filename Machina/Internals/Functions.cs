@@ -5,9 +5,18 @@ using System.Text;
 
 namespace Machina.Internals
 {
-    public static class ForEach
+    public static class Functions
     {
-        public static void Each<T>(List<T> items, Action<T> forEachAction)
+        /// <summary>
+        /// Equivalent to foreach(var item in items) { forEachAction(item); }
+        /// With a key difference: The collection CAN be modified during the loop.
+        /// If an element is added during the loop after the current index, it will be iterated upon.
+        /// If an element is added during the loop before the current index, it will not be iterated upon.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="items"></param>
+        /// <param name="forEachAction"></param>
+        public static void ForEach<T>(IList<T> items, Action<T> forEachAction)
         {
             int whileLoopIterationCount = 0;
             HashSet<T> visited = new HashSet<T>();
