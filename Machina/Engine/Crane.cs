@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Engine
@@ -135,33 +136,43 @@ namespace Machina.Engine
 
         private void FlushCreatedIterables()
         {
-            foreach (var iterable in iterablesCreatedThisFrame)
+            while (this.iterablesCreatedThisFrame.Count > 0)
             {
+                var iterable = this.iterablesCreatedThisFrame[0];
+                this.iterablesCreatedThisFrame.RemoveAt(0);
+
                 this.iterables.Add(iterable);
                 iterable.Start();
             }
 
-            iterablesCreatedThisFrame.Clear();
+            Debug.Assert(this.iterablesCreatedThisFrame.Count == 0);
         }
 
         private void FlushRemovedAndDeletedIterables()
         {
-            foreach (var iterable in iterablesDeletedThisFrame)
+
+            while (this.iterablesDeletedThisFrame.Count > 0)
             {
-                if (iterables.Remove(iterable))
+                var iterable = iterablesDeletedThisFrame[0];
+                this.iterablesDeletedThisFrame.RemoveAt(0);
+
+                if (this.iterables.Remove(iterable))
                 {
                     iterable.OnDeleteFinished();
                 }
             }
 
-            iterablesDeletedThisFrame.Clear();
+            Debug.Assert(this.iterablesDeletedThisFrame.Count == 0);
 
-            foreach (var iterable in iterablesGentlyRemovedThisFrame)
+
+            while (this.iterablesGentlyRemovedThisFrame.Count > 0)
             {
-                iterables.Remove(iterable);
+                var iterable = this.iterablesGentlyRemovedThisFrame[0];
+                this.iterablesGentlyRemovedThisFrame.RemoveAt(0);
+                this.iterables.Remove(iterable);
             }
 
-            iterablesGentlyRemovedThisFrame.Clear();
+            Debug.Assert(this.iterablesGentlyRemovedThisFrame.Count == 0);
         }
 
         public virtual void Update(float dt)

@@ -315,6 +315,7 @@ namespace Machina.Components
             newActor.transform.LocalDepth = new Depth(0);
             newActor.transform.LocalAngle = 0f;
 
+            FlushBuffers();
             return newActor;
         }
 
