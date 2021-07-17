@@ -13,16 +13,17 @@ namespace Machina.Components
     {
         // TODO: Turn these into EventHandler<DragEventArgs>
         // DragEventArgs should hold: mousePosition and accumulatedDelta
+        public delegate void DragAction(Vector2 mousePos, Vector2 accumulatedDelta);
 
         /// <summary>
         /// Passes the accumulated delta of the drag
         /// </summary>
-        public event Action<Vector2> Drag;
+        public event DragAction Drag;
         /// <summary>
         /// Passes the cursor world position on drag start
         /// </summary>
-        public event Action<Vector2> DragStart;
-        public event Action<Vector2> DragEnd;
+        public event DragAction DragStart;
+        public event DragAction DragEnd;
 
         public bool IsDragging
         {
@@ -47,14 +48,14 @@ namespace Machina.Components
                     {
                         IsDragging = true;
                         this.accumulatedDragDelta = Vector2.Zero;
-                        DragStart?.Invoke(currentPosition);
+                        DragStart?.Invoke(currentPosition, this.accumulatedDragDelta);
                     }
                 }
                 else
                 {
                     if (IsDragging)
                     {
-                        DragEnd?.Invoke(currentPosition);
+                        DragEnd?.Invoke(currentPosition, this.accumulatedDragDelta);
                     }
                     IsDragging = false;
                 }
@@ -66,7 +67,7 @@ namespace Machina.Components
             if (IsDragging)
             {
                 this.accumulatedDragDelta += positionDelta;
-                Drag?.Invoke(this.accumulatedDragDelta);
+                Drag?.Invoke(currentPosition, this.accumulatedDragDelta);
             }
         }
 

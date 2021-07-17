@@ -74,7 +74,7 @@ namespace Machina.Data
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
              {
                  new Hoverable(headerContentActor);
-                 new Draggable(headerContentActor).DragStart += vec => OnAnyPartOfWindowClicked(MouseButton.Left);
+                 new Draggable(headerContentActor).DragStart += (position, delta) => OnAnyPartOfWindowClicked(MouseButton.Left);
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
                  var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal)

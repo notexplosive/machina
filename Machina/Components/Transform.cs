@@ -121,6 +121,11 @@ namespace Machina.Components
             }
             set
             {
+                if (!Single.IsNormal(value))
+                {
+                    return;
+                }
+
                 this.angle_impl = value;
                 for (int i = 0; i < ChildCount; i++)
                 {

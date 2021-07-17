@@ -34,12 +34,12 @@ namespace Machina.Components
             this.draggable.DragStart -= OnDragStart;
         }
 
-        private void OnDragStart(Vector2 point)
+        private void OnDragStart(Vector2 point, Vector2 delta)
         {
             this.positionAtStartOfDrag = this.targetTransform.Position; //point.ToVector2();
         }
 
-        private void OnDrag(Vector2 delta)
+        private void OnDrag(Vector2 mousePos, Vector2 delta)
         {
             this.targetTransform.Position = this.positionAtStartOfDrag + delta;
         }
