@@ -14,6 +14,7 @@ namespace Machina.Engine
         public readonly Scene scene;
         public readonly string name;
         public readonly Transform transform;
+
         public bool Visible
         {
             get; set;
