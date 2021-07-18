@@ -171,8 +171,6 @@ namespace Machina.Engine
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
 
-            Window.Title = gameTitle;
-
             IFrameStep frameStep;
 #if DEBUG
             frameStep = new FrameStep();
@@ -211,6 +209,8 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
+            Window.Title = this.gameTitle;
+
             CurrentGameCanvas.BuildCanvas(GraphicsDevice);
             this.IsMouseVisible = true;
             SetWindowSize(this.startingWindowSize);

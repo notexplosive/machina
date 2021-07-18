@@ -12,6 +12,7 @@ namespace Machina.Engine
         public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false, Action onComplete = null)
         {
             var fullPath = Path.Combine(MachinaGame.Current.appDataPath, path);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             await File.WriteAllTextAsync(fullPath, data);
 
 #if DEBUG

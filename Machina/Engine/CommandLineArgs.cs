@@ -12,6 +12,7 @@ namespace Machina.Engine
         private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, ValueArg> earlyValueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
+        private readonly Dictionary<string, FlagArg> earlyFlagArgTable = new Dictionary<string, FlagArg>();
         public Action onFinishExecute;
 
         public CommandLineArgs(string[] args)
@@ -105,6 +106,12 @@ namespace Machina.Engine
             this.earlyValueArgTable.Add(argName, new ValueArg(onExecute));
         }
 
+        public void RegisterEarlyFlagArg(string argName, Action onExecute)
+        {
+            Debug.Assert(!IsStringACommand(argName));
+            this.earlyFlagArgTable.Add(argName, new FlagArg(onExecute));
+        }
+
         /// <summary>
         /// Command line arg that is evaluated just AFTER the game is loaded.
         /// Users can register flag args during OnGameLoad and they'll execute right after
@@ -153,11 +160,11 @@ namespace Machina.Engine
                 }
             }
 
-            //foreach (var argName in this.earlyFlagArgTable.Keys)
+            foreach (var argName in this.earlyFlagArgTable.Keys)
             {
-                //  if (HasArgument(argName))
+                if (InitialStringHasArgument(argName))
                 {
-                    // this.earlyFlagArgTable[argName].Execute();
+                    this.earlyFlagArgTable[argName].Execute();
                 }
             }
 
