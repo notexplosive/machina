@@ -22,9 +22,10 @@ namespace Machina.Engine
                 if (!skipDevPath)
                 {
                     var devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
-                    fullPath = Path.Combine(devContentPath, path);
-                    Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-                    await File.WriteAllTextAsync(fullPath, data);
+                    var fullContentPath = Path.Combine(devContentPath, path);
+                    Directory.CreateDirectory(Path.GetDirectoryName(fullContentPath));
+                    await File.WriteAllTextAsync(fullContentPath, data);
+                    MachinaGame.Print("Saved:", fullContentPath);
                 }
             }
 #endif

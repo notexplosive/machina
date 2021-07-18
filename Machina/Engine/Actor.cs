@@ -10,6 +10,7 @@ namespace Machina.Engine
 {
     public class Actor : Crane<IComponent>
     {
+        public event Action Destroyed;
         public readonly Scene scene;
         public readonly string name;
         public readonly Transform transform;
@@ -91,6 +92,7 @@ namespace Machina.Engine
                 component.OnActorDestroy();
             }
 
+            Destroyed?.Invoke();
             this.scene.DeleteActor(this);
             this.IsDestroyed = true;
         }

@@ -121,7 +121,7 @@ namespace Machina.Components
             }
             set
             {
-                if (!Single.IsNormal(value))
+                if (Single.IsNaN(value))
                 {
                     return;
                 }
