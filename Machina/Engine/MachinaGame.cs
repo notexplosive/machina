@@ -253,8 +253,8 @@ namespace Machina.Engine
                 Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
+            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
 #if DEBUG
-            var debugActor = sceneLayers.debugScene.AddActor("DemoActor");
 
             DebugBuilder.CreateFramerateCounter(sceneLayers);
             DebugBuilder.CreateFramestep(sceneLayers);
