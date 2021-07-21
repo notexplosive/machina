@@ -35,6 +35,7 @@ namespace Machina.Data
         private bool isScrollable;
         private int maxScrollPos;
         private Vector2 startingPosition;
+        private Action<UIWindow> onLaunch;
 
         private readonly Point contentSize;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
@@ -61,12 +62,20 @@ namespace Machina.Data
             window.Title = this.title;
             window.rootTransform.Position = this.startingPosition;
 
+            this.onLaunch?.Invoke(window);
+
             return window;
         }
 
         public WindowBuilder Title(string title)
         {
             this.title = title;
+            return this;
+        }
+
+        public WindowBuilder OnLaunch(Action<UIWindow> onLaunch)
+        {
+            this.onLaunch += onLaunch;
             return this;
         }
 

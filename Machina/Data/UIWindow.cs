@@ -23,6 +23,7 @@ namespace Machina.Data
          */
 
         public readonly SceneRenderer sceneRenderer;
+
         /// <summary>
         /// Primary scene of the content within the window
         /// </summary>
@@ -198,6 +199,11 @@ namespace Machina.Data
         public void Delete()
         {
             rootTransform.actor.Delete();
+        }
+
+        public bool IsOpen()
+        {
+            return !this.rootTransform.actor.IsDestroyed;
         }
     }
 }

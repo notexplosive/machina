@@ -51,6 +51,8 @@ namespace Machina.Engine.Debugging.Data
                 .SetMargin(dockMargin)
             ;
 
+            var windowManager = new WindowManager(MachinaGame.defaultStyle, dockActor.transform.Depth - 100);
+
             LayoutGroup AddRow()
             {
                 LayoutGroup row = null;
@@ -62,7 +64,7 @@ namespace Machina.Engine.Debugging.Data
                 return row;
             }
 
-            void AddIcon(LayoutGroup row, string iconName, Action callBack)
+            void AddIcon(LayoutGroup row, App app)
             {
                 row.AddVerticallyStretchedElement("IconRootActor", iconWidth, iconActor =>
                  {
@@ -73,7 +75,7 @@ namespace Machina.Engine.Debugging.Data
                      {
                          if (button == MouseButton.Left)
                          {
-                             callBack?.Invoke();
+                             app.Open(sceneLayers.debugScene, windowManager);
                          }
                      };
 
@@ -86,32 +88,26 @@ namespace Machina.Engine.Debugging.Data
                         })
                         .AddBothStretchedElement("IconText", iconTextActor =>
                         {
-                            new BoundedTextRenderer(iconTextActor, iconName, MachinaGame.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center, VerticalAlignment.Top);
+                            new BoundedTextRenderer(iconTextActor, app.appName, MachinaGame.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center, VerticalAlignment.Top);
                         });
                  });
             }
 
-            var windowManager = new WindowManager(MachinaGame.defaultStyle, dockActor.transform.Depth - 100);
-
-            var row = AddRow();
-            AddIcon(row, "Scene Graph Renderer", () => CreateSceneGraphRenderer(sceneLayers, windowManager));
-            AddIcon(row, "Console Window", null);
-            AddIcon(row, "Asset Viewer", null);
-        }
-
-        public static UIWindow CreateSceneGraphRenderer(SceneLayers sceneLayers, WindowManager windowManager)
-        {
-            var window = windowManager.CreateWindow(sceneLayers.debugScene,
+            var sceneGraphRendererApp = new App("Scene Graph", true,
                 new WindowBuilder(new Point(300, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
                     .Title("Scene Graph")
-                );
+                    .OnLaunch((window) =>
+                    {
+                        var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
+                        new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
+                    }));
 
-            var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
-            new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
-
-            return window;
+            var row = AddRow();
+            AddIcon(row, sceneGraphRendererApp);
+            // AddIcon(row, "Console Window", null);
+            // AddIcon(row, "Asset Viewer", null);
         }
 
         public static Logger BuildOutputConsole(SceneLayers sceneLayers)
