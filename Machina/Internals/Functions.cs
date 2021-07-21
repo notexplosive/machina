@@ -16,7 +16,7 @@ namespace Machina.Internals
         /// <typeparam name="T"></typeparam>
         /// <param name="items"></param>
         /// <param name="forEachAction"></param>
-        public static void ForEach<T>(IList<T> items, Action<T> forEachAction)
+        public static void ResilientForEach<T>(IList<T> items, Action<T> forEachAction)
         {
             int whileLoopIterationCount = 0;
             HashSet<T> visited = new HashSet<T>();

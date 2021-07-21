@@ -37,7 +37,7 @@ namespace TestMachina.Tests
         {
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
 
-            Functions.ForEach(items, (item) => { item.Visit(); });
+            Functions.ResilientForEach(items, (item) => { item.Visit(); });
 
             items.Should().BeEquivalentTo(new List<Visitable> { new Visitable(1), new Visitable(1), new Visitable(1), new Visitable(1) });
         }
@@ -48,7 +48,7 @@ namespace TestMachina.Tests
             int iterationCount = 0;
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -67,7 +67,7 @@ namespace TestMachina.Tests
             int iterationCount = 0;
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -86,7 +86,7 @@ namespace TestMachina.Tests
             int iterationCount = 0;
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -105,7 +105,7 @@ namespace TestMachina.Tests
             int iterationCount = 0;
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -125,7 +125,7 @@ namespace TestMachina.Tests
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
             var copyOfOriginalItems = new List<Visitable>(items);
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -148,7 +148,7 @@ namespace TestMachina.Tests
             var items = new List<Visitable> { new Visitable(), new Visitable(), new Visitable(), new Visitable() };
             var copyOfOriginalItems = new List<Visitable>(items);
 
-            Functions.ForEach(items, (item) =>
+            Functions.ResilientForEach(items, (item) =>
             {
                 item.Visit();
                 iterationCount++;
@@ -172,7 +172,7 @@ namespace TestMachina.Tests
 
             try
             {
-                Functions.ForEach(items, (item) =>
+                Functions.ResilientForEach(items, (item) =>
                 {
                     item.Visit();
                     items.Insert(2, new Visitable());

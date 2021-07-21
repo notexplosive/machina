@@ -177,7 +177,7 @@ namespace Machina.Engine
 
         public virtual void Update(float dt)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.Update(dt);
             });
@@ -187,7 +187,7 @@ namespace Machina.Engine
         public void FlushBuffers()
         {
             FlushCreatedIterables();
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.FlushBuffers();
             });
@@ -196,7 +196,7 @@ namespace Machina.Engine
 
         public virtual void OnPostUpdate()
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnPostUpdate();
             });
@@ -204,7 +204,7 @@ namespace Machina.Engine
 
         public virtual void Start()
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.Start();
             });
@@ -212,28 +212,28 @@ namespace Machina.Engine
 
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.PreDraw(spriteBatch);
             });
         }
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.Draw(spriteBatch);
             });
         }
         public virtual void DebugDraw(SpriteBatch spriteBatch)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.DebugDraw(spriteBatch);
             });
         }
         public virtual void OnScroll(int scrollDelta)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnScroll(scrollDelta);
             });
@@ -241,7 +241,7 @@ namespace Machina.Engine
 
         public virtual void OnDeleteFinished()
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnDeleteFinished();
             });
@@ -249,7 +249,7 @@ namespace Machina.Engine
 
         public virtual void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
              {
                  iterable.OnKey(key, state, modifiers);
              });
@@ -257,7 +257,7 @@ namespace Machina.Engine
 
         public virtual void OnTextInput(TextInputEventArgs textInputEventArgs)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnTextInput(textInputEventArgs);
             });
@@ -265,14 +265,14 @@ namespace Machina.Engine
 
         public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta);
             });
         }
         public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnMouseButton(button, currentPosition, state);
             });
@@ -280,7 +280,7 @@ namespace Machina.Engine
 
         public void OnDeleteImmediate()
         {
-            Functions.ForEach(this.iterables, (iterable) =>
+            Functions.ResilientForEach(this.iterables, (iterable) =>
             {
                 iterable.OnDeleteImmediate();
             });
