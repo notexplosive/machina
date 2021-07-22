@@ -12,7 +12,7 @@ namespace Machina.Components
         private readonly BoundingRect boundingRect;
 
         private int padding;
-        private int margin;
+        private Point margin;
 
         public readonly Orientation orientation;
 
@@ -34,9 +34,10 @@ namespace Machina.Components
             var isVertical = this.orientation == Orientation.Vertical;
             var groupRect = this.boundingRect.Rect;
             var totalAlongSize = isVertical ? groupRect.Size.Y : groupRect.Size.X;
+            var alongMargin = isVertical ? this.margin.Y : this.margin.X;
 
             var elements = GetAllElements();
-            var remainingAlongSize = totalAlongSize - this.margin * 2;
+            var remainingAlongSize = totalAlongSize - alongMargin * 2;
             var stretchAlong = new List<LayoutElement>();
             var stretchPerpendicular = new List<LayoutElement>();
 
@@ -104,17 +105,17 @@ namespace Machina.Components
                 {
                     if (isVertical)
                     {
-                        perpElement.boundingRect.Width = groupRect.Width - margin * 2;
+                        perpElement.boundingRect.Width = groupRect.Width - this.margin.X * 2;
                     }
                     else
                     {
-                        perpElement.boundingRect.Height = groupRect.Height - margin * 2;
+                        perpElement.boundingRect.Height = groupRect.Height - this.margin.Y * 2;
                     }
                 }
             }
 
             // Place elements
-            var nextLocation = new Point(groupRect.Location.X + margin, groupRect.Location.Y + margin);
+            var nextLocation = new Point(groupRect.Location.X + this.margin.X, groupRect.Location.Y + this.margin.Y);
             foreach (var element in elements)
             {
                 element.actor.transform.Position = nextLocation.ToVector2() + element.boundingRect.Offset;
@@ -139,7 +140,16 @@ namespace Machina.Components
             }
         }
 
+        [Obsolete("Prefer SetMarginSize")]
         public LayoutGroup SetMargin(int margin)
+        {
+            this.margin.X = margin;
+            this.margin.Y = margin;
+            ExecuteLayout();
+            return this;
+        }
+
+        public LayoutGroup SetMarginSize(Point margin)
         {
             this.margin = margin;
             ExecuteLayout();
