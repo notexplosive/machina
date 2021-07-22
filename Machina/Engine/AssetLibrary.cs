@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using Machina.Data;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Machina.Engine
 {
@@ -21,6 +22,8 @@ namespace Machina.Engine
         public void UnloadAssets();
         public SoundEffectInstance CreateSoundEffectInstance(string name);
         public SoundEffectInstance GetSoundEffectInstance(string name);
+        public SoundEffect GetSoundEffect(string name);
+        public Song GetSong(string name);
     }
 
     public class AssetLibrary : IAssetLibrary
@@ -28,6 +31,7 @@ namespace Machina.Engine
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<string, SpriteFont> spriteFonts = new Dictionary<string, SpriteFont>();
         private readonly Dictionary<string, SoundEffect> soundEffects = new Dictionary<string, SoundEffect>();
+        private readonly Dictionary<string, Song> songs = new Dictionary<string, Song>();
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances = new Dictionary<string, SoundEffectInstance>();
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
@@ -50,9 +54,14 @@ namespace Machina.Engine
                 LoadSpriteFont("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
 
-            foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
+            foreach (var soundEffect in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
             {
-                LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(spriteFont));
+                LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(soundEffect));
+            }
+
+            foreach (var song in GamePlatform.GetFilesAtContentDirectory("songs", "xnb"))
+            {
+                LoadSong("songs/" + Path.GetFileNameWithoutExtension(song));
             }
         }
 
@@ -81,6 +90,15 @@ namespace Machina.Engine
             soundEffects.Add(name, soundEffect);
             soundEffectInstances.Add(name, soundEffect.CreateInstance());
             Console.WriteLine(string.Format("Loaded SoundEffect: {0}", name));
+        }
+
+        private void LoadSong(string fullName)
+        {
+            var name = Path.GetFileName(fullName);
+
+            var song = this.content.Load<Song>(fullName);
+            songs.Add(name, song);
+            Console.WriteLine(string.Format("Loaded Song: {0}", name));
         }
 
         public void UnloadAssets()
@@ -122,6 +140,12 @@ namespace Machina.Engine
         {
             Debug.Assert(soundEffects.ContainsKey(name), "No sound effect called `" + name + "` was found");
             return soundEffects[name];
+        }
+
+        public Song GetSong(string name)
+        {
+            Debug.Assert(songs.ContainsKey(name), "No sound effect called `" + name + "` was found");
+            return songs[name];
         }
 
         /// <summary>
