@@ -29,7 +29,7 @@ namespace Machina.Engine
             new CallbackOnClick(buttonActor, onPressCallback);
             new ButtonNinepatchHandler(buttonActor, style.buttonHover, style.buttonPress);
             new LayoutElement(buttonActor).StretchHorizontally();
-            new LayoutGroup(buttonActor, Orientation.Vertical).SetMargin(5);
+            new LayoutGroup(buttonActor, Orientation.Vertical).SetMarginSize(new Point(5, 5));
             var buttonLabelActor = scene.AddActor("Button Label");
             buttonLabelActor.transform.SetParent(buttonActor);
             new BoundingRect(buttonLabelActor, Point.Zero);
@@ -166,7 +166,7 @@ namespace Machina.Engine
             new BoundingRect(textInput, new Point(32, 28));
             new LayoutElement(textInput).StretchHorizontally();
             new NinepatchRenderer(textInput, style.textboxSheet);
-            new LayoutGroup(textInput, Orientation.Vertical).SetMargin(3);
+            new LayoutGroup(textInput, Orientation.Vertical).SetMarginSize(new Point(3, 3));
             new Hoverable(textInput);
             var clickable = new Clickable(textInput);
             var text = textInput.transform.AddActorAsChild("TextInput - Text");

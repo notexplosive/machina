@@ -71,7 +71,7 @@ namespace Machina.Data
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
-            rootGroup.SetMargin(this.margin);
+            rootGroup.SetMarginSize(new Point(this.margin, this.margin));
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
              {
                  new Hoverable(headerContentActor);

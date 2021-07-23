@@ -59,10 +59,13 @@ namespace Machina.Engine
                 LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(soundEffect));
             }
 
+            /*
+            // Monogame Songs suck!!
             foreach (var song in GamePlatform.GetFilesAtContentDirectory("songs", "xnb"))
             {
                 LoadSong("songs/" + Path.GetFileNameWithoutExtension(song));
             }
+            */
         }
 
         private void LoadTexture(string fullName)

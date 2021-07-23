@@ -48,7 +48,7 @@ namespace Machina.Engine.Debugging.Data
                 {
                     new BoundedTextRenderer(titleActor, "Machina Debug Dock", MachinaGame.defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center, VerticalAlignment.Center);
                 })
-                .SetMargin(dockMargin)
+                .SetMarginSize(new Point(dockMargin, dockMargin))
             ;
 
             var windowManager = new WindowManager(MachinaGame.defaultStyle, dockActor.transform.Depth - 100);
@@ -81,7 +81,7 @@ namespace Machina.Engine.Debugging.Data
 
                      new DebugIconHoverRenderer(iconActor);
                      new LayoutGroup(iconActor, Orientation.Vertical)
-                        .SetMargin(5)
+                        .SetMarginSize(new Point(5, 5))
                         .AddHorizontallyStretchedElement("IconImage", 50, iconImageActor =>
                         {
                             new BoundingRectFill(iconImageActor, Color.Orange);
@@ -93,7 +93,8 @@ namespace Machina.Engine.Debugging.Data
                  });
             }
 
-            var sceneGraphRendererApp = new App("Scene Graph", true,
+            var row = AddRow();
+            AddIcon(row, new App("Scene Graph", true,
                 new WindowBuilder(new Point(300, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
@@ -102,11 +103,17 @@ namespace Machina.Engine.Debugging.Data
                     {
                         var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
                         new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
-                    }));
-
-            var row = AddRow();
-            AddIcon(row, sceneGraphRendererApp);
-            // AddIcon(row, "Console Window", null);
+                    })));
+            AddIcon(row, new App("Console", true,
+                new WindowBuilder(new Point(600, 300))
+                    .CanBeScrolled(900)
+                    .CanBeResized(new Point(300, 300), new Point(1920, 1080))
+                    .Title("Machina Console")
+                    .OnLaunch((window) =>
+                    {
+                        var consoleActor = window.scene.AddActor("StaticConsole");
+                        // TODO: new StaticConsoleRenderer(sceneGraphActor,window.scrollbar)
+                    })));
             // AddIcon(row, "Asset Viewer", null);
         }
 

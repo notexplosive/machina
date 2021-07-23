@@ -95,7 +95,7 @@ namespace TestMachina.Tests
             new BoundingRect(horizontalLayout, 256, 128);
             var uiGroup = new LayoutGroup(horizontalLayout, Orientation.Horizontal);
             uiGroup.SetPaddingBetweenElements(5);
-            uiGroup.SetMargin(15);
+            uiGroup.SetMarginSize(new Point(15, 15));
             Actor e1 = null;
             Actor e2 = null;
             Actor e3 = null;
