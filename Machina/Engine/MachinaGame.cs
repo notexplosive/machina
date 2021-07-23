@@ -49,6 +49,8 @@ namespace Machina.Engine
             }
         }
         protected SpriteBatch spriteBatch;
+        private Logger overlayOutputConsole;
+
         public GameCanvas CurrentGameCanvas => (sceneLayers.gameCanvas as GameCanvas);
         private ILogger logger;
         public static UIStyle defaultStyle;
@@ -223,7 +225,8 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.logger = DebugBuilder.BuildOutputConsole(sceneLayers);
+            this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(sceneLayers);
+            this.logger = this.overlayOutputConsole;
 
             // Load initial assets
             Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
@@ -331,6 +334,16 @@ namespace Machina.Engine
         public static void Quit()
         {
             Current.Exit();
+        }
+
+        public static void PushLogger(ILogger newLogger)
+        {
+            Current.logger = newLogger;
+        }
+
+        public static void PopLogger()
+        {
+            Current.logger = Current.overlayOutputConsole;
         }
 
         protected override void UnloadContent()

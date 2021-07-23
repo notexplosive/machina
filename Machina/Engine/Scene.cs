@@ -205,6 +205,11 @@ namespace Machina.Engine
 
         ~Scene()
         {
+            DeleteAllActors();
+        }
+
+        public void DeleteAllActors()
+        {
             foreach (var actor in GetAllActors())
             {
                 actor.Delete();

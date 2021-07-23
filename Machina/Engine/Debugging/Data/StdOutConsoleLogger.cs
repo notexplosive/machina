@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Machina.Engine.Debugging.Data
 {
-    interface ILogger
+    public interface ILogger
     {
         public void Log(params object[] objects);
     }
@@ -12,7 +12,7 @@ namespace Machina.Engine.Debugging.Data
     /// <summary>
     /// A logger that just prints to standard out
     /// </summary>
-    class StdOutConsoleLogger : ILogger
+    public class StdOutConsoleLogger : ILogger
     {
         public void Log(params object[] objects)
         {

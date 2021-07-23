@@ -193,6 +193,10 @@ namespace Machina.Data
 
         public void Destroy()
         {
+            foreach (var scene in this.scene.sceneLayers.AllScenes())
+            {
+                scene.DeleteAllActors();
+            }
             rootTransform.actor.Destroy();
         }
 

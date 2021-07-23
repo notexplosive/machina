@@ -108,11 +108,12 @@ namespace Machina.Engine.Debugging.Data
                 new WindowBuilder(new Point(600, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
+                    .OnClose((win) => { win.Destroy(); })
                     .Title("Machina Console")
                     .OnLaunch((window) =>
                     {
                         var consoleActor = window.scene.AddActor("StaticConsole");
-                        // TODO: new StaticConsoleRenderer(sceneGraphActor,window.scrollbar)
+                        new WindowedConsoleRenderer(consoleActor, window.Scrollbar);
                     })));
             // AddIcon(row, "Asset Viewer", null);
         }

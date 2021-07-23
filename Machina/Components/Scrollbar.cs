@@ -55,6 +55,11 @@ namespace Machina.Components
             this.myBoundingRect.Height = this.containerBoundingRect.Height;
         }
 
+        public bool IsToSmallToNeedScrollbar()
+        {
+            return !ThumbIsSmallEnoughToRender;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (HasValidThumb)
