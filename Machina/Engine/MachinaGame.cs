@@ -211,11 +211,11 @@ namespace Machina.Engine
         {
             Assets.LoadAllContent();
 
-            IFrameStep frameStep;
+            IFrameStep frameStep = new EmptyFrameStep();
+            DebugLevel = DebugLevel.Off;
 #if DEBUG
+            DebugLevel = DebugLevel.Passive;
             frameStep = new FrameStep();
-#else
-            frameStep = new EmptyFrameStep();
 #endif
             SceneLayers = new SceneLayers(true, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior), frameStep);
             CurrentGameCanvas.BuildCanvas(GraphicsDevice);
@@ -258,17 +258,15 @@ namespace Machina.Engine
             );
 
             var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
-#if DEBUG
 
-            DebugBuilder.CreateFramerateCounter(sceneLayers);
-            DebugBuilder.CreateFramestep(sceneLayers);
-            DebugBuilder.CreateDebugDock(sceneLayers);
+            if (DebugLevel >= DebugLevel.Passive)
+            {
+                Print("Debug build detected");
+                DebugBuilder.CreateFramerateCounter(sceneLayers);
+                DebugBuilder.CreateFramestep(sceneLayers);
+                DebugBuilder.CreateDebugDock(sceneLayers);
+            }
 
-            DebugLevel = DebugLevel.Passive;
-            Print("Debug build detected");
-#else
-            DebugLevel = DebugLevel.Off;
-#endif
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
             CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
