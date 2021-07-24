@@ -91,6 +91,8 @@ namespace Machina.Engine
             return cropTexture;
         }
 
+        public readonly static FrameStep GlobalFrameStep = new FrameStep();
+
         public static DebugLevel DebugLevel
         {
             get; set;
@@ -186,7 +188,6 @@ namespace Machina.Engine
             Window.ClientSizeChanged += OnResize;
 
             Assets = new AssetLibrary(this);
-
             Random = new SeededRandom();
         }
 
@@ -212,20 +213,13 @@ namespace Machina.Engine
             Assets.LoadAllContent();
             LoadInitialStyle();
 
-            IFrameStep frameStep = new EmptyFrameStep();
-
-            DebugLevel = DebugLevel.Off;
-
-            CommandLineArgs.RegisterFlagArg("debug", () =>
-            {
-                DebugLevel = DebugLevel.Passive;
-            });
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
-            frameStep = new FrameStep();
 #endif
-            SceneLayers = new SceneLayers(true, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior), frameStep);
+
+            SceneLayers = new SceneLayers(true, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
             CurrentGameCanvas.BuildCanvas(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
             SetWindowSize(this.startingWindowSize);
 
             if (GamePlatform.IsDesktop)
@@ -233,16 +227,13 @@ namespace Machina.Engine
                 Window.TextInput += SceneLayers.AddPendingTextInput;
             }
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-
-            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
 
             if (DebugLevel >= DebugLevel.Passive)
             {
                 Print("Debug build detected");
             }
 
+            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
             CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
@@ -260,6 +251,11 @@ namespace Machina.Engine
             CommandLineArgs.RegisterValueArg("demospeed", arg =>
             {
                 demoSpeed = int.Parse(arg);
+            });
+
+            CommandLineArgs.RegisterEarlyFlagArg("debug", () =>
+            {
+                DebugLevel = DebugLevel.Passive;
             });
 
             CommandLineArgs.RegisterValueArg("demo", arg =>
@@ -442,7 +438,7 @@ namespace Machina.Engine
             float ratio = (float) windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
-            var introLayers = new SceneLayers(true, gameCanvas, new FrameStep());
+            var introLayers = new SceneLayers(true, gameCanvas);
             var introScene = introLayers.AddNewScene();
 
             introLayers.BackgroundColor = Color.Black;

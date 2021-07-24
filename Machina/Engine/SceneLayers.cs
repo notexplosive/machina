@@ -14,7 +14,6 @@ namespace Machina.Engine
     public class SceneLayers
     {
         public readonly Scene debugScene;
-        public readonly IFrameStep frameStep;
         public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
         private readonly Logger overlayOutputConsole;
@@ -62,9 +61,8 @@ namespace Machina.Engine
             this.pendingTextInput = e;
         }
 
-        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas, IFrameStep frameStep)
+        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas)
         {
-            this.frameStep = frameStep;
             this.gameCanvas = gameCanvas;
 
             if (useDebugScene)
@@ -95,7 +93,7 @@ namespace Machina.Engine
 
         public Scene AddNewScene()
         {
-            var scene = new Scene(this, this.frameStep);
+            var scene = new Scene(this, MachinaGame.GlobalFrameStep);
             Add(scene);
             return scene;
         }

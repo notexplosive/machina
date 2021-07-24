@@ -21,7 +21,7 @@ namespace Machina.Engine.Debugging.Data
         {
             var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
             var tool = new InvokableDebugTool(frameStepActor, new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
-            new FrameStepRenderer(frameStepActor, sceneLayers.frameStep, sceneLayers, tool);
+            new FrameStepRenderer(frameStepActor, MachinaGame.GlobalFrameStep, sceneLayers, tool);
             new BoundingRect(frameStepActor, new Point(64, 64));
             new Hoverable(frameStepActor);
             new Draggable(frameStepActor);

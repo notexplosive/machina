@@ -16,7 +16,7 @@ namespace TestMachina.Tests
         [Fact]
         public void test_hoverables_in_a_single_scene()
         {
-            var sceneLayers = new SceneLayers(false, new GameCanvas(new Point(800, 600), ResizeBehavior.FillContent), new EmptyFrameStep());
+            var sceneLayers = new SceneLayers(false, new GameCanvas(new Point(800, 600), ResizeBehavior.FillContent));
             var scene = sceneLayers.AddNewScene();
             var mousePoint = new Point(200, 200);
             var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
@@ -40,7 +40,7 @@ namespace TestMachina.Tests
         [Fact]
         public void test_hoverables_across_multiple_scenes()
         {
-            var sceneLayers = new SceneLayers(false, new GameCanvas(new Point(800, 600), ResizeBehavior.FillContent), new EmptyFrameStep());
+            var sceneLayers = new SceneLayers(false, new GameCanvas(new Point(800, 600), ResizeBehavior.FillContent));
             var lowerScene = sceneLayers.AddNewScene();
             var upperScene = sceneLayers.AddNewScene();
             var mousePoint = new Point(200, 200);
