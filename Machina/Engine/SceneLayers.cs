@@ -1,4 +1,5 @@
 ﻿using Machina.Data;
+using Machina.Engine.Debugging.Components;
 using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,13 @@ namespace Machina.Engine
         public readonly IFrameStep frameStep;
         public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
+        private readonly Logger overlayOutputConsole;
+
+        public ILogger Logger
+        {
+            get; private set;
+        }
+
         public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
         public InputFrameState CurrentInputFrameState
@@ -63,7 +71,22 @@ namespace Machina.Engine
             {
                 this.debugScene = new Scene(this);
                 this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
+                this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
+                Logger = this.overlayOutputConsole;
             }
+        }
+
+        public void PushLogger(ILogger newLogger)
+        {
+            Logger = newLogger;
+        }
+
+        /// <summary>
+        /// One day this might behave like a stack but for now it just reverts to the Overlay Console
+        /// </summary>
+        public void PopLogger()
+        {
+            Logger = this.overlayOutputConsole;
         }
 
         public Scene AddNewScene()

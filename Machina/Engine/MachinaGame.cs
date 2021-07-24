@@ -49,10 +49,8 @@ namespace Machina.Engine
             }
         }
         protected SpriteBatch spriteBatch;
-        private Logger overlayOutputConsole;
 
         public GameCanvas CurrentGameCanvas => (sceneLayers.gameCanvas as GameCanvas);
-        private ILogger logger;
         public static UIStyle defaultStyle;
         private Point currentWindowSize;
         private static MouseCursor pendingCursor;
@@ -124,6 +122,10 @@ namespace Machina.Engine
         {
             get; private set;
         }
+
+        private readonly ResizeBehavior startingResizeBehavior;
+        private readonly Point startingRenderResolution;
+
         public Demo.Playback DemoPlayback
         {
             get;
@@ -162,6 +164,8 @@ namespace Machina.Engine
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize, ResizeBehavior resizeBehavior)
         {
             Current = this;
+            this.startingResizeBehavior = resizeBehavior;
+            this.startingRenderResolution = startingRenderResolution;
 
             this.gameTitle = gameTitle;
             CommandLineArgs = new CommandLineArgs(args);
@@ -169,16 +173,8 @@ namespace Machina.Engine
             // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NotExplosive", this.gameTitle);
 
-            this.logger = new StdOutConsoleLogger();
             this.startingWindowSize = startingWindowSize;
             this.currentWindowSize = startingWindowSize;
-
-            IFrameStep frameStep;
-#if DEBUG
-            frameStep = new FrameStep();
-#else
-            frameStep = new EmptyFrameStep();
-#endif
 
             Content.RootDirectory = "Content";
             Graphics = new GraphicsDeviceManager(this)
@@ -190,12 +186,6 @@ namespace Machina.Engine
             Window.ClientSizeChanged += OnResize;
 
             Assets = new AssetLibrary(this);
-            this.sceneLayers = new SceneLayers(true, new GameCanvas(startingRenderResolution, resizeBehavior), frameStep);
-
-            if (GamePlatform.IsDesktop)
-            {
-                Window.TextInput += this.sceneLayers.AddPendingTextInput;
-            }
 
             Random = new SeededRandom();
         }
@@ -212,10 +202,7 @@ namespace Machina.Engine
         protected override void Initialize()
         {
             Window.Title = this.gameTitle;
-
-            CurrentGameCanvas.BuildCanvas(GraphicsDevice);
-            this.IsMouseVisible = true;
-            SetWindowSize(this.startingWindowSize);
+            IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -223,10 +210,24 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             Assets.LoadAllContent();
+
+            IFrameStep frameStep;
+#if DEBUG
+            frameStep = new FrameStep();
+#else
+            frameStep = new EmptyFrameStep();
+#endif
+            SceneLayers = new SceneLayers(true, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior), frameStep);
+            CurrentGameCanvas.BuildCanvas(GraphicsDevice);
+            SetWindowSize(this.startingWindowSize);
+
+            if (GamePlatform.IsDesktop)
+            {
+                Window.TextInput += SceneLayers.AddPendingTextInput;
+            }
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(sceneLayers);
-            this.logger = this.overlayOutputConsole;
 
             // Load initial assets
             Assets.AddMachinaAsset("ui-button", new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
@@ -334,16 +335,6 @@ namespace Machina.Engine
         public static void Quit()
         {
             Current.Exit();
-        }
-
-        public static void PushLogger(ILogger newLogger)
-        {
-            Current.logger = newLogger;
-        }
-
-        public static void PopLogger()
-        {
-            Current.logger = Current.overlayOutputConsole;
         }
 
         protected override void UnloadContent()
@@ -475,7 +466,8 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Current?.logger.Log(objects);
+            Current?.SceneLayers?.Logger.Log(objects);
+            new StdOutConsoleLogger().Log(objects);
         }
     }
 }

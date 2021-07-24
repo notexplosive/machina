@@ -21,13 +21,13 @@ namespace Machina.Engine.Debugging.Components
         {
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
             this.scrollbar = scrollbar;
-            MachinaGame.PushLogger(this);
+            MachinaGame.Current.SceneLayers.PushLogger(this);
             MachinaGame.Print("Logger pushed");
         }
 
         public override void OnDeleteFinished()
         {
-            MachinaGame.PopLogger();
+            MachinaGame.Current.SceneLayers.PopLogger();
             MachinaGame.Print("Logger popped");
         }
 
