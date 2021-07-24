@@ -40,7 +40,7 @@ namespace Machina.Engine.Debugging.Data
             new LayoutGroup(dockActor, Orientation.Vertical);
             var dock = new DebugDock(dockActor);
 
-            dock.AddIcon(new App("Scene Graph", true,
+            dock.AddApp(new App("Scene Graph", true,
                 new WindowBuilder(new Point(300, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
@@ -51,7 +51,7 @@ namespace Machina.Engine.Debugging.Data
                         var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
                         new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
                     })));
-            dock.AddIcon(new App("Console", true,
+            dock.AddApp(new App("Console", true,
                 new WindowBuilder(new Point(600, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))

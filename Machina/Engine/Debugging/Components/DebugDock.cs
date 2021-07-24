@@ -51,7 +51,7 @@ namespace Machina.Engine.Debugging.Components
             return row;
         }
 
-        public void AddIcon(App app)
+        public void AddApp(App app)
         {
             if (this.currentRow.transform.ChildCount > 3)
             {

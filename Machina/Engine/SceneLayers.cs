@@ -57,6 +57,7 @@ namespace Machina.Engine
         }
 
         public Color BackgroundColor = Color.SlateBlue;
+        private DebugDock debugDock;
 
         public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
@@ -76,8 +77,13 @@ namespace Machina.Engine
 
                 DebugBuilder.CreateFramerateCounter(this);
                 DebugBuilder.CreateFramestep(this);
-                DebugBuilder.CreateDebugDock(this);
+                this.debugDock = DebugBuilder.CreateDebugDock(this);
             }
+        }
+
+        public void AddDebugApp(App app)
+        {
+            this.debugDock.AddApp(app);
         }
 
         public void PushLogger(ILogger newLogger)
