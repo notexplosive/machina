@@ -213,7 +213,13 @@ namespace Machina.Engine
             LoadInitialStyle();
 
             IFrameStep frameStep = new EmptyFrameStep();
+
             DebugLevel = DebugLevel.Off;
+
+            CommandLineArgs.RegisterFlagArg("debug", () =>
+            {
+                DebugLevel = DebugLevel.Passive;
+            });
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
             frameStep = new FrameStep();
