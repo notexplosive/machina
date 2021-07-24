@@ -45,10 +45,13 @@ namespace Machina.Components
             }
         }
 
-        public void OnToggle(bool b)
+        public void OnToggle(bool isPaused)
         {
-            this.frameStep.IsPaused = b;
-            this.stepCount = 0;
+            if (isPaused)
+            {
+                this.stepCount = 0;
+            }
+            this.frameStep.IsPaused = isPaused;
         }
 
         public void Step()
