@@ -73,6 +73,10 @@ namespace Machina.Engine
                 this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
                 this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
                 Logger = this.overlayOutputConsole;
+
+                DebugBuilder.CreateFramerateCounter(this);
+                DebugBuilder.CreateFramestep(this);
+                DebugBuilder.CreateDebugDock(this);
             }
         }
 
