@@ -99,6 +99,7 @@ namespace Machina.Engine.Debugging.Data
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
                     .Title("Scene Graph")
+                    .DestroyOnClose()
                     .OnLaunch((window) =>
                     {
                         var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
@@ -108,7 +109,7 @@ namespace Machina.Engine.Debugging.Data
                 new WindowBuilder(new Point(600, 300))
                     .CanBeScrolled(900)
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
-                    .OnClose((win) => { win.Destroy(); })
+                    .DestroyOnClose()
                     .Title("Machina Console")
                     .OnLaunch((window) =>
                     {
