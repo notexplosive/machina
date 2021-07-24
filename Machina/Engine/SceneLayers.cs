@@ -17,6 +17,8 @@ namespace Machina.Engine
         public readonly IGameCanvas gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
         private readonly Logger overlayOutputConsole;
+        private bool hasDoneFirstUpdate;
+        private bool hasDoneFirstDraw;
 
         public ILogger Logger
         {
@@ -152,6 +154,13 @@ namespace Machina.Engine
 
         public void Update(float dt, Matrix mouseTransformMatrix, InputFrameState inputFrameState, bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
         {
+            if (!hasDoneFirstUpdate)
+            {
+                DoFirstUpdate();
+                this.hasDoneFirstUpdate = true;
+            }
+
+
             this.CurrentInputFrameState = inputFrameState;
             var scenes = AllScenes();
 
@@ -241,11 +250,33 @@ namespace Machina.Engine
 
         public void PreDraw(SpriteBatch spriteBatch)
         {
+            if (!this.hasDoneFirstDraw)
+            {
+                this.hasDoneFirstDraw = true;
+                OnFirstPreDraw?.Invoke(spriteBatch);
+            }
+
             var scenes = AllScenes();
             foreach (var scene in scenes)
             {
                 scene.FlushBuffers();
                 scene.PreDraw(spriteBatch);
+            }
+        }
+
+        public delegate void DrawAction(SpriteBatch spriteBatch);
+        public event DrawAction OnFirstPreDraw;
+
+        private void DoFirstUpdate()
+        {
+            if (!this.hasDoneFirstUpdate)
+            {
+                this.hasDoneFirstUpdate = true;
+
+                if (GamePlatform.IsMobile)
+                {
+                    MachinaGame.Fullscreen = true;
+                }
             }
         }
 

@@ -55,11 +55,6 @@ namespace Machina.Engine
         private Point currentWindowSize;
         private static MouseCursor pendingCursor;
 
-        // TODO: consider moving hasDoneFirstUpdate and hasDoneFirstDraw to SceneLayers (and remove hasLoaded)
-        private bool hasDoneFirstUpdate;
-        private bool hasDoneFirstDraw;
-        private bool hasLoaded;
-
         public static SeededRandom Random
         {
             get;
@@ -329,7 +324,6 @@ namespace Machina.Engine
         {
             CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
-            this.hasLoaded = true;
             CommandLineArgs.ExecuteArgs();
         }
 
@@ -350,7 +344,6 @@ namespace Machina.Engine
         protected override void Update(GameTime gameTime)
         {
             pendingCursor = MouseCursor.Arrow;
-            DoFirstUpdate();
             float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
@@ -380,27 +373,8 @@ namespace Machina.Engine
             base.Update(gameTime);
         }
 
-        private void DoFirstUpdate()
-        {
-            if (!this.hasDoneFirstUpdate && this.hasLoaded)
-            {
-                this.hasDoneFirstUpdate = true;
-
-                if (GamePlatform.IsMobile)
-                {
-                    Fullscreen = true;
-                }
-            }
-        }
-
         protected override void Draw(GameTime gameTime)
         {
-            if (!this.hasDoneFirstDraw && this.hasLoaded)
-            {
-                this.hasDoneFirstDraw = true;
-                OnFirstPreDraw(spriteBatch);
-            }
-
             sceneLayers.PreDraw(spriteBatch);
             CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
             GraphicsDevice.Clear(sceneLayers.BackgroundColor);
