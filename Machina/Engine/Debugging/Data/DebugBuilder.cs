@@ -49,7 +49,11 @@ namespace Machina.Engine.Debugging.Data
                     .OnLaunch((window) =>
                     {
                         var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
-                        new SceneGraphRenderer(sceneGraphActor, sceneLayers, window.Scrollbar);
+                        new BoundingRect(sceneGraphActor, Point.Zero);
+                        new SceneGraphData(sceneGraphActor, sceneLayers);
+                        new Hoverable(sceneGraphActor);
+                        new SceneGraphUI(sceneGraphActor);
+                        new SceneGraphRenderer(sceneGraphActor, window.Scrollbar);
                     })));
             dock.AddApp(new App("Console", true,
                 new WindowBuilder(new Point(600, 300))
