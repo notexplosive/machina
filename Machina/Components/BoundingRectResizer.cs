@@ -46,7 +46,7 @@ namespace Machina.Components
         private GrabState grabState;
         private Vector2 currentMousePosition;
         private bool isDraggingSomething;
-        private readonly Point? minSize;
+        private readonly Point minSize;
         private readonly Point? maxSize;
         public event EventHandler<ResizeEventArgs> Resized;
 
@@ -55,18 +55,25 @@ namespace Machina.Components
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
 
-            this.minSize = minSize;
             this.maxSize = maxSize;
             this.grabHandleThickness = grabHandleThickness;
             this.adjustRenderRectLambda = adjustRenderRectLambda;
 
-            if (!minSize.HasValue)
+            if (minSize.HasValue)
             {
-                minSize = Point.Zero;
+                this.minSize = minSize.Value;
+            }
+            else
+            {
+                this.minSize = new Point(64, 64);
             }
 
-            if (minSize.HasValue && maxSize.HasValue)
-                ClampRect();
+            ClampRectMin();
+            if (maxSize.HasValue)
+            {
+                ClampRectMax();
+            }
+
 
             Resized += OnResizeDefault;
         }
@@ -77,10 +84,16 @@ namespace Machina.Components
             this.boundingRect.SetSize(e.NewSize.ToPoint());
         }
 
-        private void ClampRect()
+        private void ClampRectMin()
         {
-            this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.minSize.Value.X, this.maxSize.Value.X);
-            this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.minSize.Value.Y, this.maxSize.Value.Y);
+            this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.minSize.X, this.boundingRect.Width);
+            this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.minSize.Y, this.boundingRect.Height);
+        }
+
+        private void ClampRectMax()
+        {
+            this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.boundingRect.Width, this.maxSize.Value.X);
+            this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.boundingRect.Height, this.maxSize.Value.Y);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -145,7 +158,7 @@ namespace Machina.Components
                             NewSize = this.boundingRect.Size.ToVector2() + this.grabState.GetSizeDelta(this.currentMousePosition),
                         });
                     }
-                    this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, null, null);
+                    this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, Point.Zero, null);
                 }
             }
         }
@@ -234,10 +247,10 @@ namespace Machina.Components
             public readonly RectEdge edge;
             private readonly Vector2 positionOfGrab;
             private readonly Rectangle currentRect;
-            private readonly Point? minSize;
+            private readonly Point minSize;
             private readonly Point? maxSize;
 
-            public GrabState(RectEdge edge, Vector2 positionOfGrab, Rectangle currentRect, Point? minSize, Point? maxSize)
+            public GrabState(RectEdge edge, Vector2 positionOfGrab, Rectangle currentRect, Point minSize, Point? maxSize)
             {
                 this.edge = edge;
                 this.positionOfGrab = positionOfGrab;
@@ -273,38 +286,42 @@ namespace Machina.Components
 
             public Vector2 GetSizeDelta(Vector2 currentPosition)
             {
-                var sizeDelta = GetTotalDelta(currentPosition);
+                var rawSizeDelta = GetTotalDelta(currentPosition);
 
                 if (IsAlongLeft)
                 {
-                    sizeDelta.X = -sizeDelta.X;
+                    rawSizeDelta.X = -rawSizeDelta.X;
                 }
 
                 if (IsLeftOrRight)
                 {
-                    sizeDelta.Y = 0;
+                    rawSizeDelta.Y = 0;
                 }
 
                 if (this.edge == RectEdge.Bottom || this.edge == RectEdge.Top)
                 {
-                    sizeDelta.X = 0;
+                    rawSizeDelta.X = 0;
                 }
 
                 if (IsAlongTop)
                 {
-                    sizeDelta.Y = -sizeDelta.Y;
+                    rawSizeDelta.Y = -rawSizeDelta.Y;
                 }
 
-                if (this.minSize.HasValue && this.maxSize.HasValue)
+                if (this.maxSize.HasValue)
                 {
                     var currentSize = currentRect.Size;
-                    var deltaX = Math.Clamp(currentSize.X + sizeDelta.X, this.minSize.Value.X, this.maxSize.Value.X) - currentSize.X;
-                    var deltaY = Math.Clamp(currentSize.Y + sizeDelta.Y, this.minSize.Value.Y, this.maxSize.Value.Y) - currentSize.Y;
+                    var deltaX = Math.Clamp(currentSize.X + rawSizeDelta.X, this.minSize.X, this.maxSize.Value.X) - currentSize.X;
+                    var deltaY = Math.Clamp(currentSize.Y + rawSizeDelta.Y, this.minSize.Y, this.maxSize.Value.Y) - currentSize.Y;
                     return new Vector2(deltaX, deltaY);
                 }
                 else
                 {
-                    return sizeDelta;
+                    var currentSize = currentRect.Size;
+                    var deltaX = Math.Max(currentSize.X + rawSizeDelta.X, this.minSize.X) - currentSize.X;
+                    var deltaY = Math.Max(currentSize.Y + rawSizeDelta.Y, this.minSize.Y) - currentSize.Y;
+                    MachinaGame.Print(deltaX, deltaY);
+                    return new Vector2(deltaX, deltaY);
                 }
             }
 
