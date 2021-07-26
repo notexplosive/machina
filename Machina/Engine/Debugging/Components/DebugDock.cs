@@ -12,7 +12,7 @@ namespace Machina.Engine.Debugging.Components
 {
     public class DebugDock : BaseComponent
     {
-        private readonly WindowManager windowManager;
+        public readonly WindowManager windowManager;
         private readonly LayoutGroup layoutGroup;
         private readonly int rowHeight = 90;
         private readonly int iconWidth = 90;

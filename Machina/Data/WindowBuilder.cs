@@ -26,8 +26,8 @@ namespace Machina.Data
 
 
         private string title = string.Empty;
-        private Point minSize;
-        private Point maxSize;
+        private Point? minSize;
+        private Point? maxSize;
         private bool canBeResized;
         private WindowAction onMinimized;
         private WindowAction onMaximized;
@@ -83,6 +83,12 @@ namespace Machina.Data
         {
             this.minSize = minSize;
             this.maxSize = maxSize;
+            this.canBeResized = true;
+            return this;
+        }
+
+        public WindowBuilder CanBeResized()
+        {
             this.canBeResized = true;
             return this;
         }

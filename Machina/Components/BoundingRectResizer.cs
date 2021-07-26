@@ -60,6 +60,11 @@ namespace Machina.Components
             this.grabHandleThickness = grabHandleThickness;
             this.adjustRenderRectLambda = adjustRenderRectLambda;
 
+            if (!minSize.HasValue)
+            {
+                minSize = Point.Zero;
+            }
+
             if (minSize.HasValue && maxSize.HasValue)
                 ClampRect();
 

@@ -56,6 +56,7 @@ namespace Machina.Data
             get => this.titleTextRenderer.Text;
             set => this.titleTextRenderer.Text = value;
         }
+        public Canvas Canvas => this.canvasActor.GetComponent<Canvas>();
 
         public event WindowAction Closed;
         public event WindowAction Minimized;
@@ -184,7 +185,7 @@ namespace Machina.Data
             Scrollbar = scrollbar_local;
         }
 
-        public BoundingRectResizer BecomeResizable(Point minSize, Point maxSize)
+        public BoundingRectResizer BecomeResizable(Point? minSize, Point? maxSize)
         {
             new Hoverable(rootTransform.actor);
             return new BoundingRectResizer(rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize, maxSize, (rect) => { rect.Y += this.margin; rect.Height -= this.margin; return rect; });

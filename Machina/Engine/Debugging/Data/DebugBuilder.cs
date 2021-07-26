@@ -52,7 +52,7 @@ namespace Machina.Engine.Debugging.Data
                         new BoundingRect(sceneGraphActor, Point.Zero);
                         new SceneGraphData(sceneGraphActor, sceneLayers);
                         new Hoverable(sceneGraphActor);
-                        new SceneGraphUI(sceneGraphActor);
+                        new SceneGraphUI(sceneGraphActor, dock.windowManager, sceneLayers.debugScene);
                         new SceneGraphRenderer(sceneGraphActor, window.Scrollbar);
                     })));
             dock.AddApp(new App("Console", true,

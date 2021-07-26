@@ -13,8 +13,10 @@ namespace Machina.Engine.Debugging.Components
 {
     public class SceneGraphUI : BaseComponent
     {
+        private readonly WindowManager windowManager;
         private readonly SceneGraphData sceneGraph;
         private readonly Hoverable hoverable;
+        private readonly Scene creatingScene;
         private SceneGraphRenderer sceneGraphRenderer;
 
         public ICrane HoveredCrane
@@ -22,10 +24,12 @@ namespace Machina.Engine.Debugging.Components
             private set; get;
         }
 
-        public SceneGraphUI(Actor actor) : base(actor)
+        public SceneGraphUI(Actor actor, WindowManager windowManager, Scene creatingScene) : base(actor)
         {
+            this.windowManager = windowManager;
             this.sceneGraph = RequireComponent<SceneGraphData>();
             this.hoverable = RequireComponent<Hoverable>();
+            this.creatingScene = creatingScene;
         }
 
         public override void Start()
@@ -53,9 +57,18 @@ namespace Machina.Engine.Debugging.Components
         {
             if (button == MouseButton.Left && state == ButtonState.Pressed)
             {
-                if (HoveredCrane != null)
+                if (HoveredCrane is Actor hoveredActor)
                 {
-                    MachinaGame.Print(HoveredCrane);
+                    this.windowManager.CreateWindow(creatingScene,
+                        new WindowBuilder(new Point(500, 500))
+                            .DestroyOnClose()
+                            .CanBeResized()
+                            .OnLaunch((window) =>
+                            {
+                                var renderActor = window.scene.AddActor("renderActor");
+                                new RemoteActorRenderer(renderActor, hoveredActor, window.Canvas);
+                            })
+                        );
                 }
             }
         }
