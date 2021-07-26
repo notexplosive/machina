@@ -63,12 +63,12 @@ namespace Machina.Data
         public event WindowAction Maximized;
         public event WindowAction AnyPartOfWindowClicked;
 
-        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized, bool canbeMinimized, UIStyle style)
+        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized, bool canbeMinimized, SpriteFrame icon, UIStyle style)
         {
             this.style = style;
             var headerSize = 32;
             var windowRoot = managerScene.AddActor("Window");
-            new BoundingRect(windowRoot, contentSize + new Point(0, headerSize));
+            new BoundingRect(windowRoot, contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
@@ -79,19 +79,22 @@ namespace Machina.Data
                  new Draggable(headerContentActor).DragStart += (position, delta) => OnAnyPartOfWindowClicked(MouseButton.Left);
                  new MoveOnDrag(headerContentActor, windowRoot.transform);
 
-                 var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal)
-                     .AddVerticallyStretchedElement("Icon", 32, iconActor =>
+                 var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal);
+                 if (icon != null)
+                 {
+                     headerGroup.AddVerticallyStretchedElement("Icon", 32, iconActor =>
                      {
-                         new SpriteRenderer(iconActor, style.uiSpriteSheet)
-                             .SetAnimation(new ChooseFrameAnimation(1));
+                         new SpriteRenderer(iconActor, icon.spriteSheet).SetAnimation(icon.animation);
 
                          iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
-                     })
-                     .PixelSpacer(5) // Spacing between icon and title
-                     .AddBothStretchedElement("Title", titleActor =>
-                     {
-                         this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
                      });
+                     headerGroup.PixelSpacer(5); // Spacing between icon and title
+                 }
+
+                 headerGroup.AddBothStretchedElement("Title", titleActor =>
+                 {
+                     this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
+                 });
 
                  if (canbeMinimized)
                  {

@@ -36,7 +36,7 @@ namespace Machina.Data
         private int maxScrollPos;
         private Vector2 startingPosition;
         private Action<UIWindow> onLaunch;
-
+        private SpriteFrame icon;
         private readonly Point contentSize;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
 
@@ -47,7 +47,7 @@ namespace Machina.Data
 
         public UIWindow Build(Scene creatingScene, UIStyle style)
         {
-            var window = new UIWindow(creatingScene, this.contentSize, this.CanBeClosed, this.CanBeMaximized, this.CanBeMinimized, style);
+            var window = new UIWindow(creatingScene, this.contentSize, CanBeClosed, CanBeMaximized, CanBeMinimized, this.icon, style);
 
             window.Closed += onClosed;
             window.Minimized += onMinimized;
@@ -70,6 +70,12 @@ namespace Machina.Data
         public WindowBuilder Title(string title)
         {
             this.title = title;
+            return this;
+        }
+
+        public WindowBuilder Icon(SpriteFrame icon)
+        {
+            this.icon = icon;
             return this;
         }
 

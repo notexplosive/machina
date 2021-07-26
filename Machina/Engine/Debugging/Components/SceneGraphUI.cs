@@ -59,14 +59,23 @@ namespace Machina.Engine.Debugging.Components
             {
                 if (HoveredCrane is Actor hoveredActor)
                 {
+                    var windowSize = new Point(250, 250);
+                    var actorBoundingRectIfExists = hoveredActor.GetComponent<BoundingRect>();
+                    if (actorBoundingRectIfExists != null)
+                    {
+                        windowSize = actorBoundingRectIfExists.Size;
+                    }
+
+
                     this.windowManager.CreateWindow(creatingScene,
-                        new WindowBuilder(new Point(500, 500))
+                        new WindowBuilder(windowSize)
                             .DestroyOnClose()
                             .CanBeResized()
+                            .Title(hoveredActor.name)
                             .OnLaunch((window) =>
                             {
                                 var renderActor = window.scene.AddActor("renderActor");
-                                new RemoteActorRenderer(renderActor, hoveredActor, window.Canvas);
+                                new RemoteActorRenderer(renderActor, hoveredActor);
                             })
                         );
                 }

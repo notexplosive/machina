@@ -39,6 +39,11 @@ namespace Machina.Components
             color = Color.White;
         }
 
+        public SpriteRenderer(Actor actor, SpriteFrame spriteFrame) : this(actor, spriteFrame.spriteSheet)
+        {
+            currentAnimation = spriteFrame.animation;
+        }
+
         public SpriteRenderer SetupBoundingRect()
         {
             var boundingRect = this.actor.GetComponent<BoundingRect>();
