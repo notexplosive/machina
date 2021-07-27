@@ -385,10 +385,6 @@ namespace Machina.Engine
             base.Draw(gameTime);
         }
 
-        protected virtual void OnFirstPreDraw(SpriteBatch spriteBatch)
-        {
-        }
-
         private void OnResize(object sender, EventArgs e)
         {
             var windowSize = new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
