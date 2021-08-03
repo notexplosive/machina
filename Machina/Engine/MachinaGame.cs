@@ -250,7 +250,7 @@ namespace Machina.Engine
 
             CommandLineArgs.RegisterEarlyFlagArg("debug", () =>
             {
-                DebugLevel = DebugLevel.Passive;
+                DebugLevel = DebugLevel.Active;
             });
 
             CommandLineArgs.RegisterValueArg("demo", arg =>

@@ -22,7 +22,7 @@ namespace Machina.Components
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.actor.scene.StartCoroutine(IntroAnimation());
-            tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-tik");
+            tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-chape");
             SwapColor();
         }
 
@@ -74,31 +74,16 @@ namespace Machina.Components
             ouch.Pitch = 0.25f;
             ouch.Volume = 0.25f;
 
-
-
-            yield return new WaitSeconds(0.5f / speed);
-
-            this.textRenderer.Text = "Not";
-            PlayTick();
-            camera.Zoom = 5;
-
-            yield return new WaitSeconds(0.5f / speed);
-
-            this.textRenderer.Text = "NotEx";
-            PlayTick(-0.75f);
-            camera.Zoom = 4;
             SwapColor();
 
-            yield return new WaitSeconds(0.5f / speed);
-
-            this.textRenderer.Text = "NotExplo";
-            PlayTick(-0.25f);
-            camera.Zoom = 3;
+            this.textRenderer.Text = "";
 
             yield return new WaitSeconds(0.5f / speed);
-
-            this.textRenderer.Text = "NotExplosive";
             PlayTick(-0.5f);
+            this.textRenderer.Text = "NOTEXPLOSIVE";
+            yield return new WaitSeconds(0.1f / speed);
+            this.textRenderer.Text = "NotExplosive";
+            PlayTick(0f);
             camera.Zoom = 2;
 
             yield return new WaitSeconds(1.5f / speed);
@@ -122,18 +107,6 @@ namespace Machina.Components
 
             yield return new WaitUntil(() => dampening == 0);
 
-            yield return new WaitSeconds(0.5f / speed);
-            this.textRenderer.Text = "NotExplosive";
-            PlayTick(1);
-            yield return new WaitSeconds(0.15f / speed);
-            this.textRenderer.Text = "NotExpl";
-            PlayTick(1);
-            yield return new WaitSeconds(0.15f / speed);
-            this.textRenderer.Text = "No";
-            PlayTick(1);
-            yield return new WaitSeconds(0.15f / speed);
-            this.textRenderer.Text = "";
-            PlayTick(1);
             yield return new WaitSeconds(1f / speed);
             this.actor.Destroy();
         }
