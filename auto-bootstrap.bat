@@ -16,12 +16,19 @@ mgcb-editor --register
 
 REM Build default OpenGL project
 dotnet new mgdesktopgl -o %1
+
+REM Create an sln and add projects to it
 dotnet new sln
 dotnet sln add %1
 dotnet sln add .\machina\Machina
 dotnet sln add .\machina\TestMachina
+
+REM Add Machina as a dependency on your project
 dotnet add %1 reference .\machina\Machina\
+
+REM Pull in the default gitignore and readme.md
 xcopy .\machina\.gitignore .
+echo "F" | xcopy .\machina\game-readme.md readme.md
 git add .
 git commit -m "(Machina:Automated) Initial Commit"
 pause
