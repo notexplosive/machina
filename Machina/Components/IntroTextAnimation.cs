@@ -62,6 +62,7 @@ namespace Machina.Components
         void PlayTick(float pitch = 0)
         {
             tikSound.Pitch = pitch;
+            tikSound.Volume = 0.25f;
             tikSound.Stop();
             tikSound.Play();
         }
