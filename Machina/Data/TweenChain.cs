@@ -33,6 +33,11 @@ namespace Machina.Data
             this.currentItem = null;
         }
 
+        public TweenChain AppendWaitUntilTween(Func<bool> callbackFn)
+        {
+            return Append(new WaitUntilCallbackChainItem(callbackFn));
+        }
+
         public TweenChain Append(IChainItem item)
         {
             chainInternal.Add(item);
@@ -284,6 +289,9 @@ namespace Machina.Data
             }
         }
 
+        /// <summary>
+        /// Instantly execute a callback in the middle of the tween
+        /// </summary>
         public class CallbackChainItem : IChainItem
         {
             private readonly Action callbackFn;
@@ -316,9 +324,40 @@ namespace Machina.Data
             }
         }
 
+        /// <summary>
+        /// Pause the tween until the callback returns true
+        /// </summary>
+        public class WaitUntilCallbackChainItem : IChainItem
+        {
+            private readonly Func<bool> callbackFn;
+
+            public WaitUntilCallbackChainItem(Func<bool> callbackFn)
+            {
+                this.callbackFn = callbackFn;
+            }
+
+            public bool IsComplete => this.callbackFn();
+
+            public void Refresh()
+            {
+                // This function is intentionally left blank
+            }
+
+            public IChainItem StartTween()
+            {
+                callbackFn?.Invoke();
+                return this;
+            }
+
+            public void Update(float dt)
+            {
+                // This function is intentionally left blank
+            }
+        }
+
         public static int LerpInt(int start, int end, float progress)
         {
-            return (int) (start + (end - start) * progress);
+            return (int)(start + (end - start) * progress);
         }
     }
 }
