@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Machina.Data;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,16 +14,16 @@ namespace Machina.Engine
             get => this.seed_impl;
             set
             {
-                Clean = new Random(value);
+                Clean = new NoiseBasedRNG((uint)value);
                 MachinaGame.Print("seed set: ", value);
                 this.seed_impl = value;
             }
         }
-        public Random Clean
+        public NoiseBasedRNG Clean
         {
             get; private set;
         }
-        public Random Dirty
+        public NoiseBasedRNG Dirty
         {
             get;
         }
@@ -30,12 +31,12 @@ namespace Machina.Engine
         public SeededRandom()
         {
             Seed = GenerateSeed();
-            Dirty = new Random();
+            Dirty = new NoiseBasedRNG((uint)GenerateSeed());
         }
 
         public static int GenerateSeed()
         {
-            return (int) DateTime.Now.Ticks & 0x0000FFFF;
+            return (int)DateTime.Now.Ticks & 0x0000FFFF;
         }
 
         /// <summary>
@@ -67,25 +68,12 @@ namespace Machina.Engine
 
         public void CleanShuffle<T>(IList<T> list)
         {
-            Shuffle(list, Clean);
+            Clean.Shuffle(list);
         }
 
         public void DirtyShuffle<T>(IList<T> list)
         {
-            Shuffle(list, Dirty);
-        }
-
-        private void Shuffle<T>(IList<T> list, Random random)
-        {
-            int n = list.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                T value = list[k];
-                list[k] = list[n];
-                list[n] = value;
-            }
+            Dirty.Shuffle(list);
         }
     }
 }
