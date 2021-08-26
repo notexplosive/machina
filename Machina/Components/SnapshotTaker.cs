@@ -52,7 +52,6 @@ namespace Machina.Components
             {
                 this.pendingSnapshot = false;
                 SaveSnapshotAndDisposeTexture(spriteBatch);
-                MachinaGame.Print("Snapshot taken");
             }
         }
 
@@ -73,6 +72,7 @@ namespace Machina.Components
             using (FileStream destStream = File.Create(Path.Combine(this.screenshotPath, currentTime.ToFileTimeUtc().ToString() + ".png")))
             {
                 texture.SaveAsPng(destStream, texture.Width, texture.Height);
+                MachinaGame.Print("Snapshot taken", this.screenshotPath);
             }
             texture.Dispose();
         }
