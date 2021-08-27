@@ -20,6 +20,28 @@ namespace Machina.Data
             this.currentPosition = 0;
         }
 
+        /// <summary>
+        /// WARNING: Avoid using for numbers that are larger than 65535
+        /// Given two seeds it tries to do something reasonable to combine them
+        /// </summary>
+        /// <param name="seedX"></param>
+        /// <param name="seedY"></param>
+        public NoiseBasedRNG(ushort seedX, ushort seedY) : this(CreateSeedFromTwoNumbers(seedX, seedY))
+        {
+        }
+
+        /// <summary>
+        /// WARNING: This implementation starts to break down if the numbers get larger than 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static uint CreateSeedFromTwoNumbers(ushort x, ushort y)
+        {
+            var numberOfBitsInUint = (sizeof(uint) * 8);
+            return y ^ ((uint)x << numberOfBitsInUint / 2);
+        }
+
         public int Next()
         {
             return (int)Squirrel3.Noise(this.currentPosition++, this.seed);
