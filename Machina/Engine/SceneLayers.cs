@@ -75,7 +75,7 @@ namespace Machina.Engine
                 this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
                 Logger = this.overlayOutputConsole;
 
-                DebugBuilder.CreateFramerateCounter(this);
+                // DebugBuilder.CreateFramerateCounter(this);
                 DebugBuilder.CreateFramestep(this);
                 this.debugDock = DebugBuilder.CreateDebugDock(this);
             }
