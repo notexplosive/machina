@@ -19,12 +19,10 @@ namespace Machina.Engine.Debugging.Data
             var strings = new List<string>();
             foreach (var obj in objects)
             {
-                strings.Add(obj.ToString());
+                strings.Add(obj == null ? "null" : obj.ToString());
             }
 
             var output = string.Join("   ", strings);
-
-            Console.WriteLine(output);
         }
     }
 }
