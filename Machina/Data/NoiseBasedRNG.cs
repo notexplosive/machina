@@ -95,5 +95,10 @@ namespace Machina.Data
                 list[n] = value;
             }
         }
+
+        public float NextRadian()
+        {
+            return NextFloat() * MathF.PI * 2;
+        }
     }
 }
