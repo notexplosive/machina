@@ -9,10 +9,19 @@ namespace Machina.Data
         public readonly Func<T> getter;
         public readonly Action<T> setter;
 
+        public T CurrentValue => getter();
+
         public TweenAccessors(Func<T> getter, Action<T> setter)
         {
             this.getter = getter;
             this.setter = setter;
+        }
+
+        public TweenAccessors(T startingValue)
+        {
+            T value = startingValue;
+            this.getter = () => value;
+            this.setter = (setVal) => value = setVal;
         }
     }
 }

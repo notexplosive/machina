@@ -13,7 +13,7 @@ namespace Machina.Data
         private readonly List<IChainItem> chainInternal;
         private int currentIndex;
         private IChainItem currentItem;
-        private TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
+        private static TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
 
         private static float dummyGetter() => 0f;
         private static void dummySetter(float val)
@@ -251,8 +251,7 @@ namespace Machina.Data
         public class ChainItem<T> : IChainItem where T : struct
         {
             private readonly LerpFunc<T> lerpFunc;
-            private readonly Func<T> getter;
-            private readonly Action<T> setter;
+            private readonly TweenAccessors<T> accessors;
             public readonly T destination;
             public readonly float duration;
             public readonly EaseFunc scaleFunc;
@@ -265,8 +264,7 @@ namespace Machina.Data
                 this.destination = destination;
                 this.duration = duration;
                 this.scaleFunc = scaleFunc;
-                this.getter = accessors.getter;
-                this.setter = accessors.setter;
+                this.accessors = accessors;
                 this.lerpFunc = lerp;
                 this.tween = new Tween<T>(lerpFunc);
             }
@@ -278,14 +276,14 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                this.tween.Start(getter(), destination, duration, scaleFunc);
+                this.tween.Start(this.accessors.getter(), destination, duration, scaleFunc);
                 return this;
             }
 
             public void Update(float dt)
             {
                 this.tween.Update(dt);
-                this.setter(this.tween.CurrentValue);
+                this.accessors.setter(this.tween.CurrentValue);
             }
         }
 
