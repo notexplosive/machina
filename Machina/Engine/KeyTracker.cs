@@ -117,7 +117,7 @@ namespace Machina.Engine
             }
 
             // A button -> Space
-            ConvertGamepadButtonToKeyboard(currentGamePadState.Buttons.A, this.oldGamePadState.Buttons.A, Keys.Space);
+            ConvertGamepadButtonToKeyboard(currentGamePadState.Buttons.A, this.oldGamePadState.Buttons.A, Keys.Z);
             // B button -> Backspace
             ConvertGamepadButtonToKeyboard(currentGamePadState.Buttons.B, this.oldGamePadState.Buttons.B, Keys.Back);
 
