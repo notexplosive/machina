@@ -14,12 +14,23 @@ namespace Machina.Components
     {
         private readonly BoundedTextRenderer textRenderer;
         private readonly Clickable clickable;
-        private bool isInFocus;
         private TextCursor cursor;
         private Color cursorColor = Color.White;
         private Color highlightColor = Color.CornflowerBlue;
         private float flickerTimer;
         public Action<string> onSubmit;
+
+        private bool isInFocus_impl;
+
+        public bool IsInFocus
+        {
+            get => this.isInFocus_impl;
+            set
+            {
+                this.isInFocus_impl = value;
+                this.flickerTimer = 0;
+            }
+        }
 
         public string Text
         {
@@ -43,16 +54,16 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (this.isInFocus)
+            if (this.IsInFocus)
             {
                 var topLeft = this.textRenderer.TextWorldPos;
-                var lineHeight = (int) (textRenderer.Font.LineSpacing * 0.9f);
+                var lineHeight = (int)(textRenderer.Font.LineSpacing * 0.9f);
 
                 if (MathF.Cos(this.flickerTimer * 5) > 0)
                 {
                     if (Text.Length != 0)
                     {
-                        var cursorLocalPos = new Point((int) textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
+                        var cursorLocalPos = new Point((int)textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X, 0);
 
                         // Caret
                         spriteBatch.FillRectangle(new Rectangle(topLeft +
@@ -64,7 +75,7 @@ namespace Machina.Components
                         // fallback case, probably not needed
                         spriteBatch.FillRectangle(new Rectangle(topLeft +
                             new Point(0, 0),
-                            new Point(1, (int) (textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor, transform.Depth - 1);
+                            new Point(1, (int)(textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor, transform.Depth - 1);
                     }
                 }
 
@@ -89,7 +100,7 @@ namespace Machina.Components
 
         public override void OnTextInput(TextInputEventArgs inputEventArgs)
         {
-            if (this.isInFocus && this.actor.Visible)
+            if (this.IsInFocus && this.actor.Visible)
             {
                 this.flickerTimer = 0;
                 if (IsPrintable(inputEventArgs.Character))
@@ -139,7 +150,7 @@ namespace Machina.Components
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            if (this.isInFocus && state == ButtonState.Pressed)
+            if (this.IsInFocus && state == ButtonState.Pressed)
             {
                 this.flickerTimer = 0;
                 if (key == Keys.Left)
@@ -168,7 +179,7 @@ namespace Machina.Components
                 }
                 else if (key == Keys.Enter)
                 {
-                    this.isInFocus = false;
+                    // this.IsInFocus = false;
                     this.onSubmit?.Invoke(Text);
                 }
 
@@ -185,7 +196,7 @@ namespace Machina.Components
             {
                 if (!this.clickable.IsHovered)
                 {
-                    this.isInFocus = false;
+                    this.IsInFocus = false;
                 }
                 else
                 {
@@ -201,7 +212,7 @@ namespace Machina.Components
                         {
                             substring += c;
                             var substrWidth = textRenderer.Font.MeasureString(substring).X;
-                            var rect = new Rectangle(topLeft.ToPoint(), new Point((int) substrWidth, textRenderer.Font.LineSpacing));
+                            var rect = new Rectangle(topLeft.ToPoint(), new Point((int)substrWidth, textRenderer.Font.LineSpacing));
                             if (rect.Contains(currentPosition))
                             {
                                 break;
@@ -223,7 +234,7 @@ namespace Machina.Components
             {
                 substring += c;
                 var substrWidth = textRenderer.Font.MeasureString(substring).X;
-                var rect = new Rectangle(topLeft.ToPoint(), new Point((int) substrWidth, textRenderer.Font.LineSpacing));
+                var rect = new Rectangle(topLeft.ToPoint(), new Point((int)substrWidth, textRenderer.Font.LineSpacing));
                 spriteBatch.DrawRectangle(
                     rect,
                     Color.Orange, 1f, transform.Depth);
@@ -237,7 +248,7 @@ namespace Machina.Components
         {
             if (button == MouseButton.Left)
             {
-                this.isInFocus = true;
+                this.IsInFocus = true;
                 this.cursor.ResetAnchor();
             }
         }
