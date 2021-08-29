@@ -27,6 +27,11 @@ namespace Machina.Data
         {
         }
 
+        public NoiseBasedRNG(uint seed, int x, int y) : this(Squirrel3.Noise2D(x, y, seed))
+        {
+
+        }
+
         public int Next()
         {
             return (int)Squirrel3.Noise(this.currentPosition++, this.seed);
