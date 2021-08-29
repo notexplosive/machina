@@ -23,6 +23,10 @@ namespace Machina.Data
             this.id = idPool++;
         }
 
+        public NoiseBasedRNG(uint seed, int x) : this(Squirrel3.Noise(x, seed))
+        {
+        }
+
         public NoiseBasedRNG(int seedX, int seedY) : this(Squirrel3.Noise(seedX, (uint)seedY))
         {
         }
