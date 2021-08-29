@@ -11,6 +11,8 @@ namespace Machina.Data
     /// </summary>
     public class NoiseBasedRNG
     {
+        private static int idPool;
+        private readonly int id;
         private readonly uint seed;
         private int currentPosition;
 
@@ -18,6 +20,7 @@ namespace Machina.Data
         {
             this.seed = seed;
             this.currentPosition = 0;
+            this.id = idPool++;
         }
 
         public NoiseBasedRNG(int seedX, int seedY) : this(Squirrel3.Noise(seedX, (uint)seedY))
@@ -56,11 +59,6 @@ namespace Machina.Data
 
         public double NextDouble()
         {
-            /*
-            var mantissaMask = 0xFFFFFFFFFFFFFL;
-            return BitConverter.Int64BitsToDouble((Next() & mantissaMask));
-            */
-
             var max = int.MaxValue / 2;
             return Next(max) / (double)max;
         }
@@ -81,6 +79,11 @@ namespace Machina.Data
         public float NextRadian()
         {
             return NextFloat() * MathF.PI * 2;
+        }
+
+        public override string ToString()
+        {
+            return "[" + this.id + "]" + " seed " + this.seed + " at " + this.currentPosition;
         }
     }
 }
