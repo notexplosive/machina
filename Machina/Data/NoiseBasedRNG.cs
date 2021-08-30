@@ -36,6 +36,33 @@ namespace Machina.Data
 
         }
 
+        /// <summary>
+        /// Sets the seed from a string, if the string is parsable as an int (eg: "100") then it's parsed.
+        /// Otherwise we sum the bytes
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        public static uint SeedFromString(string arg)
+        {
+            bool canParse = uint.TryParse(arg, out uint parsed);
+            if (canParse)
+            {
+                return parsed;
+            }
+            else
+            {
+                int index = 0;
+                int total = 0;
+                foreach (char ch in arg)
+                {
+                    total ^= ch << (int)index;
+                    index++;
+                }
+
+                return (uint)total;
+            }
+        }
+
         public int Next()
         {
             return (int)Squirrel3.Noise(this.currentPosition++, this.seed);
