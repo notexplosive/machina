@@ -37,6 +37,7 @@ namespace Machina.Data
         private Vector2 startingPosition;
         private Action<UIWindow> onLaunch;
         private SpriteFrame icon;
+        private Func<bool> shouldAllowKeyboardEventsLambda = () => false;
         private readonly Point contentSize;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
 
@@ -63,6 +64,8 @@ namespace Machina.Data
             window.rootTransform.Position = this.startingPosition;
 
             this.onLaunch?.Invoke(window);
+
+            window.sceneRenderer.SetShouldAllowKeyboardEventsLambda(this.shouldAllowKeyboardEventsLambda);
 
             return window;
         }
@@ -151,6 +154,18 @@ namespace Machina.Data
         {
             this.isScrollable = true;
             this.maxScrollPos = maxScrollPos;
+            return this;
+        }
+
+        public WindowBuilder AllowKeyboardEvents()
+        {
+            this.shouldAllowKeyboardEventsLambda = () => true;
+            return this;
+        }
+
+        public WindowBuilder AllowKeyboardEventsWhen(Func<bool> func)
+        {
+            this.shouldAllowKeyboardEventsLambda = func;
             return this;
         }
     }
