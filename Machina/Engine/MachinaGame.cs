@@ -233,7 +233,7 @@ namespace Machina.Engine
 
             CommandLineArgs.RegisterEarlyValueArg("randomseed", arg =>
             {
-                MachinaGame.Random.SetSeedFromString(arg);
+                MachinaGame.Random.Seed = (int)NoiseBasedRNG.SeedFromString(arg);
             });
 
             var demoName = Demo.MostRecentlySavedDemoPath;
