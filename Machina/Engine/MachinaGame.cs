@@ -344,7 +344,7 @@ namespace Machina.Engine
         protected override void Update(GameTime gameTime)
         {
             pendingCursor = MouseCursor.Arrow;
-            float dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
@@ -405,7 +405,7 @@ namespace Machina.Engine
             var oldSceneLayers = SceneLayers;
             var windowSize = this.startingWindowSize;
             var desiredWidth = 1920 / 4;
-            float ratio = (float) windowSize.X / desiredWidth;
+            float ratio = (float)windowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(), ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas);

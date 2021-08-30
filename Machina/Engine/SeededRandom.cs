@@ -58,7 +58,7 @@ namespace Machina.Engine
                 int total = 0;
                 foreach (var ch in arg)
                 {
-                    total += ch * index;
+                    total ^= ch << index;
                     index++;
                 }
 
