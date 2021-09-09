@@ -53,7 +53,7 @@ namespace Machina.Engine.Debugging.Components
 
         public void AddApp(App app)
         {
-            if (this.currentRow.transform.ChildCount > 3)
+            if (this.currentRow.transform.ChildCount >= 3)
             {
                 this.currentRow = AddRow();
             }
