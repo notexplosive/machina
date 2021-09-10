@@ -75,6 +75,11 @@ namespace TestMachina.Tests
 
             outer.isDone.Should().BeFalse();
             inner.isDone.Should().BeTrue();
+
+            scene.Update(1f);
+            scene.Update(1f);
+
+            outer.isDone.Should().BeTrue();
         }
     }
 }
