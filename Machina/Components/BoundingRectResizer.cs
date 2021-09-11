@@ -65,8 +65,9 @@ namespace Machina.Components
             }
             else
             {
-                this.minSize = new Point(64, 64);
+                this.minSize = new Point(0, 0);
             }
+
 
             ClampRectMin();
             if (maxSize.HasValue)
