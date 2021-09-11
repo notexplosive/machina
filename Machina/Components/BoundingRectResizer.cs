@@ -65,7 +65,9 @@ namespace Machina.Components
             }
             else
             {
-                this.minSize = new Point(0, 0);
+                // This must be exactly ZERO!
+                // If we set the min to (n,n) and then create a rect that's (n-1,n-1) we will crash
+                this.minSize = Point.Zero;
             }
 
 
