@@ -69,7 +69,7 @@ namespace Machina.Engine.Debugging.Components
 
                     this.windowManager.CreateWindow(creatingScene,
                         new WindowBuilder(windowSize)
-                            .DestroyOnClose()
+                            .DestroyViaCloseButton()
                             .CanBeResized()
                             .Title(hoveredActor.name)
                             .OnLaunch((window) =>

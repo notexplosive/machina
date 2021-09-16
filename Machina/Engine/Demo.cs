@@ -167,7 +167,7 @@ namespace Machina.Engine
 
             public bool IsFinished => this.currentIndex >= demoLength;
 
-            public float Progress => this.currentIndex / (float) demoLength;
+            public float Progress => this.currentIndex / (float)demoLength;
 
             public InputFrameState LatestFrameState
             {
@@ -189,7 +189,7 @@ namespace Machina.Engine
                 }
                 else
                 {
-                    // Unpress any pressed buttons (this doesn't work because it doesn't work that way)
+                    // Unpress any pressed buttons (this doesn't work because it doesn't work that way, we need to discover pressed keys some other way)
                     var result =
                         new InputFrameState(
                             new KeyboardFrameState(Array.Empty<Keys>(), LatestFrameState.keyboardFrameState.Pressed, ModifierKeys.NoModifiers)
@@ -201,6 +201,23 @@ namespace Machina.Engine
                     this.LatestFrameState = result;
                     return result;
                 }
+            }
+
+            public void PollHumanInput(InputFrameState inputFrameState)
+            {
+                // InputFrameState is such an inconvenient structure :(
+                foreach (var pressedButton in inputFrameState.keyboardFrameState.Pressed)
+                {
+                    if (pressedButton == Keys.Escape)
+                    {
+                        SkipToEnd();
+                    }
+                }
+            }
+
+            public void SkipToEnd()
+            {
+                this.currentIndex = this.demoLength;
             }
         }
 

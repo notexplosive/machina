@@ -115,7 +115,7 @@ namespace Machina.Data
             return this;
         }
 
-        public WindowBuilder DestroyOnClose()
+        public WindowBuilder DestroyViaCloseButton()
         {
             return OnClose((win) => { win.Destroy(); });
         }

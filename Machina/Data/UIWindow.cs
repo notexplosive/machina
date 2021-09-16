@@ -163,7 +163,7 @@ namespace Machina.Data
             });
         }
 
-        public void OnAnyPartOfWindowClicked(MouseButton mouseButton)
+        private void OnAnyPartOfWindowClicked(MouseButton mouseButton)
         {
             // mouseButton arg is ignored on purpose
             AnyPartOfWindowClicked?.Invoke(this);

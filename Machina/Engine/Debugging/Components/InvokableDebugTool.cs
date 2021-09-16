@@ -53,19 +53,32 @@ namespace Machina.Components
         {
             if (this.invokingKeyCombo.Match(key, state, modifiers) && MachinaGame.DebugLevel >= DebugLevel.Passive)
             {
-                this.toolActive = !this.toolActive;
-                this.onToolToggle?.Invoke(this.toolActive);
 
-                if (this.toolActive)
+                if (!this.toolActive)
                 {
-                    this.currentTweenChain = enterTweenChain;
+                    Open();
                 }
                 else
                 {
-                    this.currentTweenChain = exitTweenChain;
+                    Close();
                 }
-                this.currentTweenChain.Refresh();
             }
+        }
+
+        public void Close()
+        {
+            this.toolActive = false;
+            this.onToolToggle?.Invoke(this.toolActive);
+            this.currentTweenChain = exitTweenChain;
+            this.currentTweenChain.Refresh();
+        }
+
+        public void Open()
+        {
+            this.toolActive = true;
+            this.onToolToggle?.Invoke(this.toolActive);
+            this.currentTweenChain = enterTweenChain;
+            this.currentTweenChain.Refresh();
         }
     }
 }

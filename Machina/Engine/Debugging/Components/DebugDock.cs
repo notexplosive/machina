@@ -21,9 +21,11 @@ namespace Machina.Engine.Debugging.Components
         private readonly int iconPadding = 5;
 
         private LayoutGroup currentRow;
+        private readonly InvokableDebugTool invokable;
 
         public DebugDock(Actor actor) : base(actor)
         {
+            this.invokable = RequireComponent<InvokableDebugTool>();
             var boundingRect = RequireComponent<BoundingRect>();
             boundingRect.SetSize(new Point(iconWidth * 3 + iconPadding * 2 + dockMargin * 2, rowHeight * 2 + titleHeight + dockMargin * 2));
 
@@ -38,6 +40,11 @@ namespace Machina.Engine.Debugging.Components
 
 
             this.currentRow = AddRow();
+        }
+
+        public void Close()
+        {
+            this.invokable.Close();
         }
 
         private LayoutGroup AddRow()

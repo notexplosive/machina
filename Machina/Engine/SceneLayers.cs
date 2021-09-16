@@ -57,7 +57,7 @@ namespace Machina.Engine
         }
 
         public Color BackgroundColor = Color.SlateBlue;
-        private DebugDock debugDock;
+        private readonly DebugDock debugDock;
 
         public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
@@ -307,6 +307,11 @@ namespace Machina.Engine
         public void DrawDebugScene(SpriteBatch spriteBatch)
         {
             this.debugScene?.Draw(spriteBatch);
+        }
+
+        public void CloseDebugDock()
+        {
+            this.debugDock.Close();
         }
     }
 }

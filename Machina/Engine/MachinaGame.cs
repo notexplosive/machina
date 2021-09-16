@@ -289,6 +289,14 @@ namespace Machina.Engine
                 new SnapshotTaker(debugActor, shouldSkipSnapshot);
         }
 
+        public void RunDemo(string demoName)
+        {
+            var demoActor = sceneLayers.debugScene.AddActor("DebugActor");
+            var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
+            DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
+            demoPlaybackComponent.ShowGui = false;
+        }
+
         private void LoadInitialStyle()
         {
             // Load initial assets
@@ -351,26 +359,31 @@ namespace Machina.Engine
                 for (int i = 0; i < DemoPlayback.playbackSpeed; i++)
                 {
                     var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                    DemoPlayback.PollHumanInput(GetHumanFrameState());
                     sceneLayers.Update(dt, Matrix.Identity, frameState);
                 }
             }
             else
             {
-                var inputState = InputState.RawHumanInput;
-
-                MouseFrameState mouseFrameState;
-
-                if (GamePlatform.IsMobile)
-                    mouseFrameState = this.touchTracker.CalculateFrameState(inputState.touches);
-                else
-                    mouseFrameState = this.mouseTracker.CalculateFrameState(inputState.mouseState);
-
-                var humanInputFrameState = new InputFrameState(keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState), mouseFrameState);
-                sceneLayers.Update(dt, Matrix.Identity, humanInputFrameState);
+                sceneLayers.Update(dt, Matrix.Identity, GetHumanFrameState());
             }
 
             Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
+        }
+
+        private InputFrameState GetHumanFrameState()
+        {
+            var inputState = InputState.RawHumanInput;
+
+            MouseFrameState mouseFrameState;
+
+            if (GamePlatform.IsMobile)
+                mouseFrameState = this.touchTracker.CalculateFrameState(inputState.touches);
+            else
+                mouseFrameState = this.mouseTracker.CalculateFrameState(inputState.mouseState);
+
+            return new InputFrameState(keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState), mouseFrameState);
         }
 
         protected override void Draw(GameTime gameTime)
