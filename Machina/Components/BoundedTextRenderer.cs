@@ -155,18 +155,18 @@ namespace Machina.Components
 
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2();
+                var pivotPos = transform.Position;
+                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2() - pivotPos;
                 pos.Floor();
                 var depth = transform.Depth + this.depthOffset;
+                var finalDropShadowColor = new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f));
 
-                spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle,
-                    Vector2.Zero, 1f, SpriteEffects.None, depth);
+                spriteBatch.DrawString(Font, line.textContent, pivotPos, this.TextColor, transform.Angle,
+                    -pos, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(Font,
-                        line.textContent, pos + new Vector2(1, 1),
-                        new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f)), transform.Angle,
-                        Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(Font, line.textContent, pivotPos, finalDropShadowColor, transform.Angle,
+                        -(pos + new Vector2(1, 1)), 1f, SpriteEffects.None, depth + 1);
                 }
             }
         }
