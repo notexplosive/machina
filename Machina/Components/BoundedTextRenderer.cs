@@ -2,6 +2,7 @@
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,7 +40,7 @@ namespace Machina.Components
         {
             get; set;
         }
-        public Point Offset
+        public Point DrawOffset
         {
             get; set;
         }
@@ -139,7 +140,7 @@ namespace Machina.Components
             var xOffset = 0;
             foreach (var line in measurer.Lines)
             {
-                xOffset = line.positionX - (int) transform.Position.X;
+                xOffset = line.positionX - (int)transform.Position.X;
                 break;
             }
 
@@ -154,15 +155,33 @@ namespace Machina.Components
 
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.positionX, line.positionY + localPos.Y) + Offset.ToVector2();
-                var depth = transform.Depth + this.depthOffset;
+                var pos = new Vector2(line.positionX, line.positionY + localPos.Y) + DrawOffset.ToVector2();
                 pos.Floor();
+                var depth = transform.Depth + this.depthOffset;
 
-                spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth);
+                spriteBatch.DrawString(Font, line.textContent, pos, this.TextColor, transform.Angle,
+                    Vector2.Zero, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(Font, line.textContent, pos + new Vector2(1, 1), new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f)), transform.Angle, Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(Font,
+                        line.textContent, pos + new Vector2(1, 1),
+                        new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f)), transform.Angle,
+                        Vector2.Zero, 1f, SpriteEffects.None, depth + 1);
                 }
+            }
+        }
+
+        public override void DebugDraw(SpriteBatch spriteBatch)
+        {
+            var measurer = CreateMeasuredText();
+            var localPos = GetTextLocalPos(measurer);
+            spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
+            foreach (var line in measurer.Lines)
+            {
+                var pos = new Vector2(line.positionX, line.positionY + localPos.Y);
+                spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
+                spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange, 1f);
+                spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);
             }
         }
 
@@ -191,12 +210,12 @@ namespace Machina.Components
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
-                var widthOffset = bounds.Width - (int) font.MeasureString(content).X + 1;
+                var widthOffset = bounds.Width - (int)font.MeasureString(content).X + 1;
                 this.positionX = bounds.Location.X + widthOffset;
             }
             else
             {
-                var widthOffset = bounds.Width - (int) font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
+                var widthOffset = bounds.Width - (int)font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
                 this.positionX = bounds.Location.X + widthOffset;
             }
         }
