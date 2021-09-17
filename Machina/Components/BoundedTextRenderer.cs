@@ -140,7 +140,7 @@ namespace Machina.Components
             var xOffset = 0;
             foreach (var line in measurer.Lines)
             {
-                xOffset = line.textPositionX - (int)transform.Position.X;
+                xOffset = line.textPosition.X - (int)transform.Position.X;
                 break;
             }
 
@@ -155,7 +155,7 @@ namespace Machina.Components
 
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.textPositionX, line.textPositionY + localPos.Y) + DrawOffset.ToVector2();
+                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2();
                 pos.Floor();
                 var depth = transform.Depth + this.depthOffset;
 
@@ -178,7 +178,7 @@ namespace Machina.Components
             spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.textPositionX, line.textPositionY + localPos.Y);
+                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y);
                 spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
                 spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange, 1f);
                 spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);
@@ -196,27 +196,26 @@ namespace Machina.Components
     public struct TextLine
     {
         public string textContent;
-        public readonly int textPositionY;
-        public readonly int textPositionX;
+        public readonly Point textPosition;
 
         public TextLine(string content, SpriteFont font, Rectangle bounds, int positionY, HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;
-            this.textPositionY = positionY;
+            this.textPosition = new Point(0, positionY);
 
             if (horizontalAlignment == HorizontalAlignment.Left)
             {
-                textPositionX = bounds.Location.X;
+                textPosition.X = bounds.Location.X;
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
                 var widthOffset = bounds.Width - (int)font.MeasureString(content).X + 1;
-                this.textPositionX = bounds.Location.X + widthOffset;
+                this.textPosition.X = bounds.Location.X + widthOffset;
             }
             else
             {
                 var widthOffset = bounds.Width - (int)font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
-                this.textPositionX = bounds.Location.X + widthOffset;
+                this.textPosition.X = bounds.Location.X + widthOffset;
             }
         }
     }
