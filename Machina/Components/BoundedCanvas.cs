@@ -10,7 +10,7 @@ using Machina.Engine;
 
 namespace Machina.Components
 {
-    public class Canvas : BaseComponent
+    public class BoundedCanvas : BaseComponent
     {
         // Must supply a spriteBatch.Begin/End for each function
         public Action<SpriteBatch> DrawAdditionalContent;
@@ -26,7 +26,7 @@ namespace Machina.Components
             get => this.boundingRect.Rect.Location;
         }
 
-        public Canvas(Actor actor) : base(actor)
+        public BoundedCanvas(Actor actor) : base(actor)
         {
             this.DrawAdditionalContent += (SpriteBatch spriteBatch) =>
             {

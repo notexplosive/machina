@@ -56,7 +56,7 @@ namespace Machina.Data
             get => this.titleTextRenderer.Text;
             set => this.titleTextRenderer.Text = value;
         }
-        public Canvas Canvas => this.canvasActor.GetComponent<Canvas>();
+        public BoundedCanvas Canvas => this.canvasActor.GetComponent<BoundedCanvas>();
 
         public event WindowAction Closed;
         public event WindowAction Minimized;
@@ -128,7 +128,7 @@ namespace Machina.Data
                         .AddBothStretchedElement("Canvas", viewActor =>
                         {
                             canvasActor_local = viewActor;
-                            new Canvas(viewActor);
+                            new BoundedCanvas(viewActor);
                             new Hoverable(viewActor);
                             new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
                             sceneRenderer_local = new SceneRenderer(viewActor);

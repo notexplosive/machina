@@ -11,7 +11,7 @@ namespace Machina.Components
 {
     public class SceneRenderer : BaseComponent, IGameCanvas
     {
-        private readonly Canvas canvas;
+        private readonly BoundedCanvas canvas;
         private readonly BoundingRect boundingRect;
         private readonly Hoverable hoverable;
         private readonly SceneLayers sceneLayers;
@@ -22,7 +22,7 @@ namespace Machina.Components
 
         public SceneRenderer(Actor actor) : base(actor)
         {
-            this.canvas = RequireComponent<Canvas>();
+            this.canvas = RequireComponent<BoundedCanvas>();
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
             this.sceneLayers = new SceneLayers(false, this);
