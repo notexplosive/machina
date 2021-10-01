@@ -9,8 +9,8 @@ namespace Machina.Components
 {
     public class IntroTextAnimation : BaseComponent
     {
+        private readonly SoundEffectInstance introSound;
         private readonly BoundedTextRenderer textRenderer;
-        private readonly SoundEffectInstance tikSound;
         private float dampening = 1;
         private bool spinning;
         private bool toggle;
@@ -19,8 +19,8 @@ namespace Machina.Components
         public IntroTextAnimation(Actor actor) : base(actor)
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
+            this.introSound = MachinaGame.Assets.GetSoundEffectInstance("blblblbl");
             this.actor.scene.StartCoroutine(IntroAnimation());
-            this.tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-chape");
             SwapColor();
         }
 
@@ -58,14 +58,6 @@ namespace Machina.Components
             this.toggle = !this.toggle;
         }
 
-        private void PlayTick(float pitch = 0)
-        {
-            this.tikSound.Pitch = pitch;
-            this.tikSound.Volume = 0.25f;
-            this.tikSound.Stop();
-            this.tikSound.Play();
-        }
-
         private IEnumerator<ICoroutineAction> IntroAnimation()
         {
             var camera = this.actor.scene.camera;
@@ -78,31 +70,31 @@ namespace Machina.Components
 
             this.textRenderer.Text = "";
 
-            yield return new WaitSeconds(0.5f / speed);
-            PlayTick(-0.5f);
-            this.textRenderer.Text = "NOTEXPLOSIVE";
-            yield return new WaitSeconds(0.1f / speed);
-            this.textRenderer.Text = "NotExplosive";
-            PlayTick();
-            camera.Zoom = 2;
+            this.introSound.Play();
 
-            yield return new WaitSeconds(1.5f / speed);
-
-            this.textRenderer.Text = "NotExplosive.";
-            camera.Zoom = 1.5f;
-            PlayTick(0.5f);
-
+            var name = "NotExplosive";
             yield return new WaitSeconds(0.25f / speed);
 
-            this.textRenderer.Text = "NotExplosive.net";
-            PlayTick(0.5f);
-            camera.Zoom = 1;
-            SwapColor();
+            for (var i = 0; i < name.Length + 1; i++)
+            {
+                this.textRenderer.Text = name.Substring(0, i);
+                yield return new WaitSeconds(0.075f / speed);
+            }
 
-            yield return new WaitSeconds(0.75f / speed);
+            yield return new WaitSeconds(1f / speed);
 
             ouch.Play();
             this.spinning = true;
+            SwapColor();
+            
+            this.textRenderer.Text = "NotExplosive.net";
+            camera.Zoom = 1.5f;
+
+            yield return new WaitSeconds(0.25f / speed);
+
+            camera.Zoom = 1;
+
+            yield return new WaitSeconds(0.75f / speed);
 
             yield return new WaitUntil(() => this.dampening == 0);
 
