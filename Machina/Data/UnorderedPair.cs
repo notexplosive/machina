@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 
 namespace Machina.Data
@@ -12,23 +10,23 @@ namespace Machina.Data
 
         public UnorderedPair(T a, T b)
         {
-            set.Add(a);
-            set.Add(b);
-        }
-
-        public bool Contains(T c)
-        {
-            return set.Contains(c);
-        }
-
-        public bool IsEmpty()
-        {
-            return set.Count == 0;
+            this.set.Add(a);
+            this.set.Add(b);
         }
 
         public bool Equals(UnorderedPair<T> other)
         {
             return this.set.SetEquals(other.set);
+        }
+
+        public bool Contains(T c)
+        {
+            return this.set.Contains(c);
+        }
+
+        public bool IsEmpty()
+        {
+            return this.set.Count == 0;
         }
 
         public override int GetHashCode()
@@ -50,19 +48,21 @@ namespace Machina.Data
         {
             var casted = obj as UnorderedPair<T>;
             if (casted != null)
+            {
                 return Equals(casted);
+            }
 
             return false;
         }
 
         /// <summary>
-        /// Pass in one element that is in the pair, return the other one
+        ///     Pass in one element that is in the pair, return the other one
         /// </summary>
         /// <param name="me">Element that exists in the pair</param>
         /// <returns></returns>
         public T Other(T me)
         {
-            foreach (var s in set)
+            foreach (var s in this.set)
             {
                 if (!s.Equals(me))
                 {
@@ -75,12 +75,13 @@ namespace Machina.Data
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (var s in this.set)
             {
                 sb.Append(s);
                 sb.Append(", ");
             }
+
             return sb.ToString();
         }
     }

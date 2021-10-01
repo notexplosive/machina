@@ -1,83 +1,72 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MonoGame.Extended;
+﻿using System;
 using Machina.Engine;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace Machina.Components
 {
     public class BoundingRect : BaseComponent
     {
-        private Point size;
-        public Vector2 Offset
-        {
-            get; private set;
-        }
-        public Point Size => this.size;
-
-        public BoundingRect SetSize(Point size)
-        {
-            this.size = size;
-            onSizeChange?.Invoke(size);
-            return this;
-        }
-
-        public int Area => this.Width * this.Height;
-
-        public Point Location => Rect.Location;
-
         public Action<Point> onSizeChange;
+        private Point size;
 
         public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
             this.size = size;
-            this.Offset = offset;
+            Offset = offset;
         }
+
         public BoundingRect(Actor actor, Point size) : this(actor, size, new Vector2(0, 0))
         {
         }
 
-        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height), new Vector2(0, 0)) { }
+        public BoundingRect(Actor actor, int width, int height) : this(actor, new Point(width, height),
+            new Vector2(0, 0))
+        {
+        }
+
+        public Vector2 Offset { get; private set; }
+
+        public Point Size => this.size;
+
+        public int Area => Width * Height;
+
+        public Point Location => Rect.Location;
 
         public int Width
         {
-            get
-            {
-                return this.size.X;
-            }
+            get => this.size.X;
             set
             {
                 this.onSizeChange?.Invoke(new Point(value, this.size.Y));
                 this.size.X = value;
             }
         }
+
         public int Height
         {
-            get
-            {
-                return this.size.Y;
-            }
+            get => this.size.Y;
             set
             {
                 this.onSizeChange?.Invoke(new Point(this.size.X, value));
                 this.size.Y = value;
             }
         }
+
         public Rectangle Rect => new Rectangle((this.actor.transform.Position - Offset).ToPoint(), this.size);
         public RectangleF RectF => new RectangleF(this.actor.transform.Position - Offset, this.size);
 
-
-        public Vector2 NormalizedOffset
-        {
-            get
-            {
-                return this.Offset;
-            }
-        }
+        public Vector2 NormalizedOffset => Offset;
 
         public Vector2 TopLeft => Rect.Location.ToVector2();
+
+        public BoundingRect SetSize(Point size)
+        {
+            this.size = size;
+            this.onSizeChange?.Invoke(size);
+            return this;
+        }
 
         public BoundingRect SetOffsetToTopLeft()
         {

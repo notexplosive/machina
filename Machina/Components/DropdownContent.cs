@@ -1,32 +1,29 @@
-﻿using Machina.Data;
+﻿using System;
+using System.Collections.Generic;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class DropdownContent : BaseComponent
     {
-        public Action<DropdownItem> onOptionSelect;
-        private readonly List<DropdownItem> items = new List<DropdownItem>();
-        private readonly BoundingRect boundingRect;
-        private readonly Hoverable hoverable;
-        private readonly BoundingRect triggerBoundingRect;
-        private readonly SpriteFont font;
-        private int hoveredIndex;
-        private Point totalRectSize;
-        private int margin;
         private readonly NinepatchSheet backgroundSheet;
+        private readonly BoundingRect boundingRect;
+        private readonly SpriteFont font;
+        private readonly Hoverable hoverable;
         private readonly NinepatchSheet hoverSheet;
+        private readonly List<DropdownItem> items = new List<DropdownItem>();
+        private readonly int margin;
+        private readonly BoundingRect triggerBoundingRect;
+        private int hoveredIndex;
+        public Action<DropdownItem> onOptionSelect;
+        private Point totalRectSize;
 
-        public DropdownItem FirstItem => this.items[0];
-
-        public DropdownContent(Actor actor, SpriteFont font, NinepatchSheet backgroundSheet, NinepatchSheet hoverSheet) : base(actor)
+        public DropdownContent(Actor actor, SpriteFont font, NinepatchSheet backgroundSheet,
+            NinepatchSheet hoverSheet) : base(actor)
         {
             this.actor.Visible = false;
             this.boundingRect = RequireComponent<BoundingRect>();
@@ -40,9 +37,11 @@ namespace Machina.Components
             this.font = font;
         }
 
+        public DropdownItem FirstItem => this.items[0];
+
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            int index = CalculateIndexOfHoverPosition(currentPosition);
+            var index = CalculateIndexOfHoverPosition(currentPosition);
             this.hoveredIndex = index;
         }
 
@@ -50,9 +49,12 @@ namespace Machina.Components
         {
             if (buttonState == ButtonState.Released && button == MouseButton.Left)
             {
-                int index = CalculateIndexOfHoverPosition(currentPosition);
+                var index = CalculateIndexOfHoverPosition(currentPosition);
                 if (index >= 0 && index < this.items.Count)
-                    onOptionSelect?.Invoke(this.items[index]);
+                {
+                    this.onOptionSelect?.Invoke(this.items[index]);
+                }
+
                 Hide();
             }
         }
@@ -64,6 +66,7 @@ namespace Machina.Components
             {
                 return index;
             }
+
             return -1;
         }
 
@@ -73,16 +76,21 @@ namespace Machina.Components
             foreach (var item in this.items)
             {
                 // BG fill
-                var bgRect = new Rectangle(this.boundingRect.TopLeft.ToPoint(), totalRectSize);
-                this.backgroundSheet.DrawFullNinepatch(spriteBatch, bgRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth - 1);
+                var bgRect = new Rectangle(this.boundingRect.TopLeft.ToPoint(), this.totalRectSize);
+                this.backgroundSheet.DrawFullNinepatch(spriteBatch, bgRect, NinepatchSheet.GenerationDirection.Inner,
+                    transform.Depth - 1);
 
-                if (hoveredIndex != -1 && items[hoveredIndex].Equals(item))
+                if (this.hoveredIndex != -1 && this.items[this.hoveredIndex].Equals(item))
                 {
                     // Hover
-                    var hoverRect = new Rectangle(position.ToPoint(), new Point(this.totalRectSize.X, this.font.LineSpacing));
-                    this.hoverSheet.DrawFullNinepatch(spriteBatch, hoverRect, NinepatchSheet.GenerationDirection.Inner, transform.Depth - 2);
+                    var hoverRect = new Rectangle(position.ToPoint(),
+                        new Point(this.totalRectSize.X, this.font.LineSpacing));
+                    this.hoverSheet.DrawFullNinepatch(spriteBatch, hoverRect, NinepatchSheet.GenerationDirection.Inner,
+                        transform.Depth - 2);
                 }
-                spriteBatch.DrawString(this.font, item.text, position + new Vector2(this.margin, 0), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, (transform.Depth - 3).AsFloat);
+
+                spriteBatch.DrawString(this.font, item.text, position + new Vector2(this.margin, 0), Color.White, 0f,
+                    Vector2.Zero, 1f, SpriteEffects.None, (transform.Depth - 3).AsFloat);
                 position.Y += this.font.LineSpacing;
             }
         }
@@ -90,19 +98,19 @@ namespace Machina.Components
         public void Show()
         {
             this.actor.Visible = true;
-            this.boundingRect.Width = triggerBoundingRect.Width;
-            this.boundingRect.Height = items.Count * this.font.LineSpacing;
+            this.boundingRect.Width = this.triggerBoundingRect.Width;
+            this.boundingRect.Height = this.items.Count * this.font.LineSpacing;
             this.actor.transform.LocalPosition = new Vector2(0, this.triggerBoundingRect.Height);
 
-
             this.totalRectSize = new Point(this.triggerBoundingRect.Width, 0);
-            foreach (var item in items)
+            foreach (var item in this.items)
             {
                 var textSize = this.font.MeasureString(item.text) + new Vector2(this.margin * 2, 0);
                 if (textSize.X > this.totalRectSize.X)
                 {
-                    totalRectSize.X = (int) textSize.X;
+                    this.totalRectSize.X = (int) textSize.X;
                 }
+
                 this.totalRectSize.Y += (int) textSize.Y;
             }
 
@@ -121,20 +129,21 @@ namespace Machina.Components
             return Add(item);
         }
 
-        public struct DropdownItem
-        {
-            public string text;
-            public DropdownItem(string text)
-            {
-                this.text = text;
-            }
-        }
-
         public DropdownContent Add(DropdownItem item)
         {
             this.items.Add(item);
 
             return this;
+        }
+
+        public struct DropdownItem
+        {
+            public string text;
+
+            public DropdownItem(string text)
+            {
+                this.text = text;
+            }
         }
     }
 }

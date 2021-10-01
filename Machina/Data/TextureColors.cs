@@ -1,27 +1,25 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     public class TextureColors
     {
-        private readonly Texture2D sourceTexture;
         private readonly HashSet<Color> colorMap = new HashSet<Color>();
+        private readonly Texture2D sourceTexture;
 
         public TextureColors(Texture2D texture)
         {
             this.sourceTexture = texture;
 
             var rawData = new Color[this.sourceTexture.Width * this.sourceTexture.Height];
-            sourceTexture.GetData(rawData);
+            this.sourceTexture.GetData(rawData);
             foreach (var color in rawData)
             {
-                if (!colorMap.Contains(color))
+                if (!this.colorMap.Contains(color))
                 {
-                    colorMap.Add(color);
+                    this.colorMap.Add(color);
                 }
             }
         }

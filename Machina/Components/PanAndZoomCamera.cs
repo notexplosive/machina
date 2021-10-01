@@ -2,18 +2,15 @@
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class PanAndZoomCamera : BaseComponent
     {
+        private readonly Keys zoomModifier;
         private bool isPanning;
         private bool isRotating;
         private bool zoomModifierIsDown;
-        private Keys zoomModifier;
 
         public PanAndZoomCamera(Actor actor, Keys zoomModifier) : base(actor)
         {

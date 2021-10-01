@@ -1,9 +1,6 @@
-﻿using Machina.Engine;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -25,12 +22,9 @@ namespace Machina.Data
     [Serializable]
     public struct MouseButtonList
     {
-        [NonSerialized]
-        public readonly bool left;
-        [NonSerialized]
-        public readonly bool middle;
-        [NonSerialized]
-        public readonly bool right;
+        [NonSerialized] public readonly bool left;
+        [NonSerialized] public readonly bool middle;
+        [NonSerialized] public readonly bool right;
 
         public MouseButtonList(bool left, bool middle, bool right)
         {
@@ -46,10 +40,7 @@ namespace Machina.Data
             this.right = (encoded & (1 << 2)) > 0;
         }
 
-        public int EncodedInt
-        {
-            get => (left ? 1 : 0) | (middle ? 1 << 1 : 0) | (right ? 1 << 2 : 0);
-        }
+        public int EncodedInt => (this.left ? 1 : 0) | (this.middle ? 1 << 1 : 0) | (this.right ? 1 << 2 : 0);
 
         public static MouseButtonList None => new MouseButtonList(false, false, false);
     }
@@ -63,7 +54,8 @@ namespace Machina.Data
         public readonly Vector2 PositionDelta;
         public readonly int ScrollDelta;
 
-        public MouseFrameState(MouseButtonList pressed, MouseButtonList released, Point windowPos, Vector2 positionDelta, int scrollDelta)
+        public MouseFrameState(MouseButtonList pressed, MouseButtonList released, Point windowPos,
+            Vector2 positionDelta, int scrollDelta)
         {
             this.ButtonsPressedThisFrame = pressed;
             this.ButtonsReleasedThisFrame = released;
@@ -72,7 +64,8 @@ namespace Machina.Data
             this.ScrollDelta = scrollDelta;
         }
 
-        public static MouseFrameState Empty => new MouseFrameState(MouseButtonList.None, MouseButtonList.None, Point.Zero, Vector2.Zero, 0);
+        public static MouseFrameState Empty =>
+            new MouseFrameState(MouseButtonList.None, MouseButtonList.None, Point.Zero, Vector2.Zero, 0);
     }
 
     [Serializable]
@@ -97,7 +90,6 @@ namespace Machina.Data
                 new MouseButtonList(touchFrameState.TouchDown, false, false),
                 new MouseButtonList(touchFrameState.TouchUp, false, false),
                 touchFrameState.TouchPos, touchFrameState.TouchDelta, 0);
-
         }
     }
 
@@ -115,6 +107,7 @@ namespace Machina.Data
             this.Modifiers = modifiers;
         }
 
-        public static KeyboardFrameState Empty = new KeyboardFrameState(Array.Empty<Keys>(), Array.Empty<Keys>(), ModifierKeys.NoModifiers);
+        public static KeyboardFrameState Empty =
+            new KeyboardFrameState(Array.Empty<Keys>(), Array.Empty<Keys>(), ModifierKeys.NoModifiers);
     }
 }

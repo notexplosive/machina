@@ -1,59 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 
 namespace Machina.Data
 {
     public struct Depth
     {
         public const int MaxAsInt = 10569646;
-        public static Depth Middle = new Depth(MaxAsInt / 2);
-        public static Depth Max = new Depth(MaxAsInt);
-        private readonly int val;
+        public static Depth Middle = new Depth(Depth.MaxAsInt / 2);
+        public static Depth Max = new Depth(Depth.MaxAsInt);
 
-        public Depth(int val = MaxAsInt / 2)
+        public Depth(int val = Depth.MaxAsInt / 2)
         {
-            this.val = val;
+            AsInt = val;
         }
 
-        public static implicit operator int(Depth d) => d.AsInt;
-        public static implicit operator Depth(int i) => new Depth(i);
-        public static implicit operator float(Depth d) => d.AsFloat;
+        public static implicit operator int(Depth d)
+        {
+            return d.AsInt;
+        }
 
-        public int AsInt => this.val;
+        public static implicit operator Depth(int i)
+        {
+            return new Depth(i);
+        }
+
+        public static implicit operator float(Depth d)
+        {
+            return d.AsFloat;
+        }
+
+        public int AsInt { get; }
+
         public float AsFloat
         {
             get
             {
-                Debug.Assert(val <= MaxAsInt && val >= 0);
-                return (float) this.val / MaxAsInt;
+                Debug.Assert(AsInt <= Depth.MaxAsInt && AsInt >= 0);
+                return (float) AsInt / Depth.MaxAsInt;
             }
         }
 
         public static Depth operator +(Depth a, Depth b)
         {
-            return new Depth(a.val + b.val);
+            return new Depth(a.AsInt + b.AsInt);
         }
 
         public static Depth operator -(Depth a, Depth b)
         {
-            return new Depth(a.val - b.val);
+            return new Depth(a.AsInt - b.AsInt);
         }
 
         public static Depth operator +(Depth a, int b)
         {
-            return new Depth(a.val + b);
+            return new Depth(a.AsInt + b);
         }
 
         public static Depth operator -(Depth a, int b)
         {
-            return new Depth(a.val - b);
+            return new Depth(a.AsInt - b);
         }
 
         public static bool operator ==(Depth a, Depth b)
         {
-            return a.val == b.val;
+            return a.AsInt == b.AsInt;
         }
 
         public static bool operator !=(Depth a, Depth b)
@@ -65,19 +73,20 @@ namespace Machina.Data
         {
             if (obj is Depth other)
             {
-                return other.val == val;
+                return other.AsInt == AsInt;
             }
+
             return false;
         }
 
         public override int GetHashCode()
         {
-            return val;
+            return AsInt;
         }
 
         public override string ToString()
         {
-            return this.val.ToString();
+            return AsInt.ToString();
         }
     }
 }

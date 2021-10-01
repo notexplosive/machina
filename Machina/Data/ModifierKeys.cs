@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace Machina.Data
 {
@@ -35,16 +33,19 @@ namespace Machina.Data
         {
             return !a.Equals(b);
         }
-        public bool None => !control && !alt && !shift;
-        public bool Control => control && !alt && !shift;
-        public bool ControlAlt => control && alt && !shift;
-        public bool Alt => !control && alt && !shift;
-        public bool Shift => !control && !alt && shift;
-        public bool AltShift => !control && alt && shift;
-        public bool ControlShift => control && !alt && shift;
-        public bool ControlAltShift => control && alt && shift;
 
-        public int EncodedInt => (Bool2Int(control) << 2) | (Bool2Int(alt) << 1) | (Bool2Int(shift) << 0);
+        public bool None => !this.control && !this.alt && !this.shift;
+        public bool Control => this.control && !this.alt && !this.shift;
+        public bool ControlAlt => this.control && this.alt && !this.shift;
+        public bool Alt => !this.control && this.alt && !this.shift;
+        public bool Shift => !this.control && !this.alt && this.shift;
+        public bool AltShift => !this.control && this.alt && this.shift;
+        public bool ControlShift => this.control && !this.alt && this.shift;
+        public bool ControlAltShift => this.control && this.alt && this.shift;
+
+        public int EncodedInt =>
+            (Bool2Int(this.control) << 2) | (Bool2Int(this.alt) << 1) | (Bool2Int(this.shift) << 0);
+
         public int Bool2Int(bool b)
         {
             return b ? 1 : 0;
@@ -57,14 +58,17 @@ namespace Machina.Data
             {
                 sb.Append('^');
             }
+
             if (this.shift)
             {
                 sb.Append('+');
             }
+
             if (this.alt)
             {
                 sb.Append('~');
             }
+
             return sb.ToString();
         }
 
@@ -72,7 +76,7 @@ namespace Machina.Data
         {
             if (obj is ModifierKeys other)
             {
-                return this.GetHashCode() == obj.GetHashCode();
+                return GetHashCode() == obj.GetHashCode();
             }
 
             return false;

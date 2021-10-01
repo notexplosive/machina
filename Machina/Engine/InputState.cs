@@ -1,15 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine
 {
     public struct InputState
     {
-        internal static readonly InputState Empty = new InputState(new MouseState(), new KeyboardState(), new GamePadState(), new TouchCollection());
+        internal static readonly InputState Empty = new InputState(new MouseState(), new KeyboardState(),
+            new GamePadState(), new TouchCollection());
+
         public MouseState mouseState;
         public KeyboardState keyboardState;
         public GamePadState gamepadState;
@@ -23,9 +22,7 @@ namespace Machina.Engine
             this.touches = touches;
         }
 
-        public static InputState RawHumanInput
-        {
-            get => new InputState(Mouse.GetState(), Keyboard.GetState(), GamePad.GetState(PlayerIndex.One), TouchPanel.GetState());
-        }
+        public static InputState RawHumanInput => new InputState(Mouse.GetState(), Keyboard.GetState(),
+            GamePad.GetState(PlayerIndex.One), TouchPanel.GetState());
     }
 }

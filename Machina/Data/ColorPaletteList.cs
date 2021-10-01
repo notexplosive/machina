@@ -1,20 +1,18 @@
-﻿using Machina.Engine;
+﻿using System.Collections.Generic;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     /// <summary>
-    /// Expects a texture that is just rows of pixels describing a color palette.
-    /// Each row of pixels is one "palette"
+    ///     Expects a texture that is just rows of pixels describing a color palette.
+    ///     Each row of pixels is one "palette"
     /// </summary>
     public class ColorPaletteList
     {
-        public readonly int rowCount;
         private readonly Color[,] colors;
+        public readonly int rowCount;
         private readonly Texture2D sourceTexture;
 
         public ColorPaletteList(Texture2D texture)
@@ -26,9 +24,9 @@ namespace Machina.Data
             this.colors = new Color[texture.Height, texture.Width];
             this.rowCount = texture.Height;
 
-            for (int row = 0; row < texture.Height; row++)
+            for (var row = 0; row < texture.Height; row++)
             {
-                for (int i = 0; i < texture.Width; i++)
+                for (var i = 0; i < texture.Width; i++)
                 {
                     this.colors[row, i] = rawData[texture.Width * row + i];
                 }
@@ -38,20 +36,21 @@ namespace Machina.Data
         public Color[] GetRow(int row)
         {
             var content = new Color[this.sourceTexture.Width];
-            for (int i = 0; i < sourceTexture.Width; i++)
+            for (var i = 0; i < this.sourceTexture.Width; i++)
             {
                 content[i] = this.colors[row, i];
             }
+
             return content;
         }
 
         public Color[] FindBestMatch(TextureColors colorsFromOriginalTexture)
         {
-            int rowIndex = 0;
+            var rowIndex = 0;
             while (rowIndex < this.rowCount)
             {
                 var row = new List<Color>(GetRow(rowIndex));
-                bool fail = false;
+                var fail = false;
 
                 foreach (var colorFromOriginalTexture in colorsFromOriginalTexture.GetColors())
                 {
@@ -71,6 +70,7 @@ namespace Machina.Data
                 {
                     return GetRow(rowIndex);
                 }
+
                 rowIndex++;
             }
 
@@ -87,11 +87,11 @@ namespace Machina.Data
             var sourcePalette = new List<Color>(match != null ? match : new Color[0]);
             var targetPalette = new List<Color>(GetRow(targetRowIndex));
 
-            int paletteIndex = 0;
+            var paletteIndex = 0;
             foreach (var currentSourceColor in sourcePalette)
             {
                 var currentDestColor = targetPalette[paletteIndex];
-                for (int i = 0; i < source.Width * source.Height; i++)
+                for (var i = 0; i < source.Width * source.Height; i++)
                 {
                     var oldColor = sourceData[i];
                     if (oldColor == currentSourceColor)
@@ -99,6 +99,7 @@ namespace Machina.Data
                         newData[i] = currentDestColor;
                     }
                 }
+
                 paletteIndex++;
             }
 

@@ -1,9 +1,6 @@
 ﻿using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
@@ -83,7 +80,6 @@ namespace TestMachina.Tests
             Assert.Equal(20, e2.boundingRect.Height);
             Assert.Equal(140, e3.boundingRect.Height);
             Assert.Equal(200, e2.boundingRect.Width);
-
         }
 
         [Fact]

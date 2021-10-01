@@ -10,11 +10,12 @@ namespace Machina.Components
         Vertical
     }
 
-    class ThreepatchRenderer : NinepatchRenderer
+    internal class ThreepatchRenderer : NinepatchRenderer
     {
-        private Orientation orientation;
+        private readonly Orientation orientation;
 
-        public ThreepatchRenderer(Actor actor, NinepatchSheet spriteSheet, Orientation orientation) : base(actor, spriteSheet)
+        public ThreepatchRenderer(Actor actor, NinepatchSheet spriteSheet, Orientation orientation) : base(actor,
+            spriteSheet)
         {
             this.orientation = orientation;
         }

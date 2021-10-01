@@ -1,9 +1,6 @@
 ﻿using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine
 {
@@ -16,34 +13,35 @@ namespace Machina.Engine
 
     public class MouseTracker
     {
-        private int previousScroll;
-        private MouseState oldState;
         private bool firstFrame = true;
+        private MouseState oldState;
+        private int previousScroll;
 
         public MouseFrameState CalculateFrameState(MouseState currentState)
         {
-            var oldMouseButtons = new ButtonState[3] {
+            var oldMouseButtons = new ButtonState[3]
+            {
                 this.oldState.LeftButton,
                 this.oldState.MiddleButton,
-                this.oldState.RightButton,
+                this.oldState.RightButton
             };
 
-            var currentButtons = new ButtonState[3] {
+            var currentButtons = new ButtonState[3]
+            {
                 currentState.LeftButton,
                 currentState.MiddleButton,
-                currentState.RightButton,
+                currentState.RightButton
             };
 
-            bool leftPressed = false;
-            bool middlePressed = false;
-            bool rightPressed = false;
+            var leftPressed = false;
+            var middlePressed = false;
+            var rightPressed = false;
 
-            bool leftReleased = false;
-            bool middleReleased = false;
-            bool rightReleased = false;
+            var leftReleased = false;
+            var middleReleased = false;
+            var rightReleased = false;
 
-
-            for (int i = 0; i < 3; i++)
+            for (var i = 0; i < 3; i++)
             {
                 if (currentButtons[i] != oldMouseButtons[i])
                 {
@@ -51,7 +49,6 @@ namespace Machina.Engine
 
                     if (currentButtons[i] == ButtonState.Pressed)
                     {
-
                         if (mouseButton == MouseButton.Left)
                         {
                             leftPressed = true;
@@ -91,20 +88,20 @@ namespace Machina.Engine
             var pressedThisFrame = new MouseButtonList(leftPressed, middlePressed, rightPressed);
             var releasedThisFrame = new MouseButtonList(leftReleased, middleReleased, rightReleased);
 
-            Vector2 positionDelta = Vector2.Zero;
+            var positionDelta = Vector2.Zero;
 
             if (!this.firstFrame)
             {
                 // We hide this on the first frame because game will launch with a huge mouse delta otherwise
-                positionDelta = (currentState.Position - oldState.Position).ToVector2();
+                positionDelta = (currentState.Position - this.oldState.Position).ToVector2();
             }
 
             var currentScroll = currentState.ScrollWheelValue;
             var scrollDelta = (currentScroll - this.previousScroll) / 120;
             this.previousScroll = currentScroll;
 
-
-            var frameState = new MouseFrameState(pressedThisFrame, releasedThisFrame, currentState.Position, positionDelta, scrollDelta);
+            var frameState = new MouseFrameState(pressedThisFrame, releasedThisFrame, currentState.Position,
+                positionDelta, scrollDelta);
 
             this.oldState = currentState;
             this.firstFrame = false;

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Machina.Data
+﻿namespace Machina.Data
 {
     public interface UIState<T>
     {
-        public abstract T State
-        {
-            get;
-        }
+        public T State { get; }
     }
 }

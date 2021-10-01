@@ -1,8 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine
 {
@@ -14,42 +12,32 @@ namespace Machina.Engine
 
     public interface IGameCanvas
     {
-        public Point ViewportSize
-        {
-            get;
-        }
+        public Point ViewportSize { get; }
 
-        public float ScaleFactor
-        {
-            get;
-        }
+        public float ScaleFactor { get; }
 
-        public Rectangle CanvasRect
-        {
-            get;
-        }
-        public Point WindowSize
-        {
-            get;
-        }
+        public Rectangle CanvasRect { get; }
+
+        public Point WindowSize { get; }
     }
 
     public class GameCanvas : IGameCanvas
     {
-        private RenderTarget2D internalCanvas;
         private readonly IResizeStrategy resizeStrategy;
+        private RenderTarget2D internalCanvas;
 
         public GameCanvas(Point viewportSize, ResizeBehavior resizeBehavior)
         {
             ViewportSize = viewportSize;
             if (resizeBehavior == ResizeBehavior.FillContent)
             {
-                resizeStrategy = new FillStrategy();
+                this.resizeStrategy = new FillStrategy();
             }
             else
             {
-                resizeStrategy = new MaintainDesiredResolutionStrategy();
+                this.resizeStrategy = new MaintainDesiredResolutionStrategy();
             }
+
             SetWindowSize(viewportSize);
         }
 
@@ -57,30 +45,17 @@ namespace Machina.Engine
         {
             get
             {
-                var canvasSize = resizeStrategy.GetCanvasSize(WindowSize, ViewportSize);
+                var canvasSize = this.resizeStrategy.GetCanvasSize(WindowSize, ViewportSize);
                 var canvasPos = new Point((WindowSize.X - canvasSize.X) / 2, (WindowSize.Y - canvasSize.Y) / 2);
                 return new Rectangle(canvasPos.X, canvasPos.Y, canvasSize.X, canvasSize.Y);
             }
         }
 
-        public float ScaleFactor
-        {
-            get
-            {
-                return this.resizeStrategy.GetScaleFactor(WindowSize, ViewportSize);
-            }
-        }
+        public float ScaleFactor => this.resizeStrategy.GetScaleFactor(WindowSize, ViewportSize);
 
-        public Point WindowSize
-        {
-            get;
-            private set;
-        }
+        public Point WindowSize { get; private set; }
 
-        public Point ViewportSize
-        {
-            get; private set;
-        }
+        public Point ViewportSize { get; }
 
         public void SetWindowSize(Point windowSize)
         {
@@ -89,23 +64,26 @@ namespace Machina.Engine
 
         public void BuildCanvas(GraphicsDevice graphicsDevice)
         {
-            this.internalCanvas = resizeStrategy.BuildCanvas(graphicsDevice, ViewportSize);
+            this.internalCanvas = this.resizeStrategy.BuildCanvas(graphicsDevice, ViewportSize);
         }
 
         public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice)
         {
-            resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.internalCanvas);
+            this.resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.internalCanvas);
         }
 
         public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
-            resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, this.internalCanvas, CanvasRect);
+            this.resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, this.internalCanvas, CanvasRect);
         }
 
         private interface IResizeStrategy
         {
             void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
-            void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect);
+
+            void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
+                RenderTarget2D screenRenderTarget, Rectangle canvasRect);
+
             RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize);
             Point GetCanvasSize(Point windowSize, Point viewportSize);
             float GetScaleFactor(Point windowSize, Point viewportSize);
@@ -131,10 +109,12 @@ namespace Machina.Engine
                     DepthFormat.Depth24);
             }
 
-            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D canvas, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
+                RenderTarget2D canvas, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.SamplerState, DepthStencilState.DepthRead, null, null);
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.SamplerState,
+                    DepthStencilState.DepthRead);
                 spriteBatch.Draw(canvas,
                     canvasRect,
                     null, Color.White);
@@ -144,13 +124,14 @@ namespace Machina.Engine
 
             public Point GetCanvasSize(Point windowSize, Point viewportSize)
             {
-                return (new Vector2(viewportSize.X, viewportSize.Y) * GetScaleFactor(windowSize, viewportSize)).ToPoint();
+                return (new Vector2(viewportSize.X, viewportSize.Y) * GetScaleFactor(windowSize, viewportSize))
+                    .ToPoint();
             }
 
             public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 graphicsDevice.SetRenderTarget(screenRenderTarget);
-                graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+                graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
             }
         }
 
@@ -178,7 +159,8 @@ namespace Machina.Engine
                 // no-op
             }
 
-            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
+                RenderTarget2D screenRenderTarget, Rectangle canvasRect)
             {
                 // no-op
             }

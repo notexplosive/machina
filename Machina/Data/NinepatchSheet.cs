@@ -1,19 +1,21 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Machina.Engine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Machina.Engine;
 
 namespace Machina.Data
 {
-
     public class NinepatchSheet : IAsset
     {
-        public readonly NinepatchRects rects;
+        public enum GenerationDirection
+        {
+            Inner,
+            Outer
+        }
+
         private readonly Texture2D originalTexture;
+        public readonly NinepatchRects rects;
         private readonly Texture2D[] textures;
 
         public NinepatchSheet(Texture2D sourceTexture, Rectangle outerRect, Rectangle innerRect)
@@ -25,13 +27,29 @@ namespace Machina.Data
             this.rects = new NinepatchRects(outerRect, innerRect);
             this.textures = new Texture2D[9];
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
-                var rect = rects.raw[i];
+                var rect = this.rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
                     var cropTexture = MachinaGame.CropTexture(rect, sourceTexture);
-                    textures[i] = cropTexture;
+                    this.textures[i] = cropTexture;
+                }
+            }
+        }
+
+        public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
+            : this(MachinaGame.Assets.GetTexture(textureAssetName), outerRect, innerRect)
+        {
+        }
+
+        public void OnCleanup()
+        {
+            foreach (var texture in this.textures)
+            {
+                if (texture != null)
+                {
+                    texture.Dispose();
                 }
             }
         }
@@ -54,73 +72,58 @@ namespace Machina.Data
                 innerDestinationRect.Height + this.rects.TopBuffer + this.rects.BottomBuffer);
         }
 
-        public enum GenerationDirection
-        {
-            Inner,
-            Outer
-        }
-
-        public NinepatchRects GenerateDestinationRects(Rectangle starter, GenerationDirection gen = GenerationDirection.Inner)
+        public NinepatchRects GenerateDestinationRects(Rectangle starter,
+            GenerationDirection gen = GenerationDirection.Inner)
         {
             if (gen == GenerationDirection.Inner)
             {
                 var inner = GenerateInnerDestinationRect(starter);
                 return new NinepatchRects(starter, inner);
             }
-            else
-            {
-                var outer = GenerateOuterDestinationRect(starter);
-                return new NinepatchRects(outer, starter);
-            }
-        }
 
-        public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect)
-            : this(MachinaGame.Assets.GetTexture(textureAssetName), outerRect, innerRect)
-        {
-        }
-
-        public void OnCleanup()
-        {
-            foreach (var texture in textures)
-            {
-                if (texture != null)
-                {
-                    texture.Dispose();
-                }
-            }
+            var outer = GenerateOuterDestinationRect(starter);
+            return new NinepatchRects(outer, starter);
         }
 
         public void DrawDebug(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(originalTexture, this.rects.outer, this.rects.outer, Color.White);
+            spriteBatch.Draw(this.originalTexture, this.rects.outer, this.rects.outer, Color.White);
 
             foreach (var frame in this.rects.raw)
             {
-                spriteBatch.DrawRectangle(frame, Color.White, 1, 0);
+                spriteBatch.DrawRectangle(frame, Color.White);
             }
         }
 
-        public void DrawSection(SpriteBatch spriteBatch, NinepatchIndex index, Rectangle destinationRect, Depth layerDepth)
+        public void DrawSection(SpriteBatch spriteBatch, NinepatchIndex index, Rectangle destinationRect,
+            Depth layerDepth)
         {
             var dest = destinationRect;
-            var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
-            spriteBatch.Draw(textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
+            var source =
+                new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
+            spriteBatch.Draw(this.textures[(int) index], dest.Location.ToVector2(), source, Color.White, 0f,
+                new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle starter, GenerationDirection gen, Depth layerDepth, float opacity = 1f)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, Rectangle starter, GenerationDirection gen,
+            Depth layerDepth, float opacity = 1f)
         {
             DrawFullNinepatch(spriteBatch, GenerateDestinationRects(starter, gen), layerDepth, opacity);
         }
 
-        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, Depth layerDepth, float opacity = 1f)
+        public void DrawFullNinepatch(SpriteBatch spriteBatch, NinepatchRects destinationRects, Depth layerDepth,
+            float opacity = 1f)
         {
             Debug.Assert(this.rects.isValidNinepatch, "Attempted to draw an invalid Ninepatch.");
 
-            for (int i = 0; i < 9; i++)
+            for (var i = 0; i < 9; i++)
             {
                 var dest = destinationRects.raw[i];
-                var source = new Rectangle(0, 0, dest.Width, dest.Height); // Source is the size of the destination rect so we tile
-                spriteBatch.Draw(textures[i], dest.Location.ToVector2(), source, new Color(Color.White, opacity), 0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
+                var source =
+                    new Rectangle(0, 0, dest.Width,
+                        dest.Height); // Source is the size of the destination rect so we tile
+                spriteBatch.Draw(this.textures[i], dest.Location.ToVector2(), source, new Color(Color.White, opacity),
+                    0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
             }
         }
 

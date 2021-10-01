@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -11,7 +9,7 @@ namespace Machina.Data
 
     public class WaitUntil : ICoroutineAction
     {
-        private Func<bool> condition;
+        private readonly Func<bool> condition;
 
         public WaitUntil(Func<bool> condition)
         {
@@ -32,6 +30,7 @@ namespace Machina.Data
         {
             this.seconds = seconds;
         }
+
         public bool IsComplete(float dt)
         {
             this.seconds -= dt;

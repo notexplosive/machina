@@ -1,38 +1,36 @@
 ﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class RadioButtonGroup : BaseComponent
+    internal class RadioButtonGroup : BaseComponent
     {
-        private LayoutGroup layoutGroup;
+        private readonly LayoutGroup layoutGroup;
         private int currentIndex = -1;
-
-        public Actor CurrentSelectedActor
-        {
-            get
-            {
-                if (currentIndex > 0)
-                {
-                    return transform.ChildAt(this.currentIndex);
-                }
-                return null;
-            }
-        }
 
         public RadioButtonGroup(Actor actor) : base(actor)
         {
             this.layoutGroup = RequireComponent<LayoutGroup>();
         }
 
+        public Actor CurrentSelectedActor
+        {
+            get
+            {
+                if (this.currentIndex > 0)
+                {
+                    return transform.ChildAt(this.currentIndex);
+                }
+
+                return null;
+            }
+        }
+
         public void OnElementStateChange(RadioButtonState radioButtonState, bool newState)
         {
-            if (newState == true)
+            if (newState)
             {
-                int i = 0;
-                foreach (var element in layoutGroup.GetAllElements())
+                var i = 0;
+                foreach (var element in this.layoutGroup.GetAllElements())
                 {
                     if (element.actor == radioButtonState.actor)
                     {
@@ -46,6 +44,7 @@ namespace Machina.Components
                             radioState.IsFilled = false;
                         }
                     }
+
                     i++;
                 }
             }

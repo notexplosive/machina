@@ -1,13 +1,12 @@
-﻿using Machina.Engine;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Machina.Engine;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data
 {
     /// <summary>
-    /// Pulls out all frames of a SpriteSheet as their own textures
+    ///     Pulls out all frames of a SpriteSheet as their own textures
     /// </summary>
     public class TextureFrames : IDisposable
     {
@@ -17,10 +16,18 @@ namespace Machina.Data
         public TextureFrames(SpriteSheet spriteSheet)
         {
             this.sourceSpriteSheet = spriteSheet;
-            for (int i = 0; i < spriteSheet.FrameCount; i++)
+            for (var i = 0; i < spriteSheet.FrameCount; i++)
             {
                 var rect = spriteSheet.GetSourceRectForFrame(i);
                 this.textures.Add(MachinaGame.CropTexture(rect, spriteSheet.SourceTexture));
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (var texture in this.textures)
+            {
+                texture.Dispose();
             }
         }
 
@@ -32,14 +39,6 @@ namespace Machina.Data
         public IList<Texture2D> GetAllTextures()
         {
             return this.textures.ToArray();
-        }
-
-        public void Dispose()
-        {
-            foreach (var texture in this.textures)
-            {
-                texture.Dispose();
-            }
         }
     }
 }

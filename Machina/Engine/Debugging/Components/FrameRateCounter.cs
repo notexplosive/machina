@@ -1,19 +1,17 @@
-﻿using Machina.Data;
+﻿using System;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class FrameRateCounter : BaseComponent
     {
         private readonly SpriteFont font;
-        private DateTime past;
         private float fps;
+        private DateTime past;
 
         public FrameRateCounter(Actor actor) : base(actor)
         {
@@ -31,11 +29,12 @@ namespace Machina.Components
         {
             var screenWidth = this.actor.scene.sceneLayers.gameCanvas.WindowSize.X;
             var now = DateTime.Now;
-            float drawDt = (float) (now - this.past).TotalSeconds;
+            var drawDt = (float) (now - this.past).TotalSeconds;
             this.past = now;
-            float drawFps = 1 / drawDt;
-            var text = ((int) this.fps).ToString() + "/" + Math.Round(drawFps, MidpointRounding.ToEven);
-            spriteBatch.DrawString(this.font, text, new Vector2(screenWidth - this.font.MeasureString(text).X - 5, 0), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            var drawFps = 1 / drawDt;
+            var text = (int) this.fps + "/" + Math.Round(drawFps, MidpointRounding.ToEven);
+            spriteBatch.DrawString(this.font, text, new Vector2(screenWidth - this.font.MeasureString(text).X - 5, 0),
+                Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)

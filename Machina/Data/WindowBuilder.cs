@@ -1,64 +1,59 @@
-﻿using Machina.Engine;
+﻿using System;
+using System.Collections.Generic;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     public class WindowBuilder
     {
-        public bool CanBeClosed
-        {
-            get; private set;
-        }
-
-        public bool CanBeMaximized
-        {
-            get; private set;
-        }
-
-        public bool CanBeMinimized
-        {
-            get; private set;
-        }
-
-
-        private string title = string.Empty;
-        private Point? minSize;
-        private Point? maxSize;
-        private bool canBeResized;
-        private WindowAction onMinimized;
-        private WindowAction onMaximized;
-        private WindowAction onClosed;
-        private bool isScrollable;
-        private int maxScrollPos;
-        private Vector2 startingPosition;
-        private Action<UIWindow> onLaunch;
-        private SpriteFrame icon;
-        private Func<bool> shouldAllowKeyboardEventsLambda = () => false;
         private readonly Point contentSize;
         private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
+        private bool canBeResized;
+        private SpriteFrame icon;
+        private bool isScrollable;
+        private int maxScrollPos;
+        private Point? maxSize;
+        private Point? minSize;
+        private WindowAction onClosed;
+        private Action<UIWindow> onLaunch;
+        private WindowAction onMaximized;
+        private WindowAction onMinimized;
+        private Func<bool> shouldAllowKeyboardEventsLambda = () => false;
+        private Vector2 startingPosition;
+
+        private string title = string.Empty;
 
         public WindowBuilder(Point contentSize)
         {
             this.contentSize = contentSize;
         }
 
+        public bool CanBeClosed { get; private set; }
+
+        public bool CanBeMaximized { get; private set; }
+
+        public bool CanBeMinimized { get; private set; }
+
         public UIWindow Build(Scene creatingScene, UIStyle style)
         {
-            var window = new UIWindow(creatingScene, this.contentSize, CanBeClosed, CanBeMaximized, CanBeMinimized, this.icon, style);
+            var window = new UIWindow(creatingScene, this.contentSize, CanBeClosed, CanBeMaximized, CanBeMinimized,
+                this.icon, style);
 
-            window.Closed += onClosed;
-            window.Minimized += onMinimized;
-            window.Maximized += onMaximized;
+            window.Closed += this.onClosed;
+            window.Minimized += this.onMinimized;
+            window.Maximized += this.onMaximized;
 
             if (this.isScrollable)
+            {
                 window.AddScrollbar(this.maxScrollPos);
+            }
 
             if (this.canBeResized)
+            {
                 window.BecomeResizable(this.minSize, this.maxSize);
+            }
 
             window.Title = this.title;
             window.rootTransform.Position = this.startingPosition;
@@ -117,7 +112,7 @@ namespace Machina.Data
 
         public WindowBuilder DestroyViaCloseButton()
         {
-            return OnClose((win) => { win.Destroy(); });
+            return OnClose(win => { win.Destroy(); });
         }
 
         public WindowBuilder OnMinimize(WindowAction onMinimized)
@@ -140,7 +135,7 @@ namespace Machina.Data
         }
 
         /// <summary>
-        /// You should probably use OnLaunch instead.
+        ///     You should probably use OnLaunch instead.
         /// </summary>
         /// <param name="sceneCallback"></param>
         /// <returns></returns>

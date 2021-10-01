@@ -1,28 +1,22 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using Machina.Data;
 using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
 {
     public class CoroutineTests
     {
-        private class IsDoneFlag
-        {
-            public bool isDone = false;
-        }
-
         /// <summary>
-        /// One day we might want to change this behavior, but this is how Machina works today:
-        /// If you yield return new WaitSeconds(0) it will always wait one frame, it will not instantly slide to the next one
+        ///     One day we might want to change this behavior, but this is how Machina works today:
+        ///     If you yield return new WaitSeconds(0) it will always wait one frame, it will not instantly slide to the next one
         /// </summary>
         [Fact]
         public void one_yield_per_frame()
         {
-            var scene = new Scene(null, null);
+            var scene = new Scene(null);
+
             IEnumerator<ICoroutineAction> InstantCoroutine(IsDoneFlag flag)
             {
                 yield return new WaitSeconds(0.1f);
@@ -46,7 +40,8 @@ namespace TestMachina.Tests
         [Fact]
         public void nested_coroutines_work()
         {
-            var scene = new Scene(null, null);
+            var scene = new Scene(null);
+
             IEnumerator<ICoroutineAction> OuterCoroutine(Scene scene, IsDoneFlag inner, IsDoneFlag outer)
             {
                 yield return new WaitSeconds(1);
@@ -64,6 +59,7 @@ namespace TestMachina.Tests
                 inner.isDone = true;
                 yield return null;
             }
+
             var inner = new IsDoneFlag();
             var outer = new IsDoneFlag();
 
@@ -80,6 +76,11 @@ namespace TestMachina.Tests
             scene.Update(1f);
 
             outer.isDone.Should().BeTrue();
+        }
+
+        private class IsDoneFlag
+        {
+            public bool isDone;
         }
     }
 }

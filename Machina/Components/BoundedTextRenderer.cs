@@ -1,12 +1,11 @@
-﻿using Machina.Data;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Machina.Components
 {
@@ -32,26 +31,14 @@ namespace Machina.Components
 
     public class BoundedTextRenderer : BaseComponent
     {
-        public string Text
-        {
-            get; set;
-        }
-        public SpriteFont Font
-        {
-            get; set;
-        }
-        public Point DrawOffset
-        {
-            get; set;
-        }
         private readonly BoundingRect boundingRect;
-        public Color TextColor;
+        private readonly Depth depthOffset;
+        private readonly HorizontalAlignment horizontalAlignment;
+        private readonly Overflow overflow;
+        private readonly VerticalAlignment verticalAlignment;
         private Color dropShadowColor;
         private bool isDropShadowEnabled;
-        private readonly Depth depthOffset;
-        private readonly Overflow overflow;
-        private readonly HorizontalAlignment horizontalAlignment;
-        private readonly VerticalAlignment verticalAlignment;
+        public Color TextColor;
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font,
             Color textColor,
@@ -72,13 +59,24 @@ namespace Machina.Components
             this.overflow = overflow;
         }
 
-        public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White) { }
+        public BoundedTextRenderer(Actor actor, string text, SpriteFont font) : this(actor, text, font, Color.White)
+        {
+        }
 
+        public string Text { get; set; }
 
+        public SpriteFont Font { get; set; }
+
+        public Point DrawOffset { get; set; }
+
+        public Point TextLocalPos => GetTextLocalPos(CreateMeasuredText());
+
+        public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
         private TextMeasurer CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment);
+            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment,
+                this.verticalAlignment);
 
             while (!measurer.IsAtEnd())
             {
@@ -102,6 +100,7 @@ namespace Machina.Components
                         {
                             measurer.AppendNextWord();
                         }
+
                         break;
                     }
                 }
@@ -115,24 +114,14 @@ namespace Machina.Components
             return measurer;
         }
 
-        public Point TextLocalPos
-        {
-            get
-            {
-                return GetTextLocalPos(CreateMeasuredText());
-            }
-        }
-
-        public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
-
         public Point GetTextLocalPos(TextMeasurer measurer)
         {
             var yOffset = 0;
-            if (verticalAlignment == VerticalAlignment.Center)
+            if (this.verticalAlignment == VerticalAlignment.Center)
             {
                 yOffset = this.boundingRect.Height / 2 - Font.LineSpacing / 2 * measurer.Lines.Count;
             }
-            else if (verticalAlignment == VerticalAlignment.Bottom)
+            else if (this.verticalAlignment == VerticalAlignment.Bottom)
             {
                 yOffset = this.boundingRect.Height - Font.LineSpacing * measurer.Lines.Count;
             }
@@ -140,7 +129,7 @@ namespace Machina.Components
             var xOffset = 0;
             foreach (var line in measurer.Lines)
             {
-                xOffset = line.textPosition.X - (int)transform.Position.X;
+                xOffset = line.textPosition.X - (int) transform.Position.X;
                 break;
             }
 
@@ -156,10 +145,12 @@ namespace Machina.Components
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = transform.Position;
-                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2() - pivotPos;
+                var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2() -
+                          pivotPos;
                 pos.Floor();
                 var depth = transform.Depth + this.depthOffset;
-                var finalDropShadowColor = new Color(this.dropShadowColor, (this.dropShadowColor.A / 255f) * (this.TextColor.A / 255f));
+                var finalDropShadowColor = new Color(this.dropShadowColor,
+                    this.dropShadowColor.A / 255f * (this.TextColor.A / 255f));
 
                 spriteBatch.DrawString(Font, line.textContent, pivotPos, this.TextColor, transform.Angle,
                     -pos, 1f, SpriteEffects.None, depth);
@@ -180,7 +171,7 @@ namespace Machina.Components
             {
                 var pos = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y);
                 spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
-                spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange, 1f);
+                spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange);
                 spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);
             }
         }
@@ -198,23 +189,24 @@ namespace Machina.Components
         public string textContent;
         public readonly Point textPosition;
 
-        public TextLine(string content, SpriteFont font, Rectangle bounds, int positionY, HorizontalAlignment horizontalAlignment)
+        public TextLine(string content, SpriteFont font, Rectangle bounds, int positionY,
+            HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;
             this.textPosition = new Point(0, positionY);
 
             if (horizontalAlignment == HorizontalAlignment.Left)
             {
-                textPosition.X = bounds.Location.X;
+                this.textPosition.X = bounds.Location.X;
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
-                var widthOffset = bounds.Width - (int)font.MeasureString(content).X + 1;
+                var widthOffset = bounds.Width - (int) font.MeasureString(content).X + 1;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
             else
             {
-                var widthOffset = bounds.Width - (int)font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
+                var widthOffset = bounds.Width - (int) font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
         }
@@ -234,7 +226,8 @@ namespace Machina.Components
         private readonly Rectangle totalAvailableRect;
         private readonly float spaceWidth;
 
-        public TextMeasurer(string text, SpriteFont font, Rectangle rect, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
+        public TextMeasurer(string text, SpriteFont font, Rectangle rect, HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment)
         {
             this.widthOfCurrentLine = 0f;
 
@@ -247,8 +240,10 @@ namespace Machina.Components
                 {
                     words.Add(word);
                 }
+
                 words.Add("\n"); // Re-add the newline as a sentinal value
             }
+
             this.words = words.ToArray();
             this.stringBuilder = new StringBuilder();
             this.currentWordIndex = 0;
@@ -263,19 +258,19 @@ namespace Machina.Components
 
         public bool HasRoomForNextWordOnCurrentLine()
         {
-            var word = this.words[currentWordIndex];
+            var word = this.words[this.currentWordIndex];
             return HasRoomForWordOnCurrentLine(word);
         }
 
         private bool HasRoomForWordOnCurrentLine(string word)
         {
-            var widthAfterAppend = this.widthOfCurrentLine + this.font.MeasureString(word).X + spaceWidth;
-            return widthAfterAppend < totalAvailableRect.Width;
+            var widthAfterAppend = this.widthOfCurrentLine + this.font.MeasureString(word).X + this.spaceWidth;
+            return widthAfterAppend < this.totalAvailableRect.Width;
         }
 
         public void AppendNextWord()
         {
-            var word = this.words[currentWordIndex];
+            var word = this.words[this.currentWordIndex];
             if (word == "\n")
             {
                 AppendLinebreak();
@@ -284,12 +279,13 @@ namespace Machina.Components
             {
                 AppendWord(word);
             }
-            currentWordIndex++;
+
+            this.currentWordIndex++;
         }
 
         private void AppendWord(string word)
         {
-            this.widthOfCurrentLine += this.font.MeasureString(word).X + spaceWidth;
+            this.widthOfCurrentLine += this.font.MeasureString(word).X + this.spaceWidth;
             this.stringBuilder.Append(word);
             this.stringBuilder.Append(' ');
         }
@@ -301,7 +297,8 @@ namespace Machina.Components
 
         public void AddNextTextLine()
         {
-            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), font, totalAvailableRect, this.totalAvailableRect.Y + currentY, horizontalAlignment));
+            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.font, this.totalAvailableRect,
+                this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
 
@@ -322,7 +319,7 @@ namespace Machina.Components
         public bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
-            return currentY + this.font.LineSpacing * 2 <= this.totalAvailableRect.Height;
+            return this.currentY + this.font.LineSpacing * 2 <= this.totalAvailableRect.Height;
         }
 
         public void Elide()
@@ -340,10 +337,6 @@ namespace Machina.Components
                     this.stringBuilder.Remove(this.stringBuilder.Length - 1, 1);
                     this.widthOfCurrentLine -= widthOfLastCharacter;
                     Elide();
-                }
-                else
-                {
-                    // If we're here that means we have literally no room to render anything
                 }
             }
         }

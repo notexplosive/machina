@@ -4,16 +4,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class DemoRecorderComponent : BaseComponent
     {
-        private readonly Demo.Recorder recorder;
         private readonly SpriteFont font;
+        private readonly Demo.Recorder recorder;
         private readonly string text;
 
         public DemoRecorderComponent(Actor actor, Demo.Recorder recorder) : base(actor)
@@ -36,7 +33,8 @@ namespace Machina.Components
             spriteBatch.DrawRectangle(rect, Color.Red, 2f, new Depth(10));
 
             var textSize = this.font.MeasureString(this.text);
-            spriteBatch.DrawString(this.font, this.text, new Vector2(rect.Right - textSize.X - padding * 2, rect.Bottom - textSize.Y - padding * 2), Color.Red);
+            spriteBatch.DrawString(this.font, this.text,
+                new Vector2(rect.Right - textSize.X - padding * 2, rect.Bottom - textSize.Y - padding * 2), Color.Red);
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)

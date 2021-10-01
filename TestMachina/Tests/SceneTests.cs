@@ -1,7 +1,4 @@
 ﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
@@ -24,7 +21,8 @@ namespace TestMachina.Tests
             scene.FlushBuffers();
 
             var allActors = scene.GetAllActors();
-            Assert.Equal(new Actor[] { o1, parent, child, grandChild, o2, o3 }, allActors.ToArray()); // All actors obtained in correct order
+            Assert.Equal(new[] {o1, parent, child, grandChild, o2, o3},
+                allActors.ToArray()); // All actors obtained in correct order
         }
 
         [Fact]
@@ -44,7 +42,8 @@ namespace TestMachina.Tests
             o3.Destroy();
 
             var allActors = scene.GetAllActors();
-            Assert.Equal(new Actor[] { o1, parent, child, grandChild, o2 }, allActors.ToArray()); // All actors obtained in correct order
+            Assert.Equal(new[] {o1, parent, child, grandChild, o2},
+                allActors.ToArray()); // All actors obtained in correct order
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace TestMachina.Tests
             child.Destroy();
 
             var allActors = scene.GetAllActors();
-            Assert.Equal(new Actor[] { o1, parent, o2, o3 }, allActors.ToArray()); // All actors obtained in correct order
+            Assert.Equal(new[] {o1, parent, o2, o3}, allActors.ToArray()); // All actors obtained in correct order
         }
     }
 }

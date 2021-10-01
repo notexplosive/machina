@@ -1,16 +1,13 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class MoveOnDrag : BaseComponent
     {
         private readonly Draggable draggable;
+        private readonly Transform targetTransform;
         private Vector2 positionAtStartOfDrag;
-        private Transform targetTransform;
 
         public MoveOnDrag(Actor actor, Transform targetTransform = null) : base(actor)
         {

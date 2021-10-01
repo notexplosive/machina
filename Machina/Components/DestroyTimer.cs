@@ -2,13 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class DestroyTimer : BaseComponent
+    internal class DestroyTimer : BaseComponent
     {
         private float timer;
 
@@ -29,7 +26,8 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(new CircleF(this.actor.transform.Position, 5 * this.timer), 15, Color.Red, this.timer);
+            spriteBatch.DrawCircle(new CircleF(this.actor.transform.Position, 5 * this.timer), 15, Color.Red,
+                this.timer);
         }
     }
 }

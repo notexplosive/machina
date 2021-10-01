@@ -1,24 +1,21 @@
-﻿using Machina.Data;
+﻿using System;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class AdHoc : BaseComponent
     {
-        public Action<float> onUpdate;
         public Action<SpriteBatch> onDraw;
         public Action<Keys, ButtonState, ModifierKeys> onKey;
         public Action<MouseButton, Vector2, ButtonState> onMouseButton;
+        public Action<float> onUpdate;
 
         public AdHoc(Actor actor) : base(actor)
         {
-
         }
 
         public override void Update(float dt)

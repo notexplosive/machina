@@ -1,14 +1,12 @@
-﻿using Machina.Components;
+﻿using System;
+using Machina.Components;
 using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TestMachina.Utility
 {
     public class FakeComponent : BaseComponent
     {
-        private Action onDeleteLambda;
+        private readonly Action onDeleteLambda;
 
         public FakeComponent(Actor actor, Action onDeleteLambda) : base(actor)
         {

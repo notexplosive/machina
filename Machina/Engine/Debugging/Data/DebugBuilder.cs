@@ -3,9 +3,6 @@ using Machina.Data;
 using Machina.Engine.Debugging.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine.Debugging.Data
 {
@@ -20,7 +17,8 @@ namespace Machina.Engine.Debugging.Data
         public static void CreateFramestep(SceneLayers sceneLayers)
         {
             var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
-            var tool = new InvokableDebugTool(frameStepActor, new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
+            var tool = new InvokableDebugTool(frameStepActor,
+                new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
             new FrameStepRenderer(frameStepActor, MachinaGame.GlobalFrameStep, sceneLayers, tool);
             new BoundingRect(frameStepActor, new Point(64, 64));
             new Hoverable(frameStepActor);
@@ -46,7 +44,7 @@ namespace Machina.Engine.Debugging.Data
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
                     .Title("Scene Graph")
                     .DestroyViaCloseButton()
-                    .OnLaunch((window) =>
+                    .OnLaunch(window =>
                     {
                         var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
                         new BoundingRect(sceneGraphActor, Point.Zero);
@@ -61,7 +59,7 @@ namespace Machina.Engine.Debugging.Data
                     .CanBeResized(new Point(300, 300), new Point(1920, 1080))
                     .DestroyViaCloseButton()
                     .Title("Machina Console")
-                    .OnLaunch((window) =>
+                    .OnLaunch(window =>
                     {
                         var consoleActor = window.scene.AddActor("StaticConsole");
                         new WindowedConsoleRenderer(consoleActor, window.Scrollbar);

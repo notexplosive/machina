@@ -1,9 +1,6 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
@@ -20,7 +17,7 @@ namespace Machina.Components
 
         public TextureRenderer CenterOffset()
         {
-            this.offset = new Vector2(texture.Width / 2, texture.Height / 2);
+            this.offset = new Vector2(this.texture.Width / 2, this.texture.Height / 2);
             return this;
         }
 
@@ -32,7 +29,8 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle, this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
+            spriteBatch.Draw(this.texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle,
+                this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
         }
 
         public void SetupBoundingRect()

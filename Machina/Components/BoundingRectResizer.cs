@@ -1,56 +1,35 @@
-﻿using Machina.Components;
+﻿using System;
 using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Machina.Components
 {
     public class ResizeEventArgs : EventArgs
     {
-        public Vector2 PositionOffset
-        {
-            get; set;
-        }
-        public Vector2 NewSize
-        {
-            get; set;
-        }
+        public Vector2 PositionOffset { get; set; }
+
+        public Vector2 NewSize { get; set; }
     }
 
     public class BoundingRectResizer : BaseComponent
     {
-        private enum RectEdge
-        {
-            None,
-            Top,
-            Bottom,
-            Left,
-            Right,
-            TopLeftCorner,
-            TopRightCorner,
-            BottomLeftCorner,
-            BottomRightCorner
-        }
-
-        private readonly Hoverable hoverable;
+        private readonly Func<Rectangle, Rectangle> adjustRenderRectLambda;
         private readonly BoundingRect boundingRect;
         private readonly XYPair<int> grabHandleThickness;
-        private readonly Func<Rectangle, Rectangle> adjustRenderRectLambda;
-        private GrabState grabState;
-        private Vector2 currentMousePosition;
-        private bool isDraggingSomething;
-        private readonly Point minSize;
-        private readonly Point? maxSize;
-        public event EventHandler<ResizeEventArgs> Resized;
 
-        public BoundingRectResizer(Actor actor, XYPair<int> grabHandleThickness, Point? minSize, Point? maxSize, Func<Rectangle, Rectangle> adjustRenderRectLambda = null) : base(actor)
+        private readonly Hoverable hoverable;
+        private readonly Point? maxSize;
+        private readonly Point minSize;
+        private Vector2 currentMousePosition;
+        private GrabState grabState;
+        private bool isDraggingSomething;
+
+        public BoundingRectResizer(Actor actor, XYPair<int> grabHandleThickness, Point? minSize, Point? maxSize,
+            Func<Rectangle, Rectangle> adjustRenderRectLambda = null) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
@@ -70,16 +49,16 @@ namespace Machina.Components
                 this.minSize = Point.Zero;
             }
 
-
             ClampRectMin();
             if (maxSize.HasValue)
             {
                 ClampRectMax();
             }
 
-
             Resized += OnResizeDefault;
         }
+
+        public event EventHandler<ResizeEventArgs> Resized;
 
         private void OnResizeDefault(object sender, ResizeEventArgs e)
         {
@@ -95,8 +74,10 @@ namespace Machina.Components
 
         private void ClampRectMax()
         {
-            this.boundingRect.Width = Math.Clamp(this.boundingRect.Width, this.boundingRect.Width, this.maxSize.Value.X);
-            this.boundingRect.Height = Math.Clamp(this.boundingRect.Height, this.boundingRect.Height, this.maxSize.Value.Y);
+            this.boundingRect.Width =
+                Math.Clamp(this.boundingRect.Width, this.boundingRect.Width, this.maxSize.Value.X);
+            this.boundingRect.Height =
+                Math.Clamp(this.boundingRect.Height, this.boundingRect.Height, this.maxSize.Value.Y);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -122,16 +103,24 @@ namespace Machina.Components
         private void SetCursorBasedOnEdge(RectEdge edge)
         {
             if (edge == RectEdge.BottomLeftCorner || edge == RectEdge.TopRightCorner)
+            {
                 MachinaGame.SetCursor(MouseCursor.SizeNESW);
+            }
 
             if (edge == RectEdge.TopLeftCorner || edge == RectEdge.BottomRightCorner)
+            {
                 MachinaGame.SetCursor(MouseCursor.SizeNWSE);
+            }
 
             if (edge == RectEdge.Right || edge == RectEdge.Left)
+            {
                 MachinaGame.SetCursor(MouseCursor.SizeWE);
+            }
 
             if (edge == RectEdge.Bottom || edge == RectEdge.Top)
+            {
                 MachinaGame.SetCursor(MouseCursor.SizeNS);
+            }
         }
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
@@ -149,7 +138,8 @@ namespace Machina.Components
             {
                 if (state == ButtonState.Pressed)
                 {
-                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition, this.boundingRect.Rect, this.minSize, this.maxSize);
+                    this.grabState = new GrabState(GetEdgeAtPoint(currentPosition), currentPosition,
+                        this.boundingRect.Rect, this.minSize, this.maxSize);
                 }
                 else
                 {
@@ -158,9 +148,11 @@ namespace Machina.Components
                         Resized?.Invoke(this, new ResizeEventArgs
                         {
                             PositionOffset = this.grabState.GetPositionDelta(this.currentMousePosition),
-                            NewSize = this.boundingRect.Size.ToVector2() + this.grabState.GetSizeDelta(this.currentMousePosition),
+                            NewSize = this.boundingRect.Size.ToVector2() +
+                                      this.grabState.GetSizeDelta(this.currentMousePosition)
                         });
                     }
+
                     this.grabState = new GrabState(RectEdge.None, Vector2.Zero, Rectangle.Empty, Point.Zero, null);
                 }
             }
@@ -239,10 +231,24 @@ namespace Machina.Components
                 var sizeDelta = this.grabState.GetSizeDelta(this.currentMousePosition);
                 var posDelta = this.grabState.GetPositionDelta(this.currentMousePosition);
 
-                var rect = new Rectangle((posDelta + this.transform.Position).ToPoint(), this.boundingRect.Rect.Size + sizeDelta.ToPoint());
+                var rect = new Rectangle((posDelta + transform.Position).ToPoint(),
+                    this.boundingRect.Rect.Size + sizeDelta.ToPoint());
                 rect = this.adjustRenderRectLambda(rect);
                 spriteBatch.DrawRectangle(rect, Color.White, 1f, transform.Depth - 10);
             }
+        }
+
+        private enum RectEdge
+        {
+            None,
+            Top,
+            Bottom,
+            Left,
+            Right,
+            TopLeftCorner,
+            TopRightCorner,
+            BottomLeftCorner,
+            BottomRightCorner
         }
 
         private struct GrabState
@@ -253,7 +259,8 @@ namespace Machina.Components
             private readonly Point minSize;
             private readonly Point? maxSize;
 
-            public GrabState(RectEdge edge, Vector2 positionOfGrab, Rectangle currentRect, Point minSize, Point? maxSize)
+            public GrabState(RectEdge edge, Vector2 positionOfGrab, Rectangle currentRect, Point minSize,
+                Point? maxSize)
             {
                 this.edge = edge;
                 this.positionOfGrab = positionOfGrab;
@@ -264,13 +271,16 @@ namespace Machina.Components
 
             private Vector2 GetTotalDelta(Vector2 currentPosition)
             {
-                return currentPosition - positionOfGrab;
+                return currentPosition - this.positionOfGrab;
             }
 
             public Vector2 GetPositionDelta(Vector2 currentPosition)
             {
-                if (this.edge == RectEdge.Right || this.edge == RectEdge.Bottom || this.edge == RectEdge.BottomRightCorner)
+                if (this.edge == RectEdge.Right || this.edge == RectEdge.Bottom ||
+                    this.edge == RectEdge.BottomRightCorner)
+                {
                     return Vector2.Zero;
+                }
 
                 var delta = -GetSizeDelta(currentPosition);
 
@@ -313,14 +323,16 @@ namespace Machina.Components
 
                 if (this.maxSize.HasValue)
                 {
-                    var currentSize = currentRect.Size;
-                    var deltaX = Math.Clamp(currentSize.X + rawSizeDelta.X, this.minSize.X, this.maxSize.Value.X) - currentSize.X;
-                    var deltaY = Math.Clamp(currentSize.Y + rawSizeDelta.Y, this.minSize.Y, this.maxSize.Value.Y) - currentSize.Y;
+                    var currentSize = this.currentRect.Size;
+                    var deltaX = Math.Clamp(currentSize.X + rawSizeDelta.X, this.minSize.X, this.maxSize.Value.X) -
+                                 currentSize.X;
+                    var deltaY = Math.Clamp(currentSize.Y + rawSizeDelta.Y, this.minSize.Y, this.maxSize.Value.Y) -
+                                 currentSize.Y;
                     return new Vector2(deltaX, deltaY);
                 }
                 else
                 {
-                    var currentSize = currentRect.Size;
+                    var currentSize = this.currentRect.Size;
                     var deltaX = Math.Max(currentSize.X + rawSizeDelta.X, this.minSize.X) - currentSize.X;
                     var deltaY = Math.Max(currentSize.Y + rawSizeDelta.Y, this.minSize.Y) - currentSize.Y;
                     MachinaGame.Print(deltaX, deltaY);
@@ -328,9 +340,13 @@ namespace Machina.Components
                 }
             }
 
-            public bool IsAlongTop => this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.TopRightCorner || this.edge == RectEdge.Top;
+            public bool IsAlongTop => this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.TopRightCorner ||
+                                      this.edge == RectEdge.Top;
+
             public bool IsLeftOrRight => this.edge == RectEdge.Left || this.edge == RectEdge.Right;
-            public bool IsAlongLeft => this.edge == RectEdge.Left || this.edge == RectEdge.TopLeftCorner || this.edge == RectEdge.BottomLeftCorner;
+
+            public bool IsAlongLeft => this.edge == RectEdge.Left || this.edge == RectEdge.TopLeftCorner ||
+                                       this.edge == RectEdge.BottomLeftCorner;
         }
     }
 }

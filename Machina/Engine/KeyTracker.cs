@@ -1,19 +1,16 @@
-﻿using Machina.Data;
+﻿using System;
+using System.Collections.Generic;
+using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
-using System.Text;
 
 namespace Machina.Engine
 {
     public class KeyTracker
     {
-        private KeyboardState oldKeyState;
         private GamePadState oldGamePadState;
+        private KeyboardState oldKeyState;
 
         public KeyboardFrameState CalculateFrameState(KeyboardState currentState, GamePadState currentGamePadState)
         {
@@ -24,7 +21,7 @@ namespace Machina.Engine
 
             foreach (var current in currentPressed)
             {
-                if (!oldKeyState.IsKeyDown(current))
+                if (!this.oldKeyState.IsKeyDown(current))
                 {
                     keysPressedThisFrame.Add(current);
                 }
@@ -38,9 +35,9 @@ namespace Machina.Engine
                 }
             }
 
-            bool control = false;
-            bool alt = false;
-            bool shift = false;
+            var control = false;
+            var alt = false;
+            var shift = false;
 
             if (currentState.IsKeyDown(Keys.LeftControl) || currentState.IsKeyDown(Keys.RightControl))
             {
@@ -56,8 +53,6 @@ namespace Machina.Engine
             {
                 alt = true;
             }
-
-
 
             void ConvertGamepadButtonToKeyboard(ButtonState newState, ButtonState oldState, Keys key)
             {
@@ -129,7 +124,8 @@ namespace Machina.Engine
 
             this.oldKeyState = currentState;
             this.oldGamePadState = currentGamePadState;
-            return new KeyboardFrameState(keysPressedThisFrame.ToArray(), keysReleasedThisFrame.ToArray(), new ModifierKeys(control, alt, shift));
+            return new KeyboardFrameState(keysPressedThisFrame.ToArray(), keysReleasedThisFrame.ToArray(),
+                new ModifierKeys(control, alt, shift));
         }
     }
 }

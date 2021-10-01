@@ -1,49 +1,43 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
 
 namespace Machina.Components
 {
     /// <summary>
-    /// ClickAction means an object was clicked (mouse down)
+    ///     ClickAction means an object was clicked (mouse down)
     /// </summary>
     /// <param name="button"></param>
     public delegate void ClickAction(MouseButton button);
 
     public class Clickable : BaseComponent
     {
-        /// <summary>
-        /// Mouse was down, then up on the same object
-        /// </summary>
-        public event ClickAction OnClick;
-        /// <summary>
-        /// Mouse was down on an object (not a complete Click)
-        /// </summary>
-        public event ClickAction ClickStarted;
-        private bool leftButtonDown;
-        private bool rightButtonDown;
-        private bool middleButtonDown;
-
         private readonly Hoverable hoverable;
+        private bool leftButtonDown;
+        private bool middleButtonDown;
+        private bool rightButtonDown;
 
         public Clickable(Actor actor) : base(actor)
         {
             this.hoverable = RequireComponent<Hoverable>();
         }
 
-        public bool IsPrimedForAnyButton
-        {
-            get
-            {
-                return this.hoverable.IsHovered && (leftButtonDown || middleButtonDown || rightButtonDown);
-            }
-        }
+        public bool IsPrimedForAnyButton => this.hoverable.IsHovered &&
+                                            (this.leftButtonDown || this.middleButtonDown || this.rightButtonDown);
 
-        public bool IsPrimedForLeftMouseButton => IsPrimedForAnyButton && leftButtonDown;
+        public bool IsPrimedForLeftMouseButton => IsPrimedForAnyButton && this.leftButtonDown;
 
         public bool IsHovered => this.hoverable.IsHovered;
+
+        /// <summary>
+        ///     Mouse was down, then up on the same object
+        /// </summary>
+        public event ClickAction OnClick;
+
+        /// <summary>
+        ///     Mouse was down on an object (not a complete Click)
+        /// </summary>
+        public event ClickAction ClickStarted;
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
@@ -54,32 +48,32 @@ namespace Machina.Components
                     ClickStarted?.Invoke(button);
                     if (button == MouseButton.Left)
                     {
-                        leftButtonDown = true;
+                        this.leftButtonDown = true;
                     }
 
                     if (button == MouseButton.Right)
                     {
-                        rightButtonDown = true;
+                        this.rightButtonDown = true;
                     }
 
                     if (button == MouseButton.Middle)
                     {
-                        middleButtonDown = true;
+                        this.middleButtonDown = true;
                     }
                 }
                 else
                 {
-                    if (leftButtonDown && button == MouseButton.Left)
+                    if (this.leftButtonDown && button == MouseButton.Left)
                     {
                         OnClick?.Invoke(MouseButton.Left);
                     }
 
-                    if (rightButtonDown && button == MouseButton.Right)
+                    if (this.rightButtonDown && button == MouseButton.Right)
                     {
                         OnClick?.Invoke(MouseButton.Right);
                     }
 
-                    if (middleButtonDown && button == MouseButton.Middle)
+                    if (this.middleButtonDown && button == MouseButton.Middle)
                     {
                         OnClick?.Invoke(MouseButton.Middle);
                     }
@@ -88,9 +82,9 @@ namespace Machina.Components
 
             if (buttonState == ButtonState.Released)
             {
-                leftButtonDown = false;
-                rightButtonDown = false;
-                middleButtonDown = false;
+                this.leftButtonDown = false;
+                this.rightButtonDown = false;
+                this.middleButtonDown = false;
             }
         }
     }

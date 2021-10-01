@@ -1,9 +1,7 @@
-﻿using Machina.Engine;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using Machina.Engine;
+using Microsoft.Xna.Framework;
 
 namespace Machina.Components
 {
@@ -11,10 +9,10 @@ namespace Machina.Components
     {
         private readonly BoundingRect boundingRect;
 
-        private int padding;
+        public readonly Orientation orientation;
         private Point margin;
 
-        public readonly Orientation orientation;
+        private int padding;
 
         public LayoutGroup(Actor actor, Orientation orientation) : base(actor)
         {
@@ -41,8 +39,8 @@ namespace Machina.Components
             var stretchAlong = new List<LayoutElement>();
             var stretchPerpendicular = new List<LayoutElement>();
 
-            int last = elements.Count - 1;
-            int index = 0;
+            var last = elements.Count - 1;
+            var index = 0;
 
             // Determine true size of elements, subtract sizes
             foreach (var element in elements)
@@ -166,14 +164,15 @@ namespace Machina.Components
         public List<LayoutElement> GetAllElements()
         {
             var result = new List<LayoutElement>();
-            for (int i = 0; i < this.transform.ChildCount; i++)
+            for (var i = 0; i < transform.ChildCount; i++)
             {
-                var element = this.transform.ChildAt(i).GetComponent<LayoutElement>();
+                var element = transform.ChildAt(i).GetComponent<LayoutElement>();
                 if (element != null)
                 {
                     result.Add(element);
                 }
             }
+
             return result;
         }
 
@@ -240,6 +239,7 @@ namespace Machina.Components
             AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
             return this;
         }
+
         public LayoutGroup AddBothStretchedElement(string name, Action<Actor> onPostCreate)
         {
             AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();

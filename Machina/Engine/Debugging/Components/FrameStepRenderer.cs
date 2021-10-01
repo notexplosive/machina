@@ -1,24 +1,19 @@
-﻿using Machina.Data;
-using Machina.Engine;
+﻿using Machina.Engine;
 using Machina.Engine.Debugging.Data;
-using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class FrameStepRenderer : BaseComponent
+    internal class FrameStepRenderer : BaseComponent
     {
         private readonly IFrameStep frameStep;
         private readonly SceneLayers sceneLayers;
         private int stepCount;
 
-        public FrameStepRenderer(Actor actor, IFrameStep frameStep, SceneLayers sceneLayers, InvokableDebugTool tool) : base(actor)
+        public FrameStepRenderer(Actor actor, IFrameStep frameStep, SceneLayers sceneLayers, InvokableDebugTool tool) :
+            base(actor)
         {
             tool.onToolToggle += OnToggle;
             this.frameStep = frameStep;
@@ -51,6 +46,7 @@ namespace Machina.Components
             {
                 this.stepCount = 0;
             }
+
             this.frameStep.IsPaused = isPaused;
         }
 
@@ -58,10 +54,11 @@ namespace Machina.Components
         {
             if (this.frameStep.IsPaused)
             {
-                foreach (var scene in sceneLayers.AllScenes())
+                foreach (var scene in this.sceneLayers.AllScenes())
                 {
                     scene.Step();
                 }
+
                 this.stepCount++;
             }
         }

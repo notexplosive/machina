@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Machina.Engine
 {
@@ -9,6 +7,10 @@ namespace Machina.Engine
     public class Camera
     {
         private readonly IGameCanvas gameCanvas;
+
+        public Action<float, float> OnChangeZoom;
+
+        private float zoom;
 
         public Camera(IGameCanvas gameCanvas)
         {
@@ -18,44 +20,31 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// How offset the camera is from its initial position
+        ///     How offset the camera is from its initial position
         /// </summary>
-        public Vector2 UnscaledPosition
-        {
-            get; set;
-        }
+        public Vector2 UnscaledPosition { get; set; }
 
-        private float zoom;
         public float Zoom
         {
-            get
-            {
-                return zoom;
-            }
+            get => this.zoom;
             set
             {
-                zoom = value;
-                OnChangeZoom?.Invoke(zoom, value);
+                this.zoom = value;
+                this.OnChangeZoom?.Invoke(this.zoom, value);
             }
         }
 
-        public float Rotation
-        {
-            get; set;
-        }
+        public float Rotation { get; set; }
 
         [Obsolete("Use UnscaledViewportSize.X instead", false)]
-        public int ViewportWidth
-        {
-            get => UnscaledViewportSize.X;
-        }
+        public int ViewportWidth => UnscaledViewportSize.X;
+
         [Obsolete("Use UnscaledViewportSize.Y instead", false)]
-        public int ViewportHeight
-        {
-            get => UnscaledViewportSize.Y;
-        }
-        public Point UnscaledViewportSize => (gameCanvas.ViewportSize.ToVector2()).ToPoint();
-        public Vector2 ScaledViewportSize => gameCanvas.ViewportSize.ToVector2() / this.zoom;
+        public int ViewportHeight => UnscaledViewportSize.Y;
+
+        public Point UnscaledViewportSize => this.gameCanvas.ViewportSize.ToVector2().ToPoint();
+        public Vector2 ScaledViewportSize => this.gameCanvas.ViewportSize.ToVector2() / this.zoom;
+
         public Point ScaledPosition
         {
             get
@@ -71,59 +60,45 @@ namespace Machina.Engine
                 UnscaledPosition += offset.ToVector2();
             }
         }
-        public Vector2 CanvasTopLeft => gameCanvas.CanvasRect.Location.ToVector2();
-        public Func<Vector2> ZoomTarget
-        {
-            get; set;
-        }
+
+        public Vector2 CanvasTopLeft => this.gameCanvas.CanvasRect.Location.ToVector2();
+
+        public Func<Vector2> ZoomTarget { get; set; }
+
         public Vector2 ViewportCenter => ScaledViewportSize / 2f;
-        public Vector2 UnscaledViewportCenter
-        {
-            get
-            {
-                return UnscaledViewportSize.ToVector2() / 2f;
-            }
-        }
+
+        public Vector2 UnscaledViewportCenter => UnscaledViewportSize.ToVector2() / 2f;
 
         public Matrix MouseDeltaMatrix =>
             Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
-            * RotationAndZoomMatrix
-            ;
+            * RotationAndZoomMatrix;
 
         /// <summary>
-        /// The rotation and scale transforms applied to the camera
+        ///     The rotation and scale transforms applied to the camera
         /// </summary>
         public Matrix RotationAndZoomMatrix =>
             Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
-            * Matrix.CreateRotationZ(Rotation)
-            ;
+            * Matrix.CreateRotationZ(Rotation);
 
         /// <summary>
-        /// This is the matrix passed to SpriteBatch to render the scene, if you're using a GameCanvas
-        /// this isn't quite enough.
+        ///     This is the matrix passed to SpriteBatch to render the scene, if you're using a GameCanvas
+        ///     this isn't quite enough.
         /// </summary>
         public Matrix GraphicsTransformMatrix =>
             Matrix.CreateTranslation(-(int) UnscaledPosition.X, -(int) UnscaledPosition.Y, 0)
             * Matrix.CreateTranslation(new Vector3(-ZoomTarget(), 0))
             * RotationAndZoomMatrix
-            * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0))
-            ;
+            * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0));
 
-        public float NativeScaleFactor
-        {
-            get => gameCanvas.ScaleFactor;
-        }
+        public float NativeScaleFactor => this.gameCanvas.ScaleFactor;
 
         /// <summary>
-        /// All of the transforms needed to convert screen to world and world to screen.
+        ///     All of the transforms needed to convert screen to world and world to screen.
         /// </summary>
         public Matrix GameCanvasMatrix =>
-                 GraphicsTransformMatrix
-                * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
-                * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0))
-            ;
-
-        public Action<float, float> OnChangeZoom;
+            GraphicsTransformMatrix
+            * Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
+            * Matrix.CreateTranslation(new Vector3(CanvasTopLeft, 0));
 
         public void AdjustZoom(float amount)
         {
@@ -135,19 +110,19 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// CAUTION: You'll almost definitely not want to use this, the SpriteBatch is already doing this transform for you
+        ///     CAUTION: You'll almost definitely not want to use this, the SpriteBatch is already doing this transform for you
         /// </summary>
         /// <param name="worldPosition"></param>
         /// <returns></returns>
         public Vector2 WorldToScreen(Vector2 worldPosition)
         {
             return Vector2.Transform(worldPosition,
-                    GameCanvasMatrix
-                    );
+                GameCanvasMatrix
+            );
         }
 
         /// <summary>
-        /// Used to translate screen-based concepts (like mouse position) to the world
+        ///     Used to translate screen-based concepts (like mouse position) to the world
         /// </summary>
         /// <param name="screenPosition"></param>
         /// <returns></returns>
@@ -156,7 +131,7 @@ namespace Machina.Engine
             return Vector2.Transform(screenPosition,
                 Matrix.Invert(
                     GameCanvasMatrix
-                    ));
+                ));
         }
     }
 }

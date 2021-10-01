@@ -2,27 +2,22 @@
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class DropdownTrigger : BaseComponent, UIState<DropdownContent.DropdownItem>
     {
-        private DropdownContent.DropdownItem selectedItem;
-        private readonly Clickable clickable;
-        private readonly DropdownContent content;
-        private readonly BoundedTextRenderer textRenderer;
-        private readonly IFrameAnimation frames;
-        private readonly SpriteSheet spriteSheet;
         private readonly NinepatchSheet backgroundSheet;
         private readonly BoundingRect boundingRect;
+        private readonly Clickable clickable;
+        private readonly DropdownContent content;
+        private readonly IFrameAnimation frames;
+        private readonly SpriteSheet spriteSheet;
+        private readonly BoundedTextRenderer textRenderer;
+        private DropdownContent.DropdownItem selectedItem;
 
-        private bool Deployed => this.content.actor.Visible;
-
-        public DropdownTrigger(Actor actor, DropdownContent content, SpriteSheet spriteSheet, IFrameAnimation frames, NinepatchSheet backgroundSheet) : base(actor)
+        public DropdownTrigger(Actor actor, DropdownContent content, SpriteSheet spriteSheet, IFrameAnimation frames,
+            NinepatchSheet backgroundSheet) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
             this.clickable.OnClick += OnClick;
@@ -37,9 +32,13 @@ namespace Machina.Components
             this.boundingRect = RequireComponent<BoundingRect>();
         }
 
+        private bool Deployed => this.content.actor.Visible;
+
+        public DropdownContent.DropdownItem State => this.selectedItem;
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            int frameIndex = 2;
+            var frameIndex = 2;
             if (!Deployed)
             {
                 if (this.clickable.IsHovered)
@@ -58,10 +57,13 @@ namespace Machina.Components
             }
 
             var rect = this.boundingRect.Rect;
-            this.backgroundSheet.DrawFullNinepatch(spriteBatch, rect, NinepatchSheet.GenerationDirection.Inner, transform.Depth + 1);
+            this.backgroundSheet.DrawFullNinepatch(spriteBatch, rect, NinepatchSheet.GenerationDirection.Inner,
+                transform.Depth + 1);
 
-            var drawPos = new Vector2(rect.Right, this.transform.Position.Y) + new Vector2(-rect.Height / 2, rect.Height / 2);
-            this.spriteSheet.DrawFrame(spriteBatch, this.frames.GetFrame(frameIndex), drawPos, 1f, 0f, new PointBool(false, false), transform.Depth - 1, Color.White);
+            var drawPos = new Vector2(rect.Right, transform.Position.Y) +
+                          new Vector2(-rect.Height / 2, rect.Height / 2);
+            this.spriteSheet.DrawFrame(spriteBatch, this.frames.GetFrame(frameIndex), drawPos, 1f, 0f,
+                new PointBool(false, false), transform.Depth - 1, Color.White);
         }
 
         private void OnOptionSelected(DropdownContent.DropdownItem item)
@@ -90,7 +92,5 @@ namespace Machina.Components
                 }
             }
         }
-
-        public DropdownContent.DropdownItem State => this.selectedItem;
     }
 }

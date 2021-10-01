@@ -1,32 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Machina.Components;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Engine
 {
     public class Actor : Crane<IComponent>
     {
-        public event Action Destroyed;
-        public readonly Scene scene;
         public readonly string name;
+        public readonly Scene scene;
         public readonly Transform transform;
 
-        public bool Visible
-        {
-            get; set;
-        }
-
-        public bool IsDestroyed
-        {
-            get; private set;
-        }
-
         /// <summary>
-        /// Create an actor and add them to the given scene.
+        ///     Create an actor and add them to the given scene.
         /// </summary>
         /// <param name="name">Human readable name (for debugging)</param>
         /// <param name="scene">Scene that the ctor will add the actor to. Should not be null unless you're a test.</param>
@@ -36,13 +23,19 @@ namespace Machina.Engine
             this.scene?.AddActor(this);
             this.name = name;
 
-            this.Visible = true;
+            Visible = true;
             this.transform = new Transform(this);
 
             // Transform is "Just" a component, it just happens to be the first component and is added to every actor
             // Niche scenario, AddComponent is OK here.
-            AddComponent(transform);
+            AddComponent(this.transform);
         }
+
+        public bool Visible { get; set; }
+
+        public bool IsDestroyed { get; private set; }
+
+        public event Action Destroyed;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -74,7 +67,7 @@ namespace Machina.Engine
         public List<T> GetComponentsInImmediateChildren<T>() where T : BaseComponent
         {
             var result = new List<T>();
-            for (int i = 0; i < this.transform.ChildCount; i++)
+            for (var i = 0; i < this.transform.ChildCount; i++)
             {
                 var child = this.transform.ChildAt(i);
                 var comp = child.GetComponent<T>();
@@ -83,6 +76,7 @@ namespace Machina.Engine
                     result.Add(comp);
                 }
             }
+
             return result;
         }
 
@@ -95,7 +89,7 @@ namespace Machina.Engine
 
             Destroyed?.Invoke();
             this.scene.DeleteActor(this);
-            this.IsDestroyed = true;
+            IsDestroyed = true;
         }
 
         public void Delete()
@@ -107,15 +101,16 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// SHOULD NOT BE CALLED DIRECTLY UNLESS YOU'RE IN A UNIT TEST
-        /// If you want to add a component call `new YourComponentName(actor);`
+        ///     SHOULD NOT BE CALLED DIRECTLY UNLESS YOU'RE IN A UNIT TEST
+        ///     If you want to add a component call `new YourComponentName(actor);`
         /// </summary>
         /// <param name="component">The component who is being constructed</param>
         /// <returns></returns>
         public IComponent AddComponent(IComponent component)
         {
-            Type type = component.GetType();
-            Debug.Assert(GetComponentByName(type.FullName) == null, "Attempted to add component that already exists " + type.FullName);
+            var type = component.GetType();
+            Debug.Assert(GetComponentByName(type.FullName) == null,
+                "Attempted to add component that already exists " + type.FullName);
 
             // TODO: This should be AddIterable so we can AddComponent during an update, but then we can't assemble everything on frame 0 and RequireComponent doesn't work
             this.iterables.Add(component);
@@ -123,7 +118,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Acquire a component of type T if it exists. Otherwise get null.
+        ///     Acquire a component of type T if it exists. Otherwise get null.
         /// </summary>
         /// <typeparam name="T">Component that inherits from IComponent</typeparam>
         /// <returns></returns>
@@ -136,7 +131,6 @@ namespace Machina.Engine
         {
             return GetComponentsUnsafe<T>();
         }
-
 
         public void RemoveComponent<T>() where T : BaseComponent
         {
@@ -153,6 +147,7 @@ namespace Machina.Engine
                     return component;
                 }
             }
+
             return null;
         }
 
@@ -161,13 +156,14 @@ namespace Machina.Engine
             var parentName = "";
             if (this.transform.HasParent)
             {
-                parentName = this.transform.Parent.actor.ToString() + "/";
+                parentName = this.transform.Parent.actor + "/";
             }
+
             return parentName + this.name;
         }
 
         /// <summary>
-        /// Same as GetComponents except T can be any type
+        ///     Same as GetComponents except T can be any type
         /// </summary>
         /// <typeparam name="T">Any type the component qualifies under</typeparam>
         /// <returns></returns>
@@ -185,9 +181,8 @@ namespace Machina.Engine
             return result;
         }
 
-
         /// <summary>
-        /// Same as GetComponent except without the type safety
+        ///     Same as GetComponent except without the type safety
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -206,7 +201,7 @@ namespace Machina.Engine
 
         public T GetFirstComponentInProgeny<T>() where T : BaseComponent
         {
-            for (int i = 0; i < this.transform.ChildCount; i++)
+            for (var i = 0; i < this.transform.ChildCount; i++)
             {
                 var child = this.transform.ChildAt(i);
                 var comp = child.GetComponent<T>();
@@ -228,6 +223,4 @@ namespace Machina.Engine
             return null;
         }
     }
-
-
 }

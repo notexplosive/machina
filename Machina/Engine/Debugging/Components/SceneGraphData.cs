@@ -1,12 +1,5 @@
-﻿using Machina.Components;
-using Machina.Data;
-using Machina.Engine;
-using Machina.Engine.Debugging.Components;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using Machina.Components;
 
 namespace Machina.Engine.Debugging.Components
 {
@@ -31,7 +24,7 @@ namespace Machina.Engine.Debugging.Components
                 {
                     this.nodes.Add(new SceneGraphNode(1, targetActor));
 
-                    for (int i = 0; i < targetActor.transform.ChildCount; i++)
+                    for (var i = 0; i < targetActor.transform.ChildCount; i++)
                     {
                         this.nodes.Add(new SceneGraphNode(2, targetActor.transform.ChildAt(i)));
                     }
@@ -52,7 +45,9 @@ namespace Machina.Engine.Debugging.Components
         public SceneGraphNode? GetElementAt(int targetIndex)
         {
             if (targetIndex >= 0 && targetIndex < this.nodes.Count)
+            {
                 return this.nodes[targetIndex];
+            }
 
             return null;
         }

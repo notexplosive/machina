@@ -3,9 +3,6 @@ using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
@@ -30,7 +27,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.FillRectangle(this.boundingRect.Rect, this.color, transform.Depth + depthOffset);
+            spriteBatch.FillRectangle(this.boundingRect.Rect, this.color, transform.Depth + this.depthOffset);
         }
     }
 }

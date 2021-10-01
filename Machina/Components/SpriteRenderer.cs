@@ -1,48 +1,40 @@
-﻿using Machina.Data;
+﻿using System.Diagnostics;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Machina.Components
 {
     public class SpriteRenderer : BaseComponent
     {
+        private readonly int framesPerSecond = 15;
         public readonly SpriteSheet spriteSheet;
+        public Color color;
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
-        private int framesPerSecond = 15;
-        public float scale = 1f;
-        public Color color;
         private Vector2 offset;
-
-        public bool IsPaused
-        {
-            get; set;
-        }
-        public bool FlipX
-        {
-            get; set;
-        }
-        public bool FlipY
-        {
-            get; set;
-        }
+        public float scale = 1f;
 
         public SpriteRenderer(Actor actor, SpriteSheet spriteSheet) : base(actor)
         {
             this.spriteSheet = spriteSheet;
-            currentAnimation = spriteSheet.DefaultAnimation;
-            color = Color.White;
+            this.currentAnimation = spriteSheet.DefaultAnimation;
+            this.color = Color.White;
         }
 
         public SpriteRenderer(Actor actor, SpriteFrame spriteFrame) : this(actor, spriteFrame.spriteSheet)
         {
-            currentAnimation = spriteFrame.animation;
+            this.currentAnimation = spriteFrame.animation;
         }
+
+        public bool IsPaused { get; set; }
+
+        public bool FlipX { get; set; }
+
+        public bool FlipY { get; set; }
+
+        public int CurrentFrame => this.currentAnimation.GetFrame(this.elapsedTime);
 
         public SpriteRenderer SetupBoundingRect()
         {
@@ -66,7 +58,9 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteSheet.DrawFrame(spriteBatch, CurrentFrame, this.actor.transform.Position - this.offset, this.scale, this.actor.transform.Angle, new PointBool(FlipX, FlipY), this.actor.transform.Depth, color);
+            this.spriteSheet.DrawFrame(spriteBatch, CurrentFrame, this.actor.transform.Position - this.offset,
+                this.scale, this.actor.transform.Angle, new PointBool(FlipX, FlipY), this.actor.transform.Depth,
+                this.color);
         }
 
         public override void Update(float dt)
@@ -81,8 +75,6 @@ namespace Machina.Components
         {
             this.spriteSheet.DebugMe = true;
         }
-
-        public int CurrentFrame => this.currentAnimation.GetFrame(elapsedTime);
 
         public void SetFrame(int frame)
         {

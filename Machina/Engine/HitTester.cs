@@ -1,8 +1,5 @@
-﻿using Machina.Data;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
+﻿using System;
+using Machina.Data;
 
 namespace Machina.Engine
 {
@@ -13,7 +10,7 @@ namespace Machina.Engine
         public readonly Actor actor;
         public readonly Action<bool> approvalCallback;
         public readonly Depth depth;
-        public readonly static HitTestResult Empty = new HitTestResult(new Depth(Depth.MaxAsInt), null);
+        public static readonly HitTestResult Empty = new HitTestResult(new Depth(Depth.MaxAsInt), null);
 
         public HitTestResult(Actor actor, Action<bool> callback) : this(actor.transform.Depth, callback)
         {
@@ -22,7 +19,7 @@ namespace Machina.Engine
 
         public HitTestResult(Depth depth, Action<bool> callback)
         {
-            this.id = IdPool++;
+            this.id = HitTestResult.IdPool++;
             this.depth = depth;
             this.approvalCallback = callback;
             this.actor = null;
@@ -43,10 +40,9 @@ namespace Machina.Engine
             return this.id == other.id;
         }
 
-
         public bool IsEmpty()
         {
-            return Equals(Empty);
+            return Equals(HitTestResult.Empty);
         }
 
         public override string ToString()
@@ -58,17 +54,17 @@ namespace Machina.Engine
 
             if (this.actor != null)
             {
-                return this.actor.ToString() + " depth=" + depth;
+                return this.actor + " depth=" + this.depth;
             }
 
-            return id.ToString() + " depth=" + depth;
+            return this.id + " depth=" + this.depth;
         }
 
         internal static void ApproveTopCandidate(Scene[] scenes)
         {
             var willApproveCandidate = true;
             // Traverse scenes in reverse draw order (top to bottom)
-            for (int i = scenes.Length - 1; i >= 0; i--)
+            for (var i = scenes.Length - 1; i >= 0; i--)
             {
                 var scene = scenes[i];
                 var candidate = scene.hitTester.Candidate;
@@ -83,10 +79,7 @@ namespace Machina.Engine
 
     public class HitTester
     {
-        public HitTestResult Candidate
-        {
-            get; private set;
-        }
+        public HitTestResult Candidate { get; private set; }
 
         public void AddCandidate(HitTestResult target)
         {

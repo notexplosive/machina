@@ -1,14 +1,12 @@
-﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Machina.Engine;
 
 namespace Machina.Components
 {
     public class CallbackWhenAnimationFinished : BaseComponent
     {
-        private readonly SpriteRenderer spriteRenderer;
         private readonly Action callback;
+        private readonly SpriteRenderer spriteRenderer;
 
         public CallbackWhenAnimationFinished(Actor actor, Action callback) : base(actor)
         {

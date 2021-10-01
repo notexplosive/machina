@@ -2,13 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class SimpleButtonRenderer : BaseComponent
+    internal class SimpleButtonRenderer : BaseComponent
     {
         private readonly BoundingRect boundingRect;
         private readonly Clickable clickable;
@@ -21,7 +18,8 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(this.boundingRect.Rect, this.clickable.IsHovered ? Color.Blue : Color.Red, this.clickable.IsPrimedForAnyButton ? 5 : 1);
+            spriteBatch.DrawRectangle(this.boundingRect.Rect, this.clickable.IsHovered ? Color.Blue : Color.Red,
+                this.clickable.IsPrimedForAnyButton ? 5 : 1);
         }
     }
 }

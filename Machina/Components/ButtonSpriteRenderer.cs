@@ -1,27 +1,16 @@
-﻿using Machina.Components;
-using Machina.Data;
+﻿using Machina.Data;
 using Machina.Engine;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class ButtonSpriteRenderer : BaseComponent
+    internal class ButtonSpriteRenderer : BaseComponent
     {
-        private enum HoverSprite
-        {
-            Idle,
-            Hovered,
-            Pressed
-        }
+        private readonly BoundingRect boundingRect;
 
         private readonly Clickable clickable;
-        private readonly BoundingRect boundingRect;
-        private readonly SpriteSheet spriteSheet;
         private readonly IFrameAnimation frames;
+        private readonly SpriteSheet spriteSheet;
         private HoverSprite currentFrame;
 
         public ButtonSpriteRenderer(Actor actor, SpriteSheet spriteSheet, IFrameAnimation frames) : base(actor)
@@ -55,8 +44,17 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             var frame = (int) this.currentFrame;
-            var center = this.boundingRect.Rect.Center.ToVector2();// - this.spriteSheet.GetSourceRectForFrame(frame).Size.ToVector2() / 2;
-            spriteSheet.DrawFrame(spriteBatch, this.frames.GetFrame(frame), center, transform.Depth);
+            var center =
+                this.boundingRect.Rect.Center
+                    .ToVector2(); // - this.spriteSheet.GetSourceRectForFrame(frame).Size.ToVector2() / 2;
+            this.spriteSheet.DrawFrame(spriteBatch, this.frames.GetFrame(frame), center, transform.Depth);
+        }
+
+        private enum HoverSprite
+        {
+            Idle,
+            Hovered,
+            Pressed
         }
     }
 }

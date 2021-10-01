@@ -1,29 +1,19 @@
-﻿using Machina.Components;
-using Machina.Engine;
-using Machina.Engine.Debugging.Data;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using Machina.Components;
+using Machina.Engine.Debugging.Data;
 
 namespace Machina.Engine.Debugging.Components
 {
-
     public class Logger : BaseComponent, ILogger
     {
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
-        private IDebugOutputRenderer renderer;
-
+        private readonly IDebugOutputRenderer renderer;
 
         public Logger(Actor actor, IDebugOutputRenderer renderer) : base(actor)
         {
             this.renderer = renderer;
-
         }
-
 
         public void Log(params object[] objects)
         {

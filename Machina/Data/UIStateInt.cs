@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -16,7 +14,8 @@ namespace Machina.Data
 
         public int State
         {
-            get => this.value; set => this.value = value;
+            get => this.value;
+            set => this.value = value;
         }
     }
 }

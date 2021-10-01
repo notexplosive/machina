@@ -1,9 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -14,6 +11,7 @@ namespace Machina.Data
             this.x = x;
             this.y = y;
         }
+
         public bool x;
         public bool y;
 
@@ -23,8 +21,8 @@ namespace Machina.Data
 
     public class Image : IAsset
     {
-        private readonly SpriteSheet spriteSheet;
         private readonly int frame;
+        private readonly SpriteSheet spriteSheet;
 
         public Image(SpriteSheet spriteSheet, int frame)
         {
@@ -33,14 +31,14 @@ namespace Machina.Data
             this.frame = frame;
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip, Depth layerDepth, Color color)
-        {
-            spriteSheet.DrawFrame(spriteBatch, frame, position, scale, angle, flip, layerDepth, color);
-        }
-
         public void OnCleanup()
         {
+        }
 
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip,
+            Depth layerDepth, Color color)
+        {
+            this.spriteSheet.DrawFrame(spriteBatch, this.frame, position, scale, angle, flip, layerDepth, color);
         }
     }
 }

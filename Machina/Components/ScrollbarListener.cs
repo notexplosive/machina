@@ -1,16 +1,13 @@
 ﻿using Machina.Data;
 using Machina.Engine;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     /// <summary>
-    /// If you have a scrollbar, you can only scroll it when hovering the bar. This ensures you can scroll it while anywhere else.
-    /// Used primarily for SceneRenderers but there's no reason it can't be used elsewhere.
+    ///     If you have a scrollbar, you can only scroll it when hovering the bar. This ensures you can scroll it while
+    ///     anywhere else.
+    ///     Used primarily for SceneRenderers but there's no reason it can't be used elsewhere.
     /// </summary>
     public class ScrollbarListener : BaseComponent
     {

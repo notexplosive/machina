@@ -1,14 +1,7 @@
 ﻿using Machina.Components;
-using Machina.Data;
-using Machina.Engine;
-using Machina.Engine.Debugging.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine.Debugging.Components
 {
@@ -22,12 +15,11 @@ namespace Machina.Engine.Debugging.Components
         {
             this.remoteActor = remoteActor;
             this.cameraOffset = Vector2.Zero;
-
         }
 
         public override void Update(float dt)
         {
-            this.actor.scene.camera.UnscaledPosition = this.remoteActor.transform.Position - cameraOffset;
+            this.actor.scene.camera.UnscaledPosition = this.remoteActor.transform.Position - this.cameraOffset;
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)

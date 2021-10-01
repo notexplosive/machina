@@ -1,39 +1,54 @@
-﻿using Machina.Engine;
-using Machina.Engine.Debugging.Data;
+﻿using System;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class SceneRenderer : BaseComponent, IGameCanvas
     {
-        private readonly BoundedCanvas canvas;
         private readonly BoundingRect boundingRect;
+        private readonly BoundedCanvas canvas;
         private readonly Hoverable hoverable;
-        private readonly SceneLayers sceneLayers;
-        private Func<bool> shouldAllowKeyboardEvents;
+        public readonly Scene primaryScene;
+
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         private Func<bool> bypassHoverConstraint;
-        public readonly Scene primaryScene;
+        private Func<bool> shouldAllowKeyboardEvents;
 
         public SceneRenderer(Actor actor) : base(actor)
         {
             this.canvas = RequireComponent<BoundedCanvas>();
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
-            this.sceneLayers = new SceneLayers(false, this);
+            SceneLayers = new SceneLayers(false, this);
             this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.hoverable.OnHoverEnd += ClearHitTesters;
 
-            this.primaryScene = sceneLayers.AddNewScene();
+            this.primaryScene = SceneLayers.AddNewScene();
 
             this.shouldAllowKeyboardEvents = () => false;
             this.bypassHoverConstraint = () => false;
         }
+
+        /// <summary>
+        ///     Gets the position of the mouse within the scene, assuming the scene is not rotated.
+        /// </summary>
+        private Matrix MouseTransformMatrix
+        {
+            get
+            {
+                var topLeft = this.canvas.TopLeftCorner;
+                return Matrix.CreateTranslation(topLeft.X, topLeft.Y, 0);
+            }
+        }
+
+        public SceneLayers SceneLayers { get; }
+
+        public Point ViewportSize => this.boundingRect.Size;
+        public Point WindowSize => this.boundingRect.Size;
+        public float ScaleFactor => 1;
+        public Rectangle CanvasRect => new Rectangle(new Point(0, 0), ViewportSize);
 
         public SceneRenderer SetShouldAllowKeyboardEventsLambda(Func<bool> shouldAllowKeyboardEvents)
         {
@@ -49,7 +64,7 @@ namespace Machina.Components
 
         private void DrawInnerScene(SpriteBatch spriteBatch)
         {
-            this.sceneLayers.DrawOnCanvas(spriteBatch);
+            SceneLayers.DrawOnCanvas(spriteBatch);
         }
 
         public override void OnDeleteFinished()
@@ -60,7 +75,7 @@ namespace Machina.Components
 
         private void ClearHitTesters()
         {
-            foreach (var scene in this.sceneLayers.AllScenes())
+            foreach (var scene in SceneLayers.AllScenes())
             {
                 scene.ClearHitTester();
             }
@@ -70,9 +85,10 @@ namespace Machina.Components
         {
             var camera = this.actor.scene.camera;
             var bypassHover = this.bypassHoverConstraint.Invoke();
-            this.sceneLayers.Update(
+            SceneLayers.Update(
                 dt,
-                Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix), this.actor.scene.sceneLayers.CurrentInputFrameState,
+                Matrix.Invert(camera.GameCanvasMatrix) * Matrix.Invert(MouseTransformMatrix),
+                this.actor.scene.sceneLayers.CurrentInputFrameState,
                 this.hoverable.IsHovered || bypassHover, this.shouldAllowKeyboardEvents());
         }
 
@@ -80,26 +96,8 @@ namespace Machina.Components
         {
             if (this.shouldAllowKeyboardEvents())
             {
-                this.sceneLayers.AddPendingTextInput(null, inputEventArgs);
+                SceneLayers.AddPendingTextInput(null, inputEventArgs);
             }
         }
-
-        /// <summary>
-        /// Gets the position of the mouse within the scene, assuming the scene is not rotated.
-        /// </summary>
-        private Matrix MouseTransformMatrix
-        {
-            get
-            {
-                var topLeft = this.canvas.TopLeftCorner;
-                return Matrix.CreateTranslation(topLeft.X, topLeft.Y, 0);
-            }
-        }
-
-        public SceneLayers SceneLayers => this.sceneLayers;
-        public Point ViewportSize => this.boundingRect.Size;
-        public Point WindowSize => this.boundingRect.Size;
-        public float ScaleFactor => 1;
-        public Rectangle CanvasRect => new Rectangle(new Point(0, 0), ViewportSize);
     }
 }

@@ -1,22 +1,19 @@
-﻿using Machina.Data;
+﻿using System;
+using System.IO;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Machina.Components
 {
     public class SnapshotTaker : BaseComponent
     {
+        private readonly bool doNotUseTimer;
+        private readonly string screenshotPath;
         private DateTime lastSnapshotTime;
         private bool pendingSnapshot;
         private double waitDuration;
-        private readonly bool doNotUseTimer;
-        private readonly string screenshotPath;
 
         public SnapshotTaker(Actor actor, bool doNotUseTimer) : base(actor)
         {
@@ -36,7 +33,7 @@ namespace Machina.Components
             if (!this.doNotUseTimer)
             {
                 var currentTime = DateTime.Now;
-                var timeSince = currentTime - lastSnapshotTime;
+                var timeSince = currentTime - this.lastSnapshotTime;
                 if (timeSince.TotalSeconds >= this.waitDuration)
                 {
                     this.pendingSnapshot = true;
@@ -69,11 +66,13 @@ namespace Machina.Components
             var currentTime = DateTime.Now;
 
             Directory.CreateDirectory(this.screenshotPath);
-            using (FileStream destStream = File.Create(Path.Combine(this.screenshotPath, currentTime.ToFileTimeUtc().ToString() + ".png")))
+            using (var destStream =
+                File.Create(Path.Combine(this.screenshotPath, currentTime.ToFileTimeUtc() + ".png")))
             {
                 texture.SaveAsPng(destStream, texture.Width, texture.Height);
                 MachinaGame.Print("Snapshot taken", this.screenshotPath);
             }
+
             texture.Dispose();
         }
     }

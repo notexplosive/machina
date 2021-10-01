@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Machina.Engine.Debugging.Data
 {
@@ -10,7 +8,7 @@ namespace Machina.Engine.Debugging.Data
     }
 
     /// <summary>
-    /// A logger that just prints to standard out
+    ///     A logger that just prints to standard out
     /// </summary>
     public class StdOutConsoleLogger : ILogger
     {

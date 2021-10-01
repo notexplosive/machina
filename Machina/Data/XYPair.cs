@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Machina.Data
+﻿namespace Machina.Data
 {
     public class XYPair<T>
     {
@@ -11,8 +7,8 @@ namespace Machina.Data
 
         public XYPair(T x, T y)
         {
-            X = x;
-            Y = y;
+            this.X = x;
+            this.Y = y;
         }
     }
 }

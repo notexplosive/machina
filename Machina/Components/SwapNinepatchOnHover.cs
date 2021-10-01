@@ -1,23 +1,20 @@
 ﻿using Machina.Data;
 using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class SwapNinepatchOnHover : BaseComponent
     {
+        private readonly Hoverable hoverable;
         private readonly NinepatchSheet hoverSheet;
         private readonly NinepatchSheet normalSheet;
         private readonly NinepatchRenderer renderer;
-        private readonly Hoverable hoverable;
 
         public SwapNinepatchOnHover(Actor actor, NinepatchSheet hoverSheet) : base(actor)
         {
             this.renderer = RequireComponent<NinepatchRenderer>();
             this.hoverable = RequireComponent<Hoverable>();
-            this.normalSheet = renderer.Sheet;
+            this.normalSheet = this.renderer.Sheet;
             this.hoverSheet = hoverSheet;
 
             this.hoverable.OnHoverStart += OnHoverStart;
@@ -32,12 +29,12 @@ namespace Machina.Components
 
         private void OnHoverEnd()
         {
-            this.renderer.Sheet = normalSheet;
+            this.renderer.Sheet = this.normalSheet;
         }
 
         private void OnHoverStart()
         {
-            this.renderer.Sheet = hoverSheet;
+            this.renderer.Sheet = this.hoverSheet;
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using Machina.Engine;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Machina.Engine;
+using Microsoft.Xna.Framework;
+using MonoGame.Extended;
 
 namespace Machina.Components
 {
@@ -16,29 +14,8 @@ namespace Machina.Components
             Dynamic
         }
 
-        private struct CollideMoment
-        {
-            public readonly RectangleF colliderRect;
-            public readonly Vector2 contactNormal;
-            public readonly float contactTime;
-
-            public CollideMoment(float contactTime, RectangleF collider, Vector2 contactNormal)
-            {
-                this.contactTime = contactTime;
-                this.colliderRect = collider;
-                this.contactNormal = contactNormal;
-            }
-        }
-
-        public Vector2 Velocity
-        {
-            get; set;
-        }
-
         public readonly BodyType bodyType;
         private readonly BoundingRect boundingRect;
-
-        public RectangleF ColliderRect => this.boundingRect.RectF;
         private readonly List<CollideMoment> collisionsThisFrame;
 
         public SimplePhysicsBody(Actor actor, BodyType bodyType) : base(actor)
@@ -48,14 +25,19 @@ namespace Machina.Components
             this.collisionsThisFrame = new List<CollideMoment>();
         }
 
+        public Vector2 Velocity { get; set; }
+
+        public RectangleF ColliderRect => this.boundingRect.RectF;
+
         /// <summary>
-        /// Assuming this is a dynamic body, resolve a collision against this other body
+        ///     Assuming this is a dynamic body, resolve a collision against this other body
         /// </summary>
         /// <param name="other"></param>
         public void CollideWith(SimplePhysicsBody other, float dt)
         {
             var otherCollider = other.ColliderRect;
-            if (DynamicRectVsRect(this, otherCollider, out Vector2 contactPoint, out Vector2 contactNormal, out float contactTime, dt))
+            if (SimplePhysicsBody.DynamicRectVsRect(this, otherCollider, out var contactPoint, out var contactNormal,
+                out var contactTime, dt))
             {
                 this.collisionsThisFrame.Add(new CollideMoment(contactTime, otherCollider, contactNormal));
             }
@@ -76,20 +58,19 @@ namespace Machina.Components
 
         private void ResolveCollisions()
         {
-            this.collisionsThisFrame.Sort((a, b) =>
-            {
-                return (int) ((a.contactTime - b.contactTime) * 1000);
-            });
+            this.collisionsThisFrame.Sort((a, b) => { return (int) ((a.contactTime - b.contactTime) * 1000); });
 
-            foreach (var collision in collisionsThisFrame)
+            foreach (var collision in this.collisionsThisFrame)
             {
-                Velocity += collision.contactNormal * new Vector2(MathF.Abs(Velocity.X), MathF.Abs(Velocity.Y)) * (1f - collision.contactTime);
+                Velocity += collision.contactNormal * new Vector2(MathF.Abs(Velocity.X), MathF.Abs(Velocity.Y)) *
+                            (1f - collision.contactTime);
             }
+
             this.collisionsThisFrame.Clear();
         }
 
         /// <summary>
-        /// Adapted from OLC Tutorial
+        ///     Adapted from OLC Tutorial
         /// </summary>
         /// <param name="body"></param>
         /// <param name="target"></param>
@@ -98,7 +79,8 @@ namespace Machina.Components
         /// <param name="contactTime"></param>
         /// <param name="dt"></param>
         /// <returns></returns>
-        public static bool DynamicRectVsRect(SimplePhysicsBody body, RectangleF target, out Vector2 contactPoint, out Vector2 contactNormal, out float contactTime, float dt)
+        public static bool DynamicRectVsRect(SimplePhysicsBody body, RectangleF target, out Vector2 contactPoint,
+            out Vector2 contactNormal, out float contactTime, float dt)
         {
             contactPoint = Vector2.Zero;
             contactNormal = Vector2.Zero;
@@ -112,17 +94,20 @@ namespace Machina.Components
             var bodyRect = body.ColliderRect;
             var expandedTarget = new RectangleF(target.Position - bodyRect.Size / 2, target.Size + bodyRect.Size);
 
-            if (RayVsRect(bodyRect.Center, body.Velocity * dt, expandedTarget, out contactPoint, out contactNormal, out contactTime))
+            if (SimplePhysicsBody.RayVsRect(bodyRect.Center, body.Velocity * dt, expandedTarget, out contactPoint,
+                out contactNormal, out contactTime))
             {
                 if (contactTime < 1f && contactTime >= 0f)
+                {
                     return true;
+                }
             }
 
             return false;
         }
 
         /// <summary>
-        /// Adapted from OLC tutorial
+        ///     Adapted from OLC tutorial
         /// </summary>
         /// <param name="rayOrigin">Origin of the ray</param>
         /// <param name="rayDirection">Direction and magnitude of the Ray</param>
@@ -131,7 +116,8 @@ namespace Machina.Components
         /// <param name="contactNormal">Normal of contact site</param>
         /// <param name="hitNear">Magnitude along ray in which intersects with Rect</param>
         /// <returns></returns>
-        public static bool RayVsRect(Vector2 rayOrigin, Vector2 rayDirection, RectangleF rect, out Vector2 contactPoint, out Vector2 contactNormal, out float hitNear)
+        public static bool RayVsRect(Vector2 rayOrigin, Vector2 rayDirection, RectangleF rect, out Vector2 contactPoint,
+            out Vector2 contactNormal, out float hitNear)
         {
             contactNormal = Vector2.Zero;
             contactPoint = Vector2.Zero;
@@ -160,25 +146,53 @@ namespace Machina.Components
             }
 
             hitNear = MathF.Max(near.X, near.Y);
-            float hitFar = MathF.Min(far.X, far.Y);
+            var hitFar = MathF.Min(far.X, far.Y);
 
             if (hitFar < 0)
+            {
                 return false;
+            }
 
             contactPoint = rayOrigin + hitNear * rayDirection;
 
             if (near.X > near.Y)
+            {
                 if (rayDirection.X < 0)
+                {
                     contactNormal = new Vector2(1, 0);
+                }
                 else
+                {
                     contactNormal = new Vector2(-1, 0);
+                }
+            }
             else if (near.X < near.Y)
+            {
                 if (rayDirection.Y < 0)
+                {
                     contactNormal = new Vector2(0, 1);
+                }
                 else
+                {
                     contactNormal = new Vector2(0, -1);
+                }
+            }
 
             return !(near.X > far.Y || near.Y > far.X || hitFar < 0);
+        }
+
+        private struct CollideMoment
+        {
+            public readonly RectangleF colliderRect;
+            public readonly Vector2 contactNormal;
+            public readonly float contactTime;
+
+            public CollideMoment(float contactTime, RectangleF collider, Vector2 contactNormal)
+            {
+                this.contactTime = contactTime;
+                this.colliderRect = collider;
+                this.contactNormal = contactNormal;
+            }
         }
     }
 }

@@ -1,28 +1,26 @@
-﻿using Machina.Data;
+﻿using System;
+using System.Collections.Generic;
+using Machina.Data;
 using Machina.Engine;
-using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class IntroTextAnimation : BaseComponent
     {
         private readonly BoundedTextRenderer textRenderer;
-        private bool toggle;
-        private bool spinning;
-        private float totalTime;
+        private readonly SoundEffectInstance tikSound;
         private float dampening = 1;
-        private SoundEffectInstance tikSound;
+        private bool spinning;
+        private bool toggle;
+        private float totalTime;
 
         public IntroTextAnimation(Actor actor) : base(actor)
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
             this.actor.scene.StartCoroutine(IntroAnimation());
-            tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-chape");
+            this.tikSound = MachinaGame.Assets.GetSoundEffectInstance("bbox-chape");
             SwapColor();
         }
 
@@ -31,11 +29,11 @@ namespace Machina.Components
             if (this.spinning)
             {
                 this.totalTime += dt;
-                dampening -= dt / 2;
+                this.dampening -= dt / 2;
 
-                dampening = Math.Clamp(dampening, 0, 1);
-                this.actor.scene.camera.Rotation = MathF.Sin(totalTime * 7) * dampening / 3;
-                this.actor.scene.camera.Zoom = 1 + MathF.Sin(totalTime * 5) * dampening / 5;
+                this.dampening = Math.Clamp(this.dampening, 0, 1);
+                this.actor.scene.camera.Rotation = MathF.Sin(this.totalTime * 7) * this.dampening / 3;
+                this.actor.scene.camera.Zoom = 1 + MathF.Sin(this.totalTime * 5) * this.dampening / 5;
 
                 this.actor.scene.sceneLayers.BackgroundColor *= 0.99f;
             }
@@ -46,7 +44,7 @@ namespace Machina.Components
             var primary = new Color(0, 11, 173);
             var secondary = new Color(186, 219, 173);
 
-            if (toggle)
+            if (this.toggle)
             {
                 this.textRenderer.TextColor = primary;
                 this.actor.scene.sceneLayers.BackgroundColor = secondary;
@@ -56,15 +54,16 @@ namespace Machina.Components
                 this.textRenderer.TextColor = secondary;
                 this.actor.scene.sceneLayers.BackgroundColor = primary;
             }
-            toggle = !toggle;
+
+            this.toggle = !this.toggle;
         }
 
-        void PlayTick(float pitch = 0)
+        private void PlayTick(float pitch = 0)
         {
-            tikSound.Pitch = pitch;
-            tikSound.Volume = 0.25f;
-            tikSound.Stop();
-            tikSound.Play();
+            this.tikSound.Pitch = pitch;
+            this.tikSound.Volume = 0.25f;
+            this.tikSound.Stop();
+            this.tikSound.Play();
         }
 
         private IEnumerator<ICoroutineAction> IntroAnimation()
@@ -84,11 +83,10 @@ namespace Machina.Components
             this.textRenderer.Text = "NOTEXPLOSIVE";
             yield return new WaitSeconds(0.1f / speed);
             this.textRenderer.Text = "NotExplosive";
-            PlayTick(0f);
+            PlayTick();
             camera.Zoom = 2;
 
             yield return new WaitSeconds(1.5f / speed);
-
 
             this.textRenderer.Text = "NotExplosive.";
             camera.Zoom = 1.5f;
@@ -106,7 +104,7 @@ namespace Machina.Components
             ouch.Play();
             this.spinning = true;
 
-            yield return new WaitUntil(() => dampening == 0);
+            yield return new WaitUntil(() => this.dampening == 0);
 
             yield return new WaitSeconds(1f / speed);
             this.actor.Destroy();

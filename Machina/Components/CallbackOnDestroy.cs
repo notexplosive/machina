@@ -1,13 +1,11 @@
-﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Machina.Engine;
 
 namespace Machina.Components
 {
     public class CallbackOnDestroy : BaseComponent
     {
-        private Action callback;
+        private readonly Action callback;
 
         public CallbackOnDestroy(Actor actor, Action callback) : base(actor)
         {

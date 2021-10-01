@@ -1,17 +1,16 @@
-﻿using Machina.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Machina.Engine
 {
     public class Demo
     {
-        public readonly static string MostRecentlySavedDemoPath = "saved.demo";
+        public static readonly string MostRecentlySavedDemoPath = "saved.demo";
         public readonly List<DemoSerializableEntry> records = new List<DemoSerializableEntry>();
         private readonly int seedAtStart;
 
@@ -22,7 +21,7 @@ namespace Machina.Engine
 
         public void Append(DemoSerializableEntry record)
         {
-            records.Add(record);
+            this.records.Add(record);
         }
 
         public string EncodeRecords()
@@ -39,28 +38,40 @@ namespace Machina.Engine
             {
                 demo.Append(new DemoSerializableEntry(entry.time, entry.BuildInputFrameState()));
             }
+
             return demo;
         }
 
         private int GetIndexAtTime(int earliestIndex, float latestTime)
         {
-            for (int i = earliestIndex; i < records.Count; i++)
+            for (var i = earliestIndex; i < this.records.Count; i++)
             {
-                var record = records[i];
+                var record = this.records[i];
                 if (record.time > latestTime)
                 {
                     return i;
                 }
             }
 
-            return records.Count;
+            return this.records.Count;
+        }
+
+        /// <summary>
+        ///     This needs to be Sync because we might do some CleanRandom stuff while we're waiting for the demo to load
+        /// </summary>
+        /// <param name="demoName"></param>
+        public static Demo FromDisk_Sync(string demoName)
+        {
+            var demoJson = FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
+            return Demo.DecodeRecords(demoJson);
         }
 
         [Serializable]
         public class DemoContent
         {
-            public DemoSerializableEntry[] entries;
             public readonly int randomSeed;
+            public DemoSerializableEntry[] entries;
+
             public DemoContent(List<DemoSerializableEntry> entries, int randomSeed)
             {
                 this.randomSeed = randomSeed;
@@ -71,17 +82,17 @@ namespace Machina.Engine
         [Serializable]
         public class DemoSerializableEntry
         {
-            public float time;
-            public int mouseX;
-            public int mouseY;
+            public int keyboardModifiersAsInt;
             public int mouseButtonsPressedAsInt;
             public int mouseButtonsReleasedAsInt;
-            public int scrollDelta;
             public float mouseDeltaX;
             public float mouseDeltaY;
-            public int keyboardModifiersAsInt;
+            public int mouseX;
+            public int mouseY;
             public Keys[] pressedKeys = Array.Empty<Keys>();
             public Keys[] releasedKeys = Array.Empty<Keys>();
+            public int scrollDelta;
+            public float time;
 
             public DemoSerializableEntry(float time, InputFrameState inputState)
             {
@@ -112,7 +123,8 @@ namespace Machina.Engine
                     new MouseFrameState(
                         new MouseButtonList(this.mouseButtonsPressedAsInt),
                         new MouseButtonList(this.mouseButtonsReleasedAsInt),
-                        new Point(this.mouseX, this.mouseY), new Vector2(this.mouseDeltaX, this.mouseDeltaY), scrollDelta));
+                        new Point(this.mouseX, this.mouseY), new Vector2(this.mouseDeltaX, this.mouseDeltaY),
+                        this.scrollDelta));
             }
 
             public override string ToString()
@@ -123,9 +135,9 @@ namespace Machina.Engine
 
         public class Recorder
         {
+            private readonly Demo demo;
             public readonly string fileName;
             private float totalTime;
-            private readonly Demo demo;
 
             public Recorder(string fileName)
             {
@@ -143,17 +155,17 @@ namespace Machina.Engine
             public void WriteDemoToDisk()
             {
                 Directory.CreateDirectory(Path.Join(MachinaGame.Current.appDataPath, "Demos"));
-                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", fileName));
+                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }
 
         public class Playback
         {
             private readonly Demo demo;
-            private float time;
-            private int currentIndex;
             private readonly int demoLength;
             public readonly int playbackSpeed;
+            private int currentIndex;
+            private float time;
 
             public Playback(Demo demo, int playbackSpeed)
             {
@@ -165,15 +177,11 @@ namespace Machina.Engine
                 MachinaGame.Random.Seed = demo.seedAtStart;
             }
 
-            public bool IsFinished => this.currentIndex >= demoLength;
+            public bool IsFinished => this.currentIndex >= this.demoLength;
 
-            public float Progress => this.currentIndex / (float)demoLength;
+            public float Progress => this.currentIndex / (float) this.demoLength;
 
-            public InputFrameState LatestFrameState
-            {
-                get;
-                private set;
-            }
+            public InputFrameState LatestFrameState { get; private set; }
 
             public InputFrameState UpdateAndGetInputFrameStates(float dt)
             {
@@ -184,7 +192,7 @@ namespace Machina.Engine
                 {
                     var record = this.demo.records[this.currentIndex];
                     var result = record.BuildInputFrameState();
-                    this.LatestFrameState = result;
+                    LatestFrameState = result;
                     return result;
                 }
                 else
@@ -192,13 +200,15 @@ namespace Machina.Engine
                     // Unpress any pressed buttons (this doesn't work because it doesn't work that way, we need to discover pressed keys some other way)
                     var result =
                         new InputFrameState(
-                            new KeyboardFrameState(Array.Empty<Keys>(), LatestFrameState.keyboardFrameState.Pressed, ModifierKeys.NoModifiers)
+                            new KeyboardFrameState(Array.Empty<Keys>(), LatestFrameState.keyboardFrameState.Pressed,
+                                ModifierKeys.NoModifiers)
                             ,
-                        new MouseFrameState(
-                            new MouseButtonList(),
-                            new MouseButtonList(LatestFrameState.mouseFrameState.ButtonsPressedThisFrame.EncodedInt), LatestFrameState.mouseFrameState.RawWindowPosition,
-                            Vector2.Zero, 0));
-                    this.LatestFrameState = result;
+                            new MouseFrameState(
+                                new MouseButtonList(),
+                                new MouseButtonList(LatestFrameState.mouseFrameState.ButtonsPressedThisFrame
+                                    .EncodedInt), LatestFrameState.mouseFrameState.RawWindowPosition,
+                                Vector2.Zero, 0));
+                    LatestFrameState = result;
                     return result;
                 }
             }
@@ -219,16 +229,6 @@ namespace Machina.Engine
             {
                 this.currentIndex = this.demoLength;
             }
-        }
-
-        /// <summary>
-        /// This needs to be Sync because we might do some CleanRandom stuff while we're waiting for the demo to load
-        /// </summary>
-        /// <param name="demoName"></param>
-        public static Demo FromDisk_Sync(string demoName)
-        {
-            var demoJson = FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
-            return DecodeRecords(demoJson);
         }
     }
 }

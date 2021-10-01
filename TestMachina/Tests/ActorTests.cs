@@ -1,11 +1,10 @@
+using System;
+using FluentAssertions;
 using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using TestMachina.Utility;
-using System;
-using System.Collections;
 using Xunit;
-using FluentAssertions;
 
 namespace TestMachina.Tests
 {
@@ -17,10 +16,7 @@ namespace TestMachina.Tests
             var scene = new Scene(null);
             var actor = scene.AddActor("Terry Triangle");
             var deleteCount = 0;
-            new FakeComponent(actor, () =>
-            {
-                deleteCount++;
-            });
+            new FakeComponent(actor, () => { deleteCount++; });
             actor.Destroy();
             scene.FlushBuffers();
 
@@ -33,7 +29,7 @@ namespace TestMachina.Tests
             var actor = new Actor("Sally Sceneless", null);
             var deleteCount = 0;
             var createdComponent = new FakeComponent(actor, () => { deleteCount++; });
-            FakeComponent actual = actor.GetComponent<FakeComponent>();
+            var actual = actor.GetComponent<FakeComponent>();
             actor.RemoveComponent<FakeComponent>();
             var actual_AfterRemove_BeforeUpdate = actor.GetComponent<FakeComponent>();
             actor.FlushBuffers();
@@ -60,13 +56,19 @@ namespace TestMachina.Tests
             scene.FlushBuffers();
 
             Assert.Equal(2, parent.transform.ChildCount);
-            Assert.Equal(parent.transform.Position + new Vector2(50, 50), child1.transform.Position); // Position is preserved after setting parent (child1)
-            Assert.Equal(parent.transform.Position + new Vector2(-30, 200), child2.transform.Position); // Position is preserved after setting parent (child2)
-            Assert.Equal(child1.transform.Position + new Vector2(-20, 40), grandChild.transform.Position); // Position is preserved after setting parent (grandChild)
+            Assert.Equal(parent.transform.Position + new Vector2(50, 50),
+                child1.transform.Position); // Position is preserved after setting parent (child1)
+            Assert.Equal(parent.transform.Position + new Vector2(-30, 200),
+                child2.transform.Position); // Position is preserved after setting parent (child2)
+            Assert.Equal(child1.transform.Position + new Vector2(-20, 40),
+                grandChild.transform.Position); // Position is preserved after setting parent (grandChild)
             Assert.Equal(new Vector2(50, 50), child1.transform.LocalPosition); // Local position sanity check (child1)
             Assert.Equal(new Vector2(-30, 200), child2.transform.LocalPosition); // Local position sanity check (child2)
-            Assert.Equal(new Vector2(-20, 40), grandChild.transform.LocalPosition); // Local position sanity check (grandchild)
-            Assert.Equal(parent.transform.LocalPosition, parent.transform.Position); // If an actor has no parent, its local position is equivalent to its position
+            Assert.Equal(new Vector2(-20, 40),
+                grandChild.transform.LocalPosition); // Local position sanity check (grandchild)
+            Assert.Equal(parent.transform.LocalPosition,
+                parent.transform
+                    .Position); // If an actor has no parent, its local position is equivalent to its position
         }
 
         [Fact]
@@ -83,11 +85,14 @@ namespace TestMachina.Tests
             grandChild.transform.SetParent(child1);
             scene.FlushBuffers();
 
-
-
-            Assert.Equal(new Vector2(50, -50), child1.transform.LocalPosition); // Local position does not change with starting rotation (child1)
-            Assert.True(new Vector2(200, 30).ApproximateEqual(child2.transform.LocalPosition)); // Local position does not change with starting rotation (child2)
-            Assert.True(new Vector2(50, 0).ApproximateEqual(grandChild.transform.LocalPosition)); // Local position does not change with starting rotation (granchild)
+            Assert.Equal(new Vector2(50, -50),
+                child1.transform.LocalPosition); // Local position does not change with starting rotation (child1)
+            Assert.True(
+                new Vector2(200, 30).ApproximateEqual(child2.transform
+                    .LocalPosition)); // Local position does not change with starting rotation (child2)
+            Assert.True(
+                new Vector2(50, 0).ApproximateEqual(grandChild.transform
+                    .LocalPosition)); // Local position does not change with starting rotation (granchild)
         }
 
         [Fact]
@@ -99,7 +104,6 @@ namespace TestMachina.Tests
             var child2 = scene.AddActor("Caleb Child", parent.transform.Position + new Vector2(-30, 200));
             var grandChild = scene.AddActor("Garry Grandchild", child1.transform.Position + new Vector2(-20, 40));
 
-
             child1.transform.SetParent(parent);
             child2.transform.SetParent(parent);
             grandChild.transform.SetParent(child1);
@@ -110,14 +114,25 @@ namespace TestMachina.Tests
 
             Assert.Equal(2, parent.transform.ChildCount); // ChildCount returns number of immediate children
 
-            Assert.True(new Vector2(30, 130).ApproximateEqual(child1.transform.Position)); // Position after rotation (child1)
-            Assert.True(new Vector2(-120, 50).ApproximateEqual(child2.transform.Position)); // Position after rotation (child2)
-            Assert.True(new Vector2(-10, 110).ApproximateEqual(grandChild.transform.Position)); // Position after rotation (grandChild)
+            Assert.True(
+                new Vector2(30, 130).ApproximateEqual(child1.transform.Position)); // Position after rotation (child1)
+            Assert.True(
+                new Vector2(-120, 50).ApproximateEqual(child2.transform.Position)); // Position after rotation (child2)
+            Assert.True(
+                new Vector2(-10, 110).ApproximateEqual(grandChild.transform
+                    .Position)); // Position after rotation (grandChild)
 
-            Assert.Equal(new Vector2(50, 50), child1.transform.LocalPosition); // Local position does not change after rotation (child1)
-            Assert.True(new Vector2(-30, 200).ApproximateEqual(child2.transform.LocalPosition)); // Local position does not change after rotation (child2)
-            Assert.True(new Vector2(-20, 40).ApproximateEqual(grandChild.transform.LocalPosition)); // Local position does not change after rotation (grandchild)
-            Assert.Equal(parent.transform.LocalPosition, parent.transform.Position); // If an actor has no parent, its local position is equivalent to its position
+            Assert.Equal(new Vector2(50, 50),
+                child1.transform.LocalPosition); // Local position does not change after rotation (child1)
+            Assert.True(
+                new Vector2(-30, 200).ApproximateEqual(child2.transform
+                    .LocalPosition)); // Local position does not change after rotation (child2)
+            Assert.True(
+                new Vector2(-20, 40).ApproximateEqual(grandChild.transform
+                    .LocalPosition)); // Local position does not change after rotation (grandchild)
+            Assert.Equal(parent.transform.LocalPosition,
+                parent.transform
+                    .Position); // If an actor has no parent, its local position is equivalent to its position
         }
 
         [Fact]
@@ -125,7 +140,7 @@ namespace TestMachina.Tests
         {
             var scene = new Scene(null);
             var parent = scene.AddActor("Peter Parent", new Vector2(80, 80));
-            var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0), 0f);
+            var child = scene.AddActor("Carrie Child", parent.transform.Position + new Vector2(100, 0));
 
             parent.transform.Angle = MathF.PI / 2;
             child.transform.SetParent(parent);
@@ -134,7 +149,9 @@ namespace TestMachina.Tests
             Assert.Equal(new Vector2(180, 80), child.transform.Position); // Child position is unaffected
             Assert.Equal(0, child.transform.Angle); // Child does not inherit angle
 
-            Assert.True(new Vector2(0, -100).ApproximateEqual(child.transform.LocalPosition)); // Child local position takes rotation into account
+            Assert.True(
+                new Vector2(0, -100).ApproximateEqual(child.transform
+                    .LocalPosition)); // Child local position takes rotation into account
             Assert.Equal(-MathF.PI / 2, child.transform.LocalAngle); // Child local rotation takes rotation into account
         }
 
@@ -164,10 +181,13 @@ namespace TestMachina.Tests
             scene.FlushBuffers();
             parent.transform.Angle = MathF.PI / 2;
 
-            Assert.True(new Vector2(80, 180).ApproximateEqual(child.transform.Position)); // Child position has been changed relative to rotation
+            Assert.True(
+                new Vector2(80, 180).ApproximateEqual(child.transform
+                    .Position)); // Child position has been changed relative to rotation
             Assert.Equal(MathF.PI / 2, child.transform.Angle); // Child inherits angle
 
-            Assert.Equal(new Vector2(100, 0), child.transform.LocalPosition); // Child local position is same relative position as the start
+            Assert.Equal(new Vector2(100, 0),
+                child.transform.LocalPosition); // Child local position is same relative position as the start
             Assert.Equal(0f, child.transform.LocalAngle); // Child local rotation is zero
         }
 

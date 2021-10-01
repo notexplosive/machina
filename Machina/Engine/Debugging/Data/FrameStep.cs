@@ -1,17 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Machina.Engine.Debugging.Data
+﻿namespace Machina.Engine.Debugging.Data
 {
     public interface IFrameStep
     {
-        public bool IsPaused
-        {
-            get; set;
-        }
+        public bool IsPaused { get; set; }
 
         public void Step(Scene scene);
     }
@@ -20,13 +11,8 @@ namespace Machina.Engine.Debugging.Data
     {
         public bool IsPaused
         {
-            get
-            {
-                return false;
-            }
-            set
-            {
-            }
+            get => false;
+            set { }
         }
 
         public void Step(Scene scene)
@@ -37,10 +23,7 @@ namespace Machina.Engine.Debugging.Data
 
     public class FrameStep : IFrameStep
     {
-        public bool IsPaused
-        {
-            get; set;
-        }
+        public bool IsPaused { get; set; }
 
         public void Step(Scene scene)
         {

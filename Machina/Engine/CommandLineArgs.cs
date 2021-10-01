@@ -1,58 +1,56 @@
-﻿using Machina.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Machina.Engine
 {
     public class CommandLineArgs
     {
         private readonly List<string> argsStrings;
-        private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
+        private readonly Dictionary<string, FlagArg> earlyFlagArgTable = new Dictionary<string, FlagArg>();
         private readonly Dictionary<string, ValueArg> earlyValueArgTable = new Dictionary<string, ValueArg>();
         private readonly Dictionary<string, FlagArg> flagArgTable = new Dictionary<string, FlagArg>();
-        private readonly Dictionary<string, FlagArg> earlyFlagArgTable = new Dictionary<string, FlagArg>();
+        private readonly Dictionary<string, ValueArg> valueArgTable = new Dictionary<string, ValueArg>();
         public Action onFinishExecute;
 
         public CommandLineArgs(string[] args)
         {
             var list = new List<string>(args);
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
                 list[i] = list[i].ToLower();
             }
+
             this.argsStrings = list;
         }
 
         private string GetArgumentValueFromInitialString(string argName)
         {
-            var index = argsStrings.IndexOf(ConvertToCommandToken(argName));
+            var index = this.argsStrings.IndexOf(ConvertToCommandToken(argName));
             if (index == -1)
             {
                 MachinaGame.Print("Command line switch", argName, "not found");
                 return null;
             }
 
-            if (argsStrings.Count == index + 1)
+            if (this.argsStrings.Count == index + 1)
             {
                 MachinaGame.Print("Argument value missing for", argName);
                 return null;
             }
-            else
+
+            var val = this.argsStrings[index + 1];
+            if (IsStringACommand(val))
             {
-                var val = argsStrings[index + 1];
-                if (IsStringACommand(val))
-                {
-                    MachinaGame.Print("Argument value missing for", argName);
-                    return null;
-                }
-                return val;
+                MachinaGame.Print("Argument value missing for", argName);
+                return null;
             }
+
+            return val;
         }
 
         /// <summary>
-        /// Is the string in the form `--commandName`
+        ///     Is the string in the form `--commandName`
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
@@ -67,7 +65,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Convert `foo` to `--foo`
+        ///     Convert `foo` to `--foo`
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
@@ -78,13 +76,13 @@ namespace Machina.Engine
 
         private bool InitialStringHasArgument(string argName)
         {
-            return argsStrings.Contains(ConvertToCommandToken(argName));
+            return this.argsStrings.Contains(ConvertToCommandToken(argName));
         }
 
         /// <summary>
-        /// Command line arg that is evaluated just AFTER the game is loaded.
-        /// This is useful for the user's game since users can register args 
-        /// during game load and have them execute right after
+        ///     Command line arg that is evaluated just AFTER the game is loaded.
+        ///     This is useful for the user's game since users can register args
+        ///     during game load and have them execute right after
         /// </summary>
         /// <param name="argName">String to invoke the argument, not including the `--`</param>
         /// <param name="onExecute">Callback when argument is used, passes string directly following the arg</param>
@@ -95,8 +93,8 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Command line Arg that is evalulated BEFORE the game is loaded.
-        /// This is only useful in MachinaGame internally.
+        ///     Command line Arg that is evalulated BEFORE the game is loaded.
+        ///     This is only useful in MachinaGame internally.
         /// </summary>
         /// <param name="argName">String to invoke the argument, not including the `--`</param>
         /// <param name="onExecute">Callback when argument is used, passes string directly following the arg</param>
@@ -113,8 +111,8 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Command line arg that is evaluated just AFTER the game is loaded.
-        /// Users can register flag args during OnGameLoad and they'll execute right after
+        ///     Command line arg that is evaluated just AFTER the game is loaded.
+        ///     Users can register flag args during OnGameLoad and they'll execute right after
         /// </summary>
         /// <param name="argName">String to invoke the argument, not including the `--`</param>
         /// <param name="onExecute">Callback that will execute if the command is present</param>
@@ -124,7 +122,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Executes the args, users don't need to do this, MachinaGame does this for you.
+        ///     Executes the args, users don't need to do this, MachinaGame does this for you.
         /// </summary>
         public void ExecuteArgs()
         {
@@ -144,11 +142,11 @@ namespace Machina.Engine
                 }
             }
 
-            onFinishExecute?.Invoke();
+            this.onFinishExecute?.Invoke();
         }
 
         /// <summary>
-        /// Executes early args, MachinaGame does this for you.
+        ///     Executes early args, MachinaGame does this for you.
         /// </summary>
         public void ExecuteEarlyArgs()
         {
@@ -168,9 +166,8 @@ namespace Machina.Engine
                 }
             }
 
-            onFinishExecute?.Invoke();
+            this.onFinishExecute?.Invoke();
         }
-
 
         private class FlagArg
         {

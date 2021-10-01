@@ -1,68 +1,29 @@
-﻿using Machina.Data;
+﻿using System;
+using System.Collections.Generic;
+using Machina.Data;
 using Machina.Engine.Debugging.Components;
 using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Machina.Engine
 {
     public class SceneLayers
     {
+        public delegate void DrawAction(SpriteBatch spriteBatch);
+
+        private readonly DebugDock debugDock;
         public readonly Scene debugScene;
         public readonly IGameCanvas gameCanvas;
-        private readonly List<Scene> sceneList = new List<Scene>();
         private readonly Logger overlayOutputConsole;
-        private bool hasDoneFirstUpdate;
-        private bool hasDoneFirstDraw;
-
-        public ILogger Logger
-        {
-            get; private set;
-        }
-
-        public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
-
-        public InputFrameState CurrentInputFrameState
-        {
-            get;
-            private set;
-        }
-
-        private TextInputEventArgs? pendingTextInput;
-
-        public Texture2D RenderToTexture(SpriteBatch spriteBatch)
-        {
-            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
-            var viewportSize = gameCanvas.ViewportSize;
-            var renderTarget = new RenderTarget2D(
-                                graphicsDevice,
-                                viewportSize.X,
-                                viewportSize.Y,
-                                false,
-                                graphicsDevice.PresentationParameters.BackBufferFormat,
-                                DepthFormat.Depth24);
-            graphicsDevice.SetRenderTarget(renderTarget);
-            graphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
-
-            graphicsDevice.Clear(BackgroundColor);
-            DrawOnCanvas(spriteBatch);
-
-            graphicsDevice.SetRenderTarget(null);
-            return renderTarget;
-        }
+        private readonly List<Scene> sceneList = new List<Scene>();
 
         public Color BackgroundColor = Color.SlateBlue;
-        private readonly DebugDock debugDock;
+        private bool hasDoneFirstDraw;
+        private bool hasDoneFirstUpdate;
 
-        public void AddPendingTextInput(object sender, TextInputEventArgs e)
-        {
-            this.pendingTextInput = e;
-        }
+        private TextInputEventArgs? pendingTextInput;
 
         public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas)
         {
@@ -81,6 +42,38 @@ namespace Machina.Engine
             }
         }
 
+        public ILogger Logger { get; private set; }
+
+        public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
+
+        public InputFrameState CurrentInputFrameState { get; private set; }
+
+        public Texture2D RenderToTexture(SpriteBatch spriteBatch)
+        {
+            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+            var viewportSize = this.gameCanvas.ViewportSize;
+            var renderTarget = new RenderTarget2D(
+                graphicsDevice,
+                viewportSize.X,
+                viewportSize.Y,
+                false,
+                graphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
+
+            graphicsDevice.Clear(this.BackgroundColor);
+            DrawOnCanvas(spriteBatch);
+
+            graphicsDevice.SetRenderTarget(null);
+            return renderTarget;
+        }
+
+        public void AddPendingTextInput(object sender, TextInputEventArgs e)
+        {
+            this.pendingTextInput = e;
+        }
+
         public void AddDebugApp(App app)
         {
             this.debugDock.AddApp(app);
@@ -92,7 +85,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// One day this might behave like a stack but for now it just reverts to the Overlay Console
+        ///     One day this might behave like a stack but for now it just reverts to the Overlay Console
         /// </summary>
         public void PopLogger()
         {
@@ -112,7 +105,7 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// This is private intentionally, you should only add a scene to the SceneLayers as a new scene via AddNewScene
+        ///     This is private intentionally, you should only add a scene to the SceneLayers as a new scene via AddNewScene
         /// </summary>
         /// <param name="scene"></param>
         private void Add(Scene scene)
@@ -132,19 +125,20 @@ namespace Machina.Engine
 
         public Scene[] AllScenes()
         {
-            Scene[] array = new Scene[sceneList.Count + (debugScene != null ? 1 : 0)];
-            sceneList.CopyTo(array);
-            if (debugScene != null)
+            var array = new Scene[this.sceneList.Count + (this.debugScene != null ? 1 : 0)];
+            this.sceneList.CopyTo(array);
+            if (this.debugScene != null)
             {
-                array[sceneList.Count] = debugScene;
+                array[this.sceneList.Count] = this.debugScene;
             }
+
             return array;
         }
 
         public Scene[] AllScenesExceptDebug()
         {
-            Scene[] array = new Scene[sceneList.Count];
-            sceneList.CopyTo(array);
+            var array = new Scene[this.sceneList.Count];
+            this.sceneList.CopyTo(array);
             return array;
         }
 
@@ -158,23 +152,24 @@ namespace Machina.Engine
             Update(dt, Matrix.Identity, input);
         }
 
-        public void Update(float dt, Matrix mouseTransformMatrix, InputFrameState inputFrameState, bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
+        public void Update(float dt, Matrix mouseTransformMatrix, InputFrameState inputFrameState,
+            bool allowMouseUpdate = true, bool allowKeyboardEvents = true)
         {
             try
             {
-                if (!hasDoneFirstUpdate)
+                if (!this.hasDoneFirstUpdate)
                 {
                     DoFirstUpdate();
                     this.hasDoneFirstUpdate = true;
                 }
 
-
-                this.CurrentInputFrameState = inputFrameState;
+                CurrentInputFrameState = inputFrameState;
                 var scenes = AllScenes();
 
-                var rawMousePos = Vector2.Transform(inputFrameState.mouseFrameState.RawWindowPosition.ToVector2(), mouseTransformMatrix);
+                var rawMousePos = Vector2.Transform(inputFrameState.mouseFrameState.RawWindowPosition.ToVector2(),
+                    mouseTransformMatrix);
 
-                foreach (Scene scene in scenes)
+                foreach (var scene in scenes)
                 {
                     scene.FlushBuffers();
 
@@ -238,14 +233,15 @@ namespace Machina.Engine
                             }
 
                             // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                            scene.OnMouseUpdate(rawMousePos, inputFrameState.mouseFrameState.PositionDelta, inputFrameState.mouseFrameState.PositionDelta);
+                            scene.OnMouseUpdate(rawMousePos, inputFrameState.mouseFrameState.PositionDelta,
+                                inputFrameState.mouseFrameState.PositionDelta);
                         }
                     }
                 }
 
                 this.pendingTextInput = null;
 
-                foreach (Scene scene in scenes)
+                foreach (var scene in scenes)
                 {
                     if (!scene.frameStep.IsPaused && !scene.IsFrozen)
                     {
@@ -278,7 +274,6 @@ namespace Machina.Engine
             }
         }
 
-        public delegate void DrawAction(SpriteBatch spriteBatch);
         public event DrawAction OnFirstPreDraw;
 
         private void DoFirstUpdate()

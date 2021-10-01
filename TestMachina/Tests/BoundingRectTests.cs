@@ -2,9 +2,6 @@
 using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
@@ -23,7 +20,8 @@ namespace TestMachina.Tests
             boundingRect.CenterToBounds();
 
             boundingRect.Rect.Center.Should().BeEquivalentTo(startingCenter); // Center should not have moved
-            new Point(boundingRect.Rect.Top, boundingRect.Rect.Left).Should().BeEquivalentTo(startingPosition.ToPoint());
+            new Point(boundingRect.Rect.Top, boundingRect.Rect.Left).Should()
+                .BeEquivalentTo(startingPosition.ToPoint());
         }
 
         [Fact]

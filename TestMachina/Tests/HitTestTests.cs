@@ -1,12 +1,8 @@
 ﻿using Machina.Components;
 using Machina.Data;
 using Machina.Engine;
-using Machina.Engine.Debugging.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
@@ -19,15 +15,21 @@ namespace TestMachina.Tests
             var sceneLayers = new SceneLayers(false, new GameCanvas(new Point(800, 600), ResizeBehavior.FillContent));
             var scene = sceneLayers.AddNewScene();
             var mousePoint = new Point(200, 200);
-            var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            var unreachedHoverable = BuildHoverable(scene, Point.Zero, "Hoverable that is too far to be hovered", new Depth(5));
-            var onPointHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is", new Depth(5));
-            var behindHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is, but farther back", new Depth(6));
+            var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released,
+                ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            var unreachedHoverable =
+                BuildHoverable(scene, Point.Zero, "Hoverable that is too far to be hovered", new Depth(5));
+            var onPointHoverable = BuildHoverable(scene, mousePoint, "Hoverable that is exactly were the mouse is",
+                new Depth(5));
+            var behindHoverable = BuildHoverable(scene, mousePoint,
+                "Hoverable that is exactly were the mouse is, but farther back", new Depth(6));
 
             // Need to update to push created interables into main iterable list
             scene.Update(0f);
 
-            sceneLayers.Update(0, Matrix.Identity, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
+            sceneLayers.Update(0, Matrix.Identity,
+                new InputFrameState(KeyboardFrameState.Empty,
+                    new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
             Assert.Equal(new Depth(5), scene.hitTester.Candidate.depth);
             Assert.False(unreachedHoverable.IsHovered);
             Assert.False(unreachedHoverable.IsSoftHovered);
@@ -44,14 +46,18 @@ namespace TestMachina.Tests
             var lowerScene = sceneLayers.AddNewScene();
             var upperScene = sceneLayers.AddNewScene();
             var mousePoint = new Point(200, 200);
-            var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            var mouseState = new MouseState(mousePoint.X, mousePoint.Y, 0, ButtonState.Released, ButtonState.Released,
+                ButtonState.Released, ButtonState.Released, ButtonState.Released);
             var onPointHoverable = BuildHoverable(upperScene, mousePoint, "Hoverable in upper scene", new Depth(5));
-            var behindHoverable = BuildHoverable(lowerScene, mousePoint, "Hoverable in lower scene but closer depth", new Depth(1));
+            var behindHoverable = BuildHoverable(lowerScene, mousePoint, "Hoverable in lower scene but closer depth",
+                new Depth(1));
 
             // Push created iterables
             sceneLayers.UpdateWithNoInput(0f);
 
-            sceneLayers.Update(0, new InputFrameState(KeyboardFrameState.Empty, new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
+            sceneLayers.Update(0,
+                new InputFrameState(KeyboardFrameState.Empty,
+                    new MouseFrameState(MouseButtonList.None, MouseButtonList.None, mousePoint, Vector2.Zero, 0)));
             Assert.True(onPointHoverable.IsHovered);
             Assert.False(behindHoverable.IsHovered);
             Assert.True(behindHoverable.IsSoftHovered);

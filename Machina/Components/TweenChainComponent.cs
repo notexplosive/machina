@@ -1,31 +1,29 @@
-﻿using Machina.Data;
+﻿using System;
+using Machina.Data;
 using Machina.Engine;
 using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class TweenChainComponent : BaseComponent
     {
-
         private readonly TweenChain chain;
 
         public TweenChainComponent(Actor actor) : base(actor)
         {
-            chain = new TweenChain();
+            this.chain = new TweenChain();
         }
 
         public override void Update(float dt)
         {
-            chain.Update(dt);
+            this.chain.Update(dt);
         }
 
-        public TweenChainComponent AddTween<T>(T target, float duration, EaseFunc easeFunc, TweenAccessors<T> accessors, LerpFunc<T> lerp) where T : struct
+        public TweenChainComponent AddTween<T>(T target, float duration, EaseFunc easeFunc, TweenAccessors<T> accessors,
+            LerpFunc<T> lerp) where T : struct
         {
-            chain.Append(new TweenChain.ChainItem<T>(target, duration, easeFunc, accessors, lerp));
+            this.chain.Append(new TweenChain.ChainItem<T>(target, duration, easeFunc, accessors, lerp));
             return this;
         }
 
@@ -39,7 +37,8 @@ namespace Machina.Components
             return AddTween(targetPos, duration, easeFunc, this.actor.LocalPositionTweenAccessors(), Vector2.Lerp);
         }
 
-        public TweenChainComponent AddFloatTween(float targetVal, float duration, EaseFunc easeFunc, TweenAccessors<float> accessors)
+        public TweenChainComponent AddFloatTween(float targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<float> accessors)
         {
             this.chain.AppendFloatTween(targetVal, duration, easeFunc, accessors);
             return this;
@@ -67,7 +66,8 @@ namespace Machina.Components
             this.chain.Clear();
         }
 
-        public void AddVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
+        public void AddVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<Vector2> accessors)
         {
             this.chain.AppendVectorTween(targetVal, duration, easeFunc, accessors);
         }

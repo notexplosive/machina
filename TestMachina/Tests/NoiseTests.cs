@@ -1,8 +1,5 @@
 ﻿using FluentAssertions;
 using Machina.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace TestMachina.Tests
@@ -14,7 +11,7 @@ namespace TestMachina.Tests
         {
             var random = new NoiseBasedRNG(12345);
 
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var result = random.NextDouble();
                 result.Should().BeGreaterOrEqualTo(0.0f);
@@ -27,8 +24,10 @@ namespace TestMachina.Tests
         {
             var random = new NoiseBasedRNG(12345);
 
-            for (int i = 0; i < 60; i++)
+            for (var i = 0; i < 60; i++)
+            {
                 random.Next(i).Should().BeLessOrEqualTo(i);
+            }
         }
 
         [Fact]
@@ -36,7 +35,7 @@ namespace TestMachina.Tests
         {
             var random = new NoiseBasedRNG(12345);
 
-            for (int i = 0; i < 60; i++)
+            for (var i = 0; i < 60; i++)
             {
                 var randomResult = random.Next(i, i + 60);
                 randomResult.Should().BeLessOrEqualTo(i + 60);
@@ -49,7 +48,7 @@ namespace TestMachina.Tests
         {
             var random = new NoiseBasedRNG(12345);
 
-            var array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+            var array = new[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
             random.Shuffle(array);
             array.Should().ContainInOrder(14, 11, 4, 6, 7, 5, 10, 1, 2, 8, 16, 3, 15, 9, 12, 13);
         }

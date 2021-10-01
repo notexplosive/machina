@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
-using System.Text;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
 using Machina.Data;
 using Machina.Engine.Debugging.Data;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
@@ -13,18 +11,9 @@ namespace Machina.Engine
     {
         private readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
         public readonly IFrameStep frameStep;
-        public readonly SceneLayers sceneLayers;
         public readonly HitTester hitTester = new HitTester();
+        public readonly SceneLayers sceneLayers;
         public Camera camera;
-        public bool IsFrozen
-        {
-            get; private set;
-        }
-        public float TimeScale
-        {
-            get;
-            set;
-        } = 1f;
 
         public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
@@ -37,12 +26,17 @@ namespace Machina.Engine
             this.frameStep = frameStep != null ? frameStep : new EmptyFrameStep();
         }
 
+        public bool IsFrozen { get; private set; }
+
+        public float TimeScale { get; set; } = 1f;
+
         public void SetGameCanvas(IGameCanvas gameCanvas)
         {
             this.camera = new Camera(gameCanvas);
         }
 
-        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f, int depthAsInt = Depth.MaxAsInt / 2)
+        public Actor AddActor(string name, Vector2 position = new Vector2(), float angle = 0f,
+            int depthAsInt = Depth.MaxAsInt / 2)
         {
             var actor = new Actor(name, this);
             actor.transform.Position = position;
@@ -60,7 +54,7 @@ namespace Machina.Engine
 
         public List<Actor> GetRootLevelActors()
         {
-            return new List<Actor>(iterables);
+            return new List<Actor>(this.iterables);
         }
 
         public List<Actor> GetAllActors()
@@ -71,9 +65,10 @@ namespace Machina.Engine
                 {
                     return;
                 }
+
                 accumulator.Add(actor);
 
-                for (int i = 0; i < actor.transform.ChildCount; i++)
+                for (var i = 0; i < actor.transform.ChildCount; i++)
                 {
                     var child = actor.transform.ChildAt(i);
                     if (!actor.transform.IsIterablePendingDeletion(child))
@@ -84,7 +79,7 @@ namespace Machina.Engine
             }
 
             var result = new List<Actor>();
-            foreach (var actor in iterables)
+            foreach (var actor in this.iterables)
             {
                 extractChild(result, actor);
             }
@@ -133,11 +128,12 @@ namespace Machina.Engine
                     }
                 }
             }
+
             base.Update(dt * TimeScale);
         }
 
         /// <summary>
-        /// Scene stops getting input, stops updating, it just draws
+        ///     Scene stops getting input, stops updating, it just draws
         /// </summary>
         public void Freeze()
         {
@@ -160,15 +156,18 @@ namespace Machina.Engine
                 AlphaDestinationBlend = Blend.DestinationAlpha,
                 AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction
             };
-            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, this.sceneLayers.SamplerState, DepthStencilState.DepthRead, null, null, camera.GraphicsTransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, this.sceneLayers.SamplerState,
+                DepthStencilState.DepthRead, null, null, this.camera.GraphicsTransformMatrix);
 
             base.Draw(spriteBatch);
 
             spriteBatch.End();
         }
+
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, this.sceneLayers.SamplerState, DepthStencilState.Default, null, null, camera.GraphicsTransformMatrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, this.sceneLayers.SamplerState, DepthStencilState.Default,
+                null, null, this.camera.GraphicsTransformMatrix);
 
             base.DebugDraw(spriteBatch);
 
@@ -178,14 +177,15 @@ namespace Machina.Engine
         public override void OnMouseButton(MouseButton mouseButton, Vector2 screenPosition, ButtonState buttonState)
         {
             // Convert position to account for camera
-            base.OnMouseButton(mouseButton, camera.ScreenToWorld(screenPosition), buttonState);
+            base.OnMouseButton(mouseButton, this.camera.ScreenToWorld(screenPosition), buttonState);
         }
 
         public override void OnMouseUpdate(Vector2 screenPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
             ClearHitTester();
             // Convert position to account for camera
-            base.OnMouseUpdate(camera.ScreenToWorld(screenPosition), Vector2.Transform(positionDelta, Matrix.Invert(camera.MouseDeltaMatrix)), rawDelta);
+            base.OnMouseUpdate(this.camera.ScreenToWorld(screenPosition),
+                Vector2.Transform(positionDelta, Matrix.Invert(this.camera.MouseDeltaMatrix)), rawDelta);
         }
 
         public void ClearHitTester()

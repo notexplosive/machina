@@ -1,28 +1,18 @@
-﻿using Machina.Components;
+﻿using System;
+using Machina.Components;
 using Machina.Data;
-using Machina.Engine;
-using Machina.Engine.Debugging.Components;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine.Debugging.Components
 {
     public class SceneGraphUI : BaseComponent
     {
-        private readonly WindowManager windowManager;
-        private readonly SceneGraphData sceneGraph;
-        private readonly Hoverable hoverable;
         private readonly Scene creatingScene;
+        private readonly Hoverable hoverable;
+        private readonly SceneGraphData sceneGraph;
+        private readonly WindowManager windowManager;
         private SceneGraphRenderer sceneGraphRenderer;
-
-        public ICrane HoveredCrane
-        {
-            private set; get;
-        }
 
         public SceneGraphUI(Actor actor, WindowManager windowManager, Scene creatingScene) : base(actor)
         {
@@ -31,6 +21,8 @@ namespace Machina.Engine.Debugging.Components
             this.hoverable = RequireComponent<Hoverable>();
             this.creatingScene = creatingScene;
         }
+
+        public ICrane HoveredCrane { private set; get; }
 
         public override void Start()
         {
@@ -41,7 +33,9 @@ namespace Machina.Engine.Debugging.Components
         {
             if (this.hoverable.IsHovered)
             {
-                var result = this.sceneGraph.GetElementAt((int) MathF.Floor(currentPosition.Y / this.sceneGraphRenderer.font.LineSpacing));
+                var result =
+                    this.sceneGraph.GetElementAt(
+                        (int) MathF.Floor(currentPosition.Y / this.sceneGraphRenderer.font.LineSpacing));
                 if (result.HasValue)
                 {
                     HoveredCrane = result.Value.crane;
@@ -66,18 +60,17 @@ namespace Machina.Engine.Debugging.Components
                         windowSize = actorBoundingRectIfExists.Size;
                     }
 
-
-                    this.windowManager.CreateWindow(creatingScene,
+                    this.windowManager.CreateWindow(this.creatingScene,
                         new WindowBuilder(windowSize)
                             .DestroyViaCloseButton()
                             .CanBeResized()
                             .Title(hoveredActor.name)
-                            .OnLaunch((window) =>
+                            .OnLaunch(window =>
                             {
                                 var renderActor = window.scene.AddActor("renderActor");
                                 new RemoteActorRenderer(renderActor, hoveredActor);
                             })
-                        );
+                    );
                 }
             }
         }

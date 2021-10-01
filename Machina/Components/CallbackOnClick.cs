@@ -1,14 +1,12 @@
-﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Machina.Engine;
 
 namespace Machina.Components
 {
-    class CallbackOnClick : BaseComponent
+    internal class CallbackOnClick : BaseComponent
     {
-        private readonly Action callback;
         private readonly MouseButton button;
+        private readonly Action callback;
         private readonly Clickable clickable;
 
         public CallbackOnClick(Actor actor, Action callback, MouseButton button = MouseButton.Left) : base(actor)
@@ -16,12 +14,12 @@ namespace Machina.Components
             this.callback = callback;
             this.button = button;
             this.clickable = RequireComponent<Clickable>();
-            clickable.OnClick += FireCallback;
+            this.clickable.OnClick += FireCallback;
         }
 
         public override void OnDeleteFinished()
         {
-            clickable.OnClick -= FireCallback;
+            this.clickable.OnClick -= FireCallback;
         }
 
         public void FireCallback(MouseButton button)

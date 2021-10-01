@@ -3,9 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
@@ -15,28 +12,28 @@ namespace Machina.Components
         // DragEventArgs should hold: mousePosition and accumulatedDelta
         public delegate void DragAction(Vector2 mousePos, Vector2 accumulatedDelta);
 
-        /// <summary>
-        /// Passes the accumulated delta of the drag
-        /// </summary>
-        public event DragAction Drag;
-        /// <summary>
-        /// Passes the cursor world position on drag start
-        /// </summary>
-        public event DragAction DragStart;
-        public event DragAction DragEnd;
-
-        public bool IsDragging
-        {
-            private set; get;
-        }
-        private Vector2 accumulatedDragDelta;
         private readonly Hoverable hoverable;
+        private Vector2 accumulatedDragDelta;
 
         public Draggable(Actor actor) : base(actor)
         {
             this.hoverable = RequireComponent<Hoverable>();
             IsDragging = false;
         }
+
+        public bool IsDragging { private set; get; }
+
+        /// <summary>
+        ///     Passes the accumulated delta of the drag
+        /// </summary>
+        public event DragAction Drag;
+
+        /// <summary>
+        ///     Passes the cursor world position on drag start
+        /// </summary>
+        public event DragAction DragStart;
+
+        public event DragAction DragEnd;
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState buttonState)
         {
@@ -57,6 +54,7 @@ namespace Machina.Components
                     {
                         DragEnd?.Invoke(currentPosition, this.accumulatedDragDelta);
                     }
+
                     IsDragging = false;
                 }
             }
@@ -75,7 +73,8 @@ namespace Machina.Components
         {
             if (IsDragging)
             {
-                spriteBatch.DrawLine(this.actor.transform.Position, this.actor.transform.Position + accumulatedDragDelta, Color.Orange, 4, 0.2f);
+                spriteBatch.DrawLine(this.actor.transform.Position,
+                    this.actor.transform.Position + this.accumulatedDragDelta, Color.Orange, 4, 0.2f);
             }
         }
     }

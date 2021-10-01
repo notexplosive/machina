@@ -1,29 +1,37 @@
-﻿using Machina.Components;
+﻿using System;
+using System.Collections.Generic;
 using Machina.Engine;
 using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     public class TweenChain
     {
+        private static readonly TweenAccessors<float> dummyAccessors =
+            new TweenAccessors<float>(TweenChain.dummyGetter, TweenChain.dummySetter);
+
         private readonly List<IChainItem> chainInternal;
         private int currentIndex;
         private IChainItem currentItem;
-        private static TweenAccessors<float> dummyAccessors = new TweenAccessors<float>(dummyGetter, dummySetter);
-
-        private static float dummyGetter() => 0f;
-        private static void dummySetter(float val)
-        {
-        }
 
         public TweenChain()
         {
             this.chainInternal = new List<IChainItem>();
             this.currentIndex = 0;
+        }
+
+        [Obsolete("Use IsDone() instead")]
+        public bool IsFinished =>
+            this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
+
+        private static float dummyGetter()
+        {
+            return 0f;
+        }
+
+        private static void dummySetter(float val)
+        {
         }
 
         public void Clear()
@@ -40,7 +48,7 @@ namespace Machina.Data
 
         public TweenChain Append(IChainItem item)
         {
-            chainInternal.Add(item);
+            this.chainInternal.Add(item);
             return this;
         }
 
@@ -52,19 +60,22 @@ namespace Machina.Data
         }
         */
 
-        public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc, TweenAccessors<float> accessors)
+        public TweenChain AppendFloatTween(float targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<float> accessors)
         {
             return Append(new ChainItem<float>(targetVal, duration, easeFunc, accessors, FloatTween.LerpFloat));
         }
 
         public TweenChain AppendWaitTween(float duration)
         {
-            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors, FloatTween.LerpFloat));
+            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, TweenChain.dummyAccessors,
+                FloatTween.LerpFloat));
         }
 
-        public TweenChain AppendIntTween(int targetVal, float duration, EaseFunc easeFunc, TweenAccessors<int> accessors)
+        public TweenChain AppendIntTween(int targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<int> accessors)
         {
-            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, LerpInt));
+            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, TweenChain.LerpInt));
         }
 
         public TweenChain AppendCallback(Action func)
@@ -74,17 +85,20 @@ namespace Machina.Data
 
         public TweenChain AppendPositionTween(Actor actor, Vector2 targetVal, float duration, EaseFunc easeFunc)
         {
-            return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, TweenDataFunctions.PositionTweenAccessors(actor), Vector2.Lerp));
+            return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, actor.PositionTweenAccessors(),
+                Vector2.Lerp));
         }
 
-        public TweenChain AppendVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Vector2> accessors)
+        public TweenChain AppendVectorTween(Vector2 targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<Vector2> accessors)
         {
             return Append(new ChainItem<Vector2>(targetVal, duration, easeFunc, accessors, Vector2.Lerp));
         }
 
-        public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc, TweenAccessors<Point> accessors)
+        public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc,
+            TweenAccessors<Point> accessors)
         {
-            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
+            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, TweenChain.PointLerp));
         }
 
         private static Point PointLerp(Point p1, Point p2, float amount)
@@ -135,11 +149,8 @@ namespace Machina.Data
             return this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
         }
 
-        [Obsolete("Use IsDone() instead")]
-        public bool IsFinished => this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
-
         /// <summary>
-        /// Maintains the current chain but puts us back at the beginning
+        ///     Maintains the current chain but puts us back at the beginning
         /// </summary>
         public void Refresh()
         {
@@ -155,7 +166,7 @@ namespace Machina.Data
         }
 
         /// <summary>
-        /// Skip to the end of the tween, skipping everything in between
+        ///     Skip to the end of the tween, skipping everything in between
         /// </summary>
         public void SkipToEnd()
         {
@@ -164,24 +175,35 @@ namespace Machina.Data
         }
 
         /// <summary>
-        /// This could go wrong in a lot of ways, it's also kinda slow
+        ///     This could go wrong in a lot of ways, it's also kinda slow
         /// </summary>
         public void FinishRestOfTween_Dangerous()
         {
-            while (currentItem != null)
+            while (this.currentItem != null)
             {
-                this.Update(1f / 60);
+                Update(1f / 60);
             }
+        }
+
+        private void StartNextTweenIfAble()
+        {
+            if (this.currentItem == null && this.chainInternal.Count > this.currentIndex)
+            {
+                StartNextTween();
+            }
+        }
+
+        public static int LerpInt(int start, int end, float progress)
+        {
+            return (int) (start + (end - start) * progress);
         }
 
         public interface IChainItem
         {
+            public bool IsComplete { get; }
+
             public IChainItem StartTween();
             public void Update(float dt);
-            public bool IsComplete
-            {
-                get;
-            }
             public void Refresh();
         }
 
@@ -200,22 +222,24 @@ namespace Machina.Data
                             return false;
                         }
                     }
+
                     return true;
                 }
             }
 
             public IChainItem StartTween()
             {
-                foreach (var chain in new List<TweenChain>(chains))
+                foreach (var chain in new List<TweenChain>(this.chains))
                 {
                     chain.StartNextTweenIfAble();
                 }
+
                 return this;
             }
 
             public void Refresh()
             {
-                foreach (var chain in chains)
+                foreach (var chain in this.chains)
                 {
                     chain.Refresh();
                 }
@@ -223,15 +247,15 @@ namespace Machina.Data
 
             public void Update(float dt)
             {
-                foreach (var chain in chains)
+                foreach (var chain in this.chains)
                 {
                     chain.Update(dt);
                 }
             }
 
             /// <summary>
-            /// Adds a new TweenChain channel.
-            /// CAUTION: If you have two channels that manipulate the same field, last one added will take precedence
+            ///     Adds a new TweenChain channel.
+            ///     CAUTION: If you have two channels that manipulate the same field, last one added will take precedence
             /// </summary>
             /// <returns></returns>
             public TweenChain AddChannel()
@@ -242,32 +266,27 @@ namespace Machina.Data
             }
         }
 
-        private void StartNextTweenIfAble()
-        {
-            if (this.currentItem == null && this.chainInternal.Count > this.currentIndex)
-                StartNextTween();
-        }
-
         public class ChainItem<T> : IChainItem where T : struct
         {
-            private readonly LerpFunc<T> lerpFunc;
             private readonly TweenAccessors<T> accessors;
             public readonly T destination;
             public readonly float duration;
+            private readonly LerpFunc<T> lerpFunc;
             public readonly EaseFunc scaleFunc;
             public readonly Tween<T> tween;
 
-            public bool IsComplete => this.tween.State == TweenState.Stopped;
-
-            public ChainItem(T destination, float duration, EaseFunc scaleFunc, TweenAccessors<T> accessors, LerpFunc<T> lerp)
+            public ChainItem(T destination, float duration, EaseFunc scaleFunc, TweenAccessors<T> accessors,
+                LerpFunc<T> lerp)
             {
                 this.destination = destination;
                 this.duration = duration;
                 this.scaleFunc = scaleFunc;
                 this.accessors = accessors;
                 this.lerpFunc = lerp;
-                this.tween = new Tween<T>(lerpFunc);
+                this.tween = new Tween<T>(this.lerpFunc);
             }
+
+            public bool IsComplete => this.tween.State == TweenState.Stopped;
 
             public void Refresh()
             {
@@ -276,7 +295,7 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                this.tween.Start(this.accessors.getter(), destination, duration, scaleFunc);
+                this.tween.Start(this.accessors.getter(), this.destination, this.duration, this.scaleFunc);
                 return this;
             }
 
@@ -288,7 +307,7 @@ namespace Machina.Data
         }
 
         /// <summary>
-        /// Instantly execute a callback in the middle of the tween
+        ///     Instantly execute a callback in the middle of the tween
         /// </summary>
         public class CallbackChainItem : IChainItem
         {
@@ -299,10 +318,7 @@ namespace Machina.Data
                 this.callbackFn = callbackFn;
             }
 
-            public bool IsComplete
-            {
-                get; private set;
-            }
+            public bool IsComplete { get; private set; }
 
             public void Refresh()
             {
@@ -311,7 +327,7 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                callbackFn?.Invoke();
+                this.callbackFn?.Invoke();
                 IsComplete = true;
                 return this;
             }
@@ -323,7 +339,7 @@ namespace Machina.Data
         }
 
         /// <summary>
-        /// Pause the tween until the callback returns true
+        ///     Pause the tween until the callback returns true
         /// </summary>
         public class WaitUntilCallbackChainItem : IChainItem
         {
@@ -343,7 +359,7 @@ namespace Machina.Data
 
             public IChainItem StartTween()
             {
-                callbackFn?.Invoke();
+                this.callbackFn?.Invoke();
                 return this;
             }
 
@@ -351,11 +367,6 @@ namespace Machina.Data
             {
                 // This function is intentionally left blank
             }
-        }
-
-        public static int LerpInt(int start, int end, float progress)
-        {
-            return (int)(start + (end - start) * progress);
         }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     /// <summary>
-    /// These are extension functions that act as Getters and Setters for tweenable values
+    ///     These are extension functions that act as Getters and Setters for tweenable values
     /// </summary>
     public static class TweenDataFunctions
     {
@@ -28,7 +25,8 @@ namespace Machina.Data
 
         public static TweenAccessors<Vector2> LocalPositionTweenAccessors(this Actor actor)
         {
-            return new TweenAccessors<Vector2>(() => actor.transform.LocalPosition, val => actor.transform.LocalPosition = val);
+            return new TweenAccessors<Vector2>(() => actor.transform.LocalPosition,
+                val => actor.transform.LocalPosition = val);
         }
     }
 }

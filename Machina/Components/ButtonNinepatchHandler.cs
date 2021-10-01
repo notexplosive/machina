@@ -1,19 +1,16 @@
 ﻿using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class ButtonNinepatchHandler : BaseComponent
+    internal class ButtonNinepatchHandler : BaseComponent
     {
+        private readonly Clickable clickable;
+        private readonly NinepatchSheet defaultSheet;
         private readonly NinepatchSheet hoverSheet;
         private readonly NinepatchSheet pressedSheet;
-        private readonly Clickable clickable;
         private readonly NinepatchRenderer renderer;
-        private readonly NinepatchSheet defaultSheet;
 
         public ButtonNinepatchHandler(Actor actor, NinepatchSheet hoverSheet, NinepatchSheet pressedSheet) : base(actor)
         {
@@ -21,7 +18,7 @@ namespace Machina.Components
             this.pressedSheet = pressedSheet;
             this.clickable = RequireComponent<Clickable>();
             this.renderer = RequireComponent<NinepatchRenderer>();
-            this.defaultSheet = renderer.Sheet;
+            this.defaultSheet = this.renderer.Sheet;
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)

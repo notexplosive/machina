@@ -3,16 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
-    class MouseCircle : BaseComponent
+    internal class MouseCircle : BaseComponent
     {
-        private int radius;
-        private Color color;
+        private readonly Color color;
+        private readonly int radius;
 
         public MouseCircle(Actor actor, int radius, Color color) : base(actor)
         {
@@ -22,12 +19,12 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(new CircleF(this.actor.transform.Position, this.radius), 20, this.color, 1, (this.actor.transform.Depth - 1).AsFloat);
+            spriteBatch.DrawCircle(new CircleF(this.actor.transform.Position, this.radius), 20, this.color, 1,
+                (this.actor.transform.Depth - 1).AsFloat);
         }
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
@@ -37,7 +34,8 @@ namespace Machina.Components
 
         public override void OnMouseButton(MouseButton mouseButton, Vector2 currentPosition, ButtonState buttonState)
         {
-            if (mouseButton == MouseButton.Left && buttonState == ButtonState.Pressed && MachinaGame.DebugLevel >= DebugLevel.Active)
+            if (mouseButton == MouseButton.Left && buttonState == ButtonState.Pressed &&
+                MachinaGame.DebugLevel >= DebugLevel.Active)
             {
                 var spawnedActor = this.actor.scene.AddActor("Spawned circle", currentPosition);
                 new DestroyTimer(spawnedActor, 1);

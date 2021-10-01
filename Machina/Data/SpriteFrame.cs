@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Machina.Data
+﻿namespace Machina.Data
 {
     public class SpriteFrame
     {
-        public readonly SpriteSheet spriteSheet;
         public readonly ChooseFrameAnimation animation;
+        public readonly SpriteSheet spriteSheet;
 
         public SpriteFrame(SpriteSheet spriteSheet, int frame)
         {

@@ -1,9 +1,6 @@
 ﻿using Machina.Components;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -11,6 +8,28 @@ namespace Machina.Data
 
     public class UIWindow
     {
+        /// <summary>
+        ///     Actor for the "Canvas" portion of the window
+        /// </summary>
+        public readonly Actor canvasActor;
+
+        /// <summary>
+        ///     LayoutGroup of the "Content" area of the window
+        /// </summary>
+        private readonly LayoutGroup contentGroup;
+
+        private readonly int margin = 10;
+        private readonly BoundingRect rootBoundingRect;
+
+        /// <summary>
+        ///     Transform of the parent-most actor
+        /// </summary>
+        public readonly Transform rootTransform;
+
+        /// <summary>
+        ///     Primary scene of the content within the window
+        /// </summary>
+        public readonly Scene scene;
         /*
          * [_Header_________]
          * | C O N T E N T s|
@@ -23,94 +42,66 @@ namespace Machina.Data
          */
 
         public readonly SceneRenderer sceneRenderer;
-
-        /// <summary>
-        /// Primary scene of the content within the window
-        /// </summary>
-        public readonly Scene scene;
-        /// <summary>
-        /// Transform of the parent-most actor
-        /// </summary>
-        public readonly Transform rootTransform;
-        private readonly BoundingRect rootBoundingRect;
-
-        /// <summary>
-        /// LayoutGroup of the "Content" area of the window
-        /// </summary>
-        private readonly LayoutGroup contentGroup;
-
-        /// <summary>
-        /// Actor for the "Canvas" portion of the window
-        /// </summary>
-        public readonly Actor canvasActor;
         private readonly UIStyle style;
-        private readonly int margin = 10;
         private BoundedTextRenderer titleTextRenderer;
 
-        public Scrollbar Scrollbar
-        {
-            get; private set;
-        }
-        public string Title
-        {
-            get => this.titleTextRenderer.Text;
-            set => this.titleTextRenderer.Text = value;
-        }
-        public BoundedCanvas Canvas => this.canvasActor.GetComponent<BoundedCanvas>();
-
-        public event WindowAction Closed;
-        public event WindowAction Minimized;
-        public event WindowAction Maximized;
-        public event WindowAction AnyPartOfWindowClicked;
-
-        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized, bool canbeMinimized, SpriteFrame icon, UIStyle style)
+        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
+            bool canbeMinimized, SpriteFrame icon, UIStyle style)
         {
             this.style = style;
             var headerSize = 32;
             var windowRoot = managerScene.AddActor("Window");
-            new BoundingRect(windowRoot, contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
+            new BoundingRect(windowRoot,
+                contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
             rootGroup.SetMarginSize(new Point(this.margin, this.margin));
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
-             {
-                 new Hoverable(headerContentActor);
-                 new Draggable(headerContentActor).DragStart += (position, delta) => OnAnyPartOfWindowClicked(MouseButton.Left);
-                 new MoveOnDrag(headerContentActor, windowRoot.transform);
+            {
+                new Hoverable(headerContentActor);
+                new Draggable(headerContentActor).DragStart +=
+                    (position, delta) => OnAnyPartOfWindowClicked(MouseButton.Left);
+                new MoveOnDrag(headerContentActor, windowRoot.transform);
 
-                 var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal);
-                 if (icon != null)
-                 {
-                     headerGroup.AddVerticallyStretchedElement("Icon", 32, iconActor =>
-                     {
-                         new SpriteRenderer(iconActor, icon.spriteSheet).SetAnimation(icon.animation);
+                var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal);
+                if (icon != null)
+                {
+                    headerGroup.AddVerticallyStretchedElement("Icon", 32, iconActor =>
+                    {
+                        new SpriteRenderer(iconActor, icon.spriteSheet).SetAnimation(icon.animation);
 
-                         iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
-                     });
-                     headerGroup.PixelSpacer(5); // Spacing between icon and title
-                 }
+                        iconActor.GetComponent<BoundingRect>().SetOffsetToCenter();
+                    });
+                    headerGroup.PixelSpacer(5); // Spacing between icon and title
+                }
 
-                 headerGroup.AddBothStretchedElement("Title", titleActor =>
-                 {
-                     this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here", style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center, depthOffset: -2).EnableDropShadow(Color.Black);
-                 });
+                headerGroup.AddBothStretchedElement("Title",
+                    titleActor =>
+                    {
+                        this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here",
+                            style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center,
+                            depthOffset: -2).EnableDropShadow(Color.Black);
+                    });
 
-                 if (canbeMinimized)
-                 {
-                     CreateControlButton(headerGroup, windowRoot, (win) => Minimized?.Invoke(win), this.style.minimizeButtonFrames);
-                 }
+                if (canbeMinimized)
+                {
+                    CreateControlButton(headerGroup, windowRoot, win => Minimized?.Invoke(win),
+                        this.style.minimizeButtonFrames);
+                }
 
-                 if (canBeMaximized)
-                 {
-                     CreateControlButton(headerGroup, windowRoot, (win) => Maximized?.Invoke(win), this.style.maximizeButtonFrames);
-                 }
+                if (canBeMaximized)
+                {
+                    CreateControlButton(headerGroup, windowRoot, win => Maximized?.Invoke(win),
+                        this.style.maximizeButtonFrames);
+                }
 
-                 if (canBeClosed)
-                 {
-                     CreateControlButton(headerGroup, windowRoot, (win) => Closed?.Invoke(win), this.style.closeButtonFrames);
-                 }
-             });
+                if (canBeClosed)
+                {
+                    CreateControlButton(headerGroup, windowRoot, win => Closed?.Invoke(win),
+                        this.style.closeButtonFrames);
+                }
+            });
 
             // These variables with _local at the end of their name are later assigned to readonly values
             // The locals are assigned in lambdas which is illegal for readonly assignment
@@ -125,14 +116,14 @@ namespace Machina.Data
                     new NinepatchRenderer(contentActor, style.windowSheet, NinepatchSheet.GenerationDirection.Outer);
 
                     contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
-                        .AddBothStretchedElement("Canvas", viewActor =>
-                        {
-                            canvasActor_local = viewActor;
-                            new BoundedCanvas(viewActor);
-                            new Hoverable(viewActor);
-                            new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
-                            sceneRenderer_local = new SceneRenderer(viewActor);
-                        })
+                            .AddBothStretchedElement("Canvas", viewActor =>
+                            {
+                                canvasActor_local = viewActor;
+                                new BoundedCanvas(viewActor);
+                                new Hoverable(viewActor);
+                                new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
+                                sceneRenderer_local = new SceneRenderer(viewActor);
+                            })
                         ;
                 })
                 ;
@@ -145,7 +136,23 @@ namespace Machina.Data
             this.contentGroup = contentGroup_local;
         }
 
-        private void CreateControlButton(LayoutGroup headerGroup, Actor windowRoot, WindowAction controlButtonEvent, IFrameAnimation frames)
+        public Scrollbar Scrollbar { get; private set; }
+
+        public string Title
+        {
+            get => this.titleTextRenderer.Text;
+            set => this.titleTextRenderer.Text = value;
+        }
+
+        public BoundedCanvas Canvas => this.canvasActor.GetComponent<BoundedCanvas>();
+
+        public event WindowAction Closed;
+        public event WindowAction Minimized;
+        public event WindowAction Maximized;
+        public event WindowAction AnyPartOfWindowClicked;
+
+        private void CreateControlButton(LayoutGroup headerGroup, Actor windowRoot, WindowAction controlButtonEvent,
+            IFrameAnimation frames)
         {
             headerGroup.AddVerticallyStretchedElement("ControlButton", 32, closeButtonActor =>
             {
@@ -172,17 +179,18 @@ namespace Machina.Data
         public void AddScrollbar(int maxScrollPos)
         {
             var scrollbarWidth = 20;
-            rootBoundingRect.Width += scrollbarWidth;
+            this.rootBoundingRect.Width += scrollbarWidth;
             Scrollbar scrollbar_local = null;
             this.contentGroup.AddVerticallyStretchedElement("scrollbar", scrollbarWidth, scrollbarActor =>
             {
                 new Hoverable(scrollbarActor);
-                new NinepatchRenderer(scrollbarActor, this.style.buttonDefault, NinepatchSheet.GenerationDirection.Inner);
+                new NinepatchRenderer(scrollbarActor, this.style.buttonDefault);
 
-                scrollbar_local = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(), this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
+                scrollbar_local = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(),
+                    this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
 
                 // Scrollbar listener could be applied to any actor, but we'll just create one in this case
-                new ScrollbarListener(scene.AddActor("Scrollbar Listener"), scrollbar_local);
+                new ScrollbarListener(this.scene.AddActor("Scrollbar Listener"), scrollbar_local);
             });
 
             Scrollbar = scrollbar_local;
@@ -190,10 +198,15 @@ namespace Machina.Data
 
         public BoundingRectResizer BecomeResizable(Point? minSize, Point? maxSize)
         {
-            new Hoverable(rootTransform.actor);
-            return new BoundingRectResizer(rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize, maxSize, (rect) => { rect.Y += this.margin; rect.Height -= this.margin; return rect; });
+            new Hoverable(this.rootTransform.actor);
+            return new BoundingRectResizer(this.rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize,
+                maxSize, rect =>
+                {
+                    rect.Y += this.margin;
+                    rect.Height -= this.margin;
+                    return rect;
+                });
         }
-
 
         public void Destroy()
         {
@@ -201,12 +214,13 @@ namespace Machina.Data
             {
                 scene.DeleteAllActors();
             }
-            rootTransform.actor.Destroy();
+
+            this.rootTransform.actor.Destroy();
         }
 
         public void Delete()
         {
-            rootTransform.actor.Delete();
+            this.rootTransform.actor.Delete();
         }
 
         public bool IsOpen()

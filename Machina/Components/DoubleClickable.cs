@@ -1,29 +1,24 @@
-﻿using Machina.Components;
-using Machina.Data;
-using Machina.Engine;
-using Microsoft.Xna.Framework;
+﻿using Machina.Engine;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class DoubleClickable : BaseComponent
     {
-        public event ClickAction DoubleClick;
+        private readonly Clickable clickable;
 
         private readonly float totalWaitTime = 0.5f;
-        private readonly Clickable clickable;
-        private float timer;
         private MouseButton? mostRecentButton;
         private int numberOfHits;
+        private float timer;
 
         public DoubleClickable(Actor actor) : base(actor)
         {
             this.clickable = RequireComponent<Clickable>();
             this.clickable.OnClick += OnClick;
         }
+
+        public event ClickAction DoubleClick;
 
         private void OnClick(MouseButton button)
         {
@@ -45,7 +40,6 @@ namespace Machina.Components
 
         public override void Update(float dt)
         {
-
             if (this.timer > 0)
             {
                 this.timer -= dt;
@@ -59,7 +53,6 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-
         }
     }
 }

@@ -1,25 +1,13 @@
 ﻿using Machina.Engine;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
     public struct GameSettings
     {
-        public float MusicVolume
-        {
-            private set; get;
-        }
-        public float SoundVolume
-        {
-            private set; get;
-        }
-        public bool Fullscreen
-        {
-            private set; get;
-        }
+        public float MusicVolume { private set; get; }
+        public float SoundVolume { private set; get; }
+        public bool Fullscreen { private set; get; }
 
         public UIState<bool> fullscreenState;
         public UIState<int> musicVolumeState;
@@ -28,9 +16,9 @@ namespace Machina.Data
 
         public void Apply()
         {
-            this.Fullscreen = fullscreenState.State;
-            this.SoundVolume = soundVolumeState.State;
-            this.MusicVolume = musicVolumeState.State;
+            Fullscreen = this.fullscreenState.State;
+            SoundVolume = this.soundVolumeState.State;
+            MusicVolume = this.musicVolumeState.State;
 
             var graphics = MachinaGame.Graphics;
 
@@ -51,6 +39,7 @@ namespace Machina.Data
                 graphics.PreferredBackBufferHeight = this.savedWindowSize.Y;
                 graphics.IsFullScreen = false;
             }
+
             graphics.ApplyChanges();
         }
     }

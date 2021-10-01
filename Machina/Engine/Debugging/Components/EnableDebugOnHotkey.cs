@@ -1,14 +1,10 @@
 ﻿using Machina.Components;
 using Machina.Data;
-using Machina.Engine;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Engine.Debugging.Components
 {
-    class EnableDebugOnHotkey : BaseComponent
+    internal class EnableDebugOnHotkey : BaseComponent
     {
         private readonly KeyCombination keyCombo;
 
@@ -19,7 +15,7 @@ namespace Machina.Engine.Debugging.Components
 
         public override void OnKey(Keys key, ButtonState buttonState, ModifierKeys modifiers)
         {
-            if (keyCombo.key == key && keyCombo.modifiers == modifiers && buttonState == ButtonState.Pressed)
+            if (this.keyCombo.key == key && this.keyCombo.modifiers == modifiers && buttonState == ButtonState.Pressed)
             {
                 if (MachinaGame.DebugLevel == DebugLevel.Passive)
                 {

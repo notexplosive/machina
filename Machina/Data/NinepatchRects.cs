@@ -1,8 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Machina.Data
 {
@@ -24,7 +21,7 @@ namespace Machina.Data
         Right,
         Bottom,
         Left,
-        Top,
+        Top
     }
 
     public struct NinepatchRects
@@ -35,39 +32,44 @@ namespace Machina.Data
         public readonly Rectangle outer;
         public readonly bool isValidNinepatch;
 
-
         public NinepatchRects(Rectangle outer, Rectangle inner)
         {
             Debug.Assert(outer.Contains(inner), "InnerRect is not contained by OuterRect");
 
-            int topBuffer = inner.Top - outer.Top;
-            int rightBuffer = outer.Right - inner.Right;
-            int leftBuffer = inner.Left - outer.Left;
-            int bottomBuffer = outer.Bottom - inner.Bottom;
+            var topBuffer = inner.Top - outer.Top;
+            var rightBuffer = outer.Right - inner.Right;
+            var leftBuffer = inner.Left - outer.Left;
+            var bottomBuffer = outer.Bottom - inner.Bottom;
 
-            sidePixelBuffers = new int[4] {
+            this.sidePixelBuffers = new int[4]
+            {
                 rightBuffer,
                 bottomBuffer,
                 leftBuffer,
                 topBuffer
             };
 
-            raw = new Rectangle[9] {
-                new Rectangle(outer.Left, outer.Top, sidePixelBuffers[(int) Side.Left], sidePixelBuffers[(int) Side.Top]),
-                new Rectangle(inner.Left, outer.Top, inner.Width, sidePixelBuffers[(int) Side.Top]),
-                new Rectangle(inner.Right, outer.Top, sidePixelBuffers[(int) Side.Right], sidePixelBuffers[(int) Side.Top]),
-                new Rectangle(outer.Left, inner.Top, sidePixelBuffers[(int) Side.Left], inner.Height),
+            this.raw = new Rectangle[9]
+            {
+                new Rectangle(outer.Left, outer.Top, this.sidePixelBuffers[(int) Side.Left],
+                    this.sidePixelBuffers[(int) Side.Top]),
+                new Rectangle(inner.Left, outer.Top, inner.Width, this.sidePixelBuffers[(int) Side.Top]),
+                new Rectangle(inner.Right, outer.Top, this.sidePixelBuffers[(int) Side.Right],
+                    this.sidePixelBuffers[(int) Side.Top]),
+                new Rectangle(outer.Left, inner.Top, this.sidePixelBuffers[(int) Side.Left], inner.Height),
                 inner,
-                new Rectangle(inner.Right, inner.Top, sidePixelBuffers[(int) Side.Right], inner.Height),
-                new Rectangle(outer.Left, inner.Bottom, sidePixelBuffers[(int) Side.Left], sidePixelBuffers[(int) Side.Bottom]),
-                new Rectangle(inner.Left, inner.Bottom, inner.Width, sidePixelBuffers[(int) Side.Bottom]),
-                new Rectangle(inner.Right, inner.Bottom, sidePixelBuffers[(int) Side.Right], sidePixelBuffers[(int) Side.Bottom]),
+                new Rectangle(inner.Right, inner.Top, this.sidePixelBuffers[(int) Side.Right], inner.Height),
+                new Rectangle(outer.Left, inner.Bottom, this.sidePixelBuffers[(int) Side.Left],
+                    this.sidePixelBuffers[(int) Side.Bottom]),
+                new Rectangle(inner.Left, inner.Bottom, inner.Width, this.sidePixelBuffers[(int) Side.Bottom]),
+                new Rectangle(inner.Right, inner.Bottom, this.sidePixelBuffers[(int) Side.Right],
+                    this.sidePixelBuffers[(int) Side.Bottom])
             };
             this.inner = inner;
             this.outer = outer;
 
             this.isValidNinepatch = true;
-            foreach (var rect in raw)
+            foreach (var rect in this.raw)
             {
                 if (rect.Width * rect.Height == 0)
                 {
@@ -75,6 +77,7 @@ namespace Machina.Data
                 }
             }
         }
+
         public Rectangle TopLeft => this.raw[(int) NinepatchIndex.TopLeft];
         public Rectangle TopCenter => this.raw[(int) NinepatchIndex.TopCenter];
         public Rectangle TopRight => this.raw[(int) NinepatchIndex.TopRight];
@@ -93,27 +96,30 @@ namespace Machina.Data
         {
             get
             {
-                foreach (var rect in new Rectangle[] { LeftCenter, Center, RightCenter })
+                foreach (var rect in new[] {LeftCenter, Center, RightCenter})
                 {
                     if (rect.Width * rect.Height == 0)
                     {
                         return false;
                     }
                 }
+
                 return true;
             }
         }
+
         public bool IsValidVerticalThreepatch
         {
             get
             {
-                foreach (var rect in new Rectangle[] { TopCenter, Center, BottomCenter })
+                foreach (var rect in new[] {TopCenter, Center, BottomCenter})
                 {
                     if (rect.Width * rect.Height == 0)
                     {
                         return false;
                     }
                 }
+
                 return true;
             }
         }

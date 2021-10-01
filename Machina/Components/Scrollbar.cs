@@ -1,29 +1,28 @@
-﻿using Machina.Data;
+﻿using System;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Components
 {
     public class Scrollbar : BaseComponent
     {
-        private readonly BoundingRect myBoundingRect;
-        private readonly Hoverable hoverable;
         private readonly BoundingRect containerBoundingRect;
-        private readonly Camera targetCamera;
+        private readonly Hoverable hoverable;
+        private readonly BoundingRect myBoundingRect;
         private readonly int scrollIncrement;
+        private readonly Camera targetCamera;
         private readonly NinepatchSheet thumbSheet;
         private bool isGrabbed;
         private float mouseYOnGrab;
         private float scrollPercentOnGrab;
         private MinMax<int> worldBounds;
 
-        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange, NinepatchSheet thumbSheet, int scrollIncrement = 64) : base(actor)
+        public Scrollbar(Actor actor, BoundingRect containerBoundingRect, Camera targetCamera, MinMax<int> scrollRange,
+            NinepatchSheet thumbSheet, int scrollIncrement = 64) : base(actor)
         {
             this.myBoundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
@@ -39,6 +38,47 @@ namespace Machina.Components
 
             this.targetCamera.OnChangeZoom += OnUpdateZoom;
         }
+
+        private float ScrollbarHeight => this.containerBoundingRect.Height;
+        private bool ThumbIsSmallEnoughToRender => OnScreenPercent < 1f;
+
+        private bool HasValidThumb =>
+            ThumbIsSmallEnoughToRender && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
+
+        /// <summary>
+        ///     Total height of scrollable area
+        /// </summary>
+        private float TotalWorldUnits => this.worldBounds.max - OnScreenUnits - this.worldBounds.min;
+
+        /// <summary>
+        ///     How many scrollable units are represented on screen?
+        /// </summary>
+        private float OnScreenUnits => ScrollbarHeight / this.targetCamera.Zoom;
+
+        /// <summary>
+        ///     What percentage of the total scrollable height is visible on screen
+        /// </summary>
+        private float OnScreenPercent => OnScreenUnits / (this.worldBounds.max - this.worldBounds.min);
+
+        /// <summary>
+        ///     How many pixels tall should the scrollbar thumb be
+        /// </summary>
+        private int ThumbHeight => (int) (ScrollbarHeight * OnScreenPercent);
+
+        private Rectangle ThumbRect
+        {
+            get
+            {
+                var scrollPercent = CurrentScrollPercent;
+                var thumbYPosition = (int) ((ScrollbarHeight - ThumbHeight) * scrollPercent);
+                return new Rectangle(this.myBoundingRect.Rect.Location + new Point(0, thumbYPosition),
+                    new Point(this.myBoundingRect.Width, ThumbHeight));
+            }
+        }
+
+        public float CurrentScrollUnits => this.targetCamera.ScaledPosition.Y;
+
+        public float CurrentScrollPercent => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
 
         public void SetWorldBounds(MinMax<int> scrollRange)
         {
@@ -64,13 +104,14 @@ namespace Machina.Components
         {
             if (HasValidThumb)
             {
-                this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner, this.transform.Depth - 1);
+                this.thumbSheet.DrawFullNinepatch(spriteBatch, ThumbRect, NinepatchSheet.GenerationDirection.Inner,
+                    transform.Depth - 1);
             }
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            Point containerLocation = this.containerBoundingRect.Location;
+            var containerLocation = this.containerBoundingRect.Location;
             spriteBatch.DrawRectangle(new Rectangle(
                 containerLocation,
                 new Point(this.containerBoundingRect.Width, (int) TotalWorldUnits)), Color.Orange, 2);
@@ -133,7 +174,7 @@ namespace Machina.Components
             var deltaPercent = CalculateDeltaPercent(deltaFromGrab);
             if (this.isGrabbed)
             {
-                SetScrollPercent(scrollPercentOnGrab + deltaPercent);
+                SetScrollPercent(this.scrollPercentOnGrab + deltaPercent);
             }
         }
 
@@ -156,38 +197,6 @@ namespace Machina.Components
             return result;
         }
 
-        private float ScrollbarHeight => this.containerBoundingRect.Height;
-        private bool ThumbIsSmallEnoughToRender => OnScreenPercent < 1f;
-        private bool HasValidThumb => ThumbIsSmallEnoughToRender && CurrentScrollPercent >= 0 && CurrentScrollPercent <= 1f;
-        /// <summary>
-        /// Total height of scrollable area
-        /// </summary>
-        private float TotalWorldUnits => (this.worldBounds.max - OnScreenUnits) - this.worldBounds.min;
-        /// <summary>
-        /// How many scrollable units are represented on screen?
-        /// </summary>
-        private float OnScreenUnits => ScrollbarHeight / this.targetCamera.Zoom;
-        /// <summary>
-        /// What percentage of the total scrollable height is visible on screen
-        /// </summary>
-        private float OnScreenPercent => OnScreenUnits / (this.worldBounds.max - this.worldBounds.min);
-        /// <summary>
-        /// How many pixels tall should the scrollbar thumb be
-        /// </summary>
-        private int ThumbHeight => (int) (ScrollbarHeight * OnScreenPercent);
-        private Rectangle ThumbRect
-        {
-            get
-            {
-                float scrollPercent = CurrentScrollPercent;
-                int thumbYPosition = (int) ((ScrollbarHeight - ThumbHeight) * scrollPercent);
-                return new Rectangle(this.myBoundingRect.Rect.Location + new Point(0, thumbYPosition),
-                            new Point(this.myBoundingRect.Width, ThumbHeight));
-            }
-        }
-
-        public float CurrentScrollUnits => this.targetCamera.ScaledPosition.Y;
-
         public void SetScrolledUnits(float value)
         {
             if (ThumbIsSmallEnoughToRender)
@@ -200,8 +209,6 @@ namespace Machina.Components
                 this.targetCamera.ScaledPosition = new Point(this.targetCamera.ScaledPosition.X, 0);
             }
         }
-
-        public float CurrentScrollPercent => (CurrentScrollUnits - this.worldBounds.min) / TotalWorldUnits;
 
         public void SetScrollPercent(float percent)
         {

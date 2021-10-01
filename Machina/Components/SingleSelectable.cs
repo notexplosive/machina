@@ -1,16 +1,14 @@
-﻿using Machina.Engine;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
+using Machina.Engine;
 
 namespace Machina.Components
 {
     public class SingleSelectable : BaseComponent
     {
-        public Action onSelect;
-        public Action onDeselect;
         private readonly Clickable clickable;
         private readonly SingleSelector selector;
+        public Action onDeselect;
+        public Action onSelect;
 
         public SingleSelectable(Actor actor, SingleSelector selector) : base(actor)
         {
@@ -18,8 +16,8 @@ namespace Machina.Components
             this.clickable.OnClick += OnClick;
             this.selector = selector;
 
-            onSelect += () => { };
-            onDeselect += () => { };
+            this.onSelect += () => { };
+            this.onDeselect += () => { };
         }
 
         public override void OnDeleteFinished()

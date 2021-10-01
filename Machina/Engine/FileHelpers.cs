@@ -1,15 +1,14 @@
-﻿using Machina.Engine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Machina.Engine
 {
     public static class FileHelpers
     {
-        public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false, Action onComplete = null)
+        public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
+            Action onComplete = null)
         {
             var fullPath = Path.Combine(MachinaGame.Current.appDataPath, path);
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
@@ -21,7 +20,8 @@ namespace Machina.Engine
             {
                 if (!skipDevPath)
                 {
-                    var devContentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
+                    var devContentPath =
+                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
                     var fullContentPath = Path.Combine(devContentPath, path);
                     Directory.CreateDirectory(Path.GetDirectoryName(fullContentPath));
                     await File.WriteAllTextAsync(fullContentPath, data);
@@ -65,8 +65,8 @@ namespace Machina.Engine
         }
 
         /// <summary>
-        /// Checks to see if path exists in AppData. If it's there, read it.
-        /// If it's not there, check the local directory instead.
+        ///     Checks to see if path exists in AppData. If it's there, read it.
+        ///     If it's not there, check the local directory instead.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>

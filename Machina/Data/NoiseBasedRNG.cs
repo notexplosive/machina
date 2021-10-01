@@ -1,13 +1,12 @@
-﻿using Machina.ThirdParty;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
+using Machina.ThirdParty;
 
 namespace Machina.Data
 {
     /// <summary>
-    /// Random Number Generator based on a Noise function
+    ///     Random Number Generator based on a Noise function
     /// </summary>
     public class NoiseBasedRNG
     {
@@ -20,52 +19,49 @@ namespace Machina.Data
         {
             this.seed = seed;
             this.currentPosition = 0;
-            this.id = idPool++;
+            this.id = NoiseBasedRNG.idPool++;
         }
 
         public NoiseBasedRNG(uint seed, int x) : this(Squirrel3.Noise(x, seed))
         {
         }
 
-        public NoiseBasedRNG(int seedX, int seedY) : this(Squirrel3.Noise(seedX, (uint)seedY))
+        public NoiseBasedRNG(int seedX, int seedY) : this(Squirrel3.Noise(seedX, (uint) seedY))
         {
         }
 
         public NoiseBasedRNG(uint seed, int x, int y) : this(Squirrel3.Noise2D(x, y, seed))
         {
-
         }
 
         /// <summary>
-        /// Sets the seed from a string, if the string is parsable as an int (eg: "100") then it's parsed.
-        /// Otherwise we sum the bytes
+        ///     Sets the seed from a string, if the string is parsable as an int (eg: "100") then it's parsed.
+        ///     Otherwise we sum the bytes
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
         public static uint SeedFromString(string arg)
         {
-            bool canParse = uint.TryParse(arg, out uint parsed);
+            var canParse = uint.TryParse(arg, out var parsed);
             if (canParse)
             {
                 return parsed;
             }
-            else
-            {
-                int index = 0;
-                int total = 0;
-                foreach (char ch in arg)
-                {
-                    total ^= ch << (int)index;
-                    index++;
-                }
 
-                return (uint)total;
+            var index = 0;
+            var total = 0;
+            foreach (var ch in arg)
+            {
+                total ^= ch << index;
+                index++;
             }
+
+            return (uint) total;
         }
 
         public int Next()
         {
-            return (int)Squirrel3.Noise(this.currentPosition++, this.seed);
+            return (int) Squirrel3.Noise(this.currentPosition++, this.seed);
         }
 
         public int Next(int maximum)
@@ -74,6 +70,7 @@ namespace Machina.Data
             {
                 return 0;
             }
+
             return Math.Abs(Next()) % maximum;
         }
 
@@ -90,23 +87,23 @@ namespace Machina.Data
 
         public float NextFloat()
         {
-            return (float)NextDouble();
+            return (float) NextDouble();
         }
 
         public double NextDouble()
         {
             var max = int.MaxValue / 2;
-            return Next(max) / (double)max;
+            return Next(max) / (double) max;
         }
 
         public void Shuffle<T>(IList<T> list)
         {
-            int n = list.Count;
+            var n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = Next(n + 1);
-                T value = list[k];
+                var k = Next(n + 1);
+                var value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }

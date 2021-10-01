@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Machina.Data
 {
@@ -11,8 +9,8 @@ namespace Machina.Data
 
         public T CurrentValue
         {
-            get => getter();
-            set => setter(value);
+            get => this.getter();
+            set => this.setter(value);
         }
 
         public TweenAccessors(Func<T> getter, Action<T> setter)
@@ -23,9 +21,9 @@ namespace Machina.Data
 
         public TweenAccessors(T startingValue)
         {
-            T value = startingValue;
+            var value = startingValue;
             this.getter = () => value;
-            this.setter = (setVal) => value = setVal;
+            this.setter = setVal => value = setVal;
         }
     }
 }
