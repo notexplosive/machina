@@ -86,7 +86,7 @@ namespace Machina.Components
             ouch.Play();
             this.spinning = true;
             SwapColor();
-            
+
             this.textRenderer.Text = "NotExplosive.net";
             camera.Zoom = 1.5f;
 
