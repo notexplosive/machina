@@ -13,6 +13,7 @@ namespace Machina.Components
         public Action<Keys, ButtonState, ModifierKeys> onKey;
         public Action<MouseButton, Vector2, ButtonState> onMouseButton;
         public Action<float> onUpdate;
+        public Action<Vector2,Vector2,Vector2> onMouseUpdate;
 
         public AdHoc(Actor actor) : base(actor)
         {
@@ -36,6 +37,11 @@ namespace Machina.Components
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
             this.onMouseButton?.Invoke(button, currentPosition, state);
+        }
+
+        public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
+        {
+            this.onMouseUpdate?.Invoke(currentPosition, positionDelta, rawDelta);
         }
     }
 }
