@@ -21,7 +21,7 @@ namespace Machina.Components
         {
             if (this.zoomModifierIsDown)
             {
-                this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
+                this.actor.scene.camera.AdjustZoom((float)scrollDelta / 4);
             }
         }
 
@@ -42,7 +42,7 @@ namespace Machina.Components
 
             if (mouseButton == MouseButton.Right && this.zoomModifierIsDown)
             {
-                this.isRotating = buttonState == ButtonState.Pressed;
+                // this.isRotating = buttonState == ButtonState.Pressed;
             }
         }
 
