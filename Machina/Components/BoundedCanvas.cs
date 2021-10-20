@@ -8,7 +8,8 @@ namespace Machina.Components
 {
     public class BoundedCanvas : BaseComponent
     {
-        private readonly Color backgroundColor = Color.Black;
+        public Color BackgroundColor { get; set; } = Color.Black;
+        public Color TintColor { get; set; } = Color.White;
 
         private readonly BoundingRect boundingRect;
 
@@ -78,8 +79,8 @@ namespace Machina.Components
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
             graphicsDevice.SetRenderTarget(this.renderTarget);
 
-            graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
-            graphicsDevice.Clear(this.backgroundColor);
+            graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
+            graphicsDevice.Clear(this.BackgroundColor);
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 
@@ -95,7 +96,7 @@ namespace Machina.Components
         {
             if (this.renderTarget != null)
             {
-                spriteBatch.Draw(this.renderTarget, this.actor.transform.Position, null, Color.White,
+                spriteBatch.Draw(this.renderTarget, this.actor.transform.Position, null, TintColor,
                     this.actor.transform.Angle, this.boundingRect.NormalizedOffset, 1f, SpriteEffects.None,
                     this.actor.transform.Depth.AsFloat);
             }
