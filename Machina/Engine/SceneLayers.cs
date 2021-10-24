@@ -29,6 +29,8 @@ namespace Machina.Engine
         {
             this.gameCanvas = gameCanvas;
 
+            Logger = new StdOutConsoleLogger();
+            
             if (useDebugScene)
             {
                 this.debugScene = new Scene(this);

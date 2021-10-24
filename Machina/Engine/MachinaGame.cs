@@ -74,6 +74,9 @@ namespace Machina.Engine
 
             MachinaGame.Assets = new AssetLibrary(this);
             MachinaGame.Random = new SeededRandom();
+            
+            SceneLayers = new SceneLayers(false,
+                new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
 
         public static CommandLineArgs CommandLineArgs { get; private set; }
