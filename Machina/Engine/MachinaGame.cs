@@ -189,16 +189,22 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             MachinaGame.Assets.LoadAllContent();
+            Console.Out.WriteLine("Loading initial style");
             LoadInitialStyle();
 
 #if DEBUG
             MachinaGame.DebugLevel = DebugLevel.Passive;
 #endif
 
+            Console.Out.WriteLine("Building SceneLayers");
             SceneLayers = new SceneLayers(true,
                 new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
+            Console.Out.WriteLine("Building Canvas");
             CurrentGameCanvas.BuildCanvas(GraphicsDevice);
+            Console.Out.WriteLine("Constructing SpriteBatch");
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            Console.Out.WriteLine("Settings Window Size");
             MachinaGame.SetWindowSize(this.startingWindowSize);
 
             if (GamePlatform.IsDesktop)
