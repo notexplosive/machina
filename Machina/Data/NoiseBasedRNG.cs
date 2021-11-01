@@ -5,6 +5,9 @@ using Machina.ThirdParty;
 
 namespace Machina.Data
 {
+    using System.Collections;
+    using System.Collections.ObjectModel;
+
     /// <summary>
     ///     Random Number Generator based on a Noise function
     /// </summary>
@@ -117,6 +120,11 @@ namespace Machina.Data
         public override string ToString()
         {
             return "[" + this.id + "]" + " seed " + this.seed + " at " + this.currentPosition;
+        }
+
+        public T GetRandomElement<T>(IList<T> items)
+        {
+            return items[Next(items.Count)];
         }
     }
 }
