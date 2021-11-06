@@ -25,7 +25,7 @@ namespace Machina.Engine
         public static UIStyle defaultStyle;
         private static MouseCursor pendingCursor;
         protected virtual GameSettings StartingSettings => new GameSettings();
-
+        public static SoundEffectPlayer SoundEffectPlayer;
         public static readonly FrameStep GlobalFrameStep = new FrameStep();
 
         /// <summary>
@@ -43,9 +43,8 @@ namespace Machina.Engine
 
         protected readonly Point startingWindowSize;
         private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
-        private Point currentWindowSize;
         private SceneLayers sceneLayers;
-        protected SpriteBatch spriteBatch;
+        private SpriteBatch spriteBatch;
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
             ResizeBehavior resizeBehavior)
@@ -62,7 +61,6 @@ namespace Machina.Engine
                 "NotExplosive", this.gameTitle);
 
             this.startingWindowSize = startingWindowSize;
-            this.currentWindowSize = startingWindowSize;
 
             Content.RootDirectory = "Content";
             MachinaGame.Graphics = new GraphicsDeviceManager(this)
@@ -80,7 +78,7 @@ namespace Machina.Engine
                 new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
 
-        public static CommandLineArgs CommandLineArgs { get; private set; }
+        protected static CommandLineArgs CommandLineArgs { get; private set; }
 
         public SceneLayers SceneLayers
         {
@@ -88,9 +86,11 @@ namespace Machina.Engine
             set
             {
                 this.sceneLayers = value;
-                CurrentGameCanvas.SetWindowSize(this.currentWindowSize);
+                CurrentGameCanvas.SetWindowSize(CurrentWindowSize);
             }
         }
+
+        public Point CurrentWindowSize => new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
 
         public GameCanvas CurrentGameCanvas => this.sceneLayers.gameCanvas as GameCanvas;
 
@@ -104,7 +104,7 @@ namespace Machina.Engine
 
         public static MachinaGame Current { get; private set; }
 
-        public Demo.Playback DemoPlayback { get; private set; }
+        private Demo.Playback DemoPlayback { get; set; }
 
         public static bool Fullscreen
         {
@@ -257,6 +257,7 @@ namespace Machina.Engine
             MachinaGame.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
 
             StartingSettings.LoadSavedSettingsIfExist();
+            SoundEffectPlayer = new SoundEffectPlayer(StartingSettings);
             
 #if DEBUG
             LoadGame();
@@ -395,7 +396,6 @@ namespace Machina.Engine
         private void OnResize(object sender, EventArgs e)
         {
             var windowSize = new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
-            this.currentWindowSize = windowSize;
             CurrentGameCanvas.SetWindowSize(windowSize);
         }
 

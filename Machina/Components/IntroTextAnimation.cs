@@ -9,7 +9,6 @@ namespace Machina.Components
 {
     public class IntroTextAnimation : BaseComponent
     {
-        private readonly SoundEffectInstance introSound;
         private readonly BoundedTextRenderer textRenderer;
         private float dampening = 1;
         private bool spinning;
@@ -19,7 +18,6 @@ namespace Machina.Components
         public IntroTextAnimation(Actor actor) : base(actor)
         {
             this.textRenderer = RequireComponent<BoundedTextRenderer>();
-            this.introSound = MachinaGame.Assets.GetSoundEffectInstance("blblblbl");
             this.actor.scene.StartCoroutine(IntroAnimation());
             SwapColor();
         }
@@ -62,15 +60,12 @@ namespace Machina.Components
         {
             var camera = this.actor.scene.camera;
             var speed = 1.5f;
-            var ouch = MachinaGame.Assets.GetSoundEffectInstance("ouch");
-            ouch.Pitch = 0.25f;
-            ouch.Volume = 0.25f;
 
             SwapColor();
 
             this.textRenderer.Text = "";
 
-            this.introSound.Play();
+            MachinaGame.SoundEffectPlayer.PlaySound("blblblbl");
 
             var name = "NotExplosive";
             yield return new WaitSeconds(0.25f / speed);
@@ -83,7 +78,7 @@ namespace Machina.Components
 
             yield return new WaitSeconds(1f / speed);
 
-            ouch.Play();
+            MachinaGame.SoundEffectPlayer.PlaySound("ouch",0.25f);
             this.spinning = true;
             SwapColor();
 
