@@ -24,6 +24,7 @@ namespace Machina.Engine
     {
         public static UIStyle defaultStyle;
         private static MouseCursor pendingCursor;
+        protected virtual GameSettings StartingSettings => new GameSettings();
 
         public static readonly FrameStep GlobalFrameStep = new FrameStep();
 
@@ -255,6 +256,8 @@ namespace Machina.Engine
             var shouldSkipSnapshot = MachinaGame.DebugLevel == DebugLevel.Off;
             MachinaGame.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
 
+            StartingSettings.LoadSavedSettingsIfExist();
+            
 #if DEBUG
             LoadGame();
 #else
