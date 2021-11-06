@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using Machina.Data;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
-
-namespace Machina.Engine
+﻿namespace Machina.Engine.AssetLibrary
 {
-    public interface IAssetLibrary
-    {
-        public T AddMachinaAsset<T>(string name, T asset) where T : IAsset;
-        public T GetMachinaAsset<T>(string name) where T : class, IAsset;
-        public SpriteFont GetSpriteFont(string name);
-        public Texture2D GetTexture(string name);
-        public void LoadAllContent();
-        public void UnloadAssets();
-        public SoundEffectInstance CreateSoundEffectInstance(string name);
-        public SoundEffectInstance GetSoundEffectInstance(string name);
-        public SoundEffect GetSoundEffect(string name);
-        public Song GetSong(string name);
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.IO;
+    using Data;
+    using Microsoft.Xna.Framework.Audio;
+    using Microsoft.Xna.Framework.Content;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Media;
 
     public class AssetLibrary : IAssetLibrary
     {
@@ -42,30 +28,37 @@ namespace Machina.Engine
             this.content = game.Content;
         }
 
-        public void LoadAllContent()
+        public AssetLoadTree GetAllPathsToAssets()
         {
+            var loadTree = new AssetLoadTree();
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
-                LoadTexture("images/" + Path.GetFileNameWithoutExtension(imageName));
+                loadTree.AddImagePath("images/" + Path.GetFileNameWithoutExtension(imageName));
             }
-
+            
             foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("fonts", "xnb"))
             {
-                LoadSpriteFont("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));
+                loadTree.AddSpritefontPath("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));
             }
 
             foreach (var soundEffect in GamePlatform.GetFilesAtContentDirectory("sounds", "xnb"))
             {
-                LoadSoundEffect("sounds/" + Path.GetFileNameWithoutExtension(soundEffect));
+                loadTree.AddSoundPath("sounds/" + Path.GetFileNameWithoutExtension(soundEffect));
             }
 
-            /*
-            // Monogame Songs suck!!
-            foreach (var song in GamePlatform.GetFilesAtContentDirectory("songs", "xnb"))
-            {
-                LoadSong("songs/" + Path.GetFileNameWithoutExtension(song));
-            }
-            */
+            return loadTree;
+        }
+
+        public bool IncrementalLoad(AssetLoadTree loadTree)
+        {
+            loadTree.LoadNextThing(this);
+            return loadTree.IsDoneLoading();
+        }
+
+        public void LoadAllContent()
+        {
+            var loadTree = GetAllPathsToAssets();
+            loadTree.LoadEverythingAtOnce(this);
         }
 
         public void UnloadAssets()
@@ -141,7 +134,7 @@ namespace Machina.Engine
             return asset;
         }
 
-        private void LoadTexture(string fullName)
+        public void LoadTexture(string fullName)
         {
             var name = Path.GetFileName(fullName);
             var texture = this.content.Load<Texture2D>(fullName);
@@ -149,7 +142,7 @@ namespace Machina.Engine
             Console.WriteLine("Loaded Texture: {0} {1}", name, this.textures[name].GetHashCode());
         }
 
-        private void LoadSpriteFont(string fullName)
+        public void LoadSpriteFont(string fullName)
         {
             var name = Path.GetFileName(fullName);
 
@@ -158,7 +151,7 @@ namespace Machina.Engine
             Console.WriteLine("Loaded SpriteFont: {0}", name);
         }
 
-        private void LoadSoundEffect(string fullName)
+        public void LoadSoundEffect(string fullName)
         {
             var name = Path.GetFileName(fullName);
 
@@ -166,15 +159,6 @@ namespace Machina.Engine
             this.soundEffects.Add(name, soundEffect);
             this.soundEffectInstances.Add(name, soundEffect.CreateInstance());
             Console.WriteLine("Loaded SoundEffect: {0}", name);
-        }
-
-        private void LoadSong(string fullName)
-        {
-            var name = Path.GetFileName(fullName);
-
-            var song = this.content.Load<Song>(fullName);
-            this.songs.Add(name, song);
-            Console.WriteLine("Loaded Song: {0}", name);
         }
     }
 }

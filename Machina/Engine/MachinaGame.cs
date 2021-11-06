@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
+    using AssetLibrary;
+
     public enum DebugLevel
     {
         Off, // Completely disabled, can be enabled with hotkey
@@ -71,7 +73,7 @@ namespace Machina.Engine
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
-            MachinaGame.Assets = new AssetLibrary(this);
+            MachinaGame.Assets = new AssetLibrary.AssetLibrary(this);
             MachinaGame.Random = new SeededRandom();
             
             SceneLayers = new SceneLayers(false,

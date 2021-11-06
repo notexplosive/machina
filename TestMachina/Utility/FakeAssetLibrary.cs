@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TestMachina.Utility
 {
+    using Machina.Engine.AssetLibrary;
+
     public class FakeAssetLibrary : IAssetLibrary
     {
         public T AddMachinaAsset<T>(string name, T asset) where T : IAsset
