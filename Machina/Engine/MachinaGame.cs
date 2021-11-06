@@ -406,19 +406,17 @@ namespace Machina.Engine
 
         private void PlayIntroAndLoadGame()
         {
+            const int desiredWidth = 1920 / 4;
             var oldSceneLayers = SceneLayers;
-            var windowSize = this.startingWindowSize;
-            var desiredWidth = 1920 / 4;
-            var ratio = (float) windowSize.X / desiredWidth;
-            var gameCanvas = new GameCanvas(new Vector2(windowSize.X / ratio, windowSize.Y / ratio).ToPoint(),
+            var ratio = (float) startingWindowSize.X / desiredWidth;
+            var gameCanvas = new GameCanvas(new Vector2(startingWindowSize.X / ratio, startingWindowSize.Y / ratio).ToPoint(),
                 ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas);
             var introScene = introLayers.AddNewScene();
 
-            introLayers.BackgroundColor = Color.Black;
             var textActor = introScene.AddActor("text");
-            var boundingRect = new BoundingRect(textActor, 20, 20);
+            new BoundingRect(textActor, 20, 20);
             new BoundingRectToViewportSize(textActor);
             new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White,
                 HorizontalAlignment.Center, VerticalAlignment.Center);
@@ -427,14 +425,15 @@ namespace Machina.Engine
             // Steal control
             SceneLayers = introLayers;
 
-            void onEnd()
+            void OnEnd()
             {
                 // Start the actual game
                 SceneLayers = oldSceneLayers;
                 LoadGame();
+                MachinaGame.Graphics.ApplyChanges();
             }
 
-            new CallbackOnDestroy(textActor, onEnd);
+            new CallbackOnDestroy(textActor, OnEnd);
         }
 
         /// <summary>
