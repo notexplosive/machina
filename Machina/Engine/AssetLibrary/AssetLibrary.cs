@@ -14,7 +14,6 @@
     {
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
         private readonly ContentManager content;
-        private readonly Dictionary<string, Song> songs = new Dictionary<string, Song>();
 
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances =
             new Dictionary<string, SoundEffectInstance>();
@@ -28,7 +27,7 @@
             this.content = game.Content;
         }
 
-        public AssetLoadTree GetAllPathsToAssets()
+        public static AssetLoadTree GetAllPathsToAssets()
         {
             var loadTree = new AssetLoadTree();
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
@@ -100,12 +99,6 @@
         {
             Debug.Assert(this.soundEffects.ContainsKey(name), "No sound effect called `" + name + "` was found");
             return this.soundEffects[name];
-        }
-
-        public Song GetSong(string name)
-        {
-            Debug.Assert(this.songs.ContainsKey(name), "No sound effect called `" + name + "` was found");
-            return this.songs[name];
         }
 
         /// <summary>

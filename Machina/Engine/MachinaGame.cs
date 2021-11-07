@@ -47,25 +47,27 @@ namespace Machina.Engine
         private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
         private SceneLayers sceneLayers;
         private SpriteBatch spriteBatch;
+        private LoadingScreen loadingScreen;
+        private bool isDoneLoading = false;
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
             ResizeBehavior resizeBehavior)
         {
-            MachinaGame.Current = this;
-            this.startingResizeBehavior = resizeBehavior;
+            Current = this;
+            startingResizeBehavior = resizeBehavior;
             this.startingRenderResolution = startingRenderResolution;
 
             this.gameTitle = gameTitle;
-            MachinaGame.CommandLineArgs = new CommandLineArgs(args);
+            CommandLineArgs = new CommandLineArgs(args);
 
             // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
-            this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "NotExplosive", this.gameTitle);
 
             this.startingWindowSize = startingWindowSize;
 
             Content.RootDirectory = "Content";
-            MachinaGame.Graphics = new GraphicsDeviceManager(this)
+            Graphics = new GraphicsDeviceManager(this)
             {
                 HardwareModeSwitch = false
             };
@@ -73,28 +75,28 @@ namespace Machina.Engine
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnResize;
 
-            MachinaGame.Assets = new AssetLibrary.AssetLibrary(this);
-            MachinaGame.Random = new SeededRandom();
-            
+            Assets = new AssetLibrary.AssetLibrary(this);
+            Random = new SeededRandom();
+
             SceneLayers = new SceneLayers(false,
-                new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
+                new GameCanvas(this.startingRenderResolution, startingResizeBehavior));
         }
 
         protected static CommandLineArgs CommandLineArgs { get; private set; }
 
         public SceneLayers SceneLayers
         {
-            get => this.sceneLayers;
+            get => sceneLayers;
             set
             {
-                this.sceneLayers = value;
+                sceneLayers = value;
                 CurrentGameCanvas.SetWindowSize(CurrentWindowSize);
             }
         }
 
         public Point CurrentWindowSize => new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
 
-        public GameCanvas CurrentGameCanvas => this.sceneLayers.gameCanvas as GameCanvas;
+        public GameCanvas CurrentGameCanvas => sceneLayers.gameCanvas as GameCanvas;
 
         public static SeededRandom Random { get; private set; }
 
@@ -114,20 +116,20 @@ namespace Machina.Engine
             {
                 if (value)
                 {
-                    MachinaGame.SetWindowSize(new Point(MachinaGame.Current.GraphicsDevice.DisplayMode.Width,
-                        MachinaGame.Current.GraphicsDevice.DisplayMode.Height));
-                    MachinaGame.Graphics.IsFullScreen = true;
+                    SetWindowSize(new Point(Current.GraphicsDevice.DisplayMode.Width,
+                        Current.GraphicsDevice.DisplayMode.Height));
+                    Graphics.IsFullScreen = true;
                 }
                 else
                 {
-                    MachinaGame.SetWindowSize(MachinaGame.Current.startingWindowSize);
-                    MachinaGame.Graphics.IsFullScreen = false;
+                    SetWindowSize(Current.startingWindowSize);
+                    Graphics.IsFullScreen = false;
                 }
 
-                MachinaGame.Graphics.ApplyChanges();
+                Graphics.ApplyChanges();
             }
 
-            get => MachinaGame.Graphics.IsFullScreen;
+            get => Graphics.IsFullScreen;
         }
 
         public static SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
@@ -141,7 +143,7 @@ namespace Machina.Engine
             {
                 Seed = seed
             };
-            MachinaGame.Random = random;
+            Random = random;
         }
 
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
@@ -151,7 +153,7 @@ namespace Machina.Engine
                 return null;
             }
 
-            var cropTexture = new Texture2D(MachinaGame.Current.GraphicsDevice, rect.Width, rect.Height);
+            var cropTexture = new Texture2D(Current.GraphicsDevice, rect.Width, rect.Height);
             var data = new Color[rect.Width * rect.Height];
             sourceTexture.GetData(0, rect, data, 0, data.Length);
             cropTexture.SetData(data);
@@ -160,7 +162,7 @@ namespace Machina.Engine
 
         public static void SetCursor(MouseCursor cursor)
         {
-            MachinaGame.pendingCursor = cursor;
+            pendingCursor = cursor;
         }
 
         /// <summary>
@@ -169,21 +171,21 @@ namespace Machina.Engine
         /// <param name="assetLibrary"></param>
         public static void SetAssetLibrary(IAssetLibrary assetLibrary)
         {
-            MachinaGame.Assets = assetLibrary;
+            Assets = assetLibrary;
         }
 
         protected static void SetWindowSize(Point windowSize)
         {
-            MachinaGame.Print("Window size changed to", windowSize);
-            MachinaGame.Graphics.PreferredBackBufferWidth = windowSize.X;
-            MachinaGame.Graphics.PreferredBackBufferHeight = windowSize.Y;
-            MachinaGame.Graphics.ApplyChanges();
-            MachinaGame.Current.CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
+            Print("Window size changed to", windowSize);
+            Graphics.PreferredBackBufferWidth = windowSize.X;
+            Graphics.PreferredBackBufferHeight = windowSize.Y;
+            Graphics.ApplyChanges();
+            Current.CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
         }
 
         protected override void Initialize()
         {
-            Window.Title = this.gameTitle;
+            Window.Title = gameTitle;
             IsMouseVisible = true;
 
             base.Initialize();
@@ -191,51 +193,55 @@ namespace Machina.Engine
 
         protected override void LoadContent()
         {
-            MachinaGame.Assets.LoadAllContent();
+            Console.Out.WriteLine("Settings Window Size");
+            SetWindowSize(startingWindowSize);
+            Console.Out.WriteLine("Constructing SpriteBatch");
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            SetupLoadingScreen();
+        }
+
+        private void FinishLoadingContent()
+        {
             Console.Out.WriteLine("Loading initial style");
             LoadInitialStyle();
 
 #if DEBUG
-            MachinaGame.DebugLevel = DebugLevel.Passive;
+            DebugLevel = DebugLevel.Passive;
 #endif
 
             Console.Out.WriteLine("Building SceneLayers");
             SceneLayers = new SceneLayers(true,
-                new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
+                new GameCanvas(startingRenderResolution, startingResizeBehavior));
             Console.Out.WriteLine("Building Canvas");
             CurrentGameCanvas.BuildCanvas(GraphicsDevice);
-            Console.Out.WriteLine("Constructing SpriteBatch");
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            Console.Out.WriteLine("Settings Window Size");
-            MachinaGame.SetWindowSize(this.startingWindowSize);
 
             if (GamePlatform.IsDesktop)
             {
                 Window.TextInput += SceneLayers.AddPendingTextInput;
             }
 
-            if (MachinaGame.DebugLevel >= DebugLevel.Passive)
+            if (DebugLevel >= DebugLevel.Passive)
             {
-                MachinaGame.Print("Debug build detected");
+                Print("Debug build detected");
             }
 
-            var debugActor = this.sceneLayers.debugScene.AddActor("DebugActor");
+            var debugActor = sceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
-            MachinaGame.CommandLineArgs.RegisterEarlyValueArg("randomseed",
-                arg => { MachinaGame.Random.Seed = (int) NoiseBasedRNG.SeedFromString(arg); });
+            CommandLineArgs.RegisterEarlyValueArg("randomseed",
+                arg => { Random.Seed = (int) NoiseBasedRNG.SeedFromString(arg); });
 
             var demoName = Demo.MostRecentlySavedDemoPath;
-            MachinaGame.CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
+            CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
 
             var demoSpeed = 1;
-            MachinaGame.CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
 
-            MachinaGame.CommandLineArgs.RegisterEarlyFlagArg("debug",
-                () => { MachinaGame.DebugLevel = DebugLevel.Active; });
+            CommandLineArgs.RegisterEarlyFlagArg("debug",
+                () => { DebugLevel = DebugLevel.Active; });
 
-            MachinaGame.CommandLineArgs.RegisterValueArg("demo", arg =>
+            CommandLineArgs.RegisterValueArg("demo", arg =>
             {
                 switch (arg)
                 {
@@ -250,17 +256,17 @@ namespace Machina.Engine
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
-                        MachinaGame.Print("Unknown demo mode", arg);
+                        Print("Unknown demo mode", arg);
                         break;
                 }
             });
 
-            var shouldSkipSnapshot = MachinaGame.DebugLevel == DebugLevel.Off;
-            MachinaGame.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
+            CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
 
             StartingSettings.LoadSavedSettingsIfExist();
             SoundEffectPlayer = new SoundEffectPlayer(StartingSettings);
-            
+
 #if DEBUG
             LoadGame();
 #else
@@ -271,11 +277,14 @@ namespace Machina.Engine
             {
                 new SnapshotTaker(debugActor, shouldSkipSnapshot);
             }
+            
+            this.isDoneLoading = true;
+            MachinaGame.Print("Loading finished");
         }
 
-        public void RunDemo(string demoName)
+        protected void RunDemo(string demoName)
         {
-            var demoActor = this.sceneLayers.debugScene.AddActor("DebugActor");
+            var demoActor = sceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
             DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
             demoPlaybackComponent.ShowGui = false;
@@ -284,82 +293,91 @@ namespace Machina.Engine
         private void LoadInitialStyle()
         {
             // Load initial assets
-            MachinaGame.Assets.AddMachinaAsset("ui-button",
+            Assets.AddMachinaAsset("ui-button",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
-            MachinaGame.Assets.AddMachinaAsset("ui-button-hover",
+            Assets.AddMachinaAsset("ui-button-hover",
                 new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
-            MachinaGame.Assets.AddMachinaAsset("ui-button-press",
+            Assets.AddMachinaAsset("ui-button-press",
                 new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
-            MachinaGame.Assets.AddMachinaAsset("ui-slider-ninepatch",
+            Assets.AddMachinaAsset("ui-slider-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24), new Rectangle(8, 152, 8, 8)));
-            MachinaGame.Assets.AddMachinaAsset("ui-checkbox-checkmark-image",
+            Assets.AddMachinaAsset("ui-checkbox-checkmark-image",
                 new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            MachinaGame.Assets.AddMachinaAsset("ui-radio-fill-image",
+            Assets.AddMachinaAsset("ui-radio-fill-image",
                 new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            MachinaGame.Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet",
+            Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet",
                 new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            MachinaGame.Assets.AddMachinaAsset("ui-textbox-ninepatch",
+            Assets.AddMachinaAsset("ui-textbox-ninepatch",
                 new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
-            MachinaGame.Assets.AddMachinaAsset("ui-window-ninepatch",
+            Assets.AddMachinaAsset("ui-window-ninepatch",
                 new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
 
-            var defaultFont = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
+            var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
 
-            MachinaGame.defaultStyle = new UIStyle(
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
-                MachinaGame.Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
+            defaultStyle = new UIStyle(
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
                 defaultFont,
-                MachinaGame.Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
-                MachinaGame.Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                MachinaGame.Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
+                Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
         }
 
         private void LoadGame()
         {
-            MachinaGame.CommandLineArgs.ExecuteEarlyArgs();
+            CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
-            MachinaGame.CommandLineArgs.ExecuteArgs();
+            CommandLineArgs.ExecuteArgs();
+            CurrentGameCanvas.SetWindowSize(CurrentWindowSize); 
+            Graphics.ApplyChanges();
         }
 
         public static void Quit()
         {
-            MachinaGame.Current.Exit();
+            Current.Exit();
         }
 
         protected override void UnloadContent()
         {
             base.UnloadContent();
-            this.spriteBatch.Dispose();
-            MachinaGame.Assets.UnloadAssets();
+            spriteBatch.Dispose();
+            Assets.UnloadAssets();
         }
 
         protected abstract void OnGameLoad();
 
         protected override void Update(GameTime gameTime)
         {
-            MachinaGame.pendingCursor = MouseCursor.Arrow;
+            pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (DemoPlayback != null && DemoPlayback.IsFinished == false)
+            if (!this.loadingScreen.IsDone())
             {
-                for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
+                this.loadingScreen.Increment(Assets as AssetLibrary.AssetLibrary, dt);
+            }
+            else if(this.isDoneLoading)
+            {
+                if (DemoPlayback != null && DemoPlayback.IsFinished == false)
                 {
-                    var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                    DemoPlayback.PollHumanInput(GetHumanFrameState());
-                    this.sceneLayers.Update(dt, Matrix.Identity, frameState);
+                    for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
+                    {
+                        var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                        DemoPlayback.PollHumanInput(GetHumanFrameState());
+                        sceneLayers.Update(dt, Matrix.Identity, frameState);
+                    }
+                }
+                else
+                {
+                    sceneLayers.Update(dt, Matrix.Identity, GetHumanFrameState());
                 }
             }
-            else
-            {
-                this.sceneLayers.Update(dt, Matrix.Identity, GetHumanFrameState());
-            }
 
-            Mouse.SetCursor(MachinaGame.pendingCursor);
+            Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
         }
 
@@ -371,27 +389,34 @@ namespace Machina.Engine
 
             if (GamePlatform.IsMobile)
             {
-                mouseFrameState = this.touchTracker.CalculateFrameState(inputState.touches);
+                mouseFrameState = touchTracker.CalculateFrameState(inputState.touches);
             }
             else
             {
-                mouseFrameState = this.mouseTracker.CalculateFrameState(inputState.mouseState);
+                mouseFrameState = mouseTracker.CalculateFrameState(inputState.mouseState);
             }
 
             return new InputFrameState(
-                this.keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState),
+                keyTracker.CalculateFrameState(inputState.keyboardState, inputState.gamepadState),
                 mouseFrameState);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            this.sceneLayers.PreDraw(this.spriteBatch);
-            CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
-            GraphicsDevice.Clear(this.sceneLayers.BackgroundColor);
+            if (!this.isDoneLoading)
+            {
+            }
+            else
+            {
+                sceneLayers.PreDraw(spriteBatch);
+                CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+                GraphicsDevice.Clear(sceneLayers.BackgroundColor);
 
-            this.sceneLayers.DrawOnCanvas(this.spriteBatch);
-            CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, this.spriteBatch);
-            this.sceneLayers.DrawDebugScene(this.spriteBatch);
+                sceneLayers.DrawOnCanvas(spriteBatch);
+                CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+                sceneLayers.DrawDebugScene(spriteBatch);
+            }
+
             base.Draw(gameTime);
         }
 
@@ -403,10 +428,16 @@ namespace Machina.Engine
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            foreach (var scene in this.sceneLayers.AllScenes())
+            foreach (var scene in sceneLayers.AllScenes())
             {
                 scene.OnDeleteFinished();
             }
+        }
+        
+        private void SetupLoadingScreen()
+        {
+            this.loadingScreen =
+                new LoadingScreen(AssetLibrary.AssetLibrary.GetAllPathsToAssets(), FinishLoadingContent);
         }
 
         private void PlayIntroAndLoadGame()
@@ -414,7 +445,8 @@ namespace Machina.Engine
             const int desiredWidth = 1920 / 4;
             var oldSceneLayers = SceneLayers;
             var ratio = (float) startingWindowSize.X / desiredWidth;
-            var gameCanvas = new GameCanvas(new Vector2(startingWindowSize.X / ratio, startingWindowSize.Y / ratio).ToPoint(),
+            var gameCanvas = new GameCanvas(
+                new Vector2(startingWindowSize.X / ratio, startingWindowSize.Y / ratio).ToPoint(),
                 ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas);
@@ -423,7 +455,7 @@ namespace Machina.Engine
             var textActor = introScene.AddActor("text");
             new BoundingRect(textActor, 20, 20);
             new BoundingRectToViewportSize(textActor);
-            new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White,
+            new BoundedTextRenderer(textActor, "", Assets.GetSpriteFont("LogoFont"), Color.White,
                 HorizontalAlignment.Center, VerticalAlignment.Center);
             new IntroTextAnimation(textActor);
 
@@ -435,7 +467,6 @@ namespace Machina.Engine
                 // Start the actual game
                 SceneLayers = oldSceneLayers;
                 LoadGame();
-                MachinaGame.Graphics.ApplyChanges();
             }
 
             new CallbackOnDestroy(textActor, OnEnd);
@@ -447,7 +478,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            MachinaGame.Current?.SceneLayers?.Logger.Log(objects);
+            Current?.SceneLayers?.Logger.Log(objects);
             new StdOutConsoleLogger().Log(objects);
         }
     }

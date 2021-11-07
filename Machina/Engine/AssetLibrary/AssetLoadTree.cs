@@ -56,20 +56,27 @@ namespace Machina.Engine.AssetLibrary
         }
         
         private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
+        private int startingCount;
 
+        private void AddAsset(UnloadedAsset asset)
+        {
+            this.assets.Add(asset);
+            this.startingCount++;
+        }
+        
         public void AddImagePath(string name)
         {
-            this.assets.Add(new UnloadedTexture(name));
+            AddAsset(new UnloadedTexture(name));
         }
 
         public void AddSpritefontPath(string name)
         {
-            this.assets.Add(new UnloadedSpritefont(name));
+            AddAsset(new UnloadedSpritefont(name));
         }
 
         public void AddSoundPath(string name)
         {
-            this.assets.Add(new UnloadedSound(name));
+            AddAsset(new UnloadedSound(name));
         }
 
         public void LoadNextThing(AssetLibrary library)
@@ -90,6 +97,11 @@ namespace Machina.Engine.AssetLibrary
             {
                 LoadNextThing(library);
             }
+        }
+
+        public float Progress()
+        {
+            return 1f - (float) this.assets.Count / this.startingCount;
         }
     }
 }

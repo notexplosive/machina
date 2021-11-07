@@ -16,6 +16,5 @@ namespace Machina.Engine.AssetLibrary
         public SoundEffectInstance CreateSoundEffectInstance(string name);
         public SoundEffectInstance GetSoundEffectInstance(string name);
         public SoundEffect GetSoundEffect(string name);
-        public Song GetSong(string name);
     }
 }
