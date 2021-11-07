@@ -63,6 +63,8 @@ namespace Machina.Components
 
             SwapColor();
 
+            yield return new WaitSeconds(1f);
+
             this.textRenderer.Text = "";
 
             MachinaGame.SoundEffectPlayer.PlaySound("blblblbl");

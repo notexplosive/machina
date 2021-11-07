@@ -81,6 +81,11 @@ namespace Machina.Engine.AssetLibrary
 
         public void LoadNextThing(AssetLibrary library)
         {
+            if (this.assets.Count == 0)
+            {
+                return;
+            }
+            
             var assetToLoad = this.assets[0];
             this.assets.RemoveAt(0);
             assetToLoad.Load(library);

@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Machina.Engine
 {
     using AssetLibrary;
+    using MonoGame.Extended;
 
     public enum DebugLevel
     {
@@ -356,11 +357,14 @@ namespace Machina.Engine
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!this.loadingScreen.IsDone())
+            if (!this.isDoneLoading)
             {
-                this.loadingScreen.Increment(Assets as AssetLibrary.AssetLibrary, dt);
+                var library = Assets as AssetLibrary.AssetLibrary;
+                this.loadingScreen.Increment(library, dt / 3);
+                this.loadingScreen.Increment(library, dt / 3);
+                this.loadingScreen.Increment(library, dt / 3);
             }
-            else if(this.isDoneLoading)
+            else
             {
                 if (DemoPlayback != null && DemoPlayback.IsFinished == false)
                 {
@@ -405,6 +409,7 @@ namespace Machina.Engine
         {
             if (!this.isDoneLoading)
             {
+                this.loadingScreen.Draw(spriteBatch, CurrentWindowSize, GraphicsDevice);
             }
             else
             {

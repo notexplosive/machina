@@ -8,7 +8,7 @@ namespace Machina.Data
         public static Depth Middle = new Depth(Depth.MaxAsInt / 2);
         public static Depth Max = new Depth(Depth.MaxAsInt);
 
-        public Depth(int val = Depth.MaxAsInt / 2)
+        public Depth(int val)
         {
             AsInt = val;
         }
