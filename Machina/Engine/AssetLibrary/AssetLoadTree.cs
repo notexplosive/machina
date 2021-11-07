@@ -1,6 +1,8 @@
 namespace Machina.Engine.AssetLibrary
 {
+    using System;
     using System.Collections.Generic;
+    using Data;
 
     public class AssetLoadTree
     {
@@ -14,6 +16,21 @@ namespace Machina.Engine.AssetLibrary
             }
 
             public abstract void Load(AssetLibrary library);
+        }
+        
+        private class UnloadedAssetCallback : UnloadedAsset
+        {
+            private readonly Func<IAsset> callback;
+
+            public UnloadedAssetCallback(string path, Func<IAsset> callback) : base(path)
+            {
+                this.callback = callback;
+            }
+
+            public override void Load(AssetLibrary library)
+            {
+                library.AddMachinaAsset(this.path, this.callback());
+            }
         }
 
         private class UnloadedTexture : UnloadedAsset
@@ -107,6 +124,11 @@ namespace Machina.Engine.AssetLibrary
         public float Progress()
         {
             return 1f - (float) this.assets.Count / this.startingCount;
+        }
+
+        public void AddMachinaAssetCallback(string assetPath,  Func<IAsset> callback)
+        {
+            AddAsset(new UnloadedAssetCallback(assetPath, callback));
         }
     }
 }

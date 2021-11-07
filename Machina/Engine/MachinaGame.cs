@@ -204,12 +204,24 @@ namespace Machina.Engine
 
         private void FinishLoadingContent()
         {
-            Console.Out.WriteLine("Loading initial style");
-            LoadInitialStyle();
-
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
 #endif
+            
+            var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
+
+            defaultStyle = new UIStyle(
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
+                defaultFont,
+                Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
+            );
 
             Console.Out.WriteLine("Building SceneLayers");
             SceneLayers = new SceneLayers(true,
@@ -291,42 +303,26 @@ namespace Machina.Engine
             demoPlaybackComponent.ShowGui = false;
         }
 
-        private void LoadInitialStyle()
+        private void PrepareLoadInitialStyle(AssetLoadTree loadTree)
         {
-            // Load initial assets
-            Assets.AddMachinaAsset("ui-button",
-                new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-hover",
-                new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-button-press",
-                new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
-            Assets.AddMachinaAsset("ui-slider-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24), new Rectangle(8, 152, 8, 8)));
-            Assets.AddMachinaAsset("ui-checkbox-checkmark-image",
-                new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            Assets.AddMachinaAsset("ui-radio-fill-image",
-                new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            Assets.AddMachinaAsset("ui-checkbox-radio-spritesheet",
-                new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            Assets.AddMachinaAsset("ui-textbox-ninepatch",
-                new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
-            Assets.AddMachinaAsset("ui-window-ninepatch",
-                new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
-
-            var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
-
-            defaultStyle = new UIStyle(
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
-                defaultFont,
-                Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
-                Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
-            );
+            loadTree.AddMachinaAssetCallback("ui-button",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-button-hover",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24), new Rectangle(8 + 24, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-button-press",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24), new Rectangle(8 + 48, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-slider-ninepatch",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24), new Rectangle(8, 152, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
+                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
+            loadTree.AddMachinaAssetCallback("ui-radio-fill-image",
+                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
+            loadTree.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
+                () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
+            loadTree.AddMachinaAssetCallback("ui-textbox-ninepatch",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24), new Rectangle(8, 104, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-window-ninepatch",
+                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
         }
 
         private void LoadGame()
@@ -441,9 +437,15 @@ namespace Machina.Engine
         
         private void SetupLoadingScreen()
         {
+            var assetTree = AssetLibrary.AssetLibrary.GetStaticAssetLoadTree();
+            PrepareDynamicAssets(assetTree);
+            PrepareLoadInitialStyle(assetTree);
+            
             this.loadingScreen =
-                new LoadingScreen(AssetLibrary.AssetLibrary.GetAllPathsToAssets(), FinishLoadingContent);
+                new LoadingScreen(assetTree, FinishLoadingContent);
         }
+
+        protected abstract void PrepareDynamicAssets(AssetLoadTree tree);
 
         private void PlayIntroAndLoadGame()
         {

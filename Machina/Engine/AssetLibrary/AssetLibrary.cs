@@ -27,7 +27,7 @@
             this.content = game.Content;
         }
 
-        public static AssetLoadTree GetAllPathsToAssets()
+        public static AssetLoadTree GetStaticAssetLoadTree()
         {
             var loadTree = new AssetLoadTree();
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
@@ -48,15 +48,9 @@
             return loadTree;
         }
 
-        public bool IncrementalLoad(AssetLoadTree loadTree)
-        {
-            loadTree.LoadNextThing(this);
-            return loadTree.IsDoneLoading();
-        }
-
         public void LoadAllContent()
         {
-            var loadTree = GetAllPathsToAssets();
+            var loadTree = GetStaticAssetLoadTree();
             loadTree.LoadEverythingAtOnce(this);
         }
 
