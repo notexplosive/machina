@@ -40,13 +40,14 @@ namespace Machina.Engine
 
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
+        private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
+        private SceneLayers sceneLayers;
+        
         private readonly Point startingRenderResolution;
 
         private readonly ResizeBehavior startingResizeBehavior;
 
         protected readonly Point startingWindowSize;
-        private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
-        private SceneLayers sceneLayers;
         private SpriteBatch spriteBatch;
         private LoadingScreen loadingScreen;
         private bool isDoneUpdateLoading = false;
