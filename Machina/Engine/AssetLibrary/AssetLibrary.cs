@@ -48,12 +48,6 @@
             return loadTree;
         }
 
-        public void LoadAllContent()
-        {
-            var loadTree = GetStaticAssetLoadTree();
-            loadTree.LoadEverythingAtOnce(this);
-        }
-
         public void UnloadAssets()
         {
             foreach (var asset in this.assets.Values)

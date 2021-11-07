@@ -3,6 +3,8 @@ namespace Machina.Engine.AssetLibrary
     using System;
     using System.Collections.Generic;
     using Data;
+    using Microsoft.Xna.Framework.Graphics;
+    using MonoGame.Extended.Sprites;
 
     public class AssetLoadTree
     {
@@ -16,6 +18,21 @@ namespace Machina.Engine.AssetLibrary
             }
 
             public abstract void Load(AssetLibrary library);
+        }
+
+        private class UnloadedDrawLoopAssetCallback
+        {
+            private readonly Func<SpriteBatch, IAsset> callback;
+
+            public UnloadedDrawLoopAssetCallback(Func<SpriteBatch, IAsset> callback)
+            {
+                this.callback = callback;
+            }
+
+            public void Load(AssetLibrary library, SpriteBatch spriteBatch)
+            {
+                this.callback(spriteBatch);
+            }
         }
         
         private class UnloadedAssetCallback : UnloadedAsset
@@ -73,11 +90,18 @@ namespace Machina.Engine.AssetLibrary
         }
         
         private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
+        private readonly List<UnloadedDrawLoopAssetCallback> drawAssets = new List<UnloadedDrawLoopAssetCallback>();
         private int startingCount;
 
         private void AddAsset(UnloadedAsset asset)
         {
             this.assets.Add(asset);
+            this.startingCount++;
+        }
+
+        private void AddDrawAsset(UnloadedDrawLoopAssetCallback asset)
+        {
+            this.drawAssets.Add(asset);
             this.startingCount++;
         }
         
@@ -96,7 +120,7 @@ namespace Machina.Engine.AssetLibrary
             AddAsset(new UnloadedSound(name));
         }
 
-        public void LoadNextThing(AssetLibrary library)
+        public void UpdateLoadNextThing(AssetLibrary library)
         {
             if (this.assets.Count == 0)
             {
@@ -107,28 +131,43 @@ namespace Machina.Engine.AssetLibrary
             this.assets.RemoveAt(0);
             assetToLoad.Load(library);
         }
+        
+        public void DrawLoadNextThing(AssetLibrary library, SpriteBatch spriteBatch)
+        {
+            if (this.drawAssets.Count == 0)
+            {
+                return;
+            }
+            
+            var assetToLoad = this.drawAssets[0];
+            this.drawAssets.RemoveAt(0);
+            
+            assetToLoad.Load(library, spriteBatch);
+        }
 
-        public bool IsDoneLoading()
+        public bool IsDoneUpdateLoading()
         {
             return this.assets.Count == 0;
         }
 
-        public void LoadEverythingAtOnce(AssetLibrary library)
-        {
-            while (!IsDoneLoading())
-            {
-                LoadNextThing(library);
-            }
-        }
-
         public float Progress()
         {
-            return 1f - (float) this.assets.Count / this.startingCount;
+            return 1f - (float) (this.assets.Count + this.drawAssets.Count) / this.startingCount;
         }
 
         public void AddMachinaAssetCallback(string assetPath,  Func<IAsset> callback)
         {
             AddAsset(new UnloadedAssetCallback(assetPath, callback));
+        }
+
+        public void AddDrawAssetCallback(string assetPath, Func<SpriteBatch, IAsset> callback)
+        {
+            AddDrawAsset(new UnloadedDrawLoopAssetCallback(callback));
+        }
+
+        public bool IsDoneDrawLoading()
+        {
+            return this.drawAssets.Count == 0;
         }
     }
 }

@@ -9,21 +9,21 @@ namespace Machina.Engine.AssetLibrary
     public class LoadingScreen
     {
         private readonly AssetLoadTree tree;
-        private readonly Action onFinish;
+        private readonly Action onFinishUpdating;
         private float delayTime;
         private bool readyToFinish;
-        private bool isTotallyDone;
+        private bool isDoneUpdating;
 
-        public LoadingScreen(AssetLoadTree tree, Action onFinish)
+        public LoadingScreen(AssetLoadTree tree, Action onFinishUpdating)
         {
             delayTime = 0.25f;
             this.tree = tree;
-            this.onFinish = onFinish;
+            this.onFinishUpdating = onFinishUpdating;
         }
 
-        public void Increment(AssetLibrary assetLibrary, float dt)
+        public void Update(AssetLibrary assetLibrary, float dt)
         {
-            if (isTotallyDone)
+            if (isDoneUpdating)
             {
                 return;
             }
@@ -36,19 +36,19 @@ namespace Machina.Engine.AssetLibrary
 
             if (readyToFinish)
             {
-                onFinish();
-                isTotallyDone = true;
+                onFinishUpdating();
+                isDoneUpdating = true;
                 return;
             }
 
-            if (tree.IsDoneLoading() && !readyToFinish)
+            if (tree.IsDoneUpdateLoading() && !readyToFinish)
             {
                 readyToFinish = true;
                 delayTime = 0.3f;
                 return;
             }
 
-            tree.LoadNextThing(assetLibrary);
+            tree.UpdateLoadNextThing(assetLibrary);
         }
 
         public void Draw(SpriteBatch spriteBatch, Point currentWindowSize, GraphicsDevice graphicsDevice)
@@ -97,6 +97,21 @@ namespace Machina.Engine.AssetLibrary
             }
 
             spriteBatch.End();
+        }
+
+        public void IncrementDrawLoopLoad(AssetLibrary assetLibrary, SpriteBatch spriteBatch)
+        {
+            if (tree.IsDoneDrawLoading())
+            {
+                return;
+            }
+
+            tree.DrawLoadNextThing(assetLibrary, spriteBatch);
+        }
+
+        public bool IsDoneDrawLoading()
+        {
+            return this.tree.IsDoneDrawLoading();
         }
     }
 }

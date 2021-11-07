@@ -11,7 +11,6 @@ namespace Machina.Engine.AssetLibrary
         public T GetMachinaAsset<T>(string name) where T : class, IAsset;
         public SpriteFont GetSpriteFont(string name);
         public Texture2D GetTexture(string name);
-        public void LoadAllContent();
         public void UnloadAssets();
         public SoundEffectInstance CreateSoundEffectInstance(string name);
         public SoundEffectInstance GetSoundEffectInstance(string name);

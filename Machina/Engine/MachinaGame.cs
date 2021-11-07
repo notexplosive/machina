@@ -49,7 +49,7 @@ namespace Machina.Engine
         private SceneLayers sceneLayers;
         private SpriteBatch spriteBatch;
         private LoadingScreen loadingScreen;
-        private bool isDoneLoading = false;
+        private bool isDoneUpdateLoading = false;
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
             ResizeBehavior resizeBehavior)
@@ -291,8 +291,7 @@ namespace Machina.Engine
                 new SnapshotTaker(debugActor, shouldSkipSnapshot);
             }
             
-            this.isDoneLoading = true;
-            MachinaGame.Print("Loading finished");
+            this.isDoneUpdateLoading = true;
         }
 
         protected void RunDemo(string demoName)
@@ -353,12 +352,17 @@ namespace Machina.Engine
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!this.isDoneLoading)
+            if (!this.isDoneUpdateLoading)
             {
                 var library = Assets as AssetLibrary.AssetLibrary;
-                this.loadingScreen.Increment(library, dt / 3);
-                this.loadingScreen.Increment(library, dt / 3);
-                this.loadingScreen.Increment(library, dt / 3);
+                var increment = 3;
+                for (int i = 0; i < increment; i++)
+                {
+                    this.loadingScreen.Update(library, dt / increment);
+                }
+            }else if (!this.loadingScreen.IsDoneDrawLoading())
+            {
+                // waiting for draw load
             }
             else
             {
@@ -403,8 +407,13 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!this.isDoneLoading)
+            if (!this.isDoneUpdateLoading)
             {
+                this.loadingScreen.Draw(spriteBatch, CurrentWindowSize, GraphicsDevice);
+            }
+            else if(!this.loadingScreen.IsDoneDrawLoading())
+            {
+                this.loadingScreen.IncrementDrawLoopLoad(Assets as AssetLibrary.AssetLibrary, this.spriteBatch);
                 this.loadingScreen.Draw(spriteBatch, CurrentWindowSize, GraphicsDevice);
             }
             else
