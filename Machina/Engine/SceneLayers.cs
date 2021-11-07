@@ -261,8 +261,6 @@ namespace Machina.Engine
             if (!hasDoneFirstUpdate)
             {
                 hasDoneFirstUpdate = true;
-
-                if (GamePlatform.IsMobile) MachinaGame.Fullscreen = true;
             }
         }
 

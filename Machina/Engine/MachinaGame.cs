@@ -51,6 +51,7 @@ namespace Machina.Engine
         private SpriteBatch spriteBatch;
         private LoadingScreen loadingScreen;
         private bool isDoneUpdateLoading = false;
+        private readonly MachinaWindow machinaWindow;
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
             ResizeBehavior resizeBehavior)
@@ -73,15 +74,16 @@ namespace Machina.Engine
             {
                 HardwareModeSwitch = false
             };
-
-            Window.AllowUserResizing = true;
-            Window.ClientSizeChanged += OnResize;
+            
+            this.machinaWindow = new MachinaWindow(startingWindowSize, Window, Graphics, GraphicsDevice);
+            this.machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
             Assets = new AssetLibrary.AssetLibrary(this);
             Random = new SeededRandom();
 
             SceneLayers = new SceneLayers(false,
                 new GameCanvas(this.startingRenderResolution, startingResizeBehavior));
+            
         }
 
         protected static CommandLineArgs CommandLineArgs { get; private set; }
@@ -92,11 +94,9 @@ namespace Machina.Engine
             set
             {
                 sceneLayers = value;
-                CurrentGameCanvas.SetWindowSize(CurrentWindowSize);
+                CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
             }
         }
-
-        public Point CurrentWindowSize => new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
 
         public GameCanvas CurrentGameCanvas => sceneLayers.gameCanvas as GameCanvas;
 
@@ -111,28 +111,6 @@ namespace Machina.Engine
         public static MachinaGame Current { get; private set; }
 
         private Demo.Playback DemoPlayback { get; set; }
-
-        public static bool Fullscreen
-        {
-            set
-            {
-                if (value)
-                {
-                    SetWindowSize(new Point(Current.GraphicsDevice.DisplayMode.Width,
-                        Current.GraphicsDevice.DisplayMode.Height));
-                    Graphics.IsFullScreen = true;
-                }
-                else
-                {
-                    SetWindowSize(Current.startingWindowSize);
-                    Graphics.IsFullScreen = false;
-                }
-
-                Graphics.ApplyChanges();
-            }
-
-            get => Graphics.IsFullScreen;
-        }
 
         public static SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
 
@@ -176,15 +154,6 @@ namespace Machina.Engine
             Assets = assetLibrary;
         }
 
-        protected static void SetWindowSize(Point windowSize)
-        {
-            Print("Window size changed to", windowSize);
-            Graphics.PreferredBackBufferWidth = windowSize.X;
-            Graphics.PreferredBackBufferHeight = windowSize.Y;
-            Graphics.ApplyChanges();
-            Current.CurrentGameCanvas.SetWindowSize(new Point(windowSize.X, windowSize.Y));
-        }
-
         protected override void Initialize()
         {
             Window.Title = gameTitle;
@@ -196,7 +165,7 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             Console.Out.WriteLine("Settings Window Size");
-            SetWindowSize(startingWindowSize);
+            this.machinaWindow.SetWindowSize(startingWindowSize);
             Console.Out.WriteLine("Constructing SpriteBatch");
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
@@ -330,7 +299,7 @@ namespace Machina.Engine
             CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
             CommandLineArgs.ExecuteArgs();
-            CurrentGameCanvas.SetWindowSize(CurrentWindowSize); 
+            CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize); 
             Graphics.ApplyChanges();
         }
 
@@ -410,12 +379,12 @@ namespace Machina.Engine
         {
             if (!this.isDoneUpdateLoading)
             {
-                this.loadingScreen.Draw(spriteBatch, CurrentWindowSize, GraphicsDevice);
+                this.loadingScreen.Draw(spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
             }
             else if(!this.loadingScreen.IsDoneDrawLoading())
             {
                 this.loadingScreen.IncrementDrawLoopLoad(Assets as AssetLibrary.AssetLibrary, this.spriteBatch);
-                this.loadingScreen.Draw(spriteBatch, CurrentWindowSize, GraphicsDevice);
+                this.loadingScreen.Draw(spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
             }
             else
             {
@@ -429,12 +398,6 @@ namespace Machina.Engine
             }
 
             base.Draw(gameTime);
-        }
-
-        private void OnResize(object sender, EventArgs e)
-        {
-            var windowSize = new Point(Window.ClientBounds.Width, Window.ClientBounds.Height);
-            CurrentGameCanvas.SetWindowSize(windowSize);
         }
 
         protected override void OnExiting(object sender, EventArgs args)
