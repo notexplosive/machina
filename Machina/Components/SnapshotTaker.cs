@@ -22,7 +22,7 @@ namespace Machina.Components
             this.doNotUseTimer = doNotUseTimer;
             this.pendingSnapshot = !doNotUseTimer;
 #if DEBUG
-            this.screenshotPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots");
+            this.screenshotPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots"));
 #else
             this.screenshotPath = MachinaGame.Current.appDataPath;
 #endif
