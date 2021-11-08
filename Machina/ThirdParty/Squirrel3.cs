@@ -21,24 +21,24 @@
         public static uint Noise(int position, uint seed)
         {
             var mangledBits = (uint) position;
-            mangledBits *= Squirrel3.NOISE1;
+            mangledBits *= NOISE1;
             mangledBits += seed;
             mangledBits ^= mangledBits >> 8;
-            mangledBits += Squirrel3.NOISE2;
+            mangledBits += NOISE2;
             mangledBits ^= mangledBits << 8;
-            mangledBits *= Squirrel3.NOISE3;
+            mangledBits *= NOISE3;
             mangledBits ^= mangledBits >> 8;
             return mangledBits;
         }
 
         public static uint Noise2D(int x, int y, uint seed)
         {
-            return Squirrel3.Noise(x + (int) (Squirrel3.PRIME1 * y), seed);
+            return Noise(x + (int) (PRIME1 * y), seed);
         }
 
         public static uint Noise3D(int x, int y, int z, uint seed)
         {
-            return Squirrel3.Noise(x + (int) (Squirrel3.PRIME1 * y) + (int) (Squirrel3.PRIME2 * z), seed);
+            return Noise(x + (int) (PRIME1 * y) + (int) (PRIME2 * z), seed);
         }
     }
 }

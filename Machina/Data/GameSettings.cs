@@ -9,7 +9,6 @@ namespace Machina.Data
 
         public virtual void LoadSavedSettingsIfExist()
         {
-            
         }
     }
 }

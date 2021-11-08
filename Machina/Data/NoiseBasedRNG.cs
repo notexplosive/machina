@@ -22,7 +22,7 @@ namespace Machina.Data
         {
             this.seed = seed;
             this.currentPosition = 0;
-            this.id = NoiseBasedRNG.idPool++;
+            this.id = idPool++;
         }
 
         public NoiseBasedRNG(uint seed, int x) : this(Squirrel3.Noise(x, seed))

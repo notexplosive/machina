@@ -63,7 +63,7 @@ namespace Machina.Engine
         public static Demo FromDisk_Sync(string demoName)
         {
             var demoJson = FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
-            return Demo.DecodeRecords(demoJson);
+            return DecodeRecords(demoJson);
         }
 
         [Serializable]

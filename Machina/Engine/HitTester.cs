@@ -19,7 +19,7 @@ namespace Machina.Engine
 
         public HitTestResult(Depth depth, Action<bool> callback)
         {
-            this.id = HitTestResult.IdPool++;
+            this.id = IdPool++;
             this.depth = depth;
             this.approvalCallback = callback;
             this.actor = null;
@@ -42,7 +42,7 @@ namespace Machina.Engine
 
         public bool IsEmpty()
         {
-            return Equals(HitTestResult.Empty);
+            return Equals(Empty);
         }
 
         public override string ToString()

@@ -28,7 +28,7 @@ namespace Machina.Engine
                 soundEffect = MachinaGame.Assets.CreateSoundEffectInstance(soundEffectName);
             }
 
-            soundEffect.Volume = baseVolume * settings.SFXVolumeAsFloat;
+            soundEffect.Volume = baseVolume * this.settings.SFXVolumeAsFloat;
             soundEffect.Pitch = pitch;
             try
             {

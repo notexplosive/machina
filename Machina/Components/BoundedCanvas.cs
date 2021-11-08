@@ -79,8 +79,8 @@ namespace Machina.Components
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
             graphicsDevice.SetRenderTarget(this.renderTarget);
 
-            graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
-            graphicsDevice.Clear(this.BackgroundColor);
+            graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
+            graphicsDevice.Clear(BackgroundColor);
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 

@@ -10,56 +10,56 @@ namespace Machina.Engine
         private readonly GameWindow window;
         private readonly GraphicsDeviceManager graphics;
         private readonly GraphicsDevice device;
-        
+
         public event Action<Point> Resized;
-        
-        public MachinaWindow(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics, GraphicsDevice device)
+
+        public MachinaWindow(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics,
+            GraphicsDevice device)
         {
             this.startingWindowSize = startingWindowSize;
             this.window = window;
             this.graphics = graphics;
             this.device = device;
-            
+
             window.AllowUserResizing = true;
             window.ClientSizeChanged += OnResize;
         }
 
-        public Point CurrentWindowSize => new Point(window.ClientBounds.Width, window.ClientBounds.Height);
-        
+        public Point CurrentWindowSize => new Point(this.window.ClientBounds.Width, this.window.ClientBounds.Height);
+
         public bool Fullscreen
         {
             set
             {
                 if (value)
                 {
-                    SetWindowSize(new Point(device.DisplayMode.Width,
-                        device.DisplayMode.Height));
-                    graphics.IsFullScreen = true;
+                    SetWindowSize(new Point(this.device.DisplayMode.Width, this.device.DisplayMode.Height));
+                    this.graphics.IsFullScreen = true;
                 }
                 else
                 {
                     SetWindowSize(this.startingWindowSize);
-                    graphics.IsFullScreen = false;
+                    this.graphics.IsFullScreen = false;
                 }
 
-                graphics.ApplyChanges();
+                this.graphics.ApplyChanges();
             }
 
-            get => graphics.IsFullScreen;
+            get => this.graphics.IsFullScreen;
         }
 
         public void SetWindowSize(Point windowSize)
         {
             MachinaGame.Print("Window size changed to", windowSize);
-            graphics.PreferredBackBufferWidth = windowSize.X;
-            graphics.PreferredBackBufferHeight = windowSize.Y;
-            graphics.ApplyChanges();
+            this.graphics.PreferredBackBufferWidth = windowSize.X;
+            this.graphics.PreferredBackBufferHeight = windowSize.Y;
+            this.graphics.ApplyChanges();
             Resized?.Invoke(windowSize);
         }
-        
+
         private void OnResize(object sender, EventArgs e)
         {
-            var windowSize = new Point(window.ClientBounds.Width, window.ClientBounds.Height);
+            var windowSize = new Point(this.window.ClientBounds.Width, this.window.ClientBounds.Height);
             Resized?.Invoke(windowSize);
         }
     }

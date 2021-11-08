@@ -5,8 +5,8 @@ namespace Machina.Data
     public struct Depth
     {
         public const int MaxAsInt = 10569646;
-        public static Depth Middle = new Depth(Depth.MaxAsInt / 2);
-        public static Depth Max = new Depth(Depth.MaxAsInt);
+        public static Depth Middle = new Depth(MaxAsInt / 2);
+        public static Depth Max = new Depth(MaxAsInt);
 
         public Depth(int val)
         {
@@ -34,8 +34,8 @@ namespace Machina.Data
         {
             get
             {
-                Debug.Assert(AsInt <= Depth.MaxAsInt && AsInt >= 0);
-                return (float) AsInt / Depth.MaxAsInt;
+                Debug.Assert(AsInt <= MaxAsInt && AsInt >= 0);
+                return (float) AsInt / MaxAsInt;
             }
         }
 

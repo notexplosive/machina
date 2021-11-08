@@ -11,17 +11,20 @@ namespace Machina.ThirdParty
     /// </summary>
     public static class ReflectiveEnumerator
     {
-        static ReflectiveEnumerator() { }
+        static ReflectiveEnumerator()
+        {
+        }
 
         public static IEnumerable<T> GetEnumerableOfType<T>(params object[] constructorArgs) where T : class
         {
-            List<T> result = new List<T>();
-            foreach (Type type in 
+            var result = new List<T>();
+            foreach (var type in
                 Assembly.GetAssembly(typeof(T)).GetTypes()
                     .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T))))
             {
-                result.Add((T)Activator.CreateInstance(type, constructorArgs));
+                result.Add((T) Activator.CreateInstance(type, constructorArgs));
             }
+
             return result;
         }
     }

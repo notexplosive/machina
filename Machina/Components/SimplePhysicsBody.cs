@@ -36,7 +36,7 @@ namespace Machina.Components
         public void CollideWith(SimplePhysicsBody other, float dt)
         {
             var otherCollider = other.ColliderRect;
-            if (SimplePhysicsBody.DynamicRectVsRect(this, otherCollider, out var contactPoint, out var contactNormal,
+            if (DynamicRectVsRect(this, otherCollider, out var contactPoint, out var contactNormal,
                 out var contactTime, dt))
             {
                 this.collisionsThisFrame.Add(new CollideMoment(contactTime, otherCollider, contactNormal));
@@ -94,7 +94,7 @@ namespace Machina.Components
             var bodyRect = body.ColliderRect;
             var expandedTarget = new RectangleF(target.Position - bodyRect.Size / 2, target.Size + bodyRect.Size);
 
-            if (SimplePhysicsBody.RayVsRect(bodyRect.Center, body.Velocity * dt, expandedTarget, out contactPoint,
+            if (RayVsRect(bodyRect.Center, body.Velocity * dt, expandedTarget, out contactPoint,
                 out contactNormal, out contactTime))
             {
                 if (contactTime < 1f && contactTime >= 0f)

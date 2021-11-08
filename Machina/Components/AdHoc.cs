@@ -13,7 +13,7 @@ namespace Machina.Components
         public Action<Keys, ButtonState, ModifierKeys> onKey;
         public Action<MouseButton, Vector2, ButtonState> onMouseButton;
         public Action<float> onUpdate;
-        public Action<Vector2,Vector2,Vector2> onMouseUpdate;
+        public Action<Vector2, Vector2, Vector2> onMouseUpdate;
 
         public AdHoc(Actor actor) : base(actor)
         {

@@ -16,39 +16,39 @@ namespace Machina.Engine.AssetLibrary
 
         public LoadingScreen(AssetLoadTree tree, Action onFinishUpdating)
         {
-            delayTime = 0.25f;
+            this.delayTime = 0.25f;
             this.tree = tree;
             this.onFinishUpdating = onFinishUpdating;
         }
 
         public void Update(AssetLibrary assetLibrary, float dt)
         {
-            if (isDoneUpdating)
+            if (this.isDoneUpdating)
             {
                 return;
             }
 
-            if (delayTime > 0)
+            if (this.delayTime > 0)
             {
-                delayTime -= dt;
+                this.delayTime -= dt;
                 return;
             }
 
-            if (readyToFinish)
+            if (this.readyToFinish)
             {
-                onFinishUpdating();
-                isDoneUpdating = true;
+                this.onFinishUpdating();
+                this.isDoneUpdating = true;
                 return;
             }
 
-            if (tree.IsDoneUpdateLoading() && !readyToFinish)
+            if (this.tree.IsDoneUpdateLoading() && !this.readyToFinish)
             {
-                readyToFinish = true;
-                delayTime = 0.3f;
+                this.readyToFinish = true;
+                this.delayTime = 0.3f;
                 return;
             }
 
-            tree.UpdateLoadNextThing(assetLibrary);
+            this.tree.UpdateLoadNextThing(assetLibrary);
         }
 
         public void Draw(SpriteBatch spriteBatch, Point currentWindowSize, GraphicsDevice graphicsDevice)
@@ -66,7 +66,7 @@ namespace Machina.Engine.AssetLibrary
             var barThickness = 10f;
             var barBackgroundColor = Color.DarkRed;
             var barForegroundColor = Color.Orange;
-            var progress = tree.Progress();
+            var progress = this.tree.Progress();
 
             spriteBatch.DrawCircle(new CircleF(startPoint, barThickness / 2f), 10, barBackgroundColor,
                 barThickness / 2f, middleDepth);
@@ -101,12 +101,12 @@ namespace Machina.Engine.AssetLibrary
 
         public void IncrementDrawLoopLoad(AssetLibrary assetLibrary, SpriteBatch spriteBatch)
         {
-            if (tree.IsDoneDrawLoading())
+            if (this.tree.IsDoneDrawLoading())
             {
                 return;
             }
 
-            tree.DrawLoadNextThing(assetLibrary, spriteBatch);
+            this.tree.DrawLoadNextThing(assetLibrary, spriteBatch);
         }
 
         public bool IsDoneDrawLoading()

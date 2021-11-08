@@ -34,7 +34,7 @@ namespace Machina.Engine.AssetLibrary
                 this.callback(spriteBatch);
             }
         }
-        
+
         private class UnloadedAssetCallback : UnloadedAsset
         {
             private readonly Func<IAsset> callback;
@@ -54,7 +54,6 @@ namespace Machina.Engine.AssetLibrary
         {
             public UnloadedTexture(string path) : base(path)
             {
-                
             }
 
             public override void Load(AssetLibrary library)
@@ -62,12 +61,11 @@ namespace Machina.Engine.AssetLibrary
                 library.LoadTexture(this.path);
             }
         }
-        
+
         private class UnloadedSound : UnloadedAsset
         {
             public UnloadedSound(string path) : base(path)
             {
-                
             }
 
             public override void Load(AssetLibrary library)
@@ -80,7 +78,6 @@ namespace Machina.Engine.AssetLibrary
         {
             public UnloadedSpritefont(string path) : base(path)
             {
-                
             }
 
             public override void Load(AssetLibrary library)
@@ -88,7 +85,7 @@ namespace Machina.Engine.AssetLibrary
                 library.LoadSpriteFont(this.path);
             }
         }
-        
+
         private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
         private readonly List<UnloadedDrawLoopAssetCallback> drawAssets = new List<UnloadedDrawLoopAssetCallback>();
         private int startingCount;
@@ -104,7 +101,7 @@ namespace Machina.Engine.AssetLibrary
             this.drawAssets.Add(asset);
             this.startingCount++;
         }
-        
+
         public void AddImagePath(string name)
         {
             AddAsset(new UnloadedTexture(name));
@@ -126,22 +123,22 @@ namespace Machina.Engine.AssetLibrary
             {
                 return;
             }
-            
+
             var assetToLoad = this.assets[0];
             this.assets.RemoveAt(0);
             assetToLoad.Load(library);
         }
-        
+
         public void DrawLoadNextThing(AssetLibrary library, SpriteBatch spriteBatch)
         {
             if (this.drawAssets.Count == 0)
             {
                 return;
             }
-            
+
             var assetToLoad = this.drawAssets[0];
             this.drawAssets.RemoveAt(0);
-            
+
             assetToLoad.Load(library, spriteBatch);
         }
 
@@ -155,7 +152,7 @@ namespace Machina.Engine.AssetLibrary
             return 1f - (float) (this.assets.Count + this.drawAssets.Count) / this.startingCount;
         }
 
-        public void AddMachinaAssetCallback(string assetPath,  Func<IAsset> callback)
+        public void AddMachinaAssetCallback(string assetPath, Func<IAsset> callback)
         {
             AddAsset(new UnloadedAssetCallback(assetPath, callback));
         }

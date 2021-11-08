@@ -34,7 +34,7 @@
             {
                 loadTree.AddImagePath("images/" + Path.GetFileNameWithoutExtension(imageName));
             }
-            
+
             foreach (var spriteFont in GamePlatform.GetFilesAtContentDirectory("fonts", "xnb"))
             {
                 loadTree.AddSpritefontPath("fonts/" + Path.GetFileNameWithoutExtension(spriteFont));

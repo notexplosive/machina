@@ -10,8 +10,8 @@ namespace Machina.Engine
 
         public SeededRandom()
         {
-            Seed = SeededRandom.GenerateSeed();
-            Dirty = new NoiseBasedRNG((uint) SeededRandom.GenerateSeed());
+            Seed = GenerateSeed();
+            Dirty = new NoiseBasedRNG((uint) GenerateSeed());
         }
 
         public int Seed

@@ -9,7 +9,7 @@ namespace Machina.Data
     public class TweenChain
     {
         private static readonly TweenAccessors<float> dummyAccessors =
-            new TweenAccessors<float>(TweenChain.dummyGetter, TweenChain.dummySetter);
+            new TweenAccessors<float>(dummyGetter, dummySetter);
 
         private readonly List<IChainItem> chainInternal;
         private int currentIndex;
@@ -68,14 +68,14 @@ namespace Machina.Data
 
         public TweenChain AppendWaitTween(float duration)
         {
-            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, TweenChain.dummyAccessors,
+            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors,
                 FloatTween.LerpFloat));
         }
 
         public TweenChain AppendIntTween(int targetVal, float duration, EaseFunc easeFunc,
             TweenAccessors<int> accessors)
         {
-            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, TweenChain.LerpInt));
+            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, LerpInt));
         }
 
         public TweenChain AppendCallback(Action func)
@@ -98,7 +98,7 @@ namespace Machina.Data
         public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc,
             TweenAccessors<Point> accessors)
         {
-            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, TweenChain.PointLerp));
+            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
         }
 
         private static Point PointLerp(Point p1, Point p2, float amount)

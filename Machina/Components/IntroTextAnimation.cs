@@ -80,7 +80,7 @@ namespace Machina.Components
 
             yield return new WaitSeconds(1f / speed);
 
-            MachinaGame.SoundEffectPlayer.PlaySound("ouch",0.25f);
+            MachinaGame.SoundEffectPlayer.PlaySound("ouch", 0.25f);
             this.spinning = true;
             SwapColor();
 

@@ -314,12 +314,12 @@ namespace Machina.ThirdParty
     public class FloatTween : Tween<float>
     {
         // Static readonly delegate to avoid multiple delegate allocations
-        private static readonly LerpFunc<float> LerpFunc = FloatTween.LerpFloat;
+        private static readonly LerpFunc<float> LerpFunc = LerpFloat;
 
         /// <summary>
         ///     Initializes a new FloatTween instance.
         /// </summary>
-        public FloatTween() : base(FloatTween.LerpFunc)
+        public FloatTween() : base(LerpFunc)
         {
         }
 
@@ -340,7 +340,7 @@ namespace Machina.ThirdParty
         /// <summary>
         ///     Initializes a new Vector2Tween instance.
         /// </summary>
-        public Vector2Tween() : base(Vector2Tween.LerpFunc)
+        public Vector2Tween() : base(LerpFunc)
         {
         }
     }
@@ -356,7 +356,7 @@ namespace Machina.ThirdParty
         /// <summary>
         ///     Initializes a new Vector3Tween instance.
         /// </summary>
-        public Vector3Tween() : base(Vector3Tween.LerpFunc)
+        public Vector3Tween() : base(LerpFunc)
         {
         }
     }
@@ -372,7 +372,7 @@ namespace Machina.ThirdParty
         /// <summary>
         ///     Initializes a new Vector4Tween instance.
         /// </summary>
-        public Vector4Tween() : base(Vector4Tween.LerpFunc)
+        public Vector4Tween() : base(LerpFunc)
         {
         }
     }
@@ -388,7 +388,7 @@ namespace Machina.ThirdParty
         /// <summary>
         ///     Initializes a new ColorTween instance.
         /// </summary>
-        public ColorTween() : base(ColorTween.LerpFunc)
+        public ColorTween() : base(LerpFunc)
         {
         }
     }
@@ -404,7 +404,7 @@ namespace Machina.ThirdParty
         /// <summary>
         ///     Initializes a new QuaternionTween instance.
         /// </summary>
-        public QuaternionTween() : base(QuaternionTween.LerpFunc)
+        public QuaternionTween() : base(LerpFunc)
         {
         }
     }
@@ -421,102 +421,102 @@ namespace Machina.ThirdParty
     public static class EaseFuncs
     {
         private const float Pi = (float) Math.PI;
-        private const float HalfPi = EaseFuncs.Pi / 2f;
+        private const float HalfPi = Pi / 2f;
 
         /// <summary>
         ///     https://easings.net/
         /// </summary>
-        public static readonly EaseFunc EaseInOutBack = EaseFuncs.EaseInOutBackImpl;
+        public static readonly EaseFunc EaseInOutBack = EaseInOutBackImpl;
 
         /// <summary>
         ///     https://easings.net/
         /// </summary>
-        public static readonly EaseFunc EaseInBack = EaseFuncs.EaseInBackImpl;
+        public static readonly EaseFunc EaseInBack = EaseInBackImpl;
 
         /// <summary>
         ///     https://easings.net/
         /// </summary>
-        public static readonly EaseFunc EaseOutBack = EaseFuncs.EaseOutBackImpl;
+        public static readonly EaseFunc EaseOutBack = EaseOutBackImpl;
 
         /// <summary>
         ///     A linear progress scale function.
         /// </summary>
-        public static readonly EaseFunc Linear = EaseFuncs.LinearImpl;
+        public static readonly EaseFunc Linear = LinearImpl;
 
         /// <summary>
         ///     A quadratic (x^2) progress scale function that eases in.
         /// </summary>
-        public static readonly EaseFunc QuadraticEaseIn = EaseFuncs.QuadraticEaseInImpl;
+        public static readonly EaseFunc QuadraticEaseIn = QuadraticEaseInImpl;
 
         /// <summary>
         ///     A quadratic (x^2) progress scale function that eases out.
         /// </summary>
-        public static readonly EaseFunc QuadraticEaseOut = EaseFuncs.QuadraticEaseOutImpl;
+        public static readonly EaseFunc QuadraticEaseOut = QuadraticEaseOutImpl;
 
         /// <summary>
         ///     A quadratic (x^2) progress scale function that eases in and out.
         /// </summary>
-        public static readonly EaseFunc QuadraticEaseInOut = EaseFuncs.QuadraticEaseInOutImpl;
+        public static readonly EaseFunc QuadraticEaseInOut = QuadraticEaseInOutImpl;
 
         /// <summary>
         ///     A cubic (x^3) progress scale function that eases in.
         /// </summary>
-        public static readonly EaseFunc CubicEaseIn = EaseFuncs.CubicEaseInImpl;
+        public static readonly EaseFunc CubicEaseIn = CubicEaseInImpl;
 
         /// <summary>
         ///     A cubic (x^3) progress scale function that eases out.
         /// </summary>
-        public static readonly EaseFunc CubicEaseOut = EaseFuncs.CubicEaseOutImpl;
+        public static readonly EaseFunc CubicEaseOut = CubicEaseOutImpl;
 
         /// <summary>
         ///     A cubic (x^3) progress scale function that eases in and out.
         /// </summary>
-        public static readonly EaseFunc CubicEaseInOut = EaseFuncs.CubicEaseInOutImpl;
+        public static readonly EaseFunc CubicEaseInOut = CubicEaseInOutImpl;
 
         /// <summary>
         ///     A quartic (x^4) progress scale function that eases in.
         /// </summary>
-        public static readonly EaseFunc QuarticEaseIn = EaseFuncs.QuarticEaseInImpl;
+        public static readonly EaseFunc QuarticEaseIn = QuarticEaseInImpl;
 
         /// <summary>
         ///     A quartic (x^4) progress scale function that eases out.
         /// </summary>
-        public static readonly EaseFunc QuarticEaseOut = EaseFuncs.QuarticEaseOutImpl;
+        public static readonly EaseFunc QuarticEaseOut = QuarticEaseOutImpl;
 
         /// <summary>
         ///     A quartic (x^4) progress scale function that eases in and out.
         /// </summary>
-        public static readonly EaseFunc QuarticEaseInOut = EaseFuncs.QuarticEaseInOutImpl;
+        public static readonly EaseFunc QuarticEaseInOut = QuarticEaseInOutImpl;
 
         /// <summary>
         ///     A quintic (x^5) progress scale function that eases in.
         /// </summary>
-        public static readonly EaseFunc QuinticEaseIn = EaseFuncs.QuinticEaseInImpl;
+        public static readonly EaseFunc QuinticEaseIn = QuinticEaseInImpl;
 
         /// <summary>
         ///     A quintic (x^5) progress scale function that eases out.
         /// </summary>
-        public static readonly EaseFunc QuinticEaseOut = EaseFuncs.QuinticEaseOutImpl;
+        public static readonly EaseFunc QuinticEaseOut = QuinticEaseOutImpl;
 
         /// <summary>
         ///     A quintic (x^5) progress scale function that eases in and out.
         /// </summary>
-        public static readonly EaseFunc QuinticEaseInOut = EaseFuncs.QuinticEaseInOutImpl;
+        public static readonly EaseFunc QuinticEaseInOut = QuinticEaseInOutImpl;
 
         /// <summary>
         ///     A sinusoidal progress scale function that eases in.
         /// </summary>
-        public static readonly EaseFunc SineEaseIn = EaseFuncs.SineEaseInImpl;
+        public static readonly EaseFunc SineEaseIn = SineEaseInImpl;
 
         /// <summary>
         ///     A sinusoidal progress scale function that eases out.
         /// </summary>
-        public static readonly EaseFunc SineEaseOut = EaseFuncs.SineEaseOutImpl;
+        public static readonly EaseFunc SineEaseOut = SineEaseOutImpl;
 
         /// <summary>
         ///     A sinusoidal progress scale function that eases in and out.
         /// </summary>
-        public static readonly EaseFunc SineEaseInOut = EaseFuncs.SineEaseInOutImpl;
+        public static readonly EaseFunc SineEaseInOut = SineEaseInOutImpl;
 
         private static float LinearImpl(float progress)
         {
@@ -525,62 +525,62 @@ namespace Machina.ThirdParty
 
         private static float QuadraticEaseInImpl(float progress)
         {
-            return EaseFuncs.EaseInPower(progress, 2);
+            return EaseInPower(progress, 2);
         }
 
         private static float QuadraticEaseOutImpl(float progress)
         {
-            return EaseFuncs.EaseOutPower(progress, 2);
+            return EaseOutPower(progress, 2);
         }
 
         private static float QuadraticEaseInOutImpl(float progress)
         {
-            return EaseFuncs.EaseInOutPower(progress, 2);
+            return EaseInOutPower(progress, 2);
         }
 
         private static float CubicEaseInImpl(float progress)
         {
-            return EaseFuncs.EaseInPower(progress, 3);
+            return EaseInPower(progress, 3);
         }
 
         private static float CubicEaseOutImpl(float progress)
         {
-            return EaseFuncs.EaseOutPower(progress, 3);
+            return EaseOutPower(progress, 3);
         }
 
         private static float CubicEaseInOutImpl(float progress)
         {
-            return EaseFuncs.EaseInOutPower(progress, 3);
+            return EaseInOutPower(progress, 3);
         }
 
         private static float QuarticEaseInImpl(float progress)
         {
-            return EaseFuncs.EaseInPower(progress, 4);
+            return EaseInPower(progress, 4);
         }
 
         private static float QuarticEaseOutImpl(float progress)
         {
-            return EaseFuncs.EaseOutPower(progress, 4);
+            return EaseOutPower(progress, 4);
         }
 
         private static float QuarticEaseInOutImpl(float progress)
         {
-            return EaseFuncs.EaseInOutPower(progress, 4);
+            return EaseInOutPower(progress, 4);
         }
 
         private static float QuinticEaseInImpl(float progress)
         {
-            return EaseFuncs.EaseInPower(progress, 5);
+            return EaseInPower(progress, 5);
         }
 
         private static float QuinticEaseOutImpl(float progress)
         {
-            return EaseFuncs.EaseOutPower(progress, 5);
+            return EaseOutPower(progress, 5);
         }
 
         private static float QuinticEaseInOutImpl(float progress)
         {
-            return EaseFuncs.EaseInOutPower(progress, 5);
+            return EaseInOutPower(progress, 5);
         }
 
         private static float EaseInBackImpl(float progress)
@@ -634,17 +634,17 @@ namespace Machina.ThirdParty
 
         private static float SineEaseInImpl(float progress)
         {
-            return (float) Math.Sin(progress * EaseFuncs.HalfPi - EaseFuncs.HalfPi) + 1;
+            return (float) Math.Sin(progress * HalfPi - HalfPi) + 1;
         }
 
         private static float SineEaseOutImpl(float progress)
         {
-            return (float) Math.Sin(progress * EaseFuncs.HalfPi);
+            return (float) Math.Sin(progress * HalfPi);
         }
 
         private static float SineEaseInOutImpl(float progress)
         {
-            return (float) (Math.Sin(progress * EaseFuncs.Pi - EaseFuncs.HalfPi) + 1) / 2;
+            return (float) (Math.Sin(progress * Pi - HalfPi) + 1) / 2;
         }
     }
 }

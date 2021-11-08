@@ -33,14 +33,14 @@ namespace Machina.Engine
 
             if (useDebugScene)
             {
-                debugScene = new Scene(this);
-                debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
-                overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
-                Logger = overlayOutputConsole;
+                this.debugScene = new Scene(this);
+                this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
+                this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
+                Logger = this.overlayOutputConsole;
 
                 // DebugBuilder.CreateFramerateCounter(this);
                 DebugBuilder.CreateFramestep(this);
-                debugDock = DebugBuilder.CreateDebugDock(this);
+                this.debugDock = DebugBuilder.CreateDebugDock(this);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Machina.Engine
         public Texture2D RenderToTexture(SpriteBatch spriteBatch)
         {
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
-            var viewportSize = gameCanvas.ViewportSize;
+            var viewportSize = this.gameCanvas.ViewportSize;
             var renderTarget = new RenderTarget2D(
                 graphicsDevice,
                 viewportSize.X,
@@ -64,7 +64,7 @@ namespace Machina.Engine
             graphicsDevice.SetRenderTarget(renderTarget);
             graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
 
-            graphicsDevice.Clear(BackgroundColor);
+            graphicsDevice.Clear(this.BackgroundColor);
             DrawOnCanvas(spriteBatch);
 
             graphicsDevice.SetRenderTarget(null);
@@ -73,12 +73,12 @@ namespace Machina.Engine
 
         public void AddPendingTextInput(object sender, TextInputEventArgs e)
         {
-            pendingTextInput = e;
+            this.pendingTextInput = e;
         }
 
         public void AddDebugApp(App app)
         {
-            debugDock.AddApp(app);
+            this.debugDock.AddApp(app);
         }
 
         public void PushLogger(ILogger newLogger)
@@ -91,7 +91,7 @@ namespace Machina.Engine
         /// </summary>
         public void PopLogger()
         {
-            Logger = overlayOutputConsole;
+            Logger = this.overlayOutputConsole;
         }
 
         public Scene AddNewScene()
@@ -103,7 +103,7 @@ namespace Machina.Engine
 
         public void RemoveScene(Scene scene)
         {
-            sceneList.Remove(scene);
+            this.sceneList.Remove(scene);
         }
 
         /// <summary>
@@ -112,32 +112,35 @@ namespace Machina.Engine
         /// <param name="scene"></param>
         private void Add(Scene scene)
         {
-            sceneList.Add(scene);
+            this.sceneList.Add(scene);
         }
 
         public int IndexOf(Scene scene)
         {
-            return sceneList.IndexOf(scene);
+            return this.sceneList.IndexOf(scene);
         }
 
         public void Set(int i, Scene scene)
         {
-            sceneList[i] = scene;
+            this.sceneList[i] = scene;
         }
 
         public Scene[] AllScenes()
         {
-            var array = new Scene[sceneList.Count + (debugScene != null ? 1 : 0)];
-            sceneList.CopyTo(array);
-            if (debugScene != null) array[sceneList.Count] = debugScene;
+            var array = new Scene[this.sceneList.Count + (this.debugScene != null ? 1 : 0)];
+            this.sceneList.CopyTo(array);
+            if (this.debugScene != null)
+            {
+                array[this.sceneList.Count] = this.debugScene;
+            }
 
             return array;
         }
 
         public Scene[] AllScenesExceptDebug()
         {
-            var array = new Scene[sceneList.Count];
-            sceneList.CopyTo(array);
+            var array = new Scene[this.sceneList.Count];
+            this.sceneList.CopyTo(array);
             return array;
         }
 
@@ -159,10 +162,10 @@ namespace Machina.Engine
             try
             {
 #endif
-            if (!hasDoneFirstUpdate)
+            if (!this.hasDoneFirstUpdate)
             {
                 DoFirstUpdate();
-                hasDoneFirstUpdate = true;
+                this.hasDoneFirstUpdate = true;
             }
 
             CurrentInputFrameState = inputFrameState;
@@ -179,39 +182,60 @@ namespace Machina.Engine
                 {
                     if (allowKeyboardEvents)
                     {
-                        if (pendingTextInput.HasValue) scene.OnTextInput(pendingTextInput.Value);
+                        if (this.pendingTextInput.HasValue)
+                        {
+                            scene.OnTextInput(this.pendingTextInput.Value);
+                        }
 
                         foreach (var key in inputFrameState.keyboardFrameState.Released)
+                        {
                             scene.OnKey(key, ButtonState.Released, inputFrameState.keyboardFrameState.Modifiers);
+                        }
 
                         foreach (var key in inputFrameState.keyboardFrameState.Pressed)
+                        {
                             scene.OnKey(key, ButtonState.Pressed, inputFrameState.keyboardFrameState.Modifiers);
+                        }
                     }
 
                     if (allowMouseUpdate)
                     {
                         if (inputFrameState.mouseFrameState.ScrollDelta != 0)
+                        {
                             scene.OnScroll(inputFrameState.mouseFrameState.ScrollDelta);
+                        }
 
                         // Pressed
                         if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.left)
+                        {
                             scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Pressed);
+                        }
 
                         if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.middle)
+                        {
                             scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Pressed);
+                        }
 
                         if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.right)
+                        {
                             scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Pressed);
+                        }
 
                         // Released
                         if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.left)
+                        {
                             scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Released);
+                        }
 
                         if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.middle)
+                        {
                             scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Released);
+                        }
 
                         if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.right)
+                        {
                             scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Released);
+                        }
 
                         // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
                         scene.OnMouseUpdate(rawMousePos, inputFrameState.mouseFrameState.PositionDelta,
@@ -220,11 +244,15 @@ namespace Machina.Engine
                 }
             }
 
-            pendingTextInput = null;
+            this.pendingTextInput = null;
 
             foreach (var scene in scenes)
+            {
                 if (!scene.frameStep.IsPaused && !scene.IsFrozen)
+                {
                     scene.Update(dt);
+                }
+            }
 
             HitTestResult.ApproveTopCandidate(scenes);
 #if DEBUG
@@ -240,9 +268,9 @@ namespace Machina.Engine
 
         public void PreDraw(SpriteBatch spriteBatch)
         {
-            if (!hasDoneFirstDraw)
+            if (!this.hasDoneFirstDraw)
             {
-                hasDoneFirstDraw = true;
+                this.hasDoneFirstDraw = true;
                 OnFirstPreDraw?.Invoke(spriteBatch);
             }
 
@@ -258,9 +286,9 @@ namespace Machina.Engine
 
         private void DoFirstUpdate()
         {
-            if (!hasDoneFirstUpdate)
+            if (!this.hasDoneFirstUpdate)
             {
-                hasDoneFirstUpdate = true;
+                this.hasDoneFirstUpdate = true;
             }
         }
 
@@ -268,21 +296,28 @@ namespace Machina.Engine
         {
             var scenes = AllScenesExceptDebug();
 
-            foreach (var scene in scenes) scene.Draw(spriteBatch);
+            foreach (var scene in scenes)
+            {
+                scene.Draw(spriteBatch);
+            }
 
             if (MachinaGame.DebugLevel > DebugLevel.Passive)
+            {
                 foreach (var scene in scenes)
+                {
                     scene.DebugDraw(spriteBatch);
+                }
+            }
         }
 
         public void DrawDebugScene(SpriteBatch spriteBatch)
         {
-            debugScene?.Draw(spriteBatch);
+            this.debugScene?.Draw(spriteBatch);
         }
 
         public void CloseDebugDock()
         {
-            debugDock.Close();
+            this.debugDock.Close();
         }
     }
 }

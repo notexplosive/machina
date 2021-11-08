@@ -21,7 +21,7 @@ namespace Machina.Components
         {
             if (this.zoomModifierIsDown)
             {
-                this.actor.scene.camera.AdjustZoom((float)scrollDelta / 4);
+                this.actor.scene.camera.AdjustZoom((float) scrollDelta / 4);
             }
         }
 
