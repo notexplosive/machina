@@ -43,60 +43,35 @@ namespace Machina.Engine
             demoPlaybackComponent.ShowGui = false;
         }
 
-        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, MachinaWindow machinaWindow)
+        internal void Draw()
         {
-            if (!isDoneUpdateLoading)
-            {
-                loadingScreen.Draw(this.spriteBatch, machinaWindow.CurrentWindowSize, GraphicsDevice);
-            }
-            else if (!loadingScreen.IsDoneDrawLoading())
-            {
-                loadingScreen.IncrementDrawLoopLoad(assets, spriteBatch);
-                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize, GraphicsDevice);
-            }
-            else
-            {
-                CurrentCartridge.SceneLayers.PreDraw(spriteBatch);
-                CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
-                GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
+            CurrentCartridge.SceneLayers.PreDraw(spriteBatch);
+            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+            GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
-                CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
-                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
-                CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
-            }
+            CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
+            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+            CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
         }
 
-        internal void Update(float dt, bool isDoneUpdateLoading, AssetLibrary assets, LoadingScreen loadingScreen)
+        internal void Update(float dt)
         {
-            if (!isDoneUpdateLoading)
+
+
+            if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
-                var library = assets;
-                var increment = 3;
-                for (var i = 0; i < increment; i++)
+                for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
                 {
-                    loadingScreen.Update(library, dt / increment);
+                    var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                    DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
+                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
                 }
-            }
-            else if (!loadingScreen.IsDoneDrawLoading())
-            {
-                // waiting for draw load
             }
             else
             {
-                if (DemoPlayback != null && DemoPlayback.IsFinished == false)
-                {
-                    for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
-                    {
-                        var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                        DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
-                        CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
-                    }
-                }
-                else
-                {
-                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
-                }
+                CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
             }
+
         }
     }
 }

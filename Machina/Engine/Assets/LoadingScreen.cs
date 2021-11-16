@@ -9,16 +9,14 @@ namespace Machina.Engine.Assets
     public class LoadingScreen
     {
         private readonly AssetLoadTree tree;
-        private readonly Action onFinishUpdating;
         private float delayTime;
         private bool readyToFinish;
         private bool isDoneUpdating;
 
-        public LoadingScreen(AssetLoadTree tree, Action onFinishUpdating)
+        public LoadingScreen(AssetLoadTree tree)
         {
             this.delayTime = 0.25f;
             this.tree = tree;
-            this.onFinishUpdating = onFinishUpdating;
         }
 
         public void Update(AssetLibrary assetLibrary, float dt)
@@ -36,7 +34,6 @@ namespace Machina.Engine.Assets
 
             if (this.readyToFinish)
             {
-                this.onFinishUpdating();
                 this.isDoneUpdating = true;
                 return;
             }
@@ -53,11 +50,6 @@ namespace Machina.Engine.Assets
 
         public void Draw(SpriteBatch spriteBatch, Point currentWindowSize, GraphicsDevice graphicsDevice)
         {
-            spriteBatch.Begin();
-
-            graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
-            graphicsDevice.Clear(Color.Black);
-
             var windowSize = currentWindowSize;
             var center = currentWindowSize.ToVector2() / 2f;
             var middleDepth = Depth.Middle;
@@ -95,8 +87,6 @@ namespace Machina.Engine.Assets
                     barForegroundColor,
                     barThickness / 2f, middleDepth - 1);
             }
-
-            spriteBatch.End();
         }
 
         public void IncrementDrawLoopLoad(AssetLibrary assetLibrary, SpriteBatch spriteBatch)
@@ -112,6 +102,11 @@ namespace Machina.Engine.Assets
         public bool IsDoneDrawLoading()
         {
             return this.tree.IsDoneDrawLoading();
+        }
+
+        public bool IsDoneUpdateLoading()
+        {
+            return this.isDoneUpdating;
         }
     }
 }

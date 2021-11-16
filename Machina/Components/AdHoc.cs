@@ -11,6 +11,7 @@ namespace Machina.Components
     public class AdHoc : BaseComponent
     {
         public Action<SpriteBatch> onDraw;
+        public Action<SpriteBatch> onPreDraw;
         public Action<Keys, ButtonState, ModifierKeys> onKey;
         public Action<MouseButton, Vector2, ButtonState> onMouseButton;
         public Action<float> onUpdate;
@@ -28,6 +29,11 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             this.onDraw?.Invoke(spriteBatch);
+        }
+
+        public override void PreDraw(SpriteBatch spriteBatch)
+        {
+            this.onPreDraw?.Invoke(spriteBatch);
         }
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)

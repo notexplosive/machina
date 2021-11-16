@@ -19,6 +19,92 @@ namespace Machina.Engine
         Active // Render DebugDraws
     }
 
+    public class LoadingScreenCartridge : Cartridge
+    {
+        public LoadingScreenCartridge(GameSettings gameSettings) : base(gameSettings.startingWindowSize, ResizeBehavior.FillContent, true)
+        {
+        }
+
+        public override void OnGameLoad(MachinaGameSpecification specification)
+        {
+            SceneLayers.BackgroundColor = Color.Black;
+        }
+
+        public void PrepareLoadingScreen(Cartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, MachinaWindow machinaWindow, Action onFinished)
+        {
+            var assetTree = AssetLibrary.GetStaticAssetLoadTree();
+            gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice);
+            PrepareLoadInitialStyle(assetTree);
+
+            var loadingScreen =
+                new LoadingScreen(assetTree);
+
+            var introScene = SceneLayers.AddNewScene();
+            var loader = introScene.AddActor("Loader");
+            var adHoc = new AdHoc(loader);
+
+            adHoc.onPreDraw += (spriteBatch) =>
+            {
+                if (!loadingScreen.IsDoneUpdateLoading())
+                {
+                    // Waiting for this to complete before draw loading
+                }
+                else if (!loadingScreen.IsDoneDrawLoading())
+                {
+                    loadingScreen.IncrementDrawLoopLoad(assets, spriteBatch);
+                }
+            };
+
+            adHoc.onDraw += (spriteBatch) =>
+            {
+                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize, runtime.GraphicsDevice);
+            };
+
+            adHoc.onUpdate += (dt) =>
+            {
+                if (!loadingScreen.IsDoneUpdateLoading())
+                {
+                    var increment = 3;
+                    for (var i = 0; i < increment; i++)
+                    {
+                        loadingScreen.Update(assets, dt / increment);
+                    }
+                }
+
+                if (loadingScreen.IsDoneDrawLoading() && loadingScreen.IsDoneUpdateLoading())
+                {
+                    onFinished();
+                }
+            };
+        }
+
+        private void PrepareLoadInitialStyle(AssetLoadTree loadTree)
+        {
+            loadTree.AddMachinaAssetCallback("ui-button",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-button-hover",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
+                    new Rectangle(8 + 24, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-button-press",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
+                    new Rectangle(8 + 48, 8, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-slider-ninepatch",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
+                    new Rectangle(8, 152, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
+                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
+            loadTree.AddMachinaAssetCallback("ui-radio-fill-image",
+                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
+            loadTree.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
+                () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
+            loadTree.AddMachinaAssetCallback("ui-textbox-ninepatch",
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
+                    new Rectangle(8, 104, 8, 8)));
+            loadTree.AddMachinaAssetCallback("ui-window-ninepatch",
+                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
+        }
+    }
+
     /// <summary>
     ///     Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
     ///     Your game should call the base constructor, even though it's abstract.
@@ -44,13 +130,8 @@ namespace Machina.Engine
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
-
-        // Loading Screen Cartridge
-        private LoadingScreen loadingScreen;
-
         // Things that are going away (hopefully)
         public static MachinaGame Current { get; private set; }
-        private bool isDoneUpdateLoading = false;
         public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
         protected MachinaGame(MachinaGameSpecification specification, Cartridge gameCartridge)
@@ -125,7 +206,9 @@ namespace Machina.Engine
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
 
-            SetupLoadingScreen();
+            var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
+            Runtime.InsertCartridge(loadingCartridge, this.specification, Window, this.machinaWindow);
+            loadingCartridge.PrepareLoadingScreen(this.gameCartridge, Runtime, Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
         }
 
         private void FinishLoadingContent()
@@ -206,39 +289,11 @@ namespace Machina.Engine
                 // NOTE: If we play the intro in a debug build this flag will not be honored, tech debt.
                 new SnapshotTaker(debugActor, shouldSkipSnapshot);
             }
-
-            this.isDoneUpdateLoading = true;
         }
 
         private void SetRandomSeedFromString(string seed)
         {
             this.gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
-        }
-
-        private void PrepareLoadInitialStyle(AssetLoadTree loadTree)
-        {
-            loadTree.AddMachinaAssetCallback("ui-button",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8)));
-            loadTree.AddMachinaAssetCallback("ui-button-hover",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
-                    new Rectangle(8 + 24, 8, 8, 8)));
-            loadTree.AddMachinaAssetCallback("ui-button-press",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
-                    new Rectangle(8 + 48, 8, 8, 8)));
-            loadTree.AddMachinaAssetCallback("ui-slider-ninepatch",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
-                    new Rectangle(8, 152, 8, 8)));
-            loadTree.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
-                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            loadTree.AddMachinaAssetCallback("ui-radio-fill-image",
-                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            loadTree.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
-                () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            loadTree.AddMachinaAssetCallback("ui-textbox-ninepatch",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
-                    new Rectangle(8, 104, 8, 8)));
-            loadTree.AddMachinaAssetCallback("ui-window-ninepatch",
-                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
         }
 
         private void InsertGameCartridgeAndRun()
@@ -264,8 +319,7 @@ namespace Machina.Engine
         {
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen);
+            Runtime.Update(dt);
 
             Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
@@ -273,7 +327,7 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, this.machinaWindow);
+            Runtime.Draw();
             base.Draw(gameTime);
         }
 
@@ -283,16 +337,6 @@ namespace Machina.Engine
             {
                 scene.OnDeleteFinished();
             }
-        }
-
-        private void SetupLoadingScreen()
-        {
-            var assetTree = AssetLibrary.GetStaticAssetLoadTree();
-            this.gameCartridge.PrepareDynamicAssets(assetTree, Runtime.GraphicsDevice);
-            PrepareLoadInitialStyle(assetTree);
-
-            this.loadingScreen =
-                new LoadingScreen(assetTree, FinishLoadingContent);
         }
 
         private void PlayIntroAndLoadGame()

@@ -15,13 +15,15 @@ namespace Machina.Engine
 
         private readonly Point renderResolution;
         private readonly ResizeBehavior resizeBehavior;
+        private readonly bool skipDebug;
 
         public SeededRandom Random { get; private set; }
 
-        protected Cartridge(Point renderResolution, ResizeBehavior resizeBehavior)
+        protected Cartridge(Point renderResolution, ResizeBehavior resizeBehavior, bool skipDebug = false)
         {
             this.renderResolution = renderResolution;
             this.resizeBehavior = resizeBehavior;
+            this.skipDebug = skipDebug;
             Random = new SeededRandom();
         }
 
@@ -58,7 +60,7 @@ namespace Machina.Engine
             if (SceneLayers == null)
             {
                 // this is lazy initialized for the dumbest reason: to be debuggable it needs to have a font, the font doesn't come in until after loading is complete
-                SceneLayers = new SceneLayers(true, new GameCanvas(renderResolution, resizeBehavior));
+                SceneLayers = new SceneLayers(!this.skipDebug, new GameCanvas(renderResolution, resizeBehavior));
             }
         }
     }
