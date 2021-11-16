@@ -35,8 +35,9 @@ namespace Machina.Engine
 
         public Demo.Playback DemoPlayback { get; set; }
         public DebugLevel DebugLevel { get; set; }
+        public GraphicsDevice GraphicsDevice { get; internal set; }
 
-        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, Cartridge CurrentCartridge, GraphicsDevice GraphicsDevice, MachinaWindow machinaWindow)
+        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, Cartridge CurrentCartridge, MachinaWindow machinaWindow)
         {
             if (!isDoneUpdateLoading)
             {
@@ -115,7 +116,7 @@ namespace Machina.Engine
 
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
-        private readonly MachinaWindow machinaWindow;
+        private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
 
@@ -163,7 +164,6 @@ namespace Machina.Engine
             };
 
             Runtime = new MachinaRuntime(graphics);
-            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, GraphicsDevice);
             Assets = new AssetLibrary(this);
         }
 
@@ -205,12 +205,18 @@ namespace Machina.Engine
 
         protected override void LoadContent()
         {
+            // We cannot do this any earlier, GraphicsDevice doesn't exist until now
+            Runtime.GraphicsDevice = GraphicsDevice;
+
+            Console.Out.WriteLine("Constructing SpriteBatch");
+            Runtime.spriteBatch = new SpriteBatch(Runtime.GraphicsDevice);
+
+            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, Runtime.GraphicsDevice);
+
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, GraphicsDevice);
+            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, Runtime.GraphicsDevice);
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
-            Console.Out.WriteLine("Constructing SpriteBatch");
-            Runtime.spriteBatch = new SpriteBatch(GraphicsDevice);
 
             SetupLoadingScreen();
         }
@@ -368,7 +374,7 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, CurrentCartridge, GraphicsDevice, this.machinaWindow);
+            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, CurrentCartridge, this.machinaWindow);
             base.Draw(gameTime);
         }
 
@@ -383,7 +389,7 @@ namespace Machina.Engine
         private void SetupLoadingScreen()
         {
             var assetTree = AssetLibrary.GetStaticAssetLoadTree();
-            this.gameCartridge.PrepareDynamicAssets(assetTree, GraphicsDevice);
+            this.gameCartridge.PrepareDynamicAssets(assetTree, Runtime.GraphicsDevice);
             PrepareLoadInitialStyle(assetTree);
 
             this.loadingScreen =
