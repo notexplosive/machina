@@ -25,33 +25,71 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
-        public static UIStyle defaultStyle;
-        private static MouseCursor pendingCursor;
-        protected virtual GameSettings StartingSettings => new GameSettings();
-        public static SoundEffectPlayer SoundEffectPlayer;
-        public static readonly FrameStep GlobalFrameStep = new FrameStep();
-
+        // PLATFORM (one of, internal)
         /// <summary>
         ///     Path to users AppData folder (or platform equivalent)
         /// </summary>
         public readonly string appDataPath;
+        public static UIStyle defaultStyle;
+        public static IAssetLibrary Assets { get; private set; }
 
-        public readonly string gameTitle;
 
+
+        // MACHINA DESKTOP
+        private readonly MachinaWindow machinaWindow;
+
+        // RUNTIME (one of, internal)
+        private static MouseCursor pendingCursor;
+        public static SoundEffectPlayer SoundEffectPlayer;
+        public static readonly FrameStep GlobalFrameStep = new FrameStep();
+        private SpriteBatch spriteBatch;
+        public static DebugLevel DebugLevel { get; set; }
+        public static GraphicsDeviceManager Graphics { get; private set; }
+        private Demo.Playback DemoPlayback { get; set; }
+
+
+
+
+        // INPUT (one of, internal)
         private readonly KeyTracker keyTracker = new KeyTracker();
         private readonly MouseTracker mouseTracker = new MouseTracker();
         private readonly SingleFingerTouchTracker touchTracker = new SingleFingerTouchTracker();
-        private SceneLayers sceneLayers;
 
-        private readonly Point startingRenderResolution;
-
-        private readonly ResizeBehavior startingResizeBehavior;
-
+        // SPEC (one of, user defined)
+        public readonly string gameTitle;
+        protected virtual GameSettings StartingSettings => new GameSettings();
         protected readonly Point startingWindowSize;
-        private SpriteBatch spriteBatch;
+        protected static CommandLineArgs CommandLineArgs { get; private set; }
+
+
+        // CARTRIDGE (many of, some user defined, some internal)
+        private SceneLayers sceneLayers;
+        private readonly Point startingRenderResolution;
+        private readonly ResizeBehavior startingResizeBehavior;
+        public static SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
+        public SceneLayers SceneLayers
+        {
+            get => this.sceneLayers;
+            set
+            {
+                this.sceneLayers = value;
+                CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
+            }
+        }
+        public GameCanvas CurrentGameCanvas => this.sceneLayers.gameCanvas as GameCanvas;
+        public static SeededRandom Random { get; private set; }
+
+
+
+        // Loading Screen Cartridge
         private LoadingScreen loadingScreen;
+
+        // Things that are going away (hopefully)
+        public static MachinaGame Current { get; private set; }
         private bool isDoneUpdateLoading = false;
-        private readonly MachinaWindow machinaWindow;
+
+
+
 
         protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
             ResizeBehavior resizeBehavior)
@@ -84,34 +122,6 @@ namespace Machina.Engine
             SceneLayers = new SceneLayers(false,
                 new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
-
-        protected static CommandLineArgs CommandLineArgs { get; private set; }
-
-        public SceneLayers SceneLayers
-        {
-            get => this.sceneLayers;
-            set
-            {
-                this.sceneLayers = value;
-                CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
-            }
-        }
-
-        public GameCanvas CurrentGameCanvas => this.sceneLayers.gameCanvas as GameCanvas;
-
-        public static SeededRandom Random { get; private set; }
-
-        public static DebugLevel DebugLevel { get; set; }
-
-        public static GraphicsDeviceManager Graphics { get; private set; }
-
-        public static IAssetLibrary Assets { get; private set; }
-
-        public static MachinaGame Current { get; private set; }
-
-        private Demo.Playback DemoPlayback { get; set; }
-
-        public static SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
 
         /// <summary>
         ///     TEST ONLY!!
