@@ -2,15 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Machina.Engine
+namespace Machina.Engine.Input
 {
-    public enum MouseButton
-    {
-        Left,
-        Middle,
-        Right
-    }
-
     public class MouseTracker
     {
         private bool firstFrame = true;

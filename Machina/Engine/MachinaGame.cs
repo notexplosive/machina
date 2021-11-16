@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Machina.Engine
 {
     using Assets;
+    using Machina.Engine.Input;
 
     public enum DebugLevel
     {

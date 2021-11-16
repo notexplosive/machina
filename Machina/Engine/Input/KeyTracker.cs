@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 
-namespace Machina.Engine
+namespace Machina.Engine.Input
 {
     public class KeyTracker
     {

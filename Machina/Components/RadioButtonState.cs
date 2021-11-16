@@ -1,4 +1,5 @@
 ﻿using Machina.Engine;
+using Machina.Engine.Input;
 
 namespace Machina.Components
 {

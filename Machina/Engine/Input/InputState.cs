@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace Machina.Engine
+namespace Machina.Engine.Input
 {
     public struct InputState
     {

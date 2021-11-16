@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using Machina.Data;
+using Machina.Engine.Input;
 using Machina.Internals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

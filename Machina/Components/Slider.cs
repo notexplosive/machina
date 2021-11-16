@@ -1,6 +1,7 @@
 ﻿using System;
 using Machina.Data;
 using Machina.Engine;
+using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

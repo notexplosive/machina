@@ -3,7 +3,7 @@ using Machina.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace Machina.Engine
+namespace Machina.Engine.Input
 {
     public class SingleFingerTouchTracker
     {

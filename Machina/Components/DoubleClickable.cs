@@ -1,4 +1,5 @@
 ﻿using Machina.Engine;
+using Machina.Engine.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components

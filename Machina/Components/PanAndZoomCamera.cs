@@ -1,5 +1,6 @@
 ﻿using Machina.Data;
 using Machina.Engine;
+using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,7 +10,6 @@ namespace Machina.Components
     {
         private readonly Keys zoomModifier;
         private bool isPanning;
-        private bool isRotating;
         private bool zoomModifierIsDown;
 
         public PanAndZoomCamera(Actor actor, Keys zoomModifier) : base(actor)
@@ -51,11 +51,6 @@ namespace Machina.Components
             if (this.isPanning)
             {
                 this.actor.scene.camera.ScaledPosition -= positionDelta.ToPoint();
-            }
-
-            if (this.isRotating)
-            {
-                this.actor.scene.camera.Rotation += rawDelta.X / 100;
             }
         }
     }
