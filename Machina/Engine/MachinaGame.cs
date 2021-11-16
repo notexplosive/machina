@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Machina.Engine
 {
     using Assets;
+    using Machina.Engine.Cartridges;
     using Machina.Engine.Input;
 
     public enum DebugLevel
@@ -17,36 +18,6 @@ namespace Machina.Engine
         Off, // Completely disabled, can be enabled with hotkey
         Passive, // Show Console Output
         Active // Render DebugDraws
-    }
-
-    public class IntroCartridge : Cartridge
-    {
-        private readonly Action onEnd;
-
-        public static Point RenderResolution(GameSettings settings)
-        {
-            const int desiredWidth = 1920 / 4;
-            var AspectRatio = (float) settings.startingWindowSize.X / desiredWidth;
-            return new Vector2(settings.startingWindowSize.X / AspectRatio, settings.startingWindowSize.Y / AspectRatio).ToPoint();
-        }
-
-        public IntroCartridge(GameSettings settings, Action onEnd) : base(RenderResolution(settings), ResizeBehavior.MaintainDesiredResolution)
-        {
-            this.onEnd = onEnd;
-        }
-
-        public override void OnGameLoad(MachinaGameSpecification specification)
-        {
-            var introScene = SceneLayers.AddNewScene();
-
-            var textActor = introScene.AddActor("text");
-            new BoundingRect(textActor, 20, 20);
-            new BoundingRectToViewportSize(textActor);
-            new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White,
-                HorizontalAlignment.Center, VerticalAlignment.Center);
-            new IntroTextAnimation(textActor);
-            new CallbackOnDestroy(textActor, onEnd);
-        }
     }
 
     /// <summary>
@@ -92,6 +63,7 @@ namespace Machina.Engine
                 this.cartridge = value;
                 this.cartridge.Setup(GraphicsDevice, this.specification, Window, this.machinaWindow);
                 this.cartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
+                Graphics.ApplyChanges();
             }
         }
         private Cartridge cartridge;
@@ -304,8 +276,6 @@ namespace Machina.Engine
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
             CurrentCartridge = this.gameCartridge;
             this.specification.CommandLineArgs.ExecuteArgs();
-            CurrentCartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
-            Graphics.ApplyChanges();
         }
 
         public static void Quit()
