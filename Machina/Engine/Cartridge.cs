@@ -51,10 +51,6 @@ namespace Machina.Engine
 
         public abstract void OnGameLoad(MachinaGameSpecification specification);
 
-        public virtual void PrepareDynamicAssets(AssetLoadTree loadTree, GraphicsDevice graphicsDevice)
-        {
-        }
-
         public void SetupSceneLayers()
         {
             if (SceneLayers == null)

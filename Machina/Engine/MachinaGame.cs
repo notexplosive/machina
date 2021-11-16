@@ -27,13 +27,13 @@ namespace Machina.Engine
     {
         // PLATFORM (one of, internal)
         /// <summary>
-        ///     Path to users AppData folder (or platform equivalent)
+        /// Path to users AppData folder (or platform equivalent)
         /// </summary>
         public readonly string appDataPath;
         /// <summary>
         /// Cartridge provided by client code
         /// </summary>
-        public readonly Cartridge gameCartridge;
+        public readonly GameCartridge gameCartridge;
         public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
         protected readonly MachinaGameSpecification specification;
@@ -48,7 +48,7 @@ namespace Machina.Engine
         public static MachinaGame Current { get; private set; }
         public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
-        protected MachinaGame(MachinaGameSpecification specification, Cartridge gameCartridge)
+        protected MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
         {
             Current = this;
             this.specification = specification;

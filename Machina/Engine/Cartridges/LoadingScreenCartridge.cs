@@ -18,7 +18,7 @@ namespace Machina.Engine.Cartridges
             SceneLayers.BackgroundColor = Color.Black;
         }
 
-        public void PrepareLoadingScreen(Cartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, MachinaWindow machinaWindow, Action onFinished)
+        public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, MachinaWindow machinaWindow, Action onFinished)
         {
             var assetTree = AssetLibrary.GetStaticAssetLoadTree();
             gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice);
