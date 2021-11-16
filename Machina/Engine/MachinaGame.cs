@@ -151,7 +151,6 @@ namespace Machina.Engine
                 Print("Debug build detected");
             }
 
-
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
             this.gameCartridge.SetupSceneLayers();
 

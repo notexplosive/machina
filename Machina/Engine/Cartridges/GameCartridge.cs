@@ -14,5 +14,11 @@ namespace Machina.Engine.Cartridges
         }
 
         public abstract void PrepareDynamicAssets(AssetLoadTree loadTree, GraphicsDevice graphicsDevice);
+
+        public void SetupSceneLayers()
+        {
+            // This function is only exposed on GameCartridge, normal cartridges cannot do this
+            BuildSceneLayers();
+        }
     }
 }

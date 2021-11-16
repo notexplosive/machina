@@ -31,7 +31,7 @@ namespace Machina.Engine
         {
             if (!this.hasBeenSetup)
             {
-                SetupSceneLayers();
+                BuildSceneLayers();
 
                 CurrentGameCanvas.BuildCanvas(graphicsDevice);
 
@@ -51,7 +51,7 @@ namespace Machina.Engine
 
         public abstract void OnGameLoad(MachinaGameSpecification specification);
 
-        public void SetupSceneLayers()
+        protected void BuildSceneLayers()
         {
             if (SceneLayers == null)
             {
