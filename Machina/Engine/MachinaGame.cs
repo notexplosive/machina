@@ -117,18 +117,6 @@ namespace Machina.Engine
                 new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
 
-        /// <summary>
-        ///     TEST ONLY!!
-        /// </summary>
-        public static void SetSeededRandom(int seed)
-        {
-            var random = new SeededRandom
-            {
-                Seed = seed
-            };
-            Random = random;
-        }
-
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
         {
             if (rect.Width * rect.Height == 0)
