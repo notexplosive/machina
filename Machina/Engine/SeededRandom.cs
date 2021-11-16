@@ -11,7 +11,6 @@ namespace Machina.Engine
         public SeededRandom()
         {
             Seed = GenerateSeed();
-            Dirty = new NoiseBasedRNG((uint) GenerateSeed());
         }
 
         public int Seed
@@ -27,8 +26,6 @@ namespace Machina.Engine
 
         public NoiseBasedRNG Clean { get; private set; }
 
-        public NoiseBasedRNG Dirty { get; }
-
         public static int GenerateSeed()
         {
             return (int) DateTime.Now.Ticks & 0x0000FFFF;
@@ -37,11 +34,6 @@ namespace Machina.Engine
         public void CleanShuffle<T>(IList<T> list)
         {
             Clean.Shuffle(list);
-        }
-
-        public void DirtyShuffle<T>(IList<T> list)
-        {
-            Dirty.Shuffle(list);
         }
     }
 }

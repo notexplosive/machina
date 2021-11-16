@@ -141,7 +141,7 @@ namespace Machina.Engine
 
             public Recorder(string fileName)
             {
-                this.demo = new Demo(MachinaGame.Random.Seed);
+                this.demo = new Demo(MachinaGame.Current.gameCartridge.Random.Seed);
                 this.totalTime = 0f;
                 this.fileName = fileName;
             }
@@ -174,7 +174,7 @@ namespace Machina.Engine
                 this.currentIndex = 0;
                 this.demoLength = this.demo.records.Count;
                 this.playbackSpeed = playbackSpeed;
-                MachinaGame.Random.Seed = demo.seedAtStart;
+                MachinaGame.Current.gameCartridge.Random.Seed = demo.seedAtStart;
             }
 
             public bool IsFinished => this.currentIndex >= this.demoLength;

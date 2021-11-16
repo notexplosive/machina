@@ -113,7 +113,7 @@ namespace Machina.Engine
                 RenderTarget2D canvas, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.SamplerState,
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.Current.CurrentCartridge.SamplerState,
                     DepthStencilState.DepthRead);
                 spriteBatch.Draw(canvas,
                     canvasRect,
@@ -131,7 +131,7 @@ namespace Machina.Engine
             public void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget)
             {
                 graphicsDevice.SetRenderTarget(screenRenderTarget);
-                graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
+                graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
             }
         }
 

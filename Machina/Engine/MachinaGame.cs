@@ -19,6 +19,36 @@ namespace Machina.Engine
         Active // Render DebugDraws
     }
 
+    public class IntroCartridge : Cartridge
+    {
+        private readonly Action onEnd;
+
+        public static Point RenderResolution(GameSettings settings)
+        {
+            const int desiredWidth = 1920 / 4;
+            var AspectRatio = (float) settings.startingWindowSize.X / desiredWidth;
+            return new Vector2(settings.startingWindowSize.X / AspectRatio, settings.startingWindowSize.Y / AspectRatio).ToPoint();
+        }
+
+        public IntroCartridge(GameSettings settings, Action onEnd) : base(RenderResolution(settings), ResizeBehavior.MaintainDesiredResolution)
+        {
+            this.onEnd = onEnd;
+        }
+
+        public override void OnGameLoad(MachinaGameSpecification specification)
+        {
+            var introScene = SceneLayers.AddNewScene();
+
+            var textActor = introScene.AddActor("text");
+            new BoundingRect(textActor, 20, 20);
+            new BoundingRectToViewportSize(textActor);
+            new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White,
+                HorizontalAlignment.Center, VerticalAlignment.Center);
+            new IntroTextAnimation(textActor);
+            new CallbackOnDestroy(textActor, onEnd);
+        }
+    }
+
     /// <summary>
     ///     Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
     ///     Your game should call the base constructor, even though it's abstract.
@@ -30,8 +60,12 @@ namespace Machina.Engine
         ///     Path to users AppData folder (or platform equivalent)
         /// </summary>
         public readonly string appDataPath;
-        public static UIStyle defaultStyle;
+        /// <summary>
+        /// Cartridge provided by client code
+        /// </summary>
+        public readonly Cartridge gameCartridge;
         public static IAssetLibrary Assets { get; private set; }
+        public static UIStyle defaultStyle;
 
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
@@ -47,25 +81,20 @@ namespace Machina.Engine
         public static GraphicsDeviceManager Graphics { get; private set; }
         private Demo.Playback DemoPlayback { get; set; }
         private readonly MachinaInput input = new MachinaInput();
-
-
-        // CARTRIDGE (many of, some user defined, some internal)
-        private SceneLayers sceneLayers;
-        private readonly Point startingRenderResolution;
-        private readonly ResizeBehavior startingResizeBehavior;
-        public static SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
-        public SceneLayers SceneLayers
+        /// <summary>
+        /// Currently loaded cartridge
+        /// </summary>
+        public Cartridge CurrentCartridge
         {
-            get => this.sceneLayers;
+            get => this.cartridge;
             set
             {
-                this.sceneLayers = value;
-                CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
+                this.cartridge = value;
+                this.cartridge.Setup(GraphicsDevice, this.specification, Window, this.machinaWindow);
+                this.cartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
             }
         }
-        public GameCanvas CurrentGameCanvas => this.sceneLayers.gameCanvas as GameCanvas;
-        public static SeededRandom Random { get; private set; }
-
+        private Cartridge cartridge;
 
 
         // Loading Screen Cartridge
@@ -76,16 +105,13 @@ namespace Machina.Engine
 
         protected readonly MachinaGameSpecification specification;
         private bool isDoneUpdateLoading = false;
+        public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
-
-
-
-        protected MachinaGame(MachinaGameSpecification specification, Point startingRenderResolution, ResizeBehavior resizeBehavior)
+        protected MachinaGame(MachinaGameSpecification specification, Cartridge gameCartridge)
         {
             Current = this;
             this.specification = specification;
-            this.startingResizeBehavior = resizeBehavior;
-            this.startingRenderResolution = startingRenderResolution;
+            this.gameCartridge = gameCartridge;
 
             // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -99,12 +125,8 @@ namespace Machina.Engine
 
 
             this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Graphics, GraphicsDevice);
-            this.machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
             Assets = new Assets.AssetLibrary(this);
-            Random = new SeededRandom();
-
-            SceneLayers = new SceneLayers(false, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
 
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
@@ -174,36 +196,26 @@ namespace Machina.Engine
                 Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
-            Console.Out.WriteLine("Building SceneLayers");
-            SceneLayers = new SceneLayers(true,
-                new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
-            Console.Out.WriteLine("Building Canvas");
-            CurrentGameCanvas.BuildCanvas(GraphicsDevice);
-
-            if (GamePlatform.IsDesktop)
-            {
-                Window.TextInput += SceneLayers.AddPendingTextInput;
-            }
-
             if (DebugLevel >= DebugLevel.Passive)
             {
                 Print("Debug build detected");
             }
 
-            var debugActor = this.sceneLayers.debugScene.AddActor("DebugActor");
+
+            // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
+            this.gameCartridge.SetupSceneLayers();
+
+            var debugActor = this.gameCartridge.SceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
-            this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
-
             var demoName = Demo.MostRecentlySavedDemoPath;
-            this.specification.CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
-
             var demoSpeed = 1;
+            var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
+
+            this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
+            this.specification.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            this.specification.CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
             this.specification.CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
-
-            this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
-                () => { DebugLevel = DebugLevel.Active; });
-
             this.specification.CommandLineArgs.RegisterValueArg("demo", arg =>
             {
                 switch (arg)
@@ -219,25 +231,29 @@ namespace Machina.Engine
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
-                        Print("Unknown demo mode", arg);
+                        MachinaGame.Print("Unknown demo mode", arg);
                         break;
                 }
             });
 
-            var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
-            this.specification.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
-
             this.specification.settings.LoadSavedSettingsIfExist();
+
+            this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
+                () => { DebugLevel = DebugLevel.Active; });
+
             SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
 
+
 #if DEBUG
-            LoadGame();
+            // PlayIntroAndLoadGame();
+            InsertGameCartridgeAndRun();
 #else
             PlayIntroAndLoadGame();
 #endif
-
+            // Currently we go [SetupDebugScene] -> [LoadGame] -> [LateSetup], hopefully the cartridge system will mitigate the need for this.
             if (GamePlatform.IsDesktop)
             {
+                // NOTE: If we play the intro in a debug build this flag will not be honored, tech debt.
                 new SnapshotTaker(debugActor, shouldSkipSnapshot);
             }
 
@@ -246,12 +262,12 @@ namespace Machina.Engine
 
         private void SetRandomSeedFromString(string seed)
         {
-            Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
+            this.gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
         }
 
-        protected void RunDemo(string demoName)
+        public void RunDemo(string demoName)
         {
-            var demoActor = this.sceneLayers.debugScene.AddActor("DebugActor");
+            var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
             DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
             demoPlaybackComponent.ShowGui = false;
@@ -283,12 +299,12 @@ namespace Machina.Engine
                 () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52)));
         }
 
-        private void LoadGame()
+        private void InsertGameCartridgeAndRun()
         {
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
-            OnGameLoad();
+            CurrentCartridge = this.gameCartridge;
             this.specification.CommandLineArgs.ExecuteArgs();
-            CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
+            CurrentCartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
         }
 
@@ -303,8 +319,6 @@ namespace Machina.Engine
             this.spriteBatch.Dispose();
             Assets.UnloadAssets();
         }
-
-        protected abstract void OnGameLoad();
 
         protected override void Update(GameTime gameTime)
         {
@@ -332,12 +346,12 @@ namespace Machina.Engine
                     {
                         var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
                         DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
-                        this.sceneLayers.Update(dt, Matrix.Identity, frameState);
+                        CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
                     }
                 }
                 else
                 {
-                    this.sceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
+                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
                 }
             }
 
@@ -358,13 +372,13 @@ namespace Machina.Engine
             }
             else
             {
-                this.sceneLayers.PreDraw(this.spriteBatch);
-                CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
-                GraphicsDevice.Clear(this.sceneLayers.BackgroundColor);
+                CurrentCartridge.SceneLayers.PreDraw(this.spriteBatch);
+                CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+                GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
-                this.sceneLayers.DrawOnCanvas(this.spriteBatch);
-                CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, this.spriteBatch);
-                this.sceneLayers.DrawDebugScene(this.spriteBatch);
+                CurrentCartridge.SceneLayers.DrawOnCanvas(this.spriteBatch);
+                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, this.spriteBatch);
+                CurrentCartridge.SceneLayers.DrawDebugScene(this.spriteBatch);
             }
 
             base.Draw(gameTime);
@@ -372,7 +386,7 @@ namespace Machina.Engine
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            foreach (var scene in this.sceneLayers.AllScenes())
+            foreach (var scene in CurrentCartridge.SceneLayers.AllScenes())
             {
                 scene.OnDeleteFinished();
             }
@@ -380,46 +394,23 @@ namespace Machina.Engine
 
         private void SetupLoadingScreen()
         {
-            var assetTree = Engine.Assets.AssetLibrary.GetStaticAssetLoadTree();
-            PrepareDynamicAssets(assetTree);
+            var assetTree = AssetLibrary.GetStaticAssetLoadTree();
+            this.gameCartridge.PrepareDynamicAssets(assetTree, GraphicsDevice);
             PrepareLoadInitialStyle(assetTree);
 
             this.loadingScreen =
                 new LoadingScreen(assetTree, FinishLoadingContent);
         }
 
-        protected abstract void PrepareDynamicAssets(AssetLoadTree tree);
-
         private void PlayIntroAndLoadGame()
         {
-            const int desiredWidth = 1920 / 4;
-            var oldSceneLayers = SceneLayers;
-            var ratio = (float) this.specification.settings.startingWindowSize.X / desiredWidth;
-            var gameCanvas = new GameCanvas(
-                new Vector2(this.specification.settings.startingWindowSize.X / ratio, this.specification.settings.startingWindowSize.Y / ratio).ToPoint(),
-                ResizeBehavior.MaintainDesiredResolution);
-            gameCanvas.BuildCanvas(GraphicsDevice);
-            var introLayers = new SceneLayers(true, gameCanvas);
-            var introScene = introLayers.AddNewScene();
-
-            var textActor = introScene.AddActor("text");
-            new BoundingRect(textActor, 20, 20);
-            new BoundingRectToViewportSize(textActor);
-            new BoundedTextRenderer(textActor, "", Assets.GetSpriteFont("LogoFont"), Color.White,
-                HorizontalAlignment.Center, VerticalAlignment.Center);
-            new IntroTextAnimation(textActor);
-
             // Steal control
-            SceneLayers = introLayers;
-
             void OnEnd()
             {
                 // Start the actual game
-                SceneLayers = oldSceneLayers;
-                LoadGame();
+                InsertGameCartridgeAndRun();
             }
-
-            new CallbackOnDestroy(textActor, OnEnd);
+            CurrentCartridge = new IntroCartridge(this.specification.settings, OnEnd);
         }
 
         /// <summary>
@@ -428,7 +419,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Current?.SceneLayers?.Logger.Log(objects);
+            Current?.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
             new StdOutConsoleLogger().Log(objects);
         }
     }
