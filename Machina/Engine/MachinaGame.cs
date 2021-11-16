@@ -35,11 +35,11 @@ namespace Machina.Engine
 
 
 
-        // MACHINA DESKTOP
+        // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private readonly MachinaWindow machinaWindow;
+        private static MouseCursor pendingCursor;
 
         // RUNTIME (one of, internal)
-        private static MouseCursor pendingCursor;
         public static SoundEffectPlayer SoundEffectPlayer;
         public static readonly FrameStep GlobalFrameStep = new FrameStep();
         private SpriteBatch spriteBatch;
