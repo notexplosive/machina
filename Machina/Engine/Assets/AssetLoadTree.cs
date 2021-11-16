@@ -1,4 +1,4 @@
-namespace Machina.Engine.AssetLibrary
+namespace Machina.Engine.Assets
 {
     using System;
     using System.Collections.Generic;

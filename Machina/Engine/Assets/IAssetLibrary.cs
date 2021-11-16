@@ -1,4 +1,4 @@
-namespace Machina.Engine.AssetLibrary
+namespace Machina.Engine.Assets
 {
     using Data;
     using Microsoft.Xna.Framework.Audio;

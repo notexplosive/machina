@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TestMachina.Utility
 {
-    using Machina.Engine.AssetLibrary;
+    using Machina.Engine.Assets;
 
     public class FakeAssetLibrary : IAssetLibrary
     {

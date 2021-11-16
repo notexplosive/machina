@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
-    using AssetLibrary;
+    using Assets;
 
     public enum DebugLevel
     {
@@ -77,7 +77,7 @@ namespace Machina.Engine
             this.machinaWindow = new MachinaWindow(startingWindowSize, Window, Graphics, GraphicsDevice);
             this.machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
-            Assets = new AssetLibrary.AssetLibrary(this);
+            Assets = new Assets.AssetLibrary(this);
             Random = new SeededRandom();
 
             SceneLayers = new SceneLayers(false,
@@ -326,7 +326,7 @@ namespace Machina.Engine
 
             if (!this.isDoneUpdateLoading)
             {
-                var library = Assets as AssetLibrary.AssetLibrary;
+                var library = Assets as Assets.AssetLibrary;
                 var increment = 3;
                 for (var i = 0; i < increment; i++)
                 {
@@ -386,7 +386,7 @@ namespace Machina.Engine
             }
             else if (!this.loadingScreen.IsDoneDrawLoading())
             {
-                this.loadingScreen.IncrementDrawLoopLoad(Assets as AssetLibrary.AssetLibrary, this.spriteBatch);
+                this.loadingScreen.IncrementDrawLoopLoad(Assets as Assets.AssetLibrary, this.spriteBatch);
                 this.loadingScreen.Draw(this.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
             }
             else
@@ -413,7 +413,7 @@ namespace Machina.Engine
 
         private void SetupLoadingScreen()
         {
-            var assetTree = AssetLibrary.AssetLibrary.GetStaticAssetLoadTree();
+            var assetTree = Engine.Assets.AssetLibrary.GetStaticAssetLoadTree();
             PrepareDynamicAssets(assetTree);
             PrepareLoadInitialStyle(assetTree);
 
