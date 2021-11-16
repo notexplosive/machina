@@ -111,6 +111,7 @@ namespace Machina.Engine
         public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
         protected readonly MachinaGameSpecification specification;
+        public MachinaRuntime Runtime { get; }
 
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
@@ -118,8 +119,6 @@ namespace Machina.Engine
         private static MouseCursor pendingCursor;
 
 
-        // RUNTIME (one of, internal)
-        public MachinaRuntime Runtime { get; }
 
         /// <summary>
         /// Currently loaded cartridge
@@ -164,10 +163,7 @@ namespace Machina.Engine
             };
 
             Runtime = new MachinaRuntime(graphics);
-
-
             this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, GraphicsDevice);
-
             Assets = new AssetLibrary(this);
         }
 
@@ -209,6 +205,8 @@ namespace Machina.Engine
 
         protected override void LoadContent()
         {
+            Console.Out.WriteLine("Applying settings");
+            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, GraphicsDevice);
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
             Console.Out.WriteLine("Constructing SpriteBatch");
@@ -277,8 +275,6 @@ namespace Machina.Engine
                         break;
                 }
             });
-
-            this.specification.settings.LoadSavedSettingsIfExist();
 
             this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
                 () => { Runtime.DebugLevel = DebugLevel.Active; });

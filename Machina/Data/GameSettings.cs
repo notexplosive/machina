@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data
 {
@@ -13,7 +14,7 @@ namespace Machina.Data
             this.startingWindowSize = startingWindowSize;
         }
 
-        public virtual void LoadSavedSettingsIfExist()
+        public virtual void LoadSavedSettingsIfExist(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice)
         {
         }
     }
