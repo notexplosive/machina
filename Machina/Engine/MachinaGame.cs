@@ -34,10 +34,10 @@ namespace Machina.Engine
         public static IAssetLibrary Assets { get; private set; }
 
 
-
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private readonly MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
+
 
         // RUNTIME (one of, internal)
         public static SoundEffectPlayer SoundEffectPlayer;
@@ -47,13 +47,6 @@ namespace Machina.Engine
         public static GraphicsDeviceManager Graphics { get; private set; }
         private Demo.Playback DemoPlayback { get; set; }
         private readonly MachinaInput input = new MachinaInput();
-
-
-        // SPEC (one of, user defined)
-        public readonly string gameTitle;
-        protected virtual GameSettings StartingSettings => new GameSettings();
-        protected readonly Point startingWindowSize;
-        protected static CommandLineArgs CommandLineArgs { get; private set; }
 
 
         // CARTRIDGE (many of, some user defined, some internal)
@@ -80,26 +73,23 @@ namespace Machina.Engine
 
         // Things that are going away (hopefully)
         public static MachinaGame Current { get; private set; }
+
+        protected readonly MachinaGameSpecification specification;
         private bool isDoneUpdateLoading = false;
 
 
 
 
-        protected MachinaGame(string gameTitle, string[] args, Point startingRenderResolution, Point startingWindowSize,
-            ResizeBehavior resizeBehavior)
+        protected MachinaGame(MachinaGameSpecification specification, Point startingRenderResolution, ResizeBehavior resizeBehavior)
         {
             Current = this;
+            this.specification = specification;
             this.startingResizeBehavior = resizeBehavior;
             this.startingRenderResolution = startingRenderResolution;
 
-            this.gameTitle = gameTitle;
-            CommandLineArgs = new CommandLineArgs(args);
-
             // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "NotExplosive", this.gameTitle);
-
-            this.startingWindowSize = startingWindowSize;
+                "NotExplosive", this.specification.gameTitle);
 
             Content.RootDirectory = "Content";
             Graphics = new GraphicsDeviceManager(this)
@@ -107,14 +97,14 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            this.machinaWindow = new MachinaWindow(startingWindowSize, Window, Graphics, GraphicsDevice);
+
+            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Graphics, GraphicsDevice);
             this.machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
             Assets = new Assets.AssetLibrary(this);
             Random = new SeededRandom();
 
-            SceneLayers = new SceneLayers(false,
-                new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
+            SceneLayers = new SceneLayers(false, new GameCanvas(this.startingRenderResolution, this.startingResizeBehavior));
         }
 
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
@@ -147,7 +137,7 @@ namespace Machina.Engine
 
         protected override void Initialize()
         {
-            Window.Title = this.gameTitle;
+            Window.Title = this.specification.gameTitle;
             IsMouseVisible = true;
 
             base.Initialize();
@@ -156,7 +146,7 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             Console.Out.WriteLine("Settings Window Size");
-            this.machinaWindow.SetWindowSize(this.startingWindowSize);
+            this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
             Console.Out.WriteLine("Constructing SpriteBatch");
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -203,19 +193,18 @@ namespace Machina.Engine
             var debugActor = this.sceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
-            CommandLineArgs.RegisterEarlyValueArg("randomseed",
-                arg => { Random.Seed = (int) NoiseBasedRNG.SeedFromString(arg); });
+            this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
 
             var demoName = Demo.MostRecentlySavedDemoPath;
-            CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
+            this.specification.CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
 
             var demoSpeed = 1;
-            CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            this.specification.CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
 
-            CommandLineArgs.RegisterEarlyFlagArg("debug",
+            this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
                 () => { DebugLevel = DebugLevel.Active; });
 
-            CommandLineArgs.RegisterValueArg("demo", arg =>
+            this.specification.CommandLineArgs.RegisterValueArg("demo", arg =>
             {
                 switch (arg)
                 {
@@ -236,10 +225,10 @@ namespace Machina.Engine
             });
 
             var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
-            CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            this.specification.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
 
-            StartingSettings.LoadSavedSettingsIfExist();
-            SoundEffectPlayer = new SoundEffectPlayer(StartingSettings);
+            this.specification.settings.LoadSavedSettingsIfExist();
+            SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
 
 #if DEBUG
             LoadGame();
@@ -253,6 +242,11 @@ namespace Machina.Engine
             }
 
             this.isDoneUpdateLoading = true;
+        }
+
+        private void SetRandomSeedFromString(string seed)
+        {
+            Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
         }
 
         protected void RunDemo(string demoName)
@@ -291,9 +285,9 @@ namespace Machina.Engine
 
         private void LoadGame()
         {
-            CommandLineArgs.ExecuteEarlyArgs();
+            this.specification.CommandLineArgs.ExecuteEarlyArgs();
             OnGameLoad();
-            CommandLineArgs.ExecuteArgs();
+            this.specification.CommandLineArgs.ExecuteArgs();
             CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
         }
@@ -400,9 +394,9 @@ namespace Machina.Engine
         {
             const int desiredWidth = 1920 / 4;
             var oldSceneLayers = SceneLayers;
-            var ratio = (float) this.startingWindowSize.X / desiredWidth;
+            var ratio = (float) this.specification.settings.startingWindowSize.X / desiredWidth;
             var gameCanvas = new GameCanvas(
-                new Vector2(this.startingWindowSize.X / ratio, this.startingWindowSize.Y / ratio).ToPoint(),
+                new Vector2(this.specification.settings.startingWindowSize.X / ratio, this.specification.settings.startingWindowSize.Y / ratio).ToPoint(),
                 ResizeBehavior.MaintainDesiredResolution);
             gameCanvas.BuildCanvas(GraphicsDevice);
             var introLayers = new SceneLayers(true, gameCanvas);
