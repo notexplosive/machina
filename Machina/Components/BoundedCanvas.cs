@@ -21,7 +21,7 @@ namespace Machina.Components
         {
             this.DrawAdditionalContent += spriteBatch =>
             {
-                if (MachinaGame.DebugLevel > DebugLevel.Passive)
+                if (MachinaGame.Current.Runtime.DebugLevel > DebugLevel.Passive)
                 {
                     spriteBatch.Begin();
                     spriteBatch.DrawRectangle(new Rectangle(5, 5, 10, 10), Color.Red, 1, this.actor.transform.Depth);
@@ -79,7 +79,7 @@ namespace Machina.Components
             var graphicsDevice = MachinaGame.Current.GraphicsDevice;
             graphicsDevice.SetRenderTarget(this.renderTarget);
 
-            graphicsDevice.DepthStencilState = new DepthStencilState {DepthBufferEnable = true};
+            graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
             graphicsDevice.Clear(BackgroundColor);
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);

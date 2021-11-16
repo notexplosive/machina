@@ -17,16 +17,16 @@ namespace Machina.Engine.Debugging.Components
         {
             if (this.keyCombo.key == key && this.keyCombo.modifiers == modifiers && buttonState == ButtonState.Pressed)
             {
-                if (MachinaGame.DebugLevel == DebugLevel.Passive)
+                if (MachinaGame.Current.Runtime.DebugLevel == DebugLevel.Passive)
                 {
-                    MachinaGame.DebugLevel = DebugLevel.Active;
+                    MachinaGame.Current.Runtime.DebugLevel = DebugLevel.Active;
                 }
                 else
                 {
-                    MachinaGame.DebugLevel = DebugLevel.Passive;
+                    MachinaGame.Current.Runtime.DebugLevel = DebugLevel.Passive;
                 }
 
-                MachinaGame.Print("DebugLevel set to ", MachinaGame.DebugLevel);
+                MachinaGame.Print("DebugLevel set to ", MachinaGame.Current.Runtime.DebugLevel);
             }
         }
     }

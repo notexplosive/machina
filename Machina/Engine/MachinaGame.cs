@@ -20,6 +20,23 @@ namespace Machina.Engine
         Active // Render DebugDraws
     }
 
+    public class MachinaRuntime
+    {
+        public SoundEffectPlayer SoundEffectPlayer;
+        public SpriteBatch spriteBatch;
+        public readonly FrameStep GlobalFrameStep = new FrameStep();
+        public readonly GraphicsDeviceManager Graphics;
+        public readonly MachinaInput input = new MachinaInput();
+
+        public MachinaRuntime(GraphicsDeviceManager graphics)
+        {
+            Graphics = graphics;
+        }
+
+        public Demo.Playback DemoPlayback { get; set; }
+        public DebugLevel DebugLevel { get; set; }
+    }
+
     /// <summary>
     ///     Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
     ///     Your game should call the base constructor, even though it's abstract.
@@ -37,6 +54,7 @@ namespace Machina.Engine
         public readonly Cartridge gameCartridge;
         public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
+        protected readonly MachinaGameSpecification specification;
 
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
@@ -45,13 +63,8 @@ namespace Machina.Engine
 
 
         // RUNTIME (one of, internal)
-        public static SoundEffectPlayer SoundEffectPlayer;
-        public static readonly FrameStep GlobalFrameStep = new FrameStep();
-        private SpriteBatch spriteBatch;
-        public static DebugLevel DebugLevel { get; set; }
-        public static GraphicsDeviceManager Graphics { get; private set; }
-        private Demo.Playback DemoPlayback { get; set; }
-        private readonly MachinaInput input = new MachinaInput();
+        public MachinaRuntime Runtime { get; }
+
         /// <summary>
         /// Currently loaded cartridge
         /// </summary>
@@ -63,7 +76,7 @@ namespace Machina.Engine
                 this.cartridge = value;
                 this.cartridge.Setup(GraphicsDevice, this.specification, Window, this.machinaWindow);
                 this.cartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
-                Graphics.ApplyChanges();
+                this.Runtime.Graphics.ApplyChanges();
             }
         }
         private Cartridge cartridge;
@@ -74,8 +87,6 @@ namespace Machina.Engine
 
         // Things that are going away (hopefully)
         public static MachinaGame Current { get; private set; }
-
-        protected readonly MachinaGameSpecification specification;
         private bool isDoneUpdateLoading = false;
         public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
@@ -90,15 +101,18 @@ namespace Machina.Engine
                 "NotExplosive", this.specification.gameTitle);
 
             Content.RootDirectory = "Content";
-            Graphics = new GraphicsDeviceManager(this)
+
+            var graphics = new GraphicsDeviceManager(this)
             {
                 HardwareModeSwitch = false
             };
 
+            Runtime = new MachinaRuntime(graphics);
 
-            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Graphics, GraphicsDevice);
 
-            Assets = new Assets.AssetLibrary(this);
+            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, GraphicsDevice);
+
+            Assets = new AssetLibrary(this);
         }
 
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
@@ -142,7 +156,7 @@ namespace Machina.Engine
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
             Console.Out.WriteLine("Constructing SpriteBatch");
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
+            Runtime.spriteBatch = new SpriteBatch(GraphicsDevice);
 
             SetupLoadingScreen();
         }
@@ -150,7 +164,7 @@ namespace Machina.Engine
         private void FinishLoadingContent()
         {
 #if DEBUG
-            DebugLevel = DebugLevel.Passive;
+            Runtime.DebugLevel = DebugLevel.Passive;
 #endif
 
             var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
@@ -168,7 +182,7 @@ namespace Machina.Engine
                 Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
-            if (DebugLevel >= DebugLevel.Passive)
+            if (Runtime.DebugLevel >= DebugLevel.Passive)
             {
                 Print("Debug build detected");
             }
@@ -182,7 +196,7 @@ namespace Machina.Engine
 
             var demoName = Demo.MostRecentlySavedDemoPath;
             var demoSpeed = 1;
-            var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
+            var shouldSkipSnapshot = Runtime.DebugLevel == DebugLevel.Off;
 
             this.specification.CommandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
             this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
@@ -196,10 +210,10 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
                         break;
                     case "playback":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
@@ -211,10 +225,9 @@ namespace Machina.Engine
             this.specification.settings.LoadSavedSettingsIfExist();
 
             this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
-                () => { DebugLevel = DebugLevel.Active; });
+                () => { Runtime.DebugLevel = DebugLevel.Active; });
 
-            SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
-
+            Runtime.SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
 
 #if DEBUG
             // PlayIntroAndLoadGame();
@@ -241,7 +254,7 @@ namespace Machina.Engine
         {
             var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
-            DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
+            Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
             demoPlaybackComponent.ShowGui = false;
         }
 
@@ -286,7 +299,7 @@ namespace Machina.Engine
         protected override void UnloadContent()
         {
             base.UnloadContent();
-            this.spriteBatch.Dispose();
+            Runtime.spriteBatch.Dispose();
             Assets.UnloadAssets();
         }
 
@@ -310,18 +323,18 @@ namespace Machina.Engine
             }
             else
             {
-                if (DemoPlayback != null && DemoPlayback.IsFinished == false)
+                if (Runtime.DemoPlayback != null && Runtime.DemoPlayback.IsFinished == false)
                 {
-                    for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
+                    for (var i = 0; i < Runtime.DemoPlayback.playbackSpeed; i++)
                     {
-                        var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                        DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
+                        var frameState = Runtime.DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                        Runtime.DemoPlayback.PollHumanInput(Runtime.input.GetHumanFrameState());
                         CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
                     }
                 }
                 else
                 {
-                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
+                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, Runtime.input.GetHumanFrameState());
                 }
             }
 
@@ -333,22 +346,22 @@ namespace Machina.Engine
         {
             if (!this.isDoneUpdateLoading)
             {
-                this.loadingScreen.Draw(this.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
+                this.loadingScreen.Draw(Runtime.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
             }
             else if (!this.loadingScreen.IsDoneDrawLoading())
             {
-                this.loadingScreen.IncrementDrawLoopLoad(Assets as Assets.AssetLibrary, this.spriteBatch);
-                this.loadingScreen.Draw(this.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
+                this.loadingScreen.IncrementDrawLoopLoad(Assets as AssetLibrary, Runtime.spriteBatch);
+                this.loadingScreen.Draw(Runtime.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
             }
             else
             {
-                CurrentCartridge.SceneLayers.PreDraw(this.spriteBatch);
+                CurrentCartridge.SceneLayers.PreDraw(Runtime.spriteBatch);
                 CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
                 GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
-                CurrentCartridge.SceneLayers.DrawOnCanvas(this.spriteBatch);
-                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, this.spriteBatch);
-                CurrentCartridge.SceneLayers.DrawDebugScene(this.spriteBatch);
+                CurrentCartridge.SceneLayers.DrawOnCanvas(Runtime.spriteBatch);
+                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, Runtime.spriteBatch);
+                CurrentCartridge.SceneLayers.DrawDebugScene(Runtime.spriteBatch);
             }
 
             base.Draw(gameTime);

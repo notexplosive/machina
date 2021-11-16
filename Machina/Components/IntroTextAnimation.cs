@@ -66,7 +66,7 @@ namespace Machina.Components
 
             this.textRenderer.Text = "";
 
-            MachinaGame.SoundEffectPlayer.PlaySound("blblblbl");
+            MachinaGame.Current.Runtime.SoundEffectPlayer.PlaySound("blblblbl");
 
             var name = "NotExplosive";
             yield return new WaitSeconds(0.25f / speed);
@@ -79,7 +79,7 @@ namespace Machina.Components
 
             yield return new WaitSeconds(1f / speed);
 
-            MachinaGame.SoundEffectPlayer.PlaySound("ouch", 0.25f);
+            MachinaGame.Current.Runtime.SoundEffectPlayer.PlaySound("ouch", 0.25f);
             this.spinning = true;
             SwapColor();
 

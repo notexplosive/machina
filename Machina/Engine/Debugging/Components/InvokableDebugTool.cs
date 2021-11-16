@@ -48,7 +48,7 @@ namespace Machina.Components
 
         public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            if (this.invokingKeyCombo.Match(key, state, modifiers) && MachinaGame.DebugLevel >= DebugLevel.Passive)
+            if (this.invokingKeyCombo.Match(key, state, modifiers) && MachinaGame.Current.Runtime.DebugLevel >= DebugLevel.Passive)
             {
                 if (!this.toolActive)
                 {

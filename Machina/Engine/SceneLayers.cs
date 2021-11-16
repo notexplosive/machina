@@ -96,7 +96,7 @@ namespace Machina.Engine
 
         public Scene AddNewScene()
         {
-            var scene = new Scene(this, MachinaGame.GlobalFrameStep);
+            var scene = new Scene(this, MachinaGame.Current.Runtime.GlobalFrameStep);
             Add(scene);
             return scene;
         }
@@ -162,99 +162,99 @@ namespace Machina.Engine
             try
             {
 #endif
-                if (!this.hasDoneFirstUpdate)
+            if (!this.hasDoneFirstUpdate)
+            {
+                DoFirstUpdate();
+                this.hasDoneFirstUpdate = true;
+            }
+
+            CurrentInputFrameState = inputFrameState;
+            var scenes = AllScenes();
+
+            var rawMousePos = Vector2.Transform(inputFrameState.mouseFrameState.RawWindowPosition.ToVector2(),
+                mouseTransformMatrix);
+
+            foreach (var scene in scenes)
+            {
+                scene.FlushBuffers();
+
+                if (!scene.IsFrozen)
                 {
-                    DoFirstUpdate();
-                    this.hasDoneFirstUpdate = true;
-                }
-
-                CurrentInputFrameState = inputFrameState;
-                var scenes = AllScenes();
-
-                var rawMousePos = Vector2.Transform(inputFrameState.mouseFrameState.RawWindowPosition.ToVector2(),
-                    mouseTransformMatrix);
-
-                foreach (var scene in scenes)
-                {
-                    scene.FlushBuffers();
-
-                    if (!scene.IsFrozen)
+                    if (allowKeyboardEvents)
                     {
-                        if (allowKeyboardEvents)
+                        if (this.pendingTextInput.HasValue)
                         {
-                            if (this.pendingTextInput.HasValue)
-                            {
-                                scene.OnTextInput(this.pendingTextInput.Value);
-                            }
-
-                            foreach (var key in inputFrameState.keyboardFrameState.Released)
-                            {
-                                scene.OnKey(key, ButtonState.Released, inputFrameState.keyboardFrameState.Modifiers);
-                            }
-
-                            foreach (var key in inputFrameState.keyboardFrameState.Pressed)
-                            {
-                                scene.OnKey(key, ButtonState.Pressed, inputFrameState.keyboardFrameState.Modifiers);
-                            }
+                            scene.OnTextInput(this.pendingTextInput.Value);
                         }
 
-                        if (allowMouseUpdate)
+                        foreach (var key in inputFrameState.keyboardFrameState.Released)
                         {
-                            if (inputFrameState.mouseFrameState.ScrollDelta != 0)
-                            {
-                                scene.OnScroll(inputFrameState.mouseFrameState.ScrollDelta);
-                            }
+                            scene.OnKey(key, ButtonState.Released, inputFrameState.keyboardFrameState.Modifiers);
+                        }
 
-                            // Pressed
-                            if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.left)
-                            {
-                                scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Pressed);
-                            }
-
-                            if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.middle)
-                            {
-                                scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Pressed);
-                            }
-
-                            if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.right)
-                            {
-                                scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Pressed);
-                            }
-
-                            // Released
-                            if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.left)
-                            {
-                                scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Released);
-                            }
-
-                            if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.middle)
-                            {
-                                scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Released);
-                            }
-
-                            if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.right)
-                            {
-                                scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Released);
-                            }
-
-                            // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
-                            scene.OnMouseUpdate(rawMousePos, inputFrameState.mouseFrameState.PositionDelta,
-                                inputFrameState.mouseFrameState.PositionDelta);
+                        foreach (var key in inputFrameState.keyboardFrameState.Pressed)
+                        {
+                            scene.OnKey(key, ButtonState.Pressed, inputFrameState.keyboardFrameState.Modifiers);
                         }
                     }
-                }
 
-                this.pendingTextInput = null;
-
-                foreach (var scene in scenes)
-                {
-                    if (!scene.frameStep.IsPaused && !scene.IsFrozen)
+                    if (allowMouseUpdate)
                     {
-                        scene.Update(dt);
+                        if (inputFrameState.mouseFrameState.ScrollDelta != 0)
+                        {
+                            scene.OnScroll(inputFrameState.mouseFrameState.ScrollDelta);
+                        }
+
+                        // Pressed
+                        if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.left)
+                        {
+                            scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Pressed);
+                        }
+
+                        if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.middle)
+                        {
+                            scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Pressed);
+                        }
+
+                        if (inputFrameState.mouseFrameState.ButtonsPressedThisFrame.right)
+                        {
+                            scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Pressed);
+                        }
+
+                        // Released
+                        if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.left)
+                        {
+                            scene.OnMouseButton(MouseButton.Left, rawMousePos, ButtonState.Released);
+                        }
+
+                        if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.middle)
+                        {
+                            scene.OnMouseButton(MouseButton.Middle, rawMousePos, ButtonState.Released);
+                        }
+
+                        if (inputFrameState.mouseFrameState.ButtonsReleasedThisFrame.right)
+                        {
+                            scene.OnMouseButton(MouseButton.Right, rawMousePos, ButtonState.Released);
+                        }
+
+                        // At this point the raw and processed deltas are equal, downstream (Scene and below) they will differ
+                        scene.OnMouseUpdate(rawMousePos, inputFrameState.mouseFrameState.PositionDelta,
+                            inputFrameState.mouseFrameState.PositionDelta);
                     }
                 }
+            }
 
-                HitTestResult.ApproveTopCandidate(scenes);
+            this.pendingTextInput = null;
+
+            foreach (var scene in scenes)
+            {
+                if (!scene.frameStep.IsPaused && !scene.IsFrozen)
+                {
+                    scene.Update(dt);
+                }
+            }
+
+            HitTestResult.ApproveTopCandidate(scenes);
 #if DEBUG
 #else
             }
@@ -301,7 +301,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (MachinaGame.DebugLevel > DebugLevel.Passive)
+            if (MachinaGame.Current.Runtime.DebugLevel > DebugLevel.Passive)
             {
                 foreach (var scene in scenes)
                 {
