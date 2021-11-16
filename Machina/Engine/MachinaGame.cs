@@ -37,6 +37,24 @@ namespace Machina.Engine
         public DebugLevel DebugLevel { get; set; }
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
+        public void InsertCartridge(Cartridge cartridge, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
+        {
+            CurrentCartridge = cartridge;
+            CurrentCartridge.Setup(GraphicsDevice, specification, window, machinaWindow);
+            CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
+            Graphics.ApplyChanges();
+        }
+
+        public Cartridge CurrentCartridge { get; private set; }
+
+        public void RunDemo(string demoName)
+        {
+            var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
+            var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
+            DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
+            demoPlaybackComponent.ShowGui = false;
+        }
+
         internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, Cartridge CurrentCartridge, MachinaWindow machinaWindow)
         {
             if (!isDoneUpdateLoading)
@@ -118,24 +136,6 @@ namespace Machina.Engine
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
-
-
-
-        /// <summary>
-        /// Currently loaded cartridge
-        /// </summary>
-        public Cartridge CurrentCartridge
-        {
-            get => this.cartridge;
-            set
-            {
-                this.cartridge = value;
-                this.cartridge.Setup(GraphicsDevice, this.specification, Window, this.machinaWindow);
-                this.cartridge.CurrentGameCanvas.SetWindowSize(this.machinaWindow.CurrentWindowSize);
-                this.Runtime.Graphics.ApplyChanges();
-            }
-        }
-        private Cartridge cartridge;
 
 
         // Loading Screen Cartridge
@@ -308,14 +308,6 @@ namespace Machina.Engine
             this.gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
         }
 
-        public void RunDemo(string demoName)
-        {
-            var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
-            var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
-            Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
-            demoPlaybackComponent.ShowGui = false;
-        }
-
         private void PrepareLoadInitialStyle(AssetLoadTree loadTree)
         {
             loadTree.AddMachinaAssetCallback("ui-button",
@@ -345,7 +337,7 @@ namespace Machina.Engine
         private void InsertGameCartridgeAndRun()
         {
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
-            CurrentCartridge = this.gameCartridge;
+            Runtime.InsertCartridge(this.gameCartridge, this.specification, Window, this.machinaWindow);
             this.specification.CommandLineArgs.ExecuteArgs();
         }
 
@@ -366,7 +358,7 @@ namespace Machina.Engine
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen, CurrentCartridge);
+            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen, Runtime.CurrentCartridge);
 
             Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
@@ -374,13 +366,13 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, CurrentCartridge, this.machinaWindow);
+            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, Runtime.CurrentCartridge, this.machinaWindow);
             base.Draw(gameTime);
         }
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            foreach (var scene in CurrentCartridge.SceneLayers.AllScenes())
+            foreach (var scene in Runtime.CurrentCartridge.SceneLayers.AllScenes())
             {
                 scene.OnDeleteFinished();
             }
@@ -404,7 +396,7 @@ namespace Machina.Engine
                 // Start the actual game
                 InsertGameCartridgeAndRun();
             }
-            CurrentCartridge = new IntroCartridge(this.specification.settings, OnEnd);
+            Runtime.InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.specification, Window, this.machinaWindow);
         }
 
         /// <summary>
@@ -413,7 +405,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Current?.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
+            Current?.Runtime.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
             new StdOutConsoleLogger().Log(objects);
         }
     }

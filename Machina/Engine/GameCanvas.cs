@@ -113,7 +113,7 @@ namespace Machina.Engine
                 RenderTarget2D canvas, Rectangle canvasRect)
             {
                 graphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.Current.CurrentCartridge.SamplerState,
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.Current.Runtime.CurrentCartridge.SamplerState,
                     DepthStencilState.DepthRead);
                 spriteBatch.Draw(canvas,
                     canvasRect,
