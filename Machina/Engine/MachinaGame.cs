@@ -55,7 +55,7 @@ namespace Machina.Engine
             demoPlaybackComponent.ShowGui = false;
         }
 
-        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, Cartridge CurrentCartridge, MachinaWindow machinaWindow)
+        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, MachinaWindow machinaWindow)
         {
             if (!isDoneUpdateLoading)
             {
@@ -78,7 +78,7 @@ namespace Machina.Engine
             }
         }
 
-        internal void Update(float dt, bool isDoneUpdateLoading, AssetLibrary assets, LoadingScreen loadingScreen, Cartridge currentCartridge)
+        internal void Update(float dt, bool isDoneUpdateLoading, AssetLibrary assets, LoadingScreen loadingScreen)
         {
             if (!isDoneUpdateLoading)
             {
@@ -101,12 +101,12 @@ namespace Machina.Engine
                     {
                         var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
                         DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
-                        currentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
+                        CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
                     }
                 }
                 else
                 {
-                    currentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
+                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
                 }
             }
         }
@@ -358,7 +358,7 @@ namespace Machina.Engine
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen, Runtime.CurrentCartridge);
+            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen);
 
             Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
@@ -366,7 +366,7 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, Runtime.CurrentCartridge, this.machinaWindow);
+            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, this.machinaWindow);
             base.Draw(gameTime);
         }
 
