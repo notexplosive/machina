@@ -24,8 +24,8 @@ namespace Machina.Engine
     {
         public SoundEffectPlayer SoundEffectPlayer;
         public SpriteBatch spriteBatch;
-        public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly GraphicsDeviceManager Graphics;
+        public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
 
         public MachinaRuntime(GraphicsDeviceManager graphics)
@@ -35,6 +35,62 @@ namespace Machina.Engine
 
         public Demo.Playback DemoPlayback { get; set; }
         public DebugLevel DebugLevel { get; set; }
+
+        internal void Draw(AssetLibrary assets, bool isDoneUpdateLoading, LoadingScreen loadingScreen, Cartridge CurrentCartridge, GraphicsDevice GraphicsDevice, MachinaWindow machinaWindow)
+        {
+            if (!isDoneUpdateLoading)
+            {
+                loadingScreen.Draw(this.spriteBatch, machinaWindow.CurrentWindowSize, GraphicsDevice);
+            }
+            else if (!loadingScreen.IsDoneDrawLoading())
+            {
+                loadingScreen.IncrementDrawLoopLoad(assets, spriteBatch);
+                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize, GraphicsDevice);
+            }
+            else
+            {
+                CurrentCartridge.SceneLayers.PreDraw(spriteBatch);
+                CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+                GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
+
+                CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
+                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+                CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
+            }
+        }
+
+        internal void Update(float dt, bool isDoneUpdateLoading, AssetLibrary assets, LoadingScreen loadingScreen, Cartridge currentCartridge)
+        {
+            if (!isDoneUpdateLoading)
+            {
+                var library = assets;
+                var increment = 3;
+                for (var i = 0; i < increment; i++)
+                {
+                    loadingScreen.Update(library, dt / increment);
+                }
+            }
+            else if (!loadingScreen.IsDoneDrawLoading())
+            {
+                // waiting for draw load
+            }
+            else
+            {
+                if (DemoPlayback != null && DemoPlayback.IsFinished == false)
+                {
+                    for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
+                    {
+                        var frameState = DemoPlayback.UpdateAndGetInputFrameStates(dt);
+                        DemoPlayback.PollHumanInput(this.input.GetHumanFrameState());
+                        currentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
+                    }
+                }
+                else
+                {
+                    currentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -308,35 +364,7 @@ namespace Machina.Engine
             pendingCursor = MouseCursor.Arrow;
             var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!this.isDoneUpdateLoading)
-            {
-                var library = Assets as Assets.AssetLibrary;
-                var increment = 3;
-                for (var i = 0; i < increment; i++)
-                {
-                    this.loadingScreen.Update(library, dt / increment);
-                }
-            }
-            else if (!this.loadingScreen.IsDoneDrawLoading())
-            {
-                // waiting for draw load
-            }
-            else
-            {
-                if (Runtime.DemoPlayback != null && Runtime.DemoPlayback.IsFinished == false)
-                {
-                    for (var i = 0; i < Runtime.DemoPlayback.playbackSpeed; i++)
-                    {
-                        var frameState = Runtime.DemoPlayback.UpdateAndGetInputFrameStates(dt);
-                        Runtime.DemoPlayback.PollHumanInput(Runtime.input.GetHumanFrameState());
-                        CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, frameState);
-                    }
-                }
-                else
-                {
-                    CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, Runtime.input.GetHumanFrameState());
-                }
-            }
+            Runtime.Update(dt, this.isDoneUpdateLoading, Assets as AssetLibrary, this.loadingScreen, CurrentCartridge);
 
             Mouse.SetCursor(pendingCursor);
             base.Update(gameTime);
@@ -344,26 +372,7 @@ namespace Machina.Engine
 
         protected override void Draw(GameTime gameTime)
         {
-            if (!this.isDoneUpdateLoading)
-            {
-                this.loadingScreen.Draw(Runtime.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
-            }
-            else if (!this.loadingScreen.IsDoneDrawLoading())
-            {
-                this.loadingScreen.IncrementDrawLoopLoad(Assets as AssetLibrary, Runtime.spriteBatch);
-                this.loadingScreen.Draw(Runtime.spriteBatch, this.machinaWindow.CurrentWindowSize, GraphicsDevice);
-            }
-            else
-            {
-                CurrentCartridge.SceneLayers.PreDraw(Runtime.spriteBatch);
-                CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
-                GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
-
-                CurrentCartridge.SceneLayers.DrawOnCanvas(Runtime.spriteBatch);
-                CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, Runtime.spriteBatch);
-                CurrentCartridge.SceneLayers.DrawDebugScene(Runtime.spriteBatch);
-            }
-
+            Runtime.Draw(Assets as AssetLibrary, this.isDoneUpdateLoading, this.loadingScreen, CurrentCartridge, GraphicsDevice, this.machinaWindow);
             base.Draw(gameTime);
         }
 
