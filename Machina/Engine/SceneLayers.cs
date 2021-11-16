@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Machina.Data;
 using Machina.Engine.Debugging.Components;
 using Machina.Engine.Debugging.Data;

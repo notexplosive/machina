@@ -1,7 +1,4 @@
-﻿using Machina.Engine;
-using Microsoft.Xna.Framework;
-
-namespace Machina.Data
+﻿namespace Machina.Data
 {
     public class GameSettings
     {

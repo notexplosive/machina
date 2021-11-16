@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework.Input;
 namespace Machina.Engine
 {
     using AssetLibrary;
-    using MonoGame.Extended;
 
     public enum DebugLevel
     {

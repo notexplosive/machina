@@ -5,9 +5,6 @@ using Machina.ThirdParty;
 
 namespace Machina.Data
 {
-    using System.Collections;
-    using System.Collections.ObjectModel;
-
     /// <summary>
     ///     Random Number Generator based on a Noise function
     /// </summary>

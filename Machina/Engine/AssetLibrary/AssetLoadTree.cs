@@ -4,7 +4,6 @@ namespace Machina.Engine.AssetLibrary
     using System.Collections.Generic;
     using Data;
     using Microsoft.Xna.Framework.Graphics;
-    using MonoGame.Extended.Sprites;
 
     public class AssetLoadTree
     {
