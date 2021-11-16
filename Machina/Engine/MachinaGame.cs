@@ -212,11 +212,11 @@ namespace Machina.Engine
             var demoSpeed = 1;
             var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
 
+            this.specification.CommandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
             this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
-            this.specification.CommandLineArgs.RegisterFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
-            this.specification.CommandLineArgs.RegisterValueArg("demopath", arg => { demoName = arg; });
-            this.specification.CommandLineArgs.RegisterValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
-            this.specification.CommandLineArgs.RegisterValueArg("demo", arg =>
+            this.specification.CommandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
+            this.specification.CommandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            this.specification.CommandLineArgs.RegisterEarlyValueArg("demo", arg =>
             {
                 switch (arg)
                 {
