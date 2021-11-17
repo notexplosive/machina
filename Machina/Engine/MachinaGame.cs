@@ -134,11 +134,6 @@ namespace Machina.Engine
                 Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
-            if (Runtime.DebugLevel >= DebugLevel.Passive)
-            {
-                MachinaClient.Print("Debug build detected");
-            }
-
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
             this.gameCartridge.SetupSceneLayers(Runtime, specification, Window, machinaWindow);
 
@@ -202,6 +197,11 @@ namespace Machina.Engine
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
             Runtime.InsertCartridge(this.gameCartridge, Window, this.machinaWindow);
             this.specification.CommandLineArgs.ExecuteArgs();
+
+            if (Runtime.DebugLevel >= DebugLevel.Passive)
+            {
+                MachinaClient.Print("Debug build detected");
+            }
         }
 
         protected override void UnloadContent()
