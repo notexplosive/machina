@@ -15,7 +15,7 @@ namespace Machina.Components
 
         public DemoPlaybackComponent(Actor actor) : base(actor)
         {
-            this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
+            this.font = MachinaClient.Assets.GetSpriteFont("DefaultFont");
         }
 
         public bool ShowGui { get; set; } = true;

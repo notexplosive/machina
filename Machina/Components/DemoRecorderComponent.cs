@@ -16,7 +16,7 @@ namespace Machina.Components
         public DemoRecorderComponent(Actor actor, Demo.Recorder recorder) : base(actor)
         {
             this.recorder = recorder;
-            this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
+            this.font = MachinaClient.Assets.GetSpriteFont("DefaultFont");
             this.text = "DEMO REC " + this.recorder.fileName + " CTRL+P to save recording";
         }
 

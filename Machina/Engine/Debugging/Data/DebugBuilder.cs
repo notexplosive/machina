@@ -70,7 +70,7 @@ namespace Machina.Engine.Debugging.Data
 
         public static Logger BuildOutputConsole(SceneLayers sceneLayers)
         {
-            var consoleFont = MachinaGame.Assets.GetSpriteFont("DefaultFont");
+            var consoleFont = MachinaClient.Assets.GetSpriteFont("DefaultFont");
             var debugActor = sceneLayers.debugScene.AddActor("DebugActor", depthAsInt: 100);
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
             return new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont));

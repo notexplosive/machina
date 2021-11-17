@@ -25,11 +25,13 @@ namespace Machina.Engine
         public static SoundEffectPlayer SoundEffectPlayer { get; private set; }
         public static NoiseBasedRNG RandomDirty { get; } = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
         public static FrameStep GlobalFrameStep { get; } = new FrameStep();
+        public static IAssetLibrary Assets { get; private set; } = new EmptyAssetLibrary();
 
-        public static void Setup(MachinaRuntime runtime)
+        public static void Setup(MachinaRuntime runtime, IAssetLibrary assetLibrary)
         {
             Runtime = runtime;
             SoundEffectPlayer = new SoundEffectPlayer(runtime.Settings);
+            Assets = assetLibrary;
 
         }
 
@@ -50,7 +52,6 @@ namespace Machina.Engine
         /// Cartridge provided by client code
         /// </summary>
         public readonly GameCartridge gameCartridge;
-        public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
         protected readonly GameSpecification specification;
         public MachinaRuntime Runtime => MachinaClient.Runtime;
@@ -63,7 +64,6 @@ namespace Machina.Engine
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;
-
             Content.RootDirectory = "Content";
 
             var graphics = new GraphicsDeviceManager(this)
@@ -71,22 +71,12 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification));
-            Assets = new AssetLibrary(this);
+            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification), new AssetLibrary(this));
         }
 
         public static void SetCursor(MouseCursor cursor)
         {
             pendingCursor = cursor;
-        }
-
-        /// <summary>
-        ///     Should only be used for tests
-        /// </summary>
-        /// <param name="assetLibrary"></param>
-        public static void SetAssetLibrary(IAssetLibrary assetLibrary)
-        {
-            Assets = assetLibrary;
         }
 
         protected override void Initialize()
@@ -114,7 +104,7 @@ namespace Machina.Engine
 
             var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
             Runtime.InsertCartridge(loadingCartridge, Window, this.machinaWindow);
-            loadingCartridge.PrepareLoadingScreen(this.gameCartridge, Runtime, Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
+            loadingCartridge.PrepareLoadingScreen(this.gameCartridge, Runtime, MachinaClient.Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
         }
 
         private void FinishLoadingContent()
@@ -123,19 +113,19 @@ namespace Machina.Engine
             Runtime.DebugLevel = DebugLevel.Passive;
 #endif
 
-            var defaultFont = Assets.GetSpriteFont("DefaultFontSmall");
+            var defaultFont = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
 
             defaultStyle = new UIStyle(
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
-                Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
                 defaultFont,
-                Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
-                Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
+                MachinaClient.Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
             );
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
@@ -210,7 +200,7 @@ namespace Machina.Engine
         {
             base.UnloadContent();
             Runtime.spriteBatch.Dispose();
-            Assets.UnloadAssets();
+            MachinaClient.Assets.UnloadAssets();
         }
 
         protected override void Update(GameTime gameTime)

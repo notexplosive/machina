@@ -39,7 +39,7 @@ namespace Machina.Data
         }
 
         public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect, GraphicsDevice graphicsDevice)
-            : this(MachinaGame.Assets.GetTexture(textureAssetName), outerRect, innerRect, graphicsDevice)
+            : this(MachinaClient.Assets.GetTexture(textureAssetName), outerRect, innerRect, graphicsDevice)
         {
         }
 

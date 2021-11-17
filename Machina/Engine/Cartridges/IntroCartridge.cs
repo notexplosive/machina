@@ -28,7 +28,7 @@ namespace Machina.Engine.Cartridges
             var textActor = introScene.AddActor("text");
             new BoundingRect(textActor, 20, 20);
             new BoundingRectToViewportSize(textActor);
-            new BoundedTextRenderer(textActor, "", MachinaGame.Assets.GetSpriteFont("LogoFont"), Color.White,
+            new BoundedTextRenderer(textActor, "", MachinaClient.Assets.GetSpriteFont("LogoFont"), Color.White,
                 HorizontalAlignment.Center, VerticalAlignment.Center);
             new IntroTextAnimation(textActor);
             new CallbackOnDestroy(textActor, onEnd);

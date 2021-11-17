@@ -19,13 +19,13 @@ namespace Machina.Engine
             if (useCache)
             {
                 // Grab the cached sound effect and reset it
-                soundEffect = MachinaGame.Assets.GetSoundEffectInstance(soundEffectName);
+                soundEffect = MachinaClient.Assets.GetSoundEffectInstance(soundEffectName);
                 soundEffect.Stop();
             }
             else
             {
                 // Build a new sound effect here and now
-                soundEffect = MachinaGame.Assets.CreateSoundEffectInstance(soundEffectName);
+                soundEffect = MachinaClient.Assets.CreateSoundEffectInstance(soundEffectName);
             }
 
             soundEffect.Volume = baseVolume * this.settings.SFXVolumeAsFloat;

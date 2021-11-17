@@ -86,7 +86,7 @@ namespace Machina.Engine.Debugging.Components
                         iconTextActor =>
                         {
                             new BoundedTextRenderer(iconTextActor, app.appName,
-                                MachinaGame.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center);
+                                MachinaClient.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center);
                         });
             });
         }

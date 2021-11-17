@@ -1,14 +1,10 @@
-﻿using Machina.Data;
-using Machina.Engine;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
-
-namespace TestMachina.Utility
+﻿namespace Machina.Engine.Assets
 {
-    using Machina.Engine.Assets;
+    using Data;
+    using Microsoft.Xna.Framework.Audio;
+    using Microsoft.Xna.Framework.Graphics;
 
-    public class FakeAssetLibrary : IAssetLibrary
+    public class EmptyAssetLibrary : IAssetLibrary
     {
         public T AddMachinaAsset<T>(string name, T asset) where T : IAsset
         {
@@ -16,11 +12,6 @@ namespace TestMachina.Utility
         }
 
         public SoundEffectInstance CreateSoundEffectInstance(string name)
-        {
-            return null;
-        }
-
-        public Song GetSong(string name)
         {
             return null;
         }

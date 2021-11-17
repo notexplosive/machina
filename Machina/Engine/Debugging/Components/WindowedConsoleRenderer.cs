@@ -16,7 +16,7 @@ namespace Machina.Engine.Debugging.Components
 
         public WindowedConsoleRenderer(Actor actor, Scrollbar scrollbar) : base(actor)
         {
-            this.font = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
+            this.font = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
             this.scrollbar = scrollbar;
             this.actor.scene.sceneLayers.runtime.CurrentCartridge.SceneLayers.PushLogger(this);
             MachinaClient.Print("Logger pushed");

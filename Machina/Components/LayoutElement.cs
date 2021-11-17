@@ -44,7 +44,7 @@ namespace Machina.Components
 
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(MachinaGame.Assets.GetSpriteFont("TinyFont"), this.actor.name,
+            spriteBatch.DrawString(MachinaClient.Assets.GetSpriteFont("TinyFont"), this.actor.name,
                 this.boundingRect.TopLeft, Color.Orange);
         }
 

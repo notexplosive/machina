@@ -17,7 +17,7 @@ namespace Machina.Data
         private readonly int rowCount;
 
         public GridBasedSpriteSheet(string textureName, Point frameSize) : this(
-            MachinaGame.Assets.GetTexture(textureName), frameSize)
+            MachinaClient.Assets.GetTexture(textureName), frameSize)
         {
         }
 

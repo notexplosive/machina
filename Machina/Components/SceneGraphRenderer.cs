@@ -21,7 +21,7 @@ namespace Machina.Engine.Debugging.Components
             this.ui = RequireComponent<SceneGraphUI>();
             this.boundingRect = RequireComponent<BoundingRect>();
             this.scrollbar = scrollbar;
-            this.font = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
+            this.font = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
         }
 
         public override void Draw(SpriteBatch spriteBatch)

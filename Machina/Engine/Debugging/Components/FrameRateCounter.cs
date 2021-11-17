@@ -15,7 +15,7 @@ namespace Machina.Components
 
         public FrameRateCounter(Actor actor) : base(actor)
         {
-            this.font = MachinaGame.Assets.GetSpriteFont("DefaultFont");
+            this.font = MachinaClient.Assets.GetSpriteFont("DefaultFont");
             this.past = DateTime.Now;
             this.actor.Visible = true;
         }
