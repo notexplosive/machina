@@ -30,11 +30,13 @@ namespace Machina.Engine
             }
 #endif
             MachinaGame.Print("Saved:", fullPath);
-            /*
-            MachinaGame.Print(data);
-            */
 
             onComplete?.Invoke();
+        }
+
+        public static string GetAppDataPath()
+        {
+            return MachinaGame.Current.appDataPath;
         }
 
         public static IEnumerable<string> GetFilesAt(string path, string suffix)

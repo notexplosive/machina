@@ -6,29 +6,34 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Machina.Engine
 {
     using Assets;
+    using Machina.Engine.Cartridges;
     using Machina.Engine.Input;
+    using System;
 
     public class MachinaRuntime
     {
         public SoundEffectPlayer SoundEffectPlayer;
         public SpriteBatch spriteBatch;
+        private readonly MachinaGameSpecification specification;
         public readonly GraphicsDeviceManager Graphics;
         public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
 
-        public MachinaRuntime(GraphicsDeviceManager graphics)
+        public MachinaRuntime(GraphicsDeviceManager graphics, MachinaGameSpecification specification)
         {
+            this.specification = specification;
             Graphics = graphics;
         }
 
         public Demo.Playback DemoPlayback { get; set; }
         public DebugLevel DebugLevel { get; set; }
+
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
-        public void InsertCartridge(Cartridge cartridge, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
+        public void InsertCartridge(Cartridge cartridge, GameWindow window, MachinaWindow machinaWindow)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(GraphicsDevice, specification, window, machinaWindow);
+            CurrentCartridge.Setup(GraphicsDevice, this.specification, window, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
         }

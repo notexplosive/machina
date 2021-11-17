@@ -15,10 +15,14 @@ namespace Machina.Engine.Cartridges
 
         public abstract void PrepareDynamicAssets(AssetLoadTree loadTree, GraphicsDevice graphicsDevice);
 
-        public void SetupSceneLayers()
+        public void SetupSceneLayers(MachinaRuntime runtime, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
         {
-            // This function is only exposed on GameCartridge, normal cartridges cannot do this
             BuildSceneLayers();
+
+            SceneLayers.OnError += (exception) =>
+            {
+                runtime.InsertCartridge(new CrashCartridge(specification.settings, exception), window, machinaWindow);
+            };
         }
     }
 }

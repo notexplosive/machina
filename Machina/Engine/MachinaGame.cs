@@ -25,7 +25,6 @@ namespace Machina.Engine
     /// </summary>
     public abstract class MachinaGame : Game
     {
-        // PLATFORM (one of, internal)
         /// <summary>
         /// Path to users AppData folder (or platform equivalent)
         /// </summary>
@@ -65,7 +64,7 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            Runtime = new MachinaRuntime(graphics);
+            Runtime = new MachinaRuntime(graphics, this.specification);
             Assets = new AssetLibrary(this);
         }
 
@@ -121,7 +120,7 @@ namespace Machina.Engine
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
 
             var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
-            Runtime.InsertCartridge(loadingCartridge, this.specification, Window, this.machinaWindow);
+            Runtime.InsertCartridge(loadingCartridge, Window, this.machinaWindow);
             loadingCartridge.PrepareLoadingScreen(this.gameCartridge, Runtime, Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
         }
 
@@ -152,7 +151,7 @@ namespace Machina.Engine
             }
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
-            this.gameCartridge.SetupSceneLayers();
+            this.gameCartridge.SetupSceneLayers(Runtime, specification, Window, machinaWindow);
 
             var debugActor = this.gameCartridge.SceneLayers.debugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
@@ -212,7 +211,7 @@ namespace Machina.Engine
         private void InsertGameCartridgeAndRun()
         {
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
-            Runtime.InsertCartridge(this.gameCartridge, this.specification, Window, this.machinaWindow);
+            Runtime.InsertCartridge(this.gameCartridge, Window, this.machinaWindow);
             this.specification.CommandLineArgs.ExecuteArgs();
         }
 
@@ -260,7 +259,7 @@ namespace Machina.Engine
                 // Start the actual game
                 InsertGameCartridgeAndRun();
             }
-            Runtime.InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.specification, Window, this.machinaWindow);
+            Runtime.InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), Window, this.machinaWindow);
         }
 
         /// <summary>
