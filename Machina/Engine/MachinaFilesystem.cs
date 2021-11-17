@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Machina.Engine
 {
-    public static class MachinaFilesystem
+    public class MachinaFileSystem
     {
-        public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
+        public async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
             Action onComplete = null)
         {
             var fullPath = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
@@ -34,12 +34,12 @@ namespace Machina.Engine
             onComplete?.Invoke();
         }
 
-        public static string GetAppDataPath()
+        public string GetAppDataPath()
         {
             return MachinaGame.Current.Runtime.appDataPath;
         }
 
-        public static IEnumerable<string> GetFilesAt(string path, string suffix)
+        public IEnumerable<string> GetFilesAt(string path, string suffix)
         {
             var result = new List<string>();
             var foundNames = new HashSet<string>();
@@ -72,7 +72,7 @@ namespace Machina.Engine
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static async Task<string> ReadTextAppDataThenLocal(string path)
+        public async Task<string> ReadTextAppDataThenLocal(string path)
         {
             var appData = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
             if (File.Exists(appData))

@@ -36,6 +36,7 @@ namespace Machina.Engine
             // TODO: I don't think this works on Android, might need some alternative
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "NotExplosive", this.specification.gameTitle);
+
         }
 
         public Demo.Playback DemoPlayback { get; set; }
