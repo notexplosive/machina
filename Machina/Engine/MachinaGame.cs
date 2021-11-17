@@ -144,11 +144,11 @@ namespace Machina.Engine
             var demoSpeed = 1;
             var shouldSkipSnapshot = Runtime.DebugLevel == DebugLevel.Off;
 
-            this.specification.CommandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
-            this.specification.CommandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
-            this.specification.CommandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
-            this.specification.CommandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
-            this.specification.CommandLineArgs.RegisterEarlyValueArg("demo", arg =>
+            this.specification.commandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demo", arg =>
             {
                 switch (arg)
                 {
@@ -168,7 +168,7 @@ namespace Machina.Engine
                 }
             });
 
-            this.specification.CommandLineArgs.RegisterEarlyFlagArg("debug",
+            this.specification.commandLineArgs.RegisterEarlyFlagArg("debug",
                 () => { Runtime.DebugLevel = DebugLevel.Active; });
 
             Runtime.SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
@@ -194,9 +194,9 @@ namespace Machina.Engine
 
         private void InsertGameCartridgeAndRun()
         {
-            this.specification.CommandLineArgs.ExecuteEarlyArgs();
+            this.specification.commandLineArgs.ExecuteEarlyArgs();
             Runtime.InsertCartridge(this.gameCartridge, Window, this.machinaWindow);
-            this.specification.CommandLineArgs.ExecuteArgs();
+            this.specification.commandLineArgs.ExecuteArgs();
 
             if (Runtime.DebugLevel >= DebugLevel.Passive)
             {
