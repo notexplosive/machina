@@ -41,7 +41,7 @@ namespace Machina.Components
         {
             if (key == Keys.P && modifiers.Control && state == ButtonState.Released)
             {
-                this.recorder.WriteDemoToDisk(this.actor.scene.sceneLayers.runtime);
+                this.recorder.WriteDemoToDisk(MachinaClient.Runtime);
             }
         }
     }

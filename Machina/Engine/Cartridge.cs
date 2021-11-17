@@ -31,7 +31,7 @@ namespace Machina.Engine
         {
             if (!this.hasBeenSetup)
             {
-                BuildSceneLayers(runtime);
+                BuildSceneLayers();
 
                 CurrentGameCanvas.BuildCanvas(graphicsDevice);
 
@@ -51,12 +51,12 @@ namespace Machina.Engine
 
         public abstract void OnGameLoad(GameSpecification specification, MachinaRuntime runtime);
 
-        protected void BuildSceneLayers(MachinaRuntime runtime)
+        protected void BuildSceneLayers()
         {
             if (SceneLayers == null)
             {
                 // this is lazy initialized for the dumbest reason: to be debuggable it needs to have a font, the font doesn't come in until after loading is complete
-                SceneLayers = new SceneLayers(!this.skipDebug, new GameCanvas(renderResolution, resizeBehavior), runtime);
+                SceneLayers = new SceneLayers(!this.skipDebug, new GameCanvas(renderResolution, resizeBehavior));
             }
         }
     }

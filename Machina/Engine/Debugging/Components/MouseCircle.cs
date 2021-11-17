@@ -36,7 +36,7 @@ namespace Machina.Components
         public override void OnMouseButton(MouseButton mouseButton, Vector2 currentPosition, ButtonState buttonState)
         {
             if (mouseButton == MouseButton.Left && buttonState == ButtonState.Pressed &&
-                this.actor.scene.sceneLayers.runtime.DebugLevel >= DebugLevel.Active)
+                MachinaClient.Runtime.DebugLevel >= DebugLevel.Active)
             {
                 var spawnedActor = this.actor.scene.AddActor("Spawned circle", currentPosition);
                 new DestroyTimer(spawnedActor, 1);

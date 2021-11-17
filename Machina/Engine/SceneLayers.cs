@@ -18,7 +18,6 @@ namespace Machina.Engine
         private readonly DebugDock debugDock;
         public readonly Scene debugScene;
         public readonly IGameCanvas gameCanvas;
-        public readonly MachinaRuntime runtime;
         private readonly Logger overlayOutputConsole;
         private readonly List<Scene> sceneList = new List<Scene>();
 
@@ -32,10 +31,9 @@ namespace Machina.Engine
 
         private TextInputEventArgs? pendingTextInput;
 
-        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas, MachinaRuntime runtime = null)
+        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas)
         {
             this.gameCanvas = gameCanvas;
-            this.runtime = runtime;
 
             Logger = new StdOutConsoleLogger();
 
@@ -60,7 +58,7 @@ namespace Machina.Engine
 
         public Texture2D RenderToTexture(SpriteBatch spriteBatch)
         {
-            var graphicsDevice = this.runtime.GraphicsDevice;
+            var graphicsDevice = MachinaClient.Runtime.GraphicsDevice;
             var viewportSize = this.gameCanvas.ViewportSize;
             var renderTarget = new RenderTarget2D(
                 graphicsDevice,
@@ -309,7 +307,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (this.runtime.DebugLevel > DebugLevel.Passive)
+            if (MachinaClient.Runtime.DebugLevel > DebugLevel.Passive)
             {
                 foreach (var scene in scenes)
                 {

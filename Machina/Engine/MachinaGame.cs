@@ -32,7 +32,6 @@ namespace Machina.Engine
             Runtime = runtime;
             SoundEffectPlayer = new SoundEffectPlayer(runtime.Settings);
             Assets = assetLibrary;
-
         }
 
         /// <summary>
