@@ -63,7 +63,7 @@ namespace Machina.Engine
         /// <param name="demoName"></param>
         public static Demo FromDisk_Sync(string demoName)
         {
-            var demoJson = FileHelpers.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
+            var demoJson = MachinaFilesystem.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
             return DecodeRecords(demoJson);
         }
 
@@ -156,7 +156,7 @@ namespace Machina.Engine
             public void WriteDemoToDisk(MachinaRuntime runtime)
             {
                 Directory.CreateDirectory(Path.Join(runtime.appDataPath, "Demos"));
-                FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
+                MachinaFilesystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }
 

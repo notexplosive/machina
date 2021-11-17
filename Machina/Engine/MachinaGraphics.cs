@@ -5,6 +5,13 @@ namespace Machina.Engine
 {
     public class MachinaGraphics
     {
+        /// <summary>
+        /// Make sure you dispose the texture when you're done!
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="sourceTexture"></param>
+        /// <param name="graphicsDevice"></param>
+        /// <returns></returns>
         public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture, GraphicsDevice graphicsDevice)
         {
             if (rect.Width * rect.Height == 0)
