@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data
 {
-    public class GameSettings
+    public abstract class GameSettings
     {
         public readonly Point startingWindowSize;
 
@@ -15,8 +15,6 @@ namespace Machina.Data
             this.startingWindowSize = startingWindowSize;
         }
 
-        public virtual void LoadSavedSettingsIfExist(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice, MachinaFileSystem fileSystem)
-        {
-        }
+        public abstract void LoadSavedSettingsIfExist(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice, MachinaFileSystem fileSystem);
     }
 }
