@@ -19,7 +19,7 @@ namespace Machina.Engine
             set
             {
                 Clean = new NoiseBasedRNG((uint) value);
-                MachinaGame.Print("seed set: ", value);
+                MachinaClient.Print("seed set: ", value);
                 this.seed_impl = value;
             }
         }

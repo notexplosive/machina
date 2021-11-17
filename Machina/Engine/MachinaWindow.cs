@@ -50,7 +50,7 @@ namespace Machina.Engine
 
         public void SetWindowSize(Point windowSize)
         {
-            MachinaGame.Print("Window size changed to", windowSize);
+            MachinaClient.Print("Window size changed to", windowSize);
             this.graphics.PreferredBackBufferWidth = windowSize.X;
             this.graphics.PreferredBackBufferHeight = windowSize.Y;
             this.graphics.ApplyChanges();

@@ -71,7 +71,7 @@ namespace Machina.Components
                 File.Create(Path.Combine(this.screenshotPath, currentTime.ToFileTimeUtc() + ".png")))
             {
                 texture.SaveAsPng(destStream, texture.Width, texture.Height);
-                MachinaGame.Print("Snapshot taken", this.screenshotPath);
+                MachinaClient.Print("Snapshot taken", this.screenshotPath);
             }
 
             texture.Dispose();

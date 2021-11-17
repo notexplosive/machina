@@ -268,7 +268,7 @@ namespace Machina.Engine
             }
             catch (System.Exception exception)
             {
-                MachinaGame.Print("caught exception");
+                MachinaClient.Print("caught exception");
                 OnError?.Invoke(exception);
             }
 #endif

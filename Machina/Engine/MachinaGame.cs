@@ -19,6 +19,26 @@ namespace Machina.Engine
         Active // Render DebugDraws
     }
 
+    public static class MachinaClient
+    {
+        public static MachinaRuntime Runtime { get; private set; }
+
+        public static void Setup(MachinaRuntime runtime)
+        {
+            Runtime = runtime;
+        }
+
+        /// <summary>
+        ///     Print to the in-game debug console
+        /// </summary>
+        /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
+        public static void Print(params object[] objects)
+        {
+            Runtime?.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
+            new StdOutConsoleLogger().Log(objects);
+        }
+    }
+
     public class MachinaGame : Game
     {
         /// <summary>
@@ -28,19 +48,17 @@ namespace Machina.Engine
         public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
         protected readonly MachinaGameSpecification specification;
-        public MachinaRuntime Runtime { get; }
+        public MachinaRuntime Runtime => MachinaClient.Runtime;
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
         // Things that are going away (hopefully)
-        public static MachinaGame Current { get; private set; }
         public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
         internal MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
         {
-            Current = this;
             this.specification = specification;
             this.gameCartridge = gameCartridge;
 
@@ -51,7 +69,7 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            Runtime = new MachinaRuntime(this, graphics, this.specification);
+            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification));
             Assets = new AssetLibrary(this);
         }
 
@@ -120,7 +138,7 @@ namespace Machina.Engine
 
             if (Runtime.DebugLevel >= DebugLevel.Passive)
             {
-                Print("Debug build detected");
+                MachinaClient.Print("Debug build detected");
             }
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
@@ -152,7 +170,7 @@ namespace Machina.Engine
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
-                        MachinaGame.Print("Unknown demo mode", arg);
+                        MachinaClient.Print("Unknown demo mode", arg);
                         break;
                 }
             });
@@ -228,16 +246,6 @@ namespace Machina.Engine
                 InsertGameCartridgeAndRun();
             }
             Runtime.InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), Window, this.machinaWindow);
-        }
-
-        /// <summary>
-        ///     Print to the in-game debug console
-        /// </summary>
-        /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
-        public static void Print(params object[] objects)
-        {
-            Current?.Runtime.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
-            new StdOutConsoleLogger().Log(objects);
         }
     }
 }

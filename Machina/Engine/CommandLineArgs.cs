@@ -29,20 +29,20 @@ namespace Machina.Engine
             var index = this.argsStrings.IndexOf(ConvertToCommandToken(argName));
             if (index == -1)
             {
-                MachinaGame.Print("Command line switch", argName, "not found");
+                MachinaClient.Print("Command line switch", argName, "not found");
                 return null;
             }
 
             if (this.argsStrings.Count == index + 1)
             {
-                MachinaGame.Print("Argument value missing for", argName);
+                MachinaClient.Print("Argument value missing for", argName);
                 return null;
             }
 
             var val = this.argsStrings[index + 1];
             if (IsStringACommand(val))
             {
-                MachinaGame.Print("Argument value missing for", argName);
+                MachinaClient.Print("Argument value missing for", argName);
                 return null;
             }
 

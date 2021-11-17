@@ -36,7 +36,7 @@ namespace Machina.Engine
             }
             catch (InstancePlayLimitException e)
             {
-                MachinaGame.Print("Caught InstancePlayLimitException", e.Message);
+                MachinaClient.Print("Caught InstancePlayLimitException", e.Message);
             }
 
             return soundEffect;

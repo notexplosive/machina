@@ -26,7 +26,7 @@ namespace Machina.Engine.Debugging.Components
                     this.actor.scene.sceneLayers.runtime.DebugLevel = DebugLevel.Passive;
                 }
 
-                MachinaGame.Print("DebugLevel set to ", this.actor.scene.sceneLayers.runtime.DebugLevel);
+                MachinaClient.Print("DebugLevel set to ", this.actor.scene.sceneLayers.runtime.DebugLevel);
             }
         }
     }

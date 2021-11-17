@@ -67,7 +67,7 @@ namespace Machina.Engine
             }
             else
             {
-                MachinaGame.Print("Demo loading is only supported on GameCartridges");
+                MachinaClient.Print("Demo loading is only supported on GameCartridges");
             }
         }
 

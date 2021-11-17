@@ -30,11 +30,11 @@ namespace Machina.Engine
                     var fullContentPath = Path.Combine(devContentPath, path);
                     Directory.CreateDirectory(Path.GetDirectoryName(fullContentPath));
                     await File.WriteAllTextAsync(fullContentPath, data);
-                    MachinaGame.Print("Saved:", fullContentPath);
+                    MachinaClient.Print("Saved:", fullContentPath);
                 }
             }
 #endif
-            MachinaGame.Print("Saved:", fullPath);
+            MachinaClient.Print("Saved:", fullPath);
 
             onComplete?.Invoke();
         }
