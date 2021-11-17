@@ -22,6 +22,7 @@ namespace Machina.Engine
     public static class MachinaClient
     {
         public static MachinaRuntime Runtime { get; private set; }
+        public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
         public static void Setup(MachinaRuntime runtime)
         {
@@ -53,9 +54,6 @@ namespace Machina.Engine
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
-
-        // Things that are going away (hopefully)
-        public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
         internal MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
         {
