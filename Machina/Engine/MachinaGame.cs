@@ -75,7 +75,7 @@ namespace Machina.Engine
                 return null;
             }
 
-            var cropTexture = new Texture2D(Current.GraphicsDevice, rect.Width, rect.Height);
+            var cropTexture = new Texture2D(Current.Runtime.GraphicsDevice, rect.Width, rect.Height);
             var data = new Color[rect.Width * rect.Height];
             sourceTexture.GetData(0, rect, data, 0, data.Length);
             cropTexture.SetData(data);

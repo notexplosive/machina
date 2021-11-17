@@ -17,7 +17,7 @@ namespace Machina.Engine.Cartridges
 
         public void SetupSceneLayers(MachinaRuntime runtime, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
         {
-            BuildSceneLayers();
+            BuildSceneLayers(runtime);
 
             SceneLayers.OnError += (exception) =>
             {

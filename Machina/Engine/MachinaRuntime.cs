@@ -33,7 +33,7 @@ namespace Machina.Engine
         public void InsertCartridge(Cartridge cartridge, GameWindow window, MachinaWindow machinaWindow)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(GraphicsDevice, this.specification, window, machinaWindow);
+            CurrentCartridge.Setup(this, GraphicsDevice, this.specification, window, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
         }

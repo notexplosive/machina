@@ -54,7 +54,7 @@ namespace Machina.Components
 
             if (newSize.X * newSize.Y > 0)
             {
-                var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+                var graphicsDevice = MachinaGame.Current.Runtime.GraphicsDevice;
                 this.renderTarget = new RenderTarget2D(
                     graphicsDevice,
                     newSize.X,
@@ -76,7 +76,7 @@ namespace Machina.Components
 
         public void DrawContent(SpriteBatch spriteBatch)
         {
-            var graphicsDevice = MachinaGame.Current.GraphicsDevice;
+            var graphicsDevice = MachinaGame.Current.Runtime.GraphicsDevice;
             graphicsDevice.SetRenderTarget(this.renderTarget);
 
             graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
