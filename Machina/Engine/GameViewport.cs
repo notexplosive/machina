@@ -21,12 +21,12 @@ namespace Machina.Engine
         public Point WindowSize { get; }
     }
 
-    public class GameCanvas : IGameCanvas
+    public class GameViewport : IGameCanvas
     {
         private readonly IResizeStrategy resizeStrategy;
         private RenderTarget2D internalCanvas;
 
-        public GameCanvas(Point viewportSize, ResizeBehavior resizeBehavior)
+        public GameViewport(Point viewportSize, ResizeBehavior resizeBehavior)
         {
             ViewportSize = viewportSize;
             if (resizeBehavior == ResizeBehavior.FillContent)

@@ -10,13 +10,13 @@ namespace Machina.Engine.Debugging.Data
     {
         public static void CreateFramerateCounter(SceneLayers sceneLayers)
         {
-            var framerateCounterActor = sceneLayers.debugScene.AddActor("FramerateCounter");
+            var framerateCounterActor = sceneLayers.DebugScene.AddActor("FramerateCounter");
             new FrameRateCounter(framerateCounterActor);
         }
 
         public static void CreateFramestep(SceneLayers sceneLayers)
         {
-            var frameStepActor = sceneLayers.debugScene.AddActor("FrameStepActor");
+            var frameStepActor = sceneLayers.DebugScene.AddActor("FrameStepActor");
             var tool = new InvokableDebugTool(frameStepActor,
                 new KeyCombination(Keys.Space, new ModifierKeys(true, false, false)));
             new FrameStepRenderer(frameStepActor, MachinaClient.GlobalFrameStep, sceneLayers, tool);
@@ -28,7 +28,7 @@ namespace Machina.Engine.Debugging.Data
 
         public static DebugDock CreateDebugDock(SceneLayers sceneLayers)
         {
-            var dockActor = sceneLayers.debugScene.AddActor("Debug Dock");
+            var dockActor = sceneLayers.DebugScene.AddActor("Debug Dock");
             new InvokableDebugTool(dockActor, new KeyCombination(Keys.Tab, new ModifierKeys(true, false, false)));
             new BoundingRect(dockActor, Point.Zero);
             new Hoverable(dockActor);
@@ -50,7 +50,7 @@ namespace Machina.Engine.Debugging.Data
                         new BoundingRect(sceneGraphActor, Point.Zero);
                         new SceneGraphData(sceneGraphActor, sceneLayers);
                         new Hoverable(sceneGraphActor);
-                        new SceneGraphUI(sceneGraphActor, dock.windowManager, sceneLayers.debugScene);
+                        new SceneGraphUI(sceneGraphActor, dock.windowManager, sceneLayers.DebugScene);
                         new SceneGraphRenderer(sceneGraphActor, window.Scrollbar);
                     })));
             dock.AddApp(new App("Console", true,
@@ -71,7 +71,7 @@ namespace Machina.Engine.Debugging.Data
         public static Logger BuildOutputConsole(SceneLayers sceneLayers)
         {
             var consoleFont = MachinaClient.Assets.GetSpriteFont("DefaultFont");
-            var debugActor = sceneLayers.debugScene.AddActor("DebugActor", depthAsInt: 100);
+            var debugActor = sceneLayers.DebugScene.AddActor("DebugActor", depthAsInt: 100);
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
             return new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont));
         }

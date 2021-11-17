@@ -15,10 +15,9 @@ namespace Machina.Engine
     {
         public delegate void DrawAction(SpriteBatch spriteBatch);
 
-        private readonly DebugDock debugDock;
-        public readonly Scene debugScene;
+        public DebugDock DebugDock { get; private set; }
+        public Scene DebugScene { get; private set; }
         public readonly IGameCanvas gameCanvas;
-        private readonly Logger overlayOutputConsole;
         private readonly List<Scene> sceneList = new List<Scene>();
 
         public Color BackgroundColor = Color.SlateBlue;
@@ -31,26 +30,22 @@ namespace Machina.Engine
 
         private TextInputEventArgs? pendingTextInput;
 
-        public SceneLayers(bool useDebugScene, IGameCanvas gameCanvas)
+        public SceneLayers(IGameCanvas gameCanvas)
         {
             this.gameCanvas = gameCanvas;
-
-            Logger = new StdOutConsoleLogger();
-
-            if (useDebugScene)
-            {
-                this.debugScene = new Scene(this);
-                this.debugScene.SetGameCanvas(new GameCanvas(gameCanvas.WindowSize, ResizeBehavior.FillContent));
-                this.overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
-                Logger = this.overlayOutputConsole;
-
-                // DebugBuilder.CreateFramerateCounter(this);
-                DebugBuilder.CreateFramestep(this);
-                this.debugDock = DebugBuilder.CreateDebugDock(this);
-            }
         }
 
-        public ILogger Logger { get; private set; }
+        public void BuildDebugScene(Cartridge cartridge)
+        {
+            DebugScene = new Scene(this);
+            DebugScene.SetGameCanvas(new GameViewport(gameCanvas.WindowSize, ResizeBehavior.FillContent));
+            var overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
+            cartridge.PushLogger(overlayOutputConsole);
+
+            // DebugBuilder.CreateFramerateCounter(this);
+            DebugBuilder.CreateFramestep(this);
+            DebugDock = DebugBuilder.CreateDebugDock(this);
+        }
 
         public SamplerState SamplerState { get; set; } = SamplerState.PointWrap;
 
@@ -84,20 +79,7 @@ namespace Machina.Engine
 
         public void AddDebugApp(App app)
         {
-            this.debugDock.AddApp(app);
-        }
-
-        public void PushLogger(ILogger newLogger)
-        {
-            Logger = newLogger;
-        }
-
-        /// <summary>
-        ///     One day this might behave like a stack but for now it just reverts to the Overlay Console
-        /// </summary>
-        public void PopLogger()
-        {
-            Logger = this.overlayOutputConsole;
+            this.DebugDock.AddApp(app);
         }
 
         public Scene AddNewScene()
@@ -133,11 +115,11 @@ namespace Machina.Engine
 
         public Scene[] AllScenes()
         {
-            var array = new Scene[this.sceneList.Count + (this.debugScene != null ? 1 : 0)];
+            var array = new Scene[this.sceneList.Count + (this.DebugScene != null ? 1 : 0)];
             this.sceneList.CopyTo(array);
-            if (this.debugScene != null)
+            if (this.DebugScene != null)
             {
-                array[this.sceneList.Count] = this.debugScene;
+                array[this.sceneList.Count] = this.DebugScene;
             }
 
             return array;
@@ -318,12 +300,12 @@ namespace Machina.Engine
 
         public void DrawDebugScene(SpriteBatch spriteBatch)
         {
-            this.debugScene?.Draw(spriteBatch);
+            this.DebugScene?.Draw(spriteBatch);
         }
 
         public void CloseDebugDock()
         {
-            this.debugDock.Close();
+            this.DebugDock.Close();
         }
     }
 }

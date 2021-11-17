@@ -60,7 +60,7 @@ namespace Machina.Engine
         {
             if (CurrentCartridge is GameCartridge gameCartridge)
             {
-                var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
+                var demoActor = CurrentCartridge.SceneLayers.DebugScene.AddActor("DebugActor");
                 var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
                 DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName, this.fileSystem), demoName, 1);
                 demoPlaybackComponent.ShowGui = false;

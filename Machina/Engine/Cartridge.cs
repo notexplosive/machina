@@ -4,14 +4,30 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Machina.Engine
 {
     using Assets;
+    using Machina.Engine.Debugging.Data;
     using System;
+    using System.Collections.Generic;
 
     public abstract class Cartridge
     {
         private bool hasBeenSetup = false;
         public SceneLayers SceneLayers { get; private set; }
         public SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
-        public GameCanvas CurrentGameCanvas => this.SceneLayers.gameCanvas as GameCanvas;
+        public GameViewport CurrentGameCanvas => this.SceneLayers.gameCanvas as GameViewport;
+        public Stack<ILogger> loggerStack = new Stack<ILogger>();
+
+        public ILogger Logger
+        {
+            get
+            {
+                if (loggerStack.Count == 0)
+                {
+                    return new StdOutConsoleLogger();
+                }
+
+                return loggerStack.Peek();
+            }
+        }
 
         private readonly Point renderResolution;
         private readonly ResizeBehavior resizeBehavior;
@@ -56,8 +72,22 @@ namespace Machina.Engine
             if (SceneLayers == null)
             {
                 // this is lazy initialized for the dumbest reason: to be debuggable it needs to have a font, the font doesn't come in until after loading is complete
-                SceneLayers = new SceneLayers(!this.skipDebug, new GameCanvas(renderResolution, resizeBehavior));
+                SceneLayers = new SceneLayers(new GameViewport(renderResolution, resizeBehavior));
+                if (!this.skipDebug)
+                {
+                    SceneLayers.BuildDebugScene(this);
+                }
             }
+        }
+
+        public void PushLogger(ILogger newLogger)
+        {
+            loggerStack.Push(newLogger);
+        }
+
+        public void PopLogger()
+        {
+            loggerStack.Pop();
         }
     }
 }

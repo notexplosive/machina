@@ -40,7 +40,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Runtime?.CurrentCartridge?.SceneLayers?.Logger.Log(objects);
+            Runtime?.CurrentCartridge?.Logger.Log(objects);
             new StdOutConsoleLogger().Log(objects);
         }
     }
@@ -130,7 +130,7 @@ namespace Machina.Engine
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
             this.gameCartridge.SetupSceneLayers(Runtime, specification, Window, machinaWindow);
 
-            var debugActor = this.gameCartridge.SceneLayers.debugScene.AddActor("DebugActor");
+            var debugActor = this.gameCartridge.SceneLayers.DebugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
 
             var demoName = Demo.MostRecentlySavedDemoPath;
