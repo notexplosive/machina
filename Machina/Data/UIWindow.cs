@@ -46,12 +46,12 @@ namespace Machina.Data
         private readonly UIStyle style;
         private BoundedTextRenderer titleTextRenderer;
 
-        public UIWindow(Scene managerScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
+        public UIWindow(Scene parentScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
             bool canbeMinimized, SpriteFrame icon, UIStyle style)
         {
             this.style = style;
             var headerSize = 32;
-            var windowRoot = managerScene.AddActor("Window");
+            var windowRoot = parentScene.AddActor("Window");
             new BoundingRect(windowRoot,
                 contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
 

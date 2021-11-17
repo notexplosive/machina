@@ -134,17 +134,6 @@ namespace Machina.Data
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        ///     You should probably use OnLaunch instead.
-        /// </summary>
-        /// <param name="sceneCallback"></param>
-        /// <returns></returns>
-        public WindowBuilder AddSceneLayer(Action<Scene> sceneCallback)
-        {
-            this.perLayerSceneFunctions.Add(sceneCallback);
-            return this;
-        }
-
         public WindowBuilder CanBeScrolled(int maxScrollPos)
         {
             this.isScrollable = true;
