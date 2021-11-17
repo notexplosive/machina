@@ -15,7 +15,7 @@ namespace Machina.Engine.Cartridges
 
         public abstract void PrepareDynamicAssets(AssetLoadTree loadTree, GraphicsDevice graphicsDevice);
 
-        public void SetupSceneLayers(MachinaRuntime runtime, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
+        public void SetupSceneLayers(MachinaRuntime runtime, GameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
         {
             BuildSceneLayers(runtime);
 

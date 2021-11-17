@@ -14,7 +14,7 @@ namespace Machina.Engine.Cartridges
         {
         }
 
-        public override void OnGameLoad(MachinaGameSpecification specification, MachinaRuntime runtime)
+        public override void OnGameLoad(GameSpecification specification, MachinaRuntime runtime)
         {
             SceneLayers.BackgroundColor = Color.Black;
         }

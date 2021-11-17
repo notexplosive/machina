@@ -15,7 +15,7 @@ namespace Machina.Engine
     {
         public SoundEffectPlayer SoundEffectPlayer;
         public SpriteBatch spriteBatch;
-        private readonly MachinaGameSpecification specification;
+        private readonly GameSpecification specification;
         public readonly GraphicsDeviceManager Graphics;
         private readonly MachinaGame game;
         public readonly FrameStep GlobalFrameStep = new FrameStep();
@@ -23,7 +23,7 @@ namespace Machina.Engine
         public readonly MachinaFileSystem fileSystem;
 
 
-        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, MachinaGameSpecification specification)
+        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification)
         {
             this.specification = specification;
             Graphics = graphics;

@@ -27,7 +27,7 @@ namespace Machina.Engine
             Random = new SeededRandom();
         }
 
-        public void Setup(MachinaRuntime runtime, GraphicsDevice graphicsDevice, MachinaGameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
+        public void Setup(MachinaRuntime runtime, GraphicsDevice graphicsDevice, GameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
         {
             if (!this.hasBeenSetup)
             {
@@ -49,7 +49,7 @@ namespace Machina.Engine
             }
         }
 
-        public abstract void OnGameLoad(MachinaGameSpecification specification, MachinaRuntime runtime);
+        public abstract void OnGameLoad(GameSpecification specification, MachinaRuntime runtime);
 
         protected void BuildSceneLayers(MachinaRuntime runtime)
         {

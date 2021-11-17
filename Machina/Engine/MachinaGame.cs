@@ -48,14 +48,14 @@ namespace Machina.Engine
         public readonly GameCartridge gameCartridge;
         public static IAssetLibrary Assets { get; private set; }
         public static UIStyle defaultStyle;
-        protected readonly MachinaGameSpecification specification;
+        protected readonly GameSpecification specification;
         public MachinaRuntime Runtime => MachinaClient.Runtime;
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
-        internal MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
+        internal MachinaGame(GameSpecification specification, GameCartridge gameCartridge)
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;

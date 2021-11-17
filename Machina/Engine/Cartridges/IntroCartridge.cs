@@ -21,7 +21,7 @@ namespace Machina.Engine.Cartridges
             this.onEnd = onEnd;
         }
 
-        public override void OnGameLoad(MachinaGameSpecification specification, MachinaRuntime runtime)
+        public override void OnGameLoad(GameSpecification specification, MachinaRuntime runtime)
         {
             var introScene = SceneLayers.AddNewScene();
 
