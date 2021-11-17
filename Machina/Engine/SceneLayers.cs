@@ -104,7 +104,7 @@ namespace Machina.Engine
 
         public Scene AddNewScene()
         {
-            var scene = new Scene(this, MachinaGame.Current.Runtime.GlobalFrameStep);
+            var scene = new Scene(this, this.runtime.GlobalFrameStep);
             Add(scene);
             return scene;
         }
@@ -309,7 +309,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (MachinaGame.Current.Runtime.DebugLevel > DebugLevel.Passive)
+            if (this.runtime.DebugLevel > DebugLevel.Passive)
             {
                 foreach (var scene in scenes)
                 {

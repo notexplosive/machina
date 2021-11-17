@@ -28,7 +28,7 @@ namespace Machina.Engine
         /// <summary>
         /// Path to users AppData folder (or platform equivalent)
         /// </summary>
-        public readonly string appDataPath;
+        public string appDataPath { get; }
         /// <summary>
         /// Cartridge provided by client code
         /// </summary>

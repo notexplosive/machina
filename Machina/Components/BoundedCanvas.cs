@@ -54,7 +54,7 @@ namespace Machina.Components
 
             if (newSize.X * newSize.Y > 0)
             {
-                var graphicsDevice = MachinaGame.Current.Runtime.GraphicsDevice;
+                var graphicsDevice = this.actor.scene.sceneLayers.runtime.GraphicsDevice;
                 this.renderTarget = new RenderTarget2D(
                     graphicsDevice,
                     newSize.X,

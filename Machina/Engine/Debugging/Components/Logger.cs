@@ -17,7 +17,7 @@ namespace Machina.Engine.Debugging.Components
 
         public void Log(params object[] objects)
         {
-            if (MachinaGame.Current.Runtime.DebugLevel == DebugLevel.Off)
+            if (this.actor.scene.sceneLayers.runtime.DebugLevel == DebugLevel.Off)
             {
                 return;
             }

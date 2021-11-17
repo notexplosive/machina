@@ -55,7 +55,7 @@ namespace Machina.Engine
             GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
             CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
-            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch);
+            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch, this);
             CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
         }
 

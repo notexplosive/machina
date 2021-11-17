@@ -18,7 +18,7 @@ namespace Machina.Engine.Debugging.Components
         {
             this.font = MachinaGame.Assets.GetSpriteFont("DefaultFontSmall");
             this.scrollbar = scrollbar;
-            MachinaGame.Current.Runtime.CurrentCartridge.SceneLayers.PushLogger(this);
+            this.actor.scene.sceneLayers.runtime.CurrentCartridge.SceneLayers.PushLogger(this);
             MachinaGame.Print("Logger pushed");
         }
 
@@ -38,7 +38,7 @@ namespace Machina.Engine.Debugging.Components
 
         public override void OnDeleteFinished()
         {
-            MachinaGame.Current.Runtime.CurrentCartridge.SceneLayers.PopLogger();
+            this.actor.scene.sceneLayers.runtime.CurrentCartridge.SceneLayers.PopLogger();
             MachinaGame.Print("Logger popped");
         }
 

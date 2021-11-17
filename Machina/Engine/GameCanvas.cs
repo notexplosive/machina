@@ -72,9 +72,9 @@ namespace Machina.Engine
             this.resizeStrategy.SetRenderTargetToCanvas(graphicsDevice, this.internalCanvas);
         }
 
-        public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, MachinaRuntime runtime)
         {
-            this.resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, this.internalCanvas, CanvasRect);
+            this.resizeStrategy.DrawCanvasToScreen(graphicsDevice, spriteBatch, this.internalCanvas, CanvasRect, runtime);
         }
 
         private interface IResizeStrategy
@@ -82,7 +82,7 @@ namespace Machina.Engine
             void SetRenderTargetToCanvas(GraphicsDevice graphicsDevice, RenderTarget2D screenRenderTarget);
 
             void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
-                RenderTarget2D screenRenderTarget, Rectangle canvasRect);
+                RenderTarget2D screenRenderTarget, Rectangle canvasRect, MachinaRuntime runtime);
 
             RenderTarget2D BuildCanvas(GraphicsDevice graphicsDevice, Point viewportSize);
             Point GetCanvasSize(Point windowSize, Point viewportSize);
@@ -109,11 +109,10 @@ namespace Machina.Engine
                     DepthFormat.Depth24);
             }
 
-            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
-                RenderTarget2D canvas, Rectangle canvasRect)
+            public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, RenderTarget2D canvas, Rectangle canvasRect, MachinaRuntime runtime)
             {
                 graphicsDevice.SetRenderTarget(null);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, MachinaGame.Current.Runtime.CurrentCartridge.SamplerState,
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, runtime.CurrentCartridge.SamplerState,
                     DepthStencilState.DepthRead);
                 spriteBatch.Draw(canvas,
                     canvasRect,
@@ -160,7 +159,7 @@ namespace Machina.Engine
             }
 
             public void DrawCanvasToScreen(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch,
-                RenderTarget2D screenRenderTarget, Rectangle canvasRect)
+                RenderTarget2D screenRenderTarget, Rectangle canvasRect, MachinaRuntime runtime)
             {
                 // no-op
             }

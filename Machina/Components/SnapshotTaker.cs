@@ -63,7 +63,7 @@ namespace Machina.Components
 
         public void SaveSnapshotAndDisposeTexture(SpriteBatch spriteBatch)
         {
-            var texture = MachinaGame.Current.Runtime.CurrentCartridge.SceneLayers.RenderToTexture(spriteBatch);
+            var texture = this.actor.scene.sceneLayers.runtime.CurrentCartridge.SceneLayers.RenderToTexture(spriteBatch);
             var currentTime = DateTime.Now;
 
             Directory.CreateDirectory(this.screenshotPath);
