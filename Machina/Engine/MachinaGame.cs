@@ -51,7 +51,7 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            Runtime = new MachinaRuntime(graphics, this.specification);
+            Runtime = new MachinaRuntime(this, graphics, this.specification);
             Assets = new AssetLibrary(this);
         }
 
@@ -186,11 +186,6 @@ namespace Machina.Engine
             this.specification.CommandLineArgs.ExecuteEarlyArgs();
             Runtime.InsertCartridge(this.gameCartridge, Window, this.machinaWindow);
             this.specification.CommandLineArgs.ExecuteArgs();
-        }
-
-        public static void Quit()
-        {
-            Current.Exit();
         }
 
         protected override void UnloadContent()

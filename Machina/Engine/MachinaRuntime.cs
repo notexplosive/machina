@@ -17,6 +17,7 @@ namespace Machina.Engine
         public SpriteBatch spriteBatch;
         private readonly MachinaGameSpecification specification;
         public readonly GraphicsDeviceManager Graphics;
+        private readonly MachinaGame game;
         public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
 
@@ -26,10 +27,11 @@ namespace Machina.Engine
         public readonly string appDataPath;
 
 
-        public MachinaRuntime(GraphicsDeviceManager graphics, MachinaGameSpecification specification)
+        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, MachinaGameSpecification specification)
         {
             this.specification = specification;
             Graphics = graphics;
+            this.game = game;
 
             // TODO: I don't think this works on Android, might need some alternative
             this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -47,6 +49,11 @@ namespace Machina.Engine
             CurrentCartridge.Setup(this, GraphicsDevice, this.specification, window, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
+        }
+
+        public void Quit()
+        {
+            this.game.Exit();
         }
 
         public Cartridge CurrentCartridge { get; private set; }
