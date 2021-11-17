@@ -1,5 +1,6 @@
 ﻿using Machina.Data;
 using Machina.Engine;
+using Machina.Engine.Cartridges;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -19,9 +20,9 @@ namespace Machina.Components
 
         public bool ShowGui { get; set; } = true;
 
-        public Demo.Playback SetDemo(Demo demo, string demoName, int playbackSpeed)
+        public Demo.Playback SetDemo(GameCartridge gameCartridge, Demo demo, string demoName, int playbackSpeed)
         {
-            this.playback = new Demo.Playback(demo, playbackSpeed);
+            this.playback = new Demo.Playback(gameCartridge, demo, playbackSpeed);
             this.text = "Playback " + demoName;
             return this.playback;
         }

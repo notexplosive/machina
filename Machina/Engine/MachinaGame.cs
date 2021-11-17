@@ -59,20 +59,6 @@ namespace Machina.Engine
             Assets = new AssetLibrary(this);
         }
 
-        public static Texture2D CropTexture(Rectangle rect, Texture2D sourceTexture)
-        {
-            if (rect.Width * rect.Height == 0)
-            {
-                return null;
-            }
-
-            var cropTexture = new Texture2D(Current.Runtime.GraphicsDevice, rect.Width, rect.Height);
-            var data = new Color[rect.Width * rect.Height];
-            sourceTexture.GetData(0, rect, data, 0, data.Length);
-            cropTexture.SetData(data);
-            return cropTexture;
-        }
-
         public static void SetCursor(MouseCursor cursor)
         {
             pendingCursor = cursor;
@@ -160,13 +146,13 @@ namespace Machina.Engine
                 switch (arg)
                 {
                     case "record":
-                        new DemoRecorderComponent(debugActor, new Demo.Recorder(demoName));
+                        new DemoRecorderComponent(debugActor, new Demo.Recorder(this.gameCartridge, demoName));
                         break;
                     case "playback":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:

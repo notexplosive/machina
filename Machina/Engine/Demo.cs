@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Machina.Data;
+using Machina.Engine.Cartridges;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
@@ -139,9 +140,9 @@ namespace Machina.Engine
             public readonly string fileName;
             private float totalTime;
 
-            public Recorder(string fileName)
+            public Recorder(GameCartridge gameCartridge, string fileName)
             {
-                this.demo = new Demo(MachinaGame.Current.gameCartridge.Random.Seed);
+                this.demo = new Demo(gameCartridge.Random.Seed);
                 this.totalTime = 0f;
                 this.fileName = fileName;
             }
@@ -152,9 +153,9 @@ namespace Machina.Engine
                 this.demo.Append(new DemoSerializableEntry(this.totalTime, inputState));
             }
 
-            public void WriteDemoToDisk()
+            public void WriteDemoToDisk(MachinaRuntime runtime)
             {
-                Directory.CreateDirectory(Path.Join(MachinaGame.Current.Runtime.appDataPath, "Demos"));
+                Directory.CreateDirectory(Path.Join(runtime.appDataPath, "Demos"));
                 FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }
@@ -167,14 +168,14 @@ namespace Machina.Engine
             private int currentIndex;
             private float time;
 
-            public Playback(Demo demo, int playbackSpeed)
+            public Playback(GameCartridge gameCartridge, Demo demo, int playbackSpeed)
             {
                 this.demo = demo;
                 this.time = 0f;
                 this.currentIndex = 0;
                 this.demoLength = this.demo.records.Count;
                 this.playbackSpeed = playbackSpeed;
-                MachinaGame.Current.gameCartridge.Random.Seed = demo.seedAtStart;
+                gameCartridge.Random.Seed = demo.seedAtStart;
             }
 
             public bool IsFinished => this.currentIndex >= this.demoLength;

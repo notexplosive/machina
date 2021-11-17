@@ -53,10 +53,17 @@ namespace Machina.Engine
 
         public void RunDemo(string demoName)
         {
-            var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
-            var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
-            DemoPlayback = demoPlaybackComponent.SetDemo(Demo.FromDisk_Sync(demoName), demoName, 1);
-            demoPlaybackComponent.ShowGui = false;
+            if (CurrentCartridge is GameCartridge gameCartridge)
+            {
+                var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
+                var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
+                DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName), demoName, 1);
+                demoPlaybackComponent.ShowGui = false;
+            }
+            else
+            {
+                MachinaGame.Print("Demo loading is only supported on GameCartridges");
+            }
         }
 
         internal void Draw()
@@ -72,8 +79,6 @@ namespace Machina.Engine
 
         internal void Update(float dt)
         {
-
-
             if (DemoPlayback != null && DemoPlayback.IsFinished == false)
             {
                 for (var i = 0; i < DemoPlayback.playbackSpeed; i++)
@@ -87,7 +92,6 @@ namespace Machina.Engine
             {
                 CurrentCartridge.SceneLayers.Update(dt, Matrix.Identity, this.input.GetHumanFrameState());
             }
-
         }
     }
 }

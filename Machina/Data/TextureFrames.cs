@@ -19,7 +19,7 @@ namespace Machina.Data
             for (var i = 0; i < spriteSheet.FrameCount; i++)
             {
                 var rect = spriteSheet.GetSourceRectForFrame(i);
-                this.textures.Add(MachinaGame.CropTexture(rect, spriteSheet.SourceTexture));
+                this.textures.Add(MachinaGraphics.CropTexture(rect, spriteSheet.SourceTexture));
             }
         }
 

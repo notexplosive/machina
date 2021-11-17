@@ -32,7 +32,7 @@ namespace Machina.Data
                 var rect = this.rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
-                    var cropTexture = MachinaGame.CropTexture(rect, sourceTexture);
+                    var cropTexture = MachinaGraphics.CropTexture(rect, sourceTexture);
                     this.textures[i] = cropTexture;
                 }
             }
