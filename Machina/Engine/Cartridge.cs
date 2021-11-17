@@ -43,13 +43,13 @@ namespace Machina.Engine
                     window.TextInput += SceneLayers.AddPendingTextInput;
                 }
 
-                OnGameLoad(specification);
+                OnGameLoad(specification, runtime);
 
                 this.hasBeenSetup = true;
             }
         }
 
-        public abstract void OnGameLoad(MachinaGameSpecification specification);
+        public abstract void OnGameLoad(MachinaGameSpecification specification, MachinaRuntime runtime);
 
         protected void BuildSceneLayers(MachinaRuntime runtime)
         {
