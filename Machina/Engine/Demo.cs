@@ -154,7 +154,7 @@ namespace Machina.Engine
 
             public void WriteDemoToDisk()
             {
-                Directory.CreateDirectory(Path.Join(MachinaGame.Current.appDataPath, "Demos"));
+                Directory.CreateDirectory(Path.Join(MachinaGame.Current.Runtime.appDataPath, "Demos"));
                 FileHelpers.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }

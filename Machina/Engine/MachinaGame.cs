@@ -26,10 +26,6 @@ namespace Machina.Engine
     public abstract class MachinaGame : Game
     {
         /// <summary>
-        /// Path to users AppData folder (or platform equivalent)
-        /// </summary>
-        public string appDataPath { get; }
-        /// <summary>
         /// Cartridge provided by client code
         /// </summary>
         public readonly GameCartridge gameCartridge;
@@ -37,7 +33,6 @@ namespace Machina.Engine
         public static UIStyle defaultStyle;
         protected readonly MachinaGameSpecification specification;
         public MachinaRuntime Runtime { get; }
-
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
@@ -52,10 +47,6 @@ namespace Machina.Engine
             Current = this;
             this.specification = specification;
             this.gameCartridge = gameCartridge;
-
-            // TODO: I don't think this works on Android; also this should be moved to GamePlatform.cs
-            this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "NotExplosive", this.specification.gameTitle);
 
             Content.RootDirectory = "Content";
 

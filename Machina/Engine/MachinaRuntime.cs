@@ -9,6 +9,7 @@ namespace Machina.Engine
     using Machina.Engine.Cartridges;
     using Machina.Engine.Input;
     using System;
+    using System.IO;
 
     public class MachinaRuntime
     {
@@ -19,10 +20,20 @@ namespace Machina.Engine
         public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
 
+        /// <summary>
+        /// Path to users AppData folder (or platform equivalent)
+        /// </summary>
+        public readonly string appDataPath;
+
+
         public MachinaRuntime(GraphicsDeviceManager graphics, MachinaGameSpecification specification)
         {
             this.specification = specification;
             Graphics = graphics;
+
+            // TODO: I don't think this works on Android, might need some alternative
+            this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "NotExplosive", this.specification.gameTitle);
         }
 
         public Demo.Playback DemoPlayback { get; set; }

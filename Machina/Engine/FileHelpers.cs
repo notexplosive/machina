@@ -10,7 +10,7 @@ namespace Machina.Engine
         public static async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
             Action onComplete = null)
         {
-            var fullPath = Path.Combine(MachinaGame.Current.appDataPath, path);
+            var fullPath = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             await File.WriteAllTextAsync(fullPath, data);
 
@@ -36,7 +36,7 @@ namespace Machina.Engine
 
         public static string GetAppDataPath()
         {
-            return MachinaGame.Current.appDataPath;
+            return MachinaGame.Current.Runtime.appDataPath;
         }
 
         public static IEnumerable<string> GetFilesAt(string path, string suffix)
@@ -55,7 +55,7 @@ namespace Machina.Engine
                 }
             }
 
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.appDataPath, path), "*"))
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.Runtime.appDataPath, path), "*"))
             {
                 if (file.EndsWith(suffix) && !foundNames.Contains(Path.GetFileName(file)))
                 {
@@ -74,7 +74,7 @@ namespace Machina.Engine
         /// <returns></returns>
         public static async Task<string> ReadTextAppDataThenLocal(string path)
         {
-            var appData = Path.Combine(MachinaGame.Current.appDataPath, path);
+            var appData = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
             if (File.Exists(appData))
             {
                 var result = await File.ReadAllTextAsync(appData);
