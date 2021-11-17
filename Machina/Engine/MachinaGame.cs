@@ -19,11 +19,7 @@ namespace Machina.Engine
         Active // Render DebugDraws
     }
 
-    /// <summary>
-    ///     Derive your Game class from MachinaGame and then populate the PostLoadContent with your code.
-    ///     Your game should call the base constructor, even though it's abstract.
-    /// </summary>
-    public abstract class MachinaGame : Game
+    public class MachinaGame : Game
     {
         /// <summary>
         /// Cartridge provided by client code
@@ -42,7 +38,7 @@ namespace Machina.Engine
         public static MachinaGame Current { get; private set; }
         public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
 
-        protected MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
+        internal MachinaGame(MachinaGameSpecification specification, GameCartridge gameCartridge)
         {
             Current = this;
             this.specification = specification;
