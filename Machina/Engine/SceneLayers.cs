@@ -104,7 +104,7 @@ namespace Machina.Engine
 
         public Scene AddNewScene()
         {
-            var scene = new Scene(this, this.runtime.GlobalFrameStep);
+            var scene = new Scene(this, MachinaClient.GlobalFrameStep);
             Add(scene);
             return scene;
         }

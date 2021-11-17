@@ -66,7 +66,7 @@ namespace Machina.Components
 
             this.textRenderer.Text = "";
 
-            this.actor.scene.sceneLayers.runtime.SoundEffectPlayer.PlaySound("blblblbl");
+            MachinaClient.SoundEffectPlayer.PlaySound("blblblbl");
 
             var name = "NotExplosive";
             yield return new WaitSeconds(0.25f / speed);
@@ -79,7 +79,7 @@ namespace Machina.Components
 
             yield return new WaitSeconds(1f / speed);
 
-            this.actor.scene.sceneLayers.runtime.SoundEffectPlayer.PlaySound("ouch", 0.25f);
+            MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.25f);
             this.spinning = true;
             SwapColor();
 

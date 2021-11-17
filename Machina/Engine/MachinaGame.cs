@@ -22,11 +22,15 @@ namespace Machina.Engine
     public static class MachinaClient
     {
         public static MachinaRuntime Runtime { get; private set; }
-        public static NoiseBasedRNG RandomDirty = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
+        public static SoundEffectPlayer SoundEffectPlayer { get; private set; }
+        public static NoiseBasedRNG RandomDirty { get; } = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
+        public static FrameStep GlobalFrameStep { get; } = new FrameStep();
 
         public static void Setup(MachinaRuntime runtime)
         {
             Runtime = runtime;
+            SoundEffectPlayer = new SoundEffectPlayer(runtime.Settings);
+
         }
 
         /// <summary>
@@ -170,8 +174,6 @@ namespace Machina.Engine
 
             this.specification.commandLineArgs.RegisterEarlyFlagArg("debug",
                 () => { Runtime.DebugLevel = DebugLevel.Active; });
-
-            Runtime.SoundEffectPlayer = new SoundEffectPlayer(this.specification.settings);
 
 #if DEBUG
             // PlayIntroAndLoadGame();

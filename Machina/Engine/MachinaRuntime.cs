@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Machina.Engine
 {
     using Assets;
+    using Machina.Data;
     using Machina.Engine.Cartridges;
     using Machina.Engine.Input;
     using System;
@@ -13,14 +14,13 @@ namespace Machina.Engine
 
     public class MachinaRuntime
     {
-        public SoundEffectPlayer SoundEffectPlayer;
         public SpriteBatch spriteBatch;
         private readonly GameSpecification specification;
         public readonly GraphicsDeviceManager Graphics;
         private readonly MachinaGame game;
-        public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
         public readonly MachinaFileSystem fileSystem;
+        public GameSettings Settings => this.specification.settings;
 
 
         public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification)
