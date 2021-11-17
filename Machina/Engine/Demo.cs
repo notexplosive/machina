@@ -61,9 +61,9 @@ namespace Machina.Engine
         ///     This needs to be Sync because we might do some CleanRandom stuff while we're waiting for the demo to load
         /// </summary>
         /// <param name="demoName"></param>
-        public static Demo FromDisk_Sync(string demoName)
+        public static Demo FromDisk_Sync(string demoName, MachinaFileSystem fileSystem)
         {
-            var demoJson = MachinaFileSystem.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
+            var demoJson = fileSystem.ReadTextAppDataThenLocal(Path.Join("Demos", demoName)).Result;
             return DecodeRecords(demoJson);
         }
 
@@ -155,8 +155,8 @@ namespace Machina.Engine
 
             public void WriteDemoToDisk(MachinaRuntime runtime)
             {
-                Directory.CreateDirectory(Path.Join(runtime.appDataPath, "Demos"));
-                MachinaFileSystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
+                Directory.CreateDirectory(Path.Join(runtime.fileSystem.AppDataPath, "Demos"));
+                runtime.fileSystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }
 

@@ -26,8 +26,8 @@ namespace Machina.Engine.Cartridges
 
             var errorText = this.exception.Message + "\n\n" + this.exception.StackTrace;
 
-            var filePath = $"{Path.Join(MachinaFileSystem.GetAppDataPath(), $"crashdump-{DateTime.Now.ToFileTime()}.txt")}";
-            MachinaFileSystem.WriteStringToAppData(errorText, filePath, true);
+            var filePath = $"{Path.Join(runtime.fileSystem.AppDataPath, $"crashdump-{DateTime.Now.ToFileTime()}.txt")}";
+            runtime.fileSystem.WriteStringToAppData(errorText, filePath, true);
 
             var titleText = "Game Crashed, sorry about that :(";
             var contactInfoText = $"You can also get this message in text form at:\n{filePath}\nReach out to @NotExplosive on Twitter so I can fix it";

@@ -88,7 +88,7 @@ namespace Machina.Engine
             this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, Runtime.GraphicsDevice);
 
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, Runtime.GraphicsDevice);
+            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, Runtime.GraphicsDevice, Runtime.fileSystem);
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
 
@@ -145,10 +145,10 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(this.gameCartridge, demoName));
                         break;
                     case "playback":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, Runtime.fileSystem), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, Runtime.fileSystem), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:

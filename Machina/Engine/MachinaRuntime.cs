@@ -20,11 +20,7 @@ namespace Machina.Engine
         private readonly MachinaGame game;
         public readonly FrameStep GlobalFrameStep = new FrameStep();
         public readonly MachinaInput input = new MachinaInput();
-
-        /// <summary>
-        /// Path to users AppData folder (or platform equivalent)
-        /// </summary>
-        public readonly string appDataPath;
+        public readonly MachinaFileSystem fileSystem;
 
 
         public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, MachinaGameSpecification specification)
@@ -34,9 +30,10 @@ namespace Machina.Engine
             this.game = game;
 
             // TODO: I don't think this works on Android, might need some alternative
-            this.appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            var appDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "NotExplosive", this.specification.gameTitle);
 
+            this.fileSystem = new MachinaFileSystem(appDataPath);
         }
 
         public Demo.Playback DemoPlayback { get; set; }
@@ -65,7 +62,7 @@ namespace Machina.Engine
             {
                 var demoActor = CurrentCartridge.SceneLayers.debugScene.AddActor("DebugActor");
                 var demoPlaybackComponent = new DemoPlaybackComponent(demoActor);
-                DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName), demoName, 1);
+                DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName, this.fileSystem), demoName, 1);
                 demoPlaybackComponent.ShowGui = false;
             }
             else

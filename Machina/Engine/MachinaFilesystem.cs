@@ -7,10 +7,15 @@ namespace Machina.Engine
 {
     public class MachinaFileSystem
     {
+        public MachinaFileSystem(string appDataPath)
+        {
+            this.AppDataPath = appDataPath;
+        }
+
         public async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
             Action onComplete = null)
         {
-            var fullPath = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
+            var fullPath = Path.Combine(this.AppDataPath, path);
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             await File.WriteAllTextAsync(fullPath, data);
 
@@ -34,10 +39,10 @@ namespace Machina.Engine
             onComplete?.Invoke();
         }
 
-        public string GetAppDataPath()
-        {
-            return MachinaGame.Current.Runtime.appDataPath;
-        }
+        /// <summary>
+        /// Path to users AppData folder (or platform equivalent)
+        /// </summary>
+        public string AppDataPath { get; }
 
         public IEnumerable<string> GetFilesAt(string path, string suffix)
         {
@@ -55,7 +60,7 @@ namespace Machina.Engine
                 }
             }
 
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(MachinaGame.Current.Runtime.appDataPath, path), "*"))
+            foreach (var file in Directory.EnumerateFiles(Path.Join(this.AppDataPath, path), "*"))
             {
                 if (file.EndsWith(suffix) && !foundNames.Contains(Path.GetFileName(file)))
                 {
@@ -74,7 +79,7 @@ namespace Machina.Engine
         /// <returns></returns>
         public async Task<string> ReadTextAppDataThenLocal(string path)
         {
-            var appData = Path.Combine(MachinaGame.Current.Runtime.appDataPath, path);
+            var appData = Path.Join(this.AppDataPath, path);
             if (File.Exists(appData))
             {
                 var result = await File.ReadAllTextAsync(appData);
