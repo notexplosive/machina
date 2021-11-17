@@ -10,7 +10,7 @@ namespace Machina.Engine.Cartridges
 
     public class LoadingScreenCartridge : Cartridge
     {
-        public LoadingScreenCartridge(GameSettings gameSettings) : base(gameSettings.startingWindowSize, ResizeBehavior.FillContent, true)
+        public LoadingScreenCartridge(GameSettings gameSettings) : base(gameSettings.startingWindowSize, ResizeBehavior.FreeAspectRatio, true)
         {
         }
 

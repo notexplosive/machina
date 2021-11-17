@@ -13,7 +13,7 @@ namespace Machina.Engine.Cartridges
     {
         private readonly Exception exception;
 
-        public CrashCartridge(GameSettings settings, Exception exception) : base(settings.startingWindowSize, ResizeBehavior.FillContent, true)
+        public CrashCartridge(GameSettings settings, Exception exception) : base(settings.startingWindowSize, ResizeBehavior.FreeAspectRatio, true)
         {
             this.exception = exception;
         }

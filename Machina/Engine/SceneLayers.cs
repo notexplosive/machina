@@ -17,7 +17,7 @@ namespace Machina.Engine
 
         public DebugDock DebugDock { get; private set; }
         public Scene DebugScene { get; private set; }
-        public readonly IGameCanvas gameCanvas;
+        public readonly IGameViewport gameCanvas;
         private readonly List<Scene> sceneList = new List<Scene>();
 
         public Color BackgroundColor = Color.SlateBlue;
@@ -30,7 +30,7 @@ namespace Machina.Engine
 
         private TextInputEventArgs? pendingTextInput;
 
-        public SceneLayers(IGameCanvas gameCanvas)
+        public SceneLayers(IGameViewport gameCanvas)
         {
             this.gameCanvas = gameCanvas;
         }
@@ -38,7 +38,7 @@ namespace Machina.Engine
         public void BuildDebugScene(Cartridge cartridge)
         {
             DebugScene = new Scene(this);
-            DebugScene.SetGameCanvas(new GameViewport(gameCanvas.WindowSize, ResizeBehavior.FillContent));
+            DebugScene.SetGameCanvas(new GameViewport(gameCanvas.WindowSize, ResizeBehavior.FreeAspectRatio));
             var overlayOutputConsole = DebugBuilder.BuildOutputConsole(this);
             cartridge.PushLogger(overlayOutputConsole);
 

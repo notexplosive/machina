@@ -6,11 +6,11 @@ namespace Machina.Engine
 {
     public enum ResizeBehavior
     {
-        MaintainDesiredResolution,
-        FillContent
+        KeepAspectRatio,
+        FreeAspectRatio
     }
 
-    public interface IGameCanvas
+    public interface IGameViewport
     {
         public Point ViewportSize { get; }
 
@@ -21,7 +21,7 @@ namespace Machina.Engine
         public Point WindowSize { get; }
     }
 
-    public class GameViewport : IGameCanvas
+    public class GameViewport : IGameViewport
     {
         private readonly IResizeStrategy resizeStrategy;
         private RenderTarget2D internalCanvas;
@@ -29,7 +29,7 @@ namespace Machina.Engine
         public GameViewport(Point viewportSize, ResizeBehavior resizeBehavior)
         {
             ViewportSize = viewportSize;
-            if (resizeBehavior == ResizeBehavior.FillContent)
+            if (resizeBehavior == ResizeBehavior.FreeAspectRatio)
             {
                 this.resizeStrategy = new FillStrategy();
             }

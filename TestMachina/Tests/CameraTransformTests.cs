@@ -13,7 +13,7 @@ namespace TestMachina.Tests
         public void game_canvas_maintain_desired_resolution_pinning()
         {
             var desiredSize = new Point(300, 200);
-            var gameCanvas = new GameViewport(desiredSize, ResizeBehavior.MaintainDesiredResolution);
+            var gameCanvas = new GameViewport(desiredSize, ResizeBehavior.KeepAspectRatio);
             var windowSizeBeforeResize = gameCanvas.WindowSize;
             var canvasRectBeforeResize = gameCanvas.CanvasRect;
             var newSize = new Point(500, 500);
@@ -36,7 +36,7 @@ namespace TestMachina.Tests
         [Fact]
         public void mouse_position_transform_integration()
         {
-            var gameCanvas = new GameViewport(new Point(800, 600), ResizeBehavior.MaintainDesiredResolution);
+            var gameCanvas = new GameViewport(new Point(800, 600), ResizeBehavior.KeepAspectRatio);
             var sceneLayers = new SceneLayers(gameCanvas);
             var scene = sceneLayers.AddNewScene();
             scene.camera.ScaledPosition = new Point(120, 240);
@@ -75,7 +75,7 @@ namespace TestMachina.Tests
         [Fact]
         public void scaled_position_assignment()
         {
-            var gameCanvas = new GameViewport(new Point(800, 600), ResizeBehavior.MaintainDesiredResolution);
+            var gameCanvas = new GameViewport(new Point(800, 600), ResizeBehavior.KeepAspectRatio);
             var sceneLayers = new SceneLayers(gameCanvas);
             var scene = sceneLayers.AddNewScene();
             scene.camera.Zoom = 2.6f;

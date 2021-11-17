@@ -16,7 +16,7 @@ namespace Machina.Engine.Cartridges
             return new Vector2(settings.startingWindowSize.X / AspectRatio, settings.startingWindowSize.Y / AspectRatio).ToPoint();
         }
 
-        public IntroCartridge(GameSettings settings, Action onEnd) : base(RenderResolution(settings), ResizeBehavior.MaintainDesiredResolution)
+        public IntroCartridge(GameSettings settings, Action onEnd) : base(RenderResolution(settings), ResizeBehavior.KeepAspectRatio)
         {
             this.onEnd = onEnd;
         }

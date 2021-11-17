@@ -31,7 +31,7 @@ namespace Machina.Engine
 
         public float TimeScale { get; set; } = 1f;
 
-        public void SetGameCanvas(IGameCanvas gameCanvas)
+        public void SetGameCanvas(IGameViewport gameCanvas)
         {
             this.camera = new Camera(gameCanvas);
         }

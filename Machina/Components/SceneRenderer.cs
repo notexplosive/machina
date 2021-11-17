@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class SceneRenderer : BaseComponent, IGameCanvas
+    public class SceneRenderer : BaseComponent, IGameViewport
     {
         private readonly BoundingRect boundingRect;
         private readonly BoundedCanvas canvas;
