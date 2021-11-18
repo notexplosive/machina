@@ -15,6 +15,6 @@ namespace Machina.Data
             this.startingWindowSize = startingWindowSize;
         }
 
-        public abstract void LoadSavedSettingsIfExist(GraphicsDeviceManager graphics, GraphicsDevice graphicsDevice, MachinaFileSystem fileSystem);
+        public abstract void LoadSavedSettingsIfExist(MachinaFileSystem fileSystem);
     }
 }

@@ -70,7 +70,7 @@ namespace Machina.Engine
             this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, Runtime.GraphicsDevice);
 
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(Runtime.Graphics, Runtime.GraphicsDevice, Runtime.fileSystem);
+            this.specification.settings.LoadSavedSettingsIfExist(Runtime.fileSystem);
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
 
