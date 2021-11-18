@@ -82,7 +82,9 @@ namespace Machina.Engine
             var appData = Path.Join(this.AppDataPath, path);
             if (File.Exists(appData))
             {
-                var result = await File.ReadAllTextAsync(appData);
+                Console.WriteLine($"Attempting to read: {appData}");
+                var result = await GamePlatform.ReadTextFile(appData);
+                Console.WriteLine($"Finished reading {appData}, found: {result}.");
                 return result;
             }
 

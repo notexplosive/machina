@@ -25,6 +25,9 @@ namespace Machina.Engine
         private static Func<string, Task<string>> ReadFileInContentDirectoryFunc =
             ReadFileInContentDirectory_Desktop;
 
+        private static Func<string, Task<string>> ReadTextFileFunc =
+            ReadTextFile_Desktop;
+
         /// <summary>
         ///     Platform is Desktop (Mac, PC, or Linux). This means we have a mouse cursor
         /// </summary>
@@ -44,11 +47,12 @@ namespace Machina.Engine
         public static bool IsAndroid => platformType == PlatformType.Android;
 
         public static void Set(PlatformType platformType, Func<string, string, List<string>> getFilesAtContentDirectory,
-            Func<string, Task<string>> readFileInContentDirectory)
+            Func<string, Task<string>> readFileInContentDirectory, Func<string, Task<string>> readTextFileFunc)
         {
             GamePlatform.platformType = platformType;
             GetFilesAtContentDirectoryFunc = getFilesAtContentDirectory;
             ReadFileInContentDirectoryFunc = readFileInContentDirectory;
+            ReadTextFileFunc = readTextFileFunc;
         }
 
         private static List<string> GetFilesAtContentDirectory_Desktop(string contentSubFolder, string extension = "*")
@@ -84,6 +88,22 @@ namespace Machina.Engine
             }
 
             throw new FileNotFoundException();
+        }
+
+        public static async Task<string> ReadTextFile_Desktop(string path)
+        {
+            if (File.Exists(path))
+            {
+                var result = await File.ReadAllTextAsync(path);
+                return result;
+            }
+
+            throw new FileNotFoundException();
+        }
+
+        public static async Task<string> ReadTextFile(string path)
+        {
+            return await ReadTextFileFunc(path);
         }
 
         public static async Task<string> ReadFileInContentDirectory(string path)

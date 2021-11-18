@@ -32,7 +32,7 @@ namespace Machina.Engine
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
-        internal MachinaGame(GameSpecification specification, GameCartridge gameCartridge)
+        public MachinaGame(GameSpecification specification, GameCartridge gameCartridge) // should be marked `internal`, marked public while working on android
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;
