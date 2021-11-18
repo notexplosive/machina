@@ -22,6 +22,8 @@ Plus a few other things that I'm piggybacking off of other people's technology t
 
 ## Getting Started
 
+Before we even begin, let me start off by saying that this engine is a totally 1-man operation. Keeping docs like these up to date is a lot of work. If you really are genuinely interested in trying out Machina. I recommend just [reaching out to me directly](https://twitter.com/notexplosive) rather than following these docs.
+
 ### Pre-setup
 
 To setup you'll need some starting software:
