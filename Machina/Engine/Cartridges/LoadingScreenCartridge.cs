@@ -67,29 +67,29 @@ namespace Machina.Engine.Cartridges
             };
         }
 
-        private void PrepareLoadInitialStyle(AssetLoadTree loadTree, GraphicsDevice graphicsDevice)
+        private void PrepareLoadInitialStyle(AssetLoader loader, GraphicsDevice graphicsDevice)
         {
-            loadTree.AddMachinaAssetCallback("ui-button",
+            loader.AddMachinaAssetCallback("ui-button",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), graphicsDevice));
-            loadTree.AddMachinaAssetCallback("ui-button-hover",
+            loader.AddMachinaAssetCallback("ui-button-hover",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
                     new Rectangle(8 + 24, 8, 8, 8), graphicsDevice));
-            loadTree.AddMachinaAssetCallback("ui-button-press",
+            loader.AddMachinaAssetCallback("ui-button-press",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
                     new Rectangle(8 + 48, 8, 8, 8), graphicsDevice));
-            loadTree.AddMachinaAssetCallback("ui-slider-ninepatch",
+            loader.AddMachinaAssetCallback("ui-slider-ninepatch",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
                     new Rectangle(8, 152, 8, 8), graphicsDevice));
-            loadTree.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
+            loader.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
                 () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            loadTree.AddMachinaAssetCallback("ui-radio-fill-image",
+            loader.AddMachinaAssetCallback("ui-radio-fill-image",
                 () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            loadTree.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
+            loader.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
                 () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            loadTree.AddMachinaAssetCallback("ui-textbox-ninepatch",
+            loader.AddMachinaAssetCallback("ui-textbox-ninepatch",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
                     new Rectangle(8, 104, 8, 8), graphicsDevice));
-            loadTree.AddMachinaAssetCallback("ui-window-ninepatch",
+            loader.AddMachinaAssetCallback("ui-window-ninepatch",
                 () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52), graphicsDevice));
         }
     }

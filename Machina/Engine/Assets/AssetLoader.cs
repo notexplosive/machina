@@ -5,7 +5,7 @@ namespace Machina.Engine.Assets
     using Data;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class AssetLoadTree
+    public class AssetLoader
     {
         private abstract class UnloadedAsset
         {

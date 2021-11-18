@@ -65,6 +65,11 @@ namespace Machina.Engine
             }
         }
 
+        /// <summary>
+        /// This is executed right after the loading screen finishes. This is your "Main" function.
+        /// </summary>
+        /// <param name="specification"></param>
+        /// <param name="runtime"></param>
         public abstract void OnGameLoad(GameSpecification specification, MachinaRuntime runtime);
 
         protected void BuildSceneLayers()

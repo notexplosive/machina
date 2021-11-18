@@ -26,9 +26,9 @@
             this.content = game.Content;
         }
 
-        public static AssetLoadTree GetStaticAssetLoadTree()
+        public static AssetLoader GetStaticAssetLoadTree()
         {
-            var loadTree = new AssetLoadTree();
+            var loadTree = new AssetLoader();
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
                 loadTree.AddImagePath("images/" + Path.GetFileNameWithoutExtension(imageName));

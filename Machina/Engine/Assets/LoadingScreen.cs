@@ -8,12 +8,12 @@ namespace Machina.Engine.Assets
 
     public class LoadingScreen
     {
-        private readonly AssetLoadTree tree;
+        private readonly AssetLoader tree;
         private float delayTime;
         private bool readyToFinish;
         private bool isDoneUpdating;
 
-        public LoadingScreen(AssetLoadTree tree)
+        public LoadingScreen(AssetLoader tree)
         {
             this.delayTime = 0.25f;
             this.tree = tree;

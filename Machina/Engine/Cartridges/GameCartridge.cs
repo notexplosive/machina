@@ -13,7 +13,13 @@ namespace Machina.Engine.Cartridges
         {
         }
 
-        public abstract void PrepareDynamicAssets(AssetLoadTree loadTree, GraphicsDevice graphicsDevice);
+        /// <summary>
+        /// Just before the loading screen runs it collects up all the assets it needs to load (namely the Textures, Sounds, SpriteFonts, etc in Content)
+        /// If there are any other assets you want it to load (such as MachinaAssets or dynamically generated Textures) you can set them up here.
+        /// </summary>
+        /// <param name="loader">Use this to request assets to be loaded</param>
+        /// <param name="graphicsDevice">MonoGame GraphicsDevice, you might need this to build textures dynamically</param>
+        public abstract void PrepareDynamicAssets(AssetLoader loader, GraphicsDevice graphicsDevice);
 
         public void SetupSceneLayers(MachinaRuntime runtime, GameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
         {

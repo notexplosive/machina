@@ -106,7 +106,7 @@ namespace Machina.Engine
         /// </summary>
         /// <param name="component">The component who is being constructed</param>
         /// <returns></returns>
-        public IComponent AddComponent(IComponent component)
+        internal IComponent AddComponent(IComponent component)
         {
             var type = component.GetType();
             Debug.Assert(GetComponentByName(type.FullName) == null,
