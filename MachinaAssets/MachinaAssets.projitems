@@ -11,7 +11,7 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
-    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\MachinaContent.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\MachinaContent.mgcb" />
   </ItemGroup>
 </Project>
