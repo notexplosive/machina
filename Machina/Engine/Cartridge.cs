@@ -51,13 +51,8 @@ namespace Machina.Engine
 
                 CurrentGameCanvas.BuildCanvas(graphicsDevice);
 
-                // platform specific!
-                // should become something like platformContext.OnCartridgeSetup()
-                if (GamePlatform.IsDesktop)
-                {
-                    machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
-                    window.TextInput += SceneLayers.AddPendingTextInput;
-                }
+                runtime.platformContext.OnCartridgeSetup(this, machinaWindow);
+                machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
                 OnGameLoad(specification, runtime);
 

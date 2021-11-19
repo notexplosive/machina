@@ -12,22 +12,28 @@ namespace Machina.Engine
     using System;
     using System.IO;
 
+    public interface IPlatformContext
+    {
+        public void OnCartridgeSetup(Cartridge cartridge, MachinaWindow window);
+    }
+
     public class MachinaRuntime
     {
         public SpriteBatch spriteBatch;
         private readonly GameSpecification specification;
         public readonly GraphicsDeviceManager Graphics;
         private readonly MachinaGame game;
+        public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
         public readonly MachinaFileSystem fileSystem;
         public GameSettings Settings => this.specification.settings;
 
-
-        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification)
+        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification, IPlatformContext platformContext)
         {
             this.specification = specification;
             Graphics = graphics;
             this.game = game;
+            this.platformContext = platformContext;
 
             // TODO: I don't think this works on Android, might need some alternative
             var appDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

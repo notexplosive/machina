@@ -32,7 +32,7 @@ namespace Machina.Engine
         private MachinaWindow machinaWindow;
         private static MouseCursor pendingCursor;
 
-        public MachinaGame(GameSpecification specification, GameCartridge gameCartridge) // should be marked `internal`, marked public while working on android
+        public MachinaGame(GameSpecification specification, GameCartridge gameCartridge, IPlatformContext platformContext)
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;
@@ -43,7 +43,7 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification), new AssetLibrary(this));
+            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification, platformContext), new AssetLibrary(this));
         }
 
         public static void SetCursor(MouseCursor cursor)

@@ -7,25 +7,25 @@ namespace Machina.Engine
     public class MachinaWindow
     {
         private readonly Point startingWindowSize;
-        private readonly GameWindow window;
         private readonly GraphicsDeviceManager graphics;
         private readonly GraphicsDevice device;
 
         public event Action<Point> Resized;
+        public GameWindow GameWindow { get; }
 
         public MachinaWindow(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics,
             GraphicsDevice device)
         {
             this.startingWindowSize = startingWindowSize;
-            this.window = window;
             this.graphics = graphics;
             this.device = device;
+            GameWindow = window;
 
             window.AllowUserResizing = true;
             window.ClientSizeChanged += OnResize;
         }
 
-        public Point CurrentWindowSize => new Point(this.window.ClientBounds.Width, this.window.ClientBounds.Height);
+        public Point CurrentWindowSize => new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
 
         public bool Fullscreen
         {
@@ -59,7 +59,7 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            var windowSize = new Point(this.window.ClientBounds.Width, this.window.ClientBounds.Height);
+            var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
             Resized?.Invoke(windowSize);
         }
     }
