@@ -28,7 +28,7 @@ namespace Machina.Data
         {
             var graphics = MachinaClient.Runtime.Graphics;
             var device = MachinaClient.Runtime.GraphicsDevice;
-            if (fullscreen.State != graphics.IsFullScreen)
+            if (fullscreen.State != graphics.IsFullScreen && !GamePlatform.IsAndroid) /*Android does not like when you mess with the buffer dimensions*/
             {
                 if (fullscreen.State)
                 {

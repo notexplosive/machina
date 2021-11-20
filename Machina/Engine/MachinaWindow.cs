@@ -51,16 +51,22 @@ namespace Machina.Engine
         public void SetWindowSize(Point windowSize)
         {
             MachinaClient.Print("Window size changed to", windowSize);
-            this.graphics.PreferredBackBufferWidth = windowSize.X;
-            this.graphics.PreferredBackBufferHeight = windowSize.Y;
-            this.graphics.ApplyChanges();
-            Resized?.Invoke(windowSize);
+            if (!GamePlatform.IsAndroid)
+            {
+                this.graphics.PreferredBackBufferWidth = windowSize.X;
+                this.graphics.PreferredBackBufferHeight = windowSize.Y;
+                this.graphics.ApplyChanges();
+                Resized?.Invoke(windowSize);
+            }
         }
 
         private void OnResize(object sender, EventArgs e)
         {
-            var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
-            Resized?.Invoke(windowSize);
+            if (!GamePlatform.IsAndroid)
+            {
+                var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
+                Resized?.Invoke(windowSize);
+            }
         }
     }
 }
