@@ -49,6 +49,7 @@ namespace Machina.Engine
         public static void Set(PlatformType platformType, Func<string, string, List<string>> getFilesAtContentDirectory,
             Func<string, Task<string>> readFileInContentDirectory, Func<string, Task<string>> readTextFileFunc)
         {
+            // This class should be merged with PlatformContext. they're both kinda trying to do the same thing
             GamePlatform.platformType = platformType;
             GetFilesAtContentDirectoryFunc = getFilesAtContentDirectory;
             ReadFileInContentDirectoryFunc = readFileInContentDirectory;
