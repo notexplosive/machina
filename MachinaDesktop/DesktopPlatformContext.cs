@@ -11,5 +11,9 @@ namespace MachinaDesktop
         {
             window.GameWindow.TextInput += cartridge.SceneLayers.AddPendingTextInput;
         }
+
+        public void OnGameConstructed(MachinaGame machinaGame)
+        {
+        }
     }
 }
