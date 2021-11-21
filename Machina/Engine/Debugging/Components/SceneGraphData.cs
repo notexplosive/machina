@@ -23,17 +23,18 @@ namespace Machina.Engine.Debugging.Components
                 foreach (var targetActor in scene.GetRootLevelActors())
                 {
                     this.nodes.Add(new SceneGraphNode(1, targetActor));
-
-                    for (var i = 0; i < targetActor.transform.ChildCount; i++)
-                    {
-                        this.nodes.Add(new SceneGraphNode(2, targetActor.transform.ChildAt(i)));
-                    }
-
-                    // foreach (var component in targetActor.GetComponentsUnsafe<IComponent>())
-                    {
-                        // DrawString(component.GetType().Name.ToString(), 2);
-                    }
+                    GetChildren(targetActor, this.nodes, 2);
                 }
+            }
+        }
+
+        private void GetChildren(Actor parentActor, List<SceneGraphNode> nodes, int indentLevel)
+        {
+            for (var i = 0; i < parentActor.transform.ChildCount; i++)
+            {
+                var child = parentActor.transform.ChildAt(i);
+                this.nodes.Add(new SceneGraphNode(indentLevel, child));
+                GetChildren(child, nodes, indentLevel + 1);
             }
         }
 

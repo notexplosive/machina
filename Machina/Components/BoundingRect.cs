@@ -61,6 +61,8 @@ namespace Machina.Components
 
         public Vector2 TopLeft => Rect.Location.ToVector2();
 
+        public Vector2 SizeF => Size.ToVector2();
+
         public BoundingRect SetSize(Point size)
         {
             this.size = size;
