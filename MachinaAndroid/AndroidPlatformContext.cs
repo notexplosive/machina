@@ -2,7 +2,10 @@
 using Android.Content.PM;
 using Android.OS;
 using Android.Views;
+using Machina.Data;
 using Machina.Engine;
+using Machina.Engine.Cartridges;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,11 +14,44 @@ using System.Threading.Tasks;
 
 namespace MachinaAndroid
 {
-    public class MachinaBootstrap
+    /*
+    [Activity(
+    Label = "@string/app_name",
+    MainLauncher = true,
+    Icon = "@drawable/icon",
+    AlwaysRetainTaskState = true,
+    LaunchMode = LaunchMode.SingleTask,
+    ScreenOrientation = ScreenOrientation.FullSensor,
+    ConfigurationChanges =
+        ConfigChanges.Orientation |
+        ConfigChanges.Keyboard |
+        ConfigChanges.KeyboardHidden |
+        ConfigChanges.ScreenSize |
+        ConfigChanges.ScreenLayout |
+        ConfigChanges.UiMode |
+        ConfigChanges.SmallestScreenSize
+    )]
+    public class Activity1 : AndroidGameActivity
     {
-        public static void Run()
+    }
+    */
+
+    public class AndroidBootstrap
+    {
+        public static void Run(GameCartridge cartridge, GameSpecification spec, Activity activity)
         {
             GamePlatform.Set(PlatformType.Android, GetFilesAtContentDirectory_Android, ReadFileInContentDirectory_Android, ReadTextFile_Android);
+
+            // I don't think I need these but they might be useful
+            // activity.Window.AddFlags(WindowManagerFlags.Fullscreen);
+            // activity.Window.AddFlags(WindowManagerFlags.LayoutInOverscan);
+
+            var game = new MachinaGame(spec, cartridge, new AndroidPlatformContext());
+            var view = game.Services.GetService(typeof(View)) as View;
+            view.SystemUiVisibility =
+                (StatusBarVisibility)(SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
+            activity.SetContentView(view);
+            game.Run();
         }
 
         private static List<string> GetFilesAtContentDirectory_Android(string contentSubfolder, string extension = "*")
