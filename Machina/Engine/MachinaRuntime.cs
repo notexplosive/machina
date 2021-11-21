@@ -15,6 +15,7 @@ namespace Machina.Engine
     public interface IPlatformContext
     {
         public void OnCartridgeSetup(Cartridge cartridge, MachinaWindow window);
+        public void OnGameConstructed(MachinaGame machinaGame);
     }
 
     public class MachinaRuntime

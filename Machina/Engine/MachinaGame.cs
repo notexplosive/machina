@@ -44,6 +44,7 @@ namespace Machina.Engine
             };
 
             MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification, platformContext), new AssetLibrary(this));
+            platformContext.OnGameConstructed(this);
         }
 
         public static void SetCursor(MouseCursor cursor)
@@ -153,7 +154,7 @@ namespace Machina.Engine
 
         private void SetRandomSeedFromString(string seed)
         {
-            this.gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
+            this.gameCartridge.Random.Seed = (int)NoiseBasedRNG.SeedFromString(seed);
         }
 
         private void InsertGameCartridgeAndRun()
@@ -178,7 +179,7 @@ namespace Machina.Engine
         protected override void Update(GameTime gameTime)
         {
             pendingCursor = MouseCursor.Arrow;
-            var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Runtime.Update(dt);
 
             Mouse.SetCursor(pendingCursor);

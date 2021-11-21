@@ -59,5 +59,10 @@ namespace MachinaAndroid
         public void OnCartridgeSetup(Cartridge cartridge, MachinaWindow window)
         {
         }
+
+        public void OnGameConstructed(MachinaGame machinaGame)
+        {
+            MachinaClient.Runtime.Graphics.IsFullScreen = true;
+        }
     }
 }
