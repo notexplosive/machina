@@ -62,11 +62,8 @@ namespace Machina.Engine
 
         private void OnResize(object sender, EventArgs e)
         {
-            if (!GamePlatform.IsAndroid)
-            {
-                var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
-                Resized?.Invoke(windowSize);
-            }
+            var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
+            Resized?.Invoke(windowSize);
         }
     }
 }
