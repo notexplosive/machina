@@ -10,20 +10,20 @@ namespace MachinaAndroid
 {
     /*
     [Activity(
-    Label = "@string/app_name",
-    MainLauncher = true,
-    Icon = "@drawable/icon",
-    AlwaysRetainTaskState = true,
-    LaunchMode = LaunchMode.SingleTask,
-    ScreenOrientation = ScreenOrientation.FullSensor,
-    ConfigurationChanges =
-        ConfigChanges.Orientation |
-        ConfigChanges.Keyboard |
-        ConfigChanges.KeyboardHidden |
-        ConfigChanges.ScreenSize |
-        ConfigChanges.ScreenLayout |
-        ConfigChanges.UiMode |
-        ConfigChanges.SmallestScreenSize
+        Label = "@string/app_name",
+        MainLauncher = true,
+        Icon = "@drawable/icon",
+        AlwaysRetainTaskState = true,
+        LaunchMode = LaunchMode.SingleTask,
+        ScreenOrientation = ScreenOrientation.FullSensor,
+        ConfigurationChanges =
+            ConfigChanges.Orientation |
+            ConfigChanges.Keyboard |
+            ConfigChanges.KeyboardHidden |
+            ConfigChanges.ScreenSize |
+            ConfigChanges.ScreenLayout |
+            ConfigChanges.UiMode |
+            ConfigChanges.SmallestScreenSize
     )]
     public class Activity1 : AndroidGameActivity
     {
@@ -43,7 +43,7 @@ namespace MachinaAndroid
             var game = new MachinaGame(spec, cartridge, new AndroidPlatformContext());
             var view = game.Services.GetService(typeof(View)) as View;
             view.SystemUiVisibility =
-                (StatusBarVisibility)(SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
+                (StatusBarVisibility) (SystemUiFlags.LayoutStable | SystemUiFlags.LayoutHideNavigation | SystemUiFlags.LayoutFullscreen | SystemUiFlags.HideNavigation | SystemUiFlags.Fullscreen | SystemUiFlags.ImmersiveSticky);
             activity.SetContentView(view);
             game.Run();
         }
