@@ -55,6 +55,9 @@
     <None Include="Resources\AboutResources.txt" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.Android">
+      <Version>3.8.0.1641</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.AppCompat" Version="1.2.0.5" />
   </ItemGroup>
   <ItemGroup>
