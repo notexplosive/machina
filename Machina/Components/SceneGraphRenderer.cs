@@ -64,15 +64,5 @@ namespace Machina.Engine.Debugging.Components
             this.scrollbar.SetWorldBounds(new MinMax<int>(0, boxHeight));
             this.boundingRect.SetSize(new Point(this.actor.scene.camera.UnscaledViewportSize.X, boxHeight));
         }
-
-        public void DrawChildren(Actor targetActor, int indent, Action<string, int> DrawString)
-        {
-            for (var i = 0; i < targetActor.transform.ChildCount; i++)
-            {
-                var child = targetActor.transform.ChildAt(i);
-                DrawString(child.name + ": " + child.transform.LocalPosition, indent + 1);
-                DrawChildren(child, indent + 1, DrawString);
-            }
-        }
     }
 }
