@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Machina.Data;
 using Machina.Engine.Debugging.Data;
 using Machina.Engine.Input;
@@ -15,6 +16,7 @@ namespace Machina.Engine
         public readonly HitTester hitTester = new HitTester();
         public readonly SceneLayers sceneLayers;
         public Camera camera;
+        private List<Action> deferredActions = new List<Action>();
 
         public Scene(SceneLayers sceneLayers, IFrameStep frameStep = null)
         {
@@ -113,6 +115,13 @@ namespace Machina.Engine
 
         public override void Update(float dt)
         {
+            foreach (var action in this.deferredActions)
+            {
+                action.Invoke();
+            }
+
+            this.deferredActions.Clear();
+
             var coroutinesCopy = new List<IEnumerator<ICoroutineAction>>(this.coroutines);
             foreach (var coroutine in coroutinesCopy)
             {
@@ -217,6 +226,15 @@ namespace Machina.Engine
             }
 
             FlushBuffers();
+        }
+
+        /// <summary>
+        /// Queues up an arbitrary function to be run at the start of next Update()
+        /// </summary>
+        /// <param name="action"></param>
+        public void AddDeferredAction(Action action)
+        {
+            this.deferredActions.Add(action);
         }
     }
 }
