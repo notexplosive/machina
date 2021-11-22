@@ -216,6 +216,13 @@ namespace Machina.Components
             return this;
         }
 
+        /// <summary>
+        /// Prefer using AddSpecificSizeElement
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="size"></param>
+        /// <param name="onPostCreate"></param>
+        /// <returns></returns>
         public LayoutElement AddElement(string name, Point size, Action<Actor> onPostCreate)
         {
             var elementActor = transform.AddActorAsChild(name);
@@ -226,6 +233,12 @@ namespace Machina.Components
 
             transform.FlushBuffers();
             return element;
+        }
+
+        public LayoutGroup AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
+        {
+            AddElement(name, size, onPostCreate);
+            return this;
         }
 
         public LayoutGroup AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
