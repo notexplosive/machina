@@ -10,12 +10,14 @@ namespace Machina.Engine.Debugging.Components
     {
         private readonly Actor remoteActor;
         private Vector2 cameraOffset;
+        private bool useDebugDraw;
         private bool isDragging;
 
-        public RemoteActorRenderer(Actor actor, Actor remoteActor) : base(actor)
+        public RemoteActorRenderer(Actor actor, Actor remoteActor, bool useDebugDraw = false) : base(actor)
         {
             this.remoteActor = remoteActor;
             this.cameraOffset = Vector2.Zero;
+            this.useDebugDraw = useDebugDraw;
         }
 
         public override void Update(float dt)
@@ -25,7 +27,7 @@ namespace Machina.Engine.Debugging.Components
 
         public override void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            if (this.isDragging)
+            if (this.isDragging)// todo: extract DragPanCamera component, use that instead of including this in RemoteActorRenderer
             {
                 this.cameraOffset += positionDelta;
             }
@@ -42,6 +44,10 @@ namespace Machina.Engine.Debugging.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             this.remoteActor.Draw(spriteBatch);
+            if (this.useDebugDraw)
+            {
+                this.remoteActor.DebugDraw(spriteBatch);
+            }
         }
     }
 }
