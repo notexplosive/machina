@@ -28,17 +28,21 @@ namespace Machina.Data
         {
             var graphics = MachinaClient.Runtime.Graphics;
             var device = MachinaClient.Runtime.GraphicsDevice;
-            if (fullscreen.State)
+            var stateChanged = fullscreen.State != graphics.IsFullScreen;
+            if (stateChanged)
             {
-                graphics.PreferredBackBufferWidth = device.DisplayMode.Width;
-                graphics.PreferredBackBufferHeight = device.DisplayMode.Height;
-                graphics.IsFullScreen = true;
-            }
-            else
-            {
-                graphics.PreferredBackBufferWidth = this.startingWindowSize.X;
-                graphics.PreferredBackBufferHeight = this.startingWindowSize.Y;
-                graphics.IsFullScreen = false;
+                if (fullscreen.State)
+                {
+                    graphics.PreferredBackBufferWidth = device.DisplayMode.Width;
+                    graphics.PreferredBackBufferHeight = device.DisplayMode.Height;
+                    graphics.IsFullScreen = true;
+                }
+                else
+                {
+                    graphics.PreferredBackBufferWidth = this.startingWindowSize.X;
+                    graphics.PreferredBackBufferHeight = this.startingWindowSize.Y;
+                    graphics.IsFullScreen = false;
+                }
             }
 
             graphics.ApplyChanges();
