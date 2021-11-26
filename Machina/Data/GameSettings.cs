@@ -26,7 +26,7 @@ namespace Machina.Data
 
         public void Apply(MachinaRuntime Runtime)
         {
-            var graphics = Runtime.Graphics;
+            var graphics = MachinaClient.Graphics;
             var device = Runtime.GraphicsDevice;
             var stateChanged = fullscreen.State != graphics.IsFullScreen;
             if (stateChanged)

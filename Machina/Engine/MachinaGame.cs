@@ -39,9 +39,9 @@ namespace Machina.Engine
             {
                 HardwareModeSwitch = false
             };
+            MachinaClient.Setup(new AssetLibrary(this), this.specification, graphics);
 
-            Runtime = new MachinaRuntime(this, graphics, this.specification, platformContext);
-            MachinaClient.Setup(new AssetLibrary(this), this.specification);
+            Runtime = new MachinaRuntime(this, this.specification, platformContext);
             platformContext.OnGameConstructed(this);
         }
 
@@ -60,7 +60,8 @@ namespace Machina.Engine
 
         protected override void LoadContent()
         {
-            var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, GraphicsDevice);
+            // GraphicsDevice is not available until now
+            var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, MachinaClient.Graphics, GraphicsDevice);
             Runtime.LateSetup(this.gameCartridge, GraphicsDevice, new SpriteBatch(GraphicsDevice), windowInterface);
         }
 

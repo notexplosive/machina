@@ -26,13 +26,11 @@ namespace Machina.Engine
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
         public UIStyle defaultStyle;
-        public GraphicsDeviceManager Graphics { get; }
         public WindowInterface WindowInterface { get; private set; }
 
-        public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification, IPlatformContext platformContext)
+        public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext)
         {
             this.specification = specification;
-            Graphics = graphics;
             this.game = game;
             this.platformContext = platformContext;
         }
@@ -47,7 +45,7 @@ namespace Machina.Engine
             CurrentCartridge = cartridge;
             CurrentCartridge.Setup(this, GraphicsDevice, this.specification, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
-            Graphics.ApplyChanges();
+            MachinaClient.Graphics.ApplyChanges();
         }
 
         public void Quit()
