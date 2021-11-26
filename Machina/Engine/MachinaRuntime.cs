@@ -26,7 +26,6 @@ namespace Machina.Engine
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
         public UIStyle defaultStyle;
-        public GameSettings Settings => this.specification.settings;
         public GraphicsDeviceManager Graphics { get; }
         public WindowInterface WindowInterface { get; private set; }
 
