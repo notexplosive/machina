@@ -24,20 +24,20 @@ namespace Machina.Data
         public float MusicVolumeAsFloat => Math.Clamp(musicVolume.State / 10f, 0, 1) * MasterVolume;
         public float SFXVolumeAsFloat => Math.Clamp(sfxVolume.State / 10f, 0, 1) * MasterVolume;
 
-        public void Apply(MachinaRuntime Runtime)
+        public void Apply(WindowInterface window)
         {
-            var stateChanged = fullscreen.State != Runtime.WindowInterface.IsFullScreen;
+            var stateChanged = fullscreen.State != window.IsFullScreen;
             if (stateChanged)
             {
-                Runtime.WindowInterface.SetFullscreen(fullscreen.State);
+                window.SetFullscreen(fullscreen.State);
             }
 
-            Runtime.WindowInterface.ApplyChanges();
+            window.ApplyChanges();
         }
 
-        public void ApplyAndSave(MachinaFileSystem fileSystem, MachinaRuntime runtime)
+        public void ApplyAndSave(MachinaFileSystem fileSystem, WindowInterface window)
         {
-            Apply(runtime);
+            Apply(window);
             SaveSettings(fileSystem);
         }
 
@@ -46,14 +46,14 @@ namespace Machina.Data
             fileSystem.WriteStringToAppData(JsonConvert.SerializeObject(this), "settings.json", true);
         }
 
-        public void LoadSavedSettingsIfExist(MachinaFileSystem fileSystem, MachinaRuntime runtime)
+        public void LoadSavedSettingsIfExist(MachinaFileSystem fileSystem, WindowInterface window)
         {
             try
             {
                 var json = fileSystem.ReadTextAppDataThenLocal("settings.json").Result;
                 var data = JsonConvert.DeserializeObject<GameSettings>(json);
                 LoadFromData(data);
-                Apply(runtime);
+                Apply(window);
             }
             catch (Exception e)
             {

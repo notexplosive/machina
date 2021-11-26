@@ -75,7 +75,7 @@ namespace Machina.Engine
             this.WindowInterface = windowInterface;
 
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, this);
+            this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, windowInterface);
             Console.Out.WriteLine("Settings Window Size");
             this.WindowInterface.SetWindowSize(this.specification.settings.startingWindowSize);
 
