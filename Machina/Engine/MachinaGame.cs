@@ -24,8 +24,9 @@ namespace Machina.Engine
         /// Cartridge provided by client code
         /// </summary>
         public readonly GameCartridge gameCartridge;
+        private readonly IPlatformContext platformContext;
         protected readonly GameSpecification specification;
-        public MachinaRuntime Runtime { get; }
+        public MachinaRuntime Runtime { get; private set; }
 
         private static MouseCursor pendingCursor;
 
@@ -33,6 +34,7 @@ namespace Machina.Engine
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;
+            this.platformContext = platformContext;
             Content.RootDirectory = "Content";
 
             var graphics = new GraphicsDeviceManager(this)
@@ -41,8 +43,7 @@ namespace Machina.Engine
             };
             MachinaClient.Setup(new AssetLibrary(this), this.specification, graphics);
 
-            Runtime = new MachinaRuntime(this, this.specification, platformContext);
-            platformContext.OnGameConstructed(this);
+            this.platformContext.OnGameConstructed(this);
         }
 
         public static void SetCursor(MouseCursor cursor)
@@ -62,6 +63,7 @@ namespace Machina.Engine
         {
             // GraphicsDevice is not available until now
             var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, MachinaClient.Graphics, GraphicsDevice);
+            Runtime = new MachinaRuntime(this, this.specification, platformContext);
             Runtime.LateSetup(this.gameCartridge, GraphicsDevice, new SpriteBatch(GraphicsDevice), windowInterface);
         }
 
