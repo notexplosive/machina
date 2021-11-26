@@ -21,7 +21,7 @@ namespace Machina.Components
             this.canvas = RequireComponent<BoundedCanvas>();
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
-            SceneLayers = new SceneLayers(this);
+            SceneLayers = new SceneLayers(this, Runtime); // SceneRenderer should provide its own Runtime (or be passed on as a constructor arg)
             this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.hoverable.OnHoverEnd += ClearHitTesters;
 

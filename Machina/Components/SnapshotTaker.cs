@@ -25,7 +25,7 @@ namespace Machina.Components
             this.screenshotPath =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots"));
 #else
-            this.screenshotPath = MachinaClient.Runtime.fileSystem.AppDataPath;
+            this.screenshotPath = MachinaClient.fileSystem.AppDataPath;
 #endif
         }
 
@@ -63,7 +63,7 @@ namespace Machina.Components
 
         public void SaveSnapshotAndDisposeTexture(SpriteBatch spriteBatch)
         {
-            var texture = MachinaClient.Runtime.CurrentCartridge.SceneLayers.RenderToTexture(spriteBatch);
+            var texture = Runtime.CurrentCartridge.SceneLayers.RenderToTexture(spriteBatch);
             var currentTime = DateTime.Now;
 
             Directory.CreateDirectory(this.screenshotPath);

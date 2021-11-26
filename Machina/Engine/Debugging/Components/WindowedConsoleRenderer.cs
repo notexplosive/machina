@@ -18,14 +18,14 @@ namespace Machina.Engine.Debugging.Components
         {
             this.font = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
             this.scrollbar = scrollbar;
-            MachinaClient.Runtime.CurrentCartridge.PushLogger(this);
+            Runtime.CurrentCartridge.PushLogger(this);
             MachinaClient.Print("Logger pushed");
         }
 
-        public void Log(params object[] objects)
+        public void Log(LogBuffer.Message message)
         {
             var strings = new List<string>();
-            foreach (var obj in objects)
+            foreach (var obj in message.Content)
             {
                 strings.Add(obj.ToString());
             }
@@ -38,7 +38,7 @@ namespace Machina.Engine.Debugging.Components
 
         public override void OnDeleteFinished()
         {
-            MachinaClient.Runtime.CurrentCartridge.PopLogger();
+            Runtime.CurrentCartridge.PopLogger();
             MachinaClient.Print("Logger popped");
         }
 

@@ -5,25 +5,25 @@ using Machina.Engine.Debugging.Data;
 
 namespace Machina.Engine.Debugging.Components
 {
-    public class Logger : BaseComponent, ILogger
+    public class LoggerComponent : BaseComponent, ILogger
     {
         // There is only one listener, it's usually the console output overlay but if you want to implement a different listener you can
         private readonly IDebugOutputRenderer renderer;
 
-        public Logger(Actor actor, IDebugOutputRenderer renderer) : base(actor)
+        public LoggerComponent(Actor actor, IDebugOutputRenderer renderer) : base(actor)
         {
             this.renderer = renderer;
         }
 
-        public void Log(params object[] objects)
+        public void Log(LogBuffer.Message message)
         {
-            if (MachinaClient.Runtime.DebugLevel == DebugLevel.Off)
+            if (Runtime.DebugLevel == DebugLevel.Off)
             {
                 return;
             }
 
             var strings = new List<string>();
-            foreach (var obj in objects)
+            foreach (var obj in message.Content)
             {
                 if (obj == null)
                 {

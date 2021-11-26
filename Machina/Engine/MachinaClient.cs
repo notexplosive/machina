@@ -5,23 +5,26 @@ using Machina.Engine.Debugging.Data;
 namespace Machina.Engine
 {
     using Assets;
+    using System.IO;
 
     /// <summary>
     /// Static global accessor for all of the static global components in the game.
     /// </summary>
     public static class MachinaClient
     {
-        public static MachinaRuntime Runtime { get; private set; } // Runtime should not be here!
         public static SoundEffectPlayer SoundEffectPlayer { get; private set; } // Needs to be initialzed, should not be here!
         public static NoiseBasedRNG RandomDirty { get; } = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
         public static FrameStep GlobalFrameStep { get; } = new FrameStep();
         public static IAssetLibrary Assets { get; private set; } = new EmptyAssetLibrary();
+        internal static LogBuffer LogBuffer { get; } = new LogBuffer();
+        public static MachinaFileSystem FileSystem { get; private set; } = new MachinaFileSystem("Unknown");
 
-        public static void Setup(MachinaRuntime runtime, IAssetLibrary assetLibrary)
+
+        public static void Setup(IAssetLibrary assetLibrary, GameSpecification specification)
         {
-            Runtime = runtime;
-            SoundEffectPlayer = new SoundEffectPlayer(runtime.Settings);
+            SoundEffectPlayer = new SoundEffectPlayer(specification.settings);
             Assets = assetLibrary;
+            FileSystem = new MachinaFileSystem(specification.gameTitle);
         }
 
         /// <summary>
@@ -30,8 +33,7 @@ namespace Machina.Engine
         /// <param name="objects">Arbitrary list of any objects, converted with .ToString and delimits with spaces.</param>
         public static void Print(params object[] objects)
         {
-            Runtime?.CurrentCartridge?.Logger.Log(objects);
-            new StdOutConsoleLogger().Log(objects);
+            LogBuffer.Add(objects);
         }
     }
 }

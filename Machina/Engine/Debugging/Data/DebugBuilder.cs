@@ -68,12 +68,12 @@ namespace Machina.Engine.Debugging.Data
             return dock;
         }
 
-        public static Logger BuildOutputConsole(SceneLayers sceneLayers)
+        public static LoggerComponent BuildOutputConsole(SceneLayers sceneLayers)
         {
             var consoleFont = MachinaClient.Assets.GetSpriteFont("DefaultFont");
             var debugActor = sceneLayers.DebugScene.AddActor("DebugActor", depthAsInt: 100);
             new EnableDebugOnHotkey(debugActor, new KeyCombination(Keys.OemTilde, new ModifierKeys(true, false, true)));
-            return new Logger(debugActor, new ConsoleOverlay(debugActor, consoleFont));
+            return new LoggerComponent(debugActor, new ConsoleOverlay(debugActor, consoleFont));
         }
     }
 }

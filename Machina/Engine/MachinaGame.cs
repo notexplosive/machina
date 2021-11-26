@@ -26,7 +26,7 @@ namespace Machina.Engine
         public readonly GameCartridge gameCartridge;
         public static UIStyle defaultStyle;
         protected readonly GameSpecification specification;
-        public MachinaRuntime Runtime => MachinaClient.Runtime;
+        public MachinaRuntime Runtime { get; }
 
         // MACHINA DESKTOP (lives in own Project, extends MachinaPlatform, which gets updated in Runtime)
         private MachinaWindow machinaWindow;
@@ -43,7 +43,8 @@ namespace Machina.Engine
                 HardwareModeSwitch = false
             };
 
-            MachinaClient.Setup(new MachinaRuntime(this, graphics, this.specification, platformContext), new AssetLibrary(this));
+            Runtime = new MachinaRuntime(this, graphics, this.specification, platformContext);
+            MachinaClient.Setup(new AssetLibrary(this), this.specification);
             platformContext.OnGameConstructed(this);
         }
 
@@ -71,7 +72,7 @@ namespace Machina.Engine
             this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, Runtime.GraphicsDevice);
 
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(Runtime.fileSystem);
+            this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, Runtime);
             Console.Out.WriteLine("Settings Window Size");
             this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
 
@@ -123,10 +124,10 @@ namespace Machina.Engine
                         new DemoRecorderComponent(debugActor, new Demo.Recorder(this.gameCartridge, demoName));
                         break;
                     case "playback":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, Runtime.fileSystem), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, MachinaClient.FileSystem), demoName, demoSpeed);
                         break;
                     case "playback-nogui":
-                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, Runtime.fileSystem), demoName, demoSpeed);
+                        Runtime.DemoPlayback = demoPlaybackComponent.SetDemo(this.gameCartridge, Demo.FromDisk_Sync(demoName, MachinaClient.FileSystem), demoName, demoSpeed);
                         demoPlaybackComponent.ShowGui = false;
                         break;
                     default:
@@ -154,7 +155,7 @@ namespace Machina.Engine
 
         private void SetRandomSeedFromString(string seed)
         {
-            this.gameCartridge.Random.Seed = (int)NoiseBasedRNG.SeedFromString(seed);
+            this.gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
         }
 
         private void InsertGameCartridgeAndRun()
@@ -179,7 +180,7 @@ namespace Machina.Engine
         protected override void Update(GameTime gameTime)
         {
             pendingCursor = MouseCursor.Arrow;
-            var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var dt = (float) gameTime.ElapsedGameTime.TotalSeconds;
             Runtime.Update(dt);
 
             Mouse.SetCursor(pendingCursor);

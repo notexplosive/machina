@@ -18,6 +18,8 @@ namespace Machina.Engine
         public DebugDock DebugDock { get; private set; }
         public Scene DebugScene { get; private set; }
         public readonly IGameViewport gameCanvas;
+
+        public MachinaRuntime Runtime { get; }
         private readonly List<Scene> sceneList = new List<Scene>();
 
         public Color BackgroundColor = Color.SlateBlue;
@@ -30,9 +32,10 @@ namespace Machina.Engine
 
         private TextInputEventArgs? pendingTextInput;
 
-        public SceneLayers(IGameViewport gameCanvas)
+        public SceneLayers(IGameViewport gameCanvas, MachinaRuntime runtime)
         {
             this.gameCanvas = gameCanvas;
+            Runtime = runtime;
         }
 
         public void BuildDebugScene(Cartridge cartridge)
@@ -53,7 +56,7 @@ namespace Machina.Engine
 
         public Texture2D RenderToTexture(SpriteBatch spriteBatch)
         {
-            var graphicsDevice = MachinaClient.Runtime.GraphicsDevice;
+            var graphicsDevice = Runtime.GraphicsDevice;
             var viewportSize = this.gameCanvas.ViewportSize;
             var renderTarget = new RenderTarget2D(
                 graphicsDevice,
@@ -289,7 +292,7 @@ namespace Machina.Engine
                 scene.Draw(spriteBatch);
             }
 
-            if (MachinaClient.Runtime.DebugLevel > DebugLevel.Passive)
+            if (Runtime.DebugLevel > DebugLevel.Passive)
             {
                 foreach (var scene in scenes)
                 {

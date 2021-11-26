@@ -7,9 +7,10 @@ namespace Machina.Engine
 {
     public class MachinaFileSystem
     {
-        public MachinaFileSystem(string appDataPath)
+        public MachinaFileSystem(string gameTitle)
         {
-            this.AppDataPath = appDataPath;
+            this.AppDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "NotExplosive", gameTitle);
         }
 
         public async void WriteStringToAppData(string data, string path, bool skipDevPath = false,

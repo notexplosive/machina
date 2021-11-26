@@ -155,8 +155,8 @@ namespace Machina.Engine
 
             public void WriteDemoToDisk(MachinaRuntime runtime)
             {
-                Directory.CreateDirectory(Path.Join(runtime.fileSystem.AppDataPath, "Demos"));
-                runtime.fileSystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
+                Directory.CreateDirectory(Path.Join(MachinaClient.FileSystem.AppDataPath, "Demos"));
+                MachinaClient.FileSystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));
             }
         }
 

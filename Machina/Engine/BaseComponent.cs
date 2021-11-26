@@ -28,6 +28,7 @@ namespace Machina.Components
         }
 
         public Transform transform => this.actor.transform;
+        public MachinaRuntime Runtime => this.actor.scene.sceneLayers.Runtime;
 
         public virtual void OnActorDestroy()
         {
