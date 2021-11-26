@@ -73,6 +73,17 @@ namespace Machina.Engine
             }
         }
 
+        public void SetRenderTarget(RenderTarget2D renderTarget)
+        {
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
+        }
+
+        public void ClearRenderTarget()
+        {
+            GraphicsDevice.SetRenderTarget(null);
+        }
+
         public void LateSetup(GameCartridge gameCartridge, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, WindowInterface windowInterface)
         {
             // We cannot do this any earlier, GraphicsDevice doesn't exist until now
@@ -95,11 +106,11 @@ namespace Machina.Engine
         internal void Draw()
         {
             CurrentCartridge.SceneLayers.PreDraw(spriteBatch);
-            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(GraphicsDevice);
+            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(this);
             GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
             CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
-            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(GraphicsDevice, spriteBatch, this);
+            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(spriteBatch, this);
             CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
         }
 

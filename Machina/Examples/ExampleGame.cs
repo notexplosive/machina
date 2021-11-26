@@ -37,7 +37,7 @@ namespace Machina.Examples
             // new HealthbarRenderer(healthActor);
         }
 
-        public override void PrepareDynamicAssets(AssetLoader loader, GraphicsDevice graphicsDevice)
+        public override void PrepareDynamicAssets(AssetLoader loader, GraphicsDevice graphicsDevice, MachinaRuntime runtime)
         {
             // Assumes Content has a SpriteFont called "my-font"
             // Assumes Content has a Texture called "player-sprite"

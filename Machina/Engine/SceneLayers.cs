@@ -65,13 +65,12 @@ namespace Machina.Engine
                 false,
                 graphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-            graphicsDevice.SetRenderTarget(renderTarget);
-            graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
+            Runtime.SetRenderTarget(renderTarget);
 
             graphicsDevice.Clear(this.BackgroundColor);
             DrawOnCanvas(spriteBatch);
 
-            graphicsDevice.SetRenderTarget(null);
+            Runtime.SetRenderTarget(null);
             return renderTarget;
         }
 

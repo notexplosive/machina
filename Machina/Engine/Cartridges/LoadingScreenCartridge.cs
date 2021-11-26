@@ -22,7 +22,7 @@ namespace Machina.Engine.Cartridges
         public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, WindowInterface machinaWindow, Action<GameCartridge> onFinished)
         {
             var assetTree = AssetLibrary.GetStaticAssetLoadTree();
-            gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice);
+            gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice, runtime);
             PrepareLoadInitialStyle(assetTree, runtime.GraphicsDevice);
 
             var loadingScreen =

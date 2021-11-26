@@ -19,7 +19,7 @@ namespace Machina.Engine.Cartridges
         /// </summary>
         /// <param name="loader">Use this to request assets to be loaded</param>
         /// <param name="graphicsDevice">MonoGame GraphicsDevice, you might need this to build textures dynamically</param>
-        public abstract void PrepareDynamicAssets(AssetLoader loader, GraphicsDevice graphicsDevice);
+        public abstract void PrepareDynamicAssets(AssetLoader loader, GraphicsDevice graphicsDevice, MachinaRuntime runtime);
 
         public void SetupSceneLayers(MachinaRuntime runtime, GameSpecification specification, WindowInterface machinaWindow)
         {

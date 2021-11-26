@@ -77,14 +77,12 @@ namespace Machina.Components
         public void DrawContent(SpriteBatch spriteBatch)
         {
             var graphicsDevice = Runtime.GraphicsDevice;
-            graphicsDevice.SetRenderTarget(this.renderTarget);
-
-            graphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
+            Runtime.SetRenderTarget(this.renderTarget);
             graphicsDevice.Clear(BackgroundColor);
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 
-            graphicsDevice.SetRenderTarget(null);
+            Runtime.ClearRenderTarget();
         }
 
         public override void PreDraw(SpriteBatch spriteBatch)
