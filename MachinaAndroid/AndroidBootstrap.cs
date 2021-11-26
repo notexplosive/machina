@@ -62,23 +62,23 @@ namespace MachinaAndroid
             return result;
         }
 
-        public async static Task<string> ReadFileInContentDirectory_Android(string pathInContent)
+        public static Task<string> ReadFileInContentDirectory_Android(string pathInContent)
         {
             using (var file = new StreamReader(Android.App.Application.Context.Assets.Open(Path.Join("Content", pathInContent))))
             {
                 var content = file.ReadToEnd();
-                return content;
+                return Task.FromResult(content);
             };
             throw new FileNotFoundException(pathInContent);
         }
 
 
-        public async static Task<string> ReadTextFile_Android(string pathToFile)
+        public static Task<string> ReadTextFile_Android(string pathToFile)
         {
             using (var file = new StreamReader(pathToFile))
             {
                 var content = file.ReadToEnd();
-                return content;
+                return Task.FromResult(content);
             };
             throw new FileNotFoundException(pathToFile);
         }
