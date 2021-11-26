@@ -60,7 +60,8 @@ namespace Machina.Engine
 
         protected override void LoadContent()
         {
-            Runtime.OnLoadContent(Window, this.gameCartridge, GraphicsDevice);
+            var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, Runtime.Graphics, GraphicsDevice);
+            Runtime.LateSetup(this.gameCartridge, GraphicsDevice, new SpriteBatch(GraphicsDevice), windowInterface);
         }
 
         protected override void UnloadContent()

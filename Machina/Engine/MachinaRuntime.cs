@@ -73,14 +73,14 @@ namespace Machina.Engine
             }
         }
 
-        public void OnLoadContent(GameWindow physicalWindow, GameCartridge gameCartridge, GraphicsDevice graphicsDevice)
+        public void LateSetup(GameCartridge gameCartridge, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, WindowInterface windowInterface)
         {
             // We cannot do this any earlier, GraphicsDevice doesn't exist until now
             GraphicsDevice = graphicsDevice;
 
             Console.Out.WriteLine("Constructing SpriteBatch");
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
-            this.machinaWindow = new WindowInterface(this.specification.settings.startingWindowSize, physicalWindow, Graphics, GraphicsDevice);
+            this.spriteBatch = spriteBatch;
+            this.machinaWindow = windowInterface;
 
             Console.Out.WriteLine("Applying settings");
             this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, this);
