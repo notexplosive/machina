@@ -14,7 +14,7 @@ namespace Machina.Engine
 
     public interface IPlatformContext
     {
-        public void OnCartridgeSetup(Cartridge cartridge, MachinaWindow window);
+        public void OnCartridgeSetup(Cartridge cartridge, WindowInterface window);
         public void OnGameConstructed(MachinaGame machinaGame);
     }
 
@@ -28,7 +28,7 @@ namespace Machina.Engine
         public UIStyle defaultStyle;
         public GameSettings Settings => this.specification.settings;
         public GraphicsDeviceManager Graphics { get; }
-        public MachinaWindow machinaWindow { get; private set; }
+        public WindowInterface machinaWindow { get; private set; }
 
         public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification, IPlatformContext platformContext)
         {
@@ -43,7 +43,7 @@ namespace Machina.Engine
 
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
-        public void InsertCartridge(Cartridge cartridge, MachinaWindow machinaWindow)
+        public void InsertCartridge(Cartridge cartridge, WindowInterface machinaWindow)
         {
             CurrentCartridge = cartridge;
             CurrentCartridge.Setup(this, GraphicsDevice, this.specification, machinaWindow);
@@ -80,8 +80,7 @@ namespace Machina.Engine
 
             Console.Out.WriteLine("Constructing SpriteBatch");
             this.spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, physicalWindow, Graphics, GraphicsDevice);
+            this.machinaWindow = new WindowInterface(this.specification.settings.startingWindowSize, physicalWindow, Graphics, GraphicsDevice);
 
             Console.Out.WriteLine("Applying settings");
             this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, this);

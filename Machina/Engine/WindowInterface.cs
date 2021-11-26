@@ -4,7 +4,7 @@ namespace Machina.Engine
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class MachinaWindow
+    public class WindowInterface
     {
         private readonly Point startingWindowSize;
         private readonly GraphicsDeviceManager graphics;
@@ -13,7 +13,7 @@ namespace Machina.Engine
         public event Action<Point> Resized;
         public GameWindow GameWindow { get; }
 
-        public MachinaWindow(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics,
+        public WindowInterface(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics,
             GraphicsDevice device)
         {
             this.startingWindowSize = startingWindowSize;
