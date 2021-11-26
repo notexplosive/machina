@@ -77,7 +77,7 @@ namespace Machina.Data
             return null;
         }
 
-        public Texture2D MakeTexture(Texture2D source, int targetRowIndex, GraphicsDevice graphicsDevice)
+        public Texture2D MakeTexture(Texture2D source, int targetRowIndex, Painter painter)
         {
             var sourceData = new Color[source.Width * source.Height];
             var newData = new Color[source.Width * source.Height];
@@ -103,7 +103,7 @@ namespace Machina.Data
                 paletteIndex++;
             }
 
-            var outputTexture = new Texture2D(graphicsDevice, source.Width, source.Height);
+            var outputTexture = painter.CreateTexture(new Point(source.Width, source.Height));
             outputTexture.SetData(newData);
             return outputTexture;
         }

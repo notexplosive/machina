@@ -48,7 +48,7 @@ namespace Machina.Engine.Assets
             this.tree.UpdateLoadNextThing(assetLibrary);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Point currentWindowSize, GraphicsDevice graphicsDevice)
+        public void Draw(SpriteBatch spriteBatch, Point currentWindowSize)
         {
             var windowSize = currentWindowSize;
             var center = currentWindowSize.ToVector2() / 2f;

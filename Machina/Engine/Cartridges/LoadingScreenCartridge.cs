@@ -22,8 +22,8 @@ namespace Machina.Engine.Cartridges
         public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, WindowInterface machinaWindow, Action<GameCartridge> onFinished)
         {
             var assetTree = AssetLibrary.GetStaticAssetLoadTree();
-            gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice, runtime);
-            PrepareLoadInitialStyle(assetTree, runtime.GraphicsDevice);
+            gameCartridge.PrepareDynamicAssets(assetTree, runtime);
+            PrepareLoadInitialStyle(assetTree, runtime);
 
             var loadingScreen =
                 new LoadingScreen(assetTree);
@@ -46,7 +46,7 @@ namespace Machina.Engine.Cartridges
 
             adHoc.onDraw += (spriteBatch) =>
             {
-                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize, runtime.GraphicsDevice);
+                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize);
             };
 
             adHoc.onUpdate += (dt) =>
@@ -67,19 +67,19 @@ namespace Machina.Engine.Cartridges
             };
         }
 
-        private void PrepareLoadInitialStyle(AssetLoader loader, GraphicsDevice graphicsDevice)
+        private void PrepareLoadInitialStyle(AssetLoader loader, MachinaRuntime runtime)
         {
             loader.AddMachinaAssetCallback("ui-button",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), graphicsDevice));
+                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), runtime));
             loader.AddMachinaAssetCallback("ui-button-hover",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
-                    new Rectangle(8 + 24, 8, 8, 8), graphicsDevice));
+                    new Rectangle(8 + 24, 8, 8, 8), runtime));
             loader.AddMachinaAssetCallback("ui-button-press",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
-                    new Rectangle(8 + 48, 8, 8, 8), graphicsDevice));
+                    new Rectangle(8 + 48, 8, 8, 8), runtime));
             loader.AddMachinaAssetCallback("ui-slider-ninepatch",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
-                    new Rectangle(8, 152, 8, 8), graphicsDevice));
+                    new Rectangle(8, 152, 8, 8), runtime));
             loader.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
                 () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
             loader.AddMachinaAssetCallback("ui-radio-fill-image",
@@ -88,9 +88,9 @@ namespace Machina.Engine.Cartridges
                 () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
             loader.AddMachinaAssetCallback("ui-textbox-ninepatch",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
-                    new Rectangle(8, 104, 8, 8), graphicsDevice));
+                    new Rectangle(8, 104, 8, 8), runtime));
             loader.AddMachinaAssetCallback("ui-window-ninepatch",
-                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52), graphicsDevice));
+                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52), runtime));
         }
     }
 }

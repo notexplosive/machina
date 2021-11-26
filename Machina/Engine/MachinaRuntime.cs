@@ -20,30 +20,29 @@ namespace Machina.Engine
 
     public class MachinaRuntime
     {
-        public SpriteBatch spriteBatch;
         private readonly GameSpecification specification;
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
         public UIStyle defaultStyle;
         public WindowInterface WindowInterface { get; private set; }
+        public Painter Painter { get; }
 
-        public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext)
+        public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext, Painter painter)
         {
             this.specification = specification;
             this.game = game;
             this.platformContext = platformContext;
+            this.Painter = painter;
         }
 
         public Demo.Playback DemoPlayback { get; set; }
         public DebugLevel DebugLevel { get; set; }
 
-        public GraphicsDevice GraphicsDevice { get; internal set; }
-
         public void InsertCartridge(Cartridge cartridge, WindowInterface machinaWindow)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(this, GraphicsDevice, this.specification, machinaWindow);
+            CurrentCartridge.Setup(this, Painter, this.specification, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
             MachinaClient.Graphics.ApplyChanges();
         }
@@ -70,24 +69,9 @@ namespace Machina.Engine
             }
         }
 
-        public void SetRenderTarget(RenderTarget2D renderTarget)
+        public void LateSetup(GameCartridge gameCartridge, WindowInterface windowInterface)
         {
-            GraphicsDevice.SetRenderTarget(renderTarget);
-            GraphicsDevice.DepthStencilState = new DepthStencilState { DepthBufferEnable = true };
-        }
-
-        public void ClearRenderTarget()
-        {
-            GraphicsDevice.SetRenderTarget(null);
-        }
-
-        public void LateSetup(GameCartridge gameCartridge, GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, WindowInterface windowInterface)
-        {
-            // We cannot do this any earlier, GraphicsDevice doesn't exist until now
-            GraphicsDevice = graphicsDevice;
-
             Console.Out.WriteLine("Constructing SpriteBatch");
-            this.spriteBatch = spriteBatch;
             this.WindowInterface = windowInterface;
 
             Console.Out.WriteLine("Applying settings");
@@ -102,13 +86,13 @@ namespace Machina.Engine
 
         internal void Draw()
         {
-            CurrentCartridge.SceneLayers.PreDraw(spriteBatch);
-            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(this);
-            GraphicsDevice.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
+            CurrentCartridge.SceneLayers.PreDraw(this.Painter.SpriteBatch);
+            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(this.Painter);
+            this.Painter.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
-            CurrentCartridge.SceneLayers.DrawOnCanvas(spriteBatch);
-            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(spriteBatch, this);
-            CurrentCartridge.SceneLayers.DrawDebugScene(spriteBatch);
+            CurrentCartridge.SceneLayers.DrawOnCanvas(this.Painter.SpriteBatch);
+            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(this, this.Painter);
+            CurrentCartridge.SceneLayers.DrawDebugScene(this.Painter.SpriteBatch);
         }
 
         internal void Update(float dt)

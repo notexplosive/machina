@@ -26,26 +26,13 @@ namespace Machina.Data
 
         public void Apply(MachinaRuntime Runtime)
         {
-            var graphics = MachinaClient.Graphics;
-            var device = Runtime.GraphicsDevice;
-            var stateChanged = fullscreen.State != graphics.IsFullScreen;
+            var stateChanged = fullscreen.State != Runtime.WindowInterface.IsFullScreen;
             if (stateChanged)
             {
-                if (fullscreen.State)
-                {
-                    graphics.PreferredBackBufferWidth = device.DisplayMode.Width;
-                    graphics.PreferredBackBufferHeight = device.DisplayMode.Height;
-                    graphics.IsFullScreen = true;
-                }
-                else
-                {
-                    graphics.PreferredBackBufferWidth = this.startingWindowSize.X;
-                    graphics.PreferredBackBufferHeight = this.startingWindowSize.Y;
-                    graphics.IsFullScreen = false;
-                }
+                Runtime.WindowInterface.SetFullscreen(fullscreen.State);
             }
 
-            graphics.ApplyChanges();
+            Runtime.WindowInterface.ApplyChanges();
         }
 
         public void ApplyAndSave(MachinaFileSystem fileSystem, MachinaRuntime runtime)

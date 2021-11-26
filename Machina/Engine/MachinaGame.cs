@@ -29,6 +29,7 @@ namespace Machina.Engine
         public MachinaRuntime Runtime { get; private set; }
 
         private static MouseCursor pendingCursor;
+        private Painter painter;
 
         public MachinaGame(GameSpecification specification, GameCartridge gameCartridge, IPlatformContext platformContext)
         {
@@ -62,15 +63,16 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             // GraphicsDevice is not available until now
+            this.painter = new Painter(GraphicsDevice);
             var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, MachinaClient.Graphics, GraphicsDevice);
-            Runtime = new MachinaRuntime(this, this.specification, platformContext);
-            Runtime.LateSetup(this.gameCartridge, GraphicsDevice, new SpriteBatch(GraphicsDevice), windowInterface);
+            Runtime = new MachinaRuntime(this, this.specification, platformContext, this.painter);
+            Runtime.LateSetup(this.gameCartridge, windowInterface);
         }
 
         protected override void UnloadContent()
         {
             base.UnloadContent();
-            Runtime.spriteBatch.Dispose();
+            this.painter.SpriteBatch.Dispose();
             MachinaClient.Assets.UnloadAssets();
         }
 

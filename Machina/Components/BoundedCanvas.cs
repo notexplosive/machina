@@ -54,14 +54,7 @@ namespace Machina.Components
 
             if (newSize.X * newSize.Y > 0)
             {
-                var graphicsDevice = Runtime.GraphicsDevice;
-                this.renderTarget = new RenderTarget2D(
-                    graphicsDevice,
-                    newSize.X,
-                    newSize.Y,
-                    false,
-                    graphicsDevice.PresentationParameters.BackBufferFormat,
-                    DepthFormat.Depth24);
+                this.renderTarget = Runtime.Painter.BuildRenderTarget(newSize);
             }
         }
 
@@ -76,13 +69,12 @@ namespace Machina.Components
 
         public void DrawContent(SpriteBatch spriteBatch)
         {
-            var graphicsDevice = Runtime.GraphicsDevice;
-            Runtime.SetRenderTarget(this.renderTarget);
-            graphicsDevice.Clear(BackgroundColor);
+            Runtime.Painter.SetRenderTarget(this.renderTarget);
+            Runtime.Painter.Clear(BackgroundColor);
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 
-            Runtime.ClearRenderTarget();
+            Runtime.Painter.ClearRenderTarget();
         }
 
         public override void PreDraw(SpriteBatch spriteBatch)

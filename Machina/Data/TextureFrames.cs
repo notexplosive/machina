@@ -13,13 +13,13 @@ namespace Machina.Data
         public readonly SpriteSheet sourceSpriteSheet;
         private readonly List<Texture2D> textures = new List<Texture2D>();
 
-        public TextureFrames(SpriteSheet spriteSheet, GraphicsDevice graphicsDevice)
+        public TextureFrames(SpriteSheet spriteSheet, MachinaRuntime runtime)
         {
             this.sourceSpriteSheet = spriteSheet;
             for (var i = 0; i < spriteSheet.FrameCount; i++)
             {
                 var rect = spriteSheet.GetSourceRectForFrame(i);
-                this.textures.Add(MachinaGraphics.CropTexture(rect, spriteSheet.SourceTexture, graphicsDevice));
+                this.textures.Add(runtime.Painter.CropTexture(rect, spriteSheet.SourceTexture));
             }
         }
 

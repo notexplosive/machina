@@ -56,21 +56,12 @@ namespace Machina.Engine
 
         public Texture2D RenderToTexture(SpriteBatch spriteBatch)
         {
-            var graphicsDevice = Runtime.GraphicsDevice;
             var viewportSize = this.gameCanvas.ViewportSize;
-            var renderTarget = new RenderTarget2D(
-                graphicsDevice,
-                viewportSize.X,
-                viewportSize.Y,
-                false,
-                graphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            Runtime.SetRenderTarget(renderTarget);
-
-            graphicsDevice.Clear(this.BackgroundColor);
+            var renderTarget = Runtime.Painter.BuildRenderTarget(viewportSize);
+            Runtime.Painter.SetRenderTarget(renderTarget);
+            Runtime.Painter.Clear(this.BackgroundColor);
             DrawOnCanvas(spriteBatch);
-
-            Runtime.SetRenderTarget(null);
+            Runtime.Painter.SetRenderTarget(null);
             return renderTarget;
         }
 

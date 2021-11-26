@@ -27,26 +27,7 @@ namespace Machina.Engine
 
         public Point CurrentWindowSize => new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
 
-        public bool Fullscreen
-        {
-            set
-            {
-                if (value)
-                {
-                    SetWindowSize(new Point(this.device.DisplayMode.Width, this.device.DisplayMode.Height));
-                    this.graphics.IsFullScreen = true;
-                }
-                else
-                {
-                    SetWindowSize(this.startingWindowSize);
-                    this.graphics.IsFullScreen = false;
-                }
-
-                this.graphics.ApplyChanges();
-            }
-
-            get => this.graphics.IsFullScreen;
-        }
+        public bool IsFullScreen => this.graphics.IsFullScreen;
 
         public void SetWindowSize(Point windowSize)
         {
@@ -57,6 +38,28 @@ namespace Machina.Engine
                 this.graphics.PreferredBackBufferHeight = windowSize.Y;
                 this.graphics.ApplyChanges();
                 Resized?.Invoke(windowSize);
+            }
+        }
+
+        public void ApplyChanges()
+        {
+            this.graphics.ApplyChanges();
+
+        }
+
+        public void SetFullscreen(bool state)
+        {
+            if (state)
+            {
+                graphics.PreferredBackBufferWidth = device.DisplayMode.Width;
+                graphics.PreferredBackBufferHeight = device.DisplayMode.Height;
+                graphics.IsFullScreen = true;
+            }
+            else
+            {
+                graphics.PreferredBackBufferWidth = this.startingWindowSize.X;
+                graphics.PreferredBackBufferHeight = this.startingWindowSize.Y;
+                graphics.IsFullScreen = false;
             }
         }
 
