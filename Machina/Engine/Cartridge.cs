@@ -43,7 +43,7 @@ namespace Machina.Engine
             Random = new SeededRandom();
         }
 
-        public void Setup(MachinaRuntime runtime, GraphicsDevice graphicsDevice, GameSpecification specification, GameWindow window, MachinaWindow machinaWindow)
+        public void Setup(MachinaRuntime runtime, GraphicsDevice graphicsDevice, GameSpecification specification, MachinaWindow machinaWindow)
         {
             if (!this.hasBeenSetup)
             {

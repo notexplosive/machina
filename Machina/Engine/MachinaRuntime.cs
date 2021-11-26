@@ -25,8 +25,10 @@ namespace Machina.Engine
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
+        public UIStyle defaultStyle;
         public GameSettings Settings => this.specification.settings;
         public GraphicsDeviceManager Graphics { get; }
+        public MachinaWindow machinaWindow { get; private set; }
 
         public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification, IPlatformContext platformContext)
         {
@@ -41,10 +43,10 @@ namespace Machina.Engine
 
         public GraphicsDevice GraphicsDevice { get; internal set; }
 
-        public void InsertCartridge(Cartridge cartridge, GameWindow window, MachinaWindow machinaWindow)
+        public void InsertCartridge(Cartridge cartridge, MachinaWindow machinaWindow)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(this, GraphicsDevice, this.specification, window, machinaWindow);
+            CurrentCartridge.Setup(this, GraphicsDevice, this.specification, machinaWindow);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
             Graphics.ApplyChanges();
         }
@@ -69,6 +71,26 @@ namespace Machina.Engine
             {
                 MachinaClient.Print("Demo loading is only supported on GameCartridges");
             }
+        }
+
+        public void OnLoadContent(GameWindow physicalWindow, GameCartridge gameCartridge, GraphicsDevice graphicsDevice)
+        {
+            // We cannot do this any earlier, GraphicsDevice doesn't exist until now
+            GraphicsDevice = graphicsDevice;
+
+            Console.Out.WriteLine("Constructing SpriteBatch");
+            this.spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            this.machinaWindow = new MachinaWindow(this.specification.settings.startingWindowSize, physicalWindow, Graphics, GraphicsDevice);
+
+            Console.Out.WriteLine("Applying settings");
+            this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, this);
+            Console.Out.WriteLine("Settings Window Size");
+            this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
+
+            var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
+            InsertCartridge(loadingCartridge, this.machinaWindow);
+            loadingCartridge.PrepareLoadingScreen(gameCartridge, this, MachinaClient.Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
         }
 
         internal void Draw()
@@ -111,6 +133,107 @@ namespace Machina.Engine
                     CurrentCartridge.Logger.Log(message);
                 }
             }
+        }
+
+        private void FinishLoadingContent(GameCartridge gameCartridge)
+        {
+#if DEBUG
+            DebugLevel = DebugLevel.Passive;
+#endif
+
+            var defaultFont = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
+
+            defaultStyle = new UIStyle(
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
+                defaultFont,
+                MachinaClient.Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
+            );
+
+            // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
+            gameCartridge.SetupSceneLayers(this, specification, machinaWindow);
+
+            var debugActor = gameCartridge.SceneLayers.DebugScene.AddActor("DebugActor");
+            var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
+
+            var demoName = Demo.MostRecentlySavedDemoPath;
+            var demoSpeed = 1;
+            var shouldSkipSnapshot = DebugLevel == DebugLevel.Off;
+
+            void SetRandomSeedFromString(string seed)
+            {
+                gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
+            }
+
+            this.specification.commandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            this.specification.commandLineArgs.RegisterEarlyValueArg("demo", arg =>
+            {
+                switch (arg)
+                {
+                    case "record":
+                        new DemoRecorderComponent(debugActor, new Demo.Recorder(gameCartridge, demoName));
+                        break;
+                    case "playback":
+                        DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName, MachinaClient.FileSystem), demoName, demoSpeed);
+                        break;
+                    case "playback-nogui":
+                        DemoPlayback = demoPlaybackComponent.SetDemo(gameCartridge, Demo.FromDisk_Sync(demoName, MachinaClient.FileSystem), demoName, demoSpeed);
+                        demoPlaybackComponent.ShowGui = false;
+                        break;
+                    default:
+                        MachinaClient.Print("Unknown demo mode", arg);
+                        break;
+                }
+            });
+
+            this.specification.commandLineArgs.RegisterEarlyFlagArg("debug",
+                () => { DebugLevel = DebugLevel.Active; });
+
+#if DEBUG
+            // PlayIntroAndLoadGame(gameCartridge);
+            InsertGameCartridgeAndRun(gameCartridge);
+#else
+            PlayIntroAndLoadGame(gameCartridge);
+#endif
+            // Currently we go [SetupDebugScene] -> [LoadGame] -> [LateSetup], hopefully the cartridge system will mitigate the need for this.
+            if (GamePlatform.IsDesktop)
+            {
+                // NOTE: If we play the intro in a debug build this flag will not be honored, tech debt.
+                new SnapshotTaker(debugActor, shouldSkipSnapshot);
+            }
+        }
+
+        private void InsertGameCartridgeAndRun(GameCartridge gameCartridge)
+        {
+            this.specification.commandLineArgs.ExecuteEarlyArgs();
+            InsertCartridge(gameCartridge, this.machinaWindow);
+            this.specification.commandLineArgs.ExecuteArgs();
+
+            if (DebugLevel >= DebugLevel.Passive)
+            {
+                MachinaClient.Print("Debug build detected");
+            }
+        }
+
+
+        private void PlayIntroAndLoadGame(GameCartridge gameCartridge)
+        {
+            // Steal control
+            void OnEnd()
+            {
+                // Start the actual game
+                InsertGameCartridgeAndRun(gameCartridge);
+            }
+            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.machinaWindow);
         }
     }
 }

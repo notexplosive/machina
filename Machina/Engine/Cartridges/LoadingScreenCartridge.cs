@@ -19,7 +19,7 @@ namespace Machina.Engine.Cartridges
             SceneLayers.BackgroundColor = Color.Black;
         }
 
-        public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, MachinaWindow machinaWindow, Action onFinished)
+        public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, MachinaWindow machinaWindow, Action<GameCartridge> onFinished)
         {
             var assetTree = AssetLibrary.GetStaticAssetLoadTree();
             gameCartridge.PrepareDynamicAssets(assetTree, runtime.GraphicsDevice);
@@ -62,7 +62,7 @@ namespace Machina.Engine.Cartridges
 
                 if (loadingScreen.IsDoneDrawLoading() && loadingScreen.IsDoneUpdateLoading())
                 {
-                    onFinished();
+                    onFinished(gameCartridge);
                 }
             };
         }

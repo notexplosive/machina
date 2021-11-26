@@ -17,7 +17,7 @@ namespace MachinaAndroid
 
         public void OnGameConstructed(MachinaGame machinaGame)
         {
-            MachinaClient.Runtime.Graphics.IsFullScreen = true;
+            machinaGame.Runtime.Graphics.IsFullScreen = true;
         }
     }
 }
