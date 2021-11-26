@@ -28,7 +28,7 @@ namespace Machina.Engine
         public UIStyle defaultStyle;
         public GameSettings Settings => this.specification.settings;
         public GraphicsDeviceManager Graphics { get; }
-        public WindowInterface machinaWindow { get; private set; }
+        public WindowInterface WindowInterface { get; private set; }
 
         public MachinaRuntime(MachinaGame game, GraphicsDeviceManager graphics, GameSpecification specification, IPlatformContext platformContext)
         {
@@ -80,16 +80,16 @@ namespace Machina.Engine
 
             Console.Out.WriteLine("Constructing SpriteBatch");
             this.spriteBatch = spriteBatch;
-            this.machinaWindow = windowInterface;
+            this.WindowInterface = windowInterface;
 
             Console.Out.WriteLine("Applying settings");
             this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, this);
             Console.Out.WriteLine("Settings Window Size");
-            this.machinaWindow.SetWindowSize(this.specification.settings.startingWindowSize);
+            this.WindowInterface.SetWindowSize(this.specification.settings.startingWindowSize);
 
             var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
-            InsertCartridge(loadingCartridge, this.machinaWindow);
-            loadingCartridge.PrepareLoadingScreen(gameCartridge, this, MachinaClient.Assets as AssetLibrary, this.machinaWindow, FinishLoadingContent);
+            InsertCartridge(loadingCartridge, this.WindowInterface);
+            loadingCartridge.PrepareLoadingScreen(gameCartridge, this, MachinaClient.Assets as AssetLibrary, this.WindowInterface, FinishLoadingContent);
         }
 
         internal void Draw()
@@ -156,7 +156,7 @@ namespace Machina.Engine
             );
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
-            gameCartridge.SetupSceneLayers(this, specification, machinaWindow);
+            gameCartridge.SetupSceneLayers(this, specification, WindowInterface);
 
             var debugActor = gameCartridge.SceneLayers.DebugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
@@ -214,7 +214,7 @@ namespace Machina.Engine
         private void InsertGameCartridgeAndRun(GameCartridge gameCartridge)
         {
             this.specification.commandLineArgs.ExecuteEarlyArgs();
-            InsertCartridge(gameCartridge, this.machinaWindow);
+            InsertCartridge(gameCartridge, this.WindowInterface);
             this.specification.commandLineArgs.ExecuteArgs();
 
             if (DebugLevel >= DebugLevel.Passive)
@@ -232,7 +232,7 @@ namespace Machina.Engine
                 // Start the actual game
                 InsertGameCartridgeAndRun(gameCartridge);
             }
-            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.machinaWindow);
+            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.WindowInterface);
         }
     }
 }
