@@ -48,7 +48,6 @@ namespace Machina.Engine
             if (!this.hasBeenSetup)
             {
                 BuildSceneLayers(runtime);
-
                 CurrentGameCanvas.BuildCanvas(runtime.Painter);
 
                 runtime.platformContext.OnCartridgeSetup(this, runtime.WindowInterface);
