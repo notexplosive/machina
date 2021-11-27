@@ -12,12 +12,6 @@ namespace Machina.Engine
     using System;
     using System.IO;
 
-    public interface IPlatformContext
-    {
-        public void OnCartridgeSetup(Cartridge cartridge, WindowInterface window);
-        public void OnGameConstructed(MachinaGame machinaGame);
-    }
-
     public class MachinaRuntime
     {
         private readonly GameSpecification specification;
