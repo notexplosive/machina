@@ -8,11 +8,11 @@ namespace Machina.Engine
     /// </summary>
     public class SubRuntime : IMachinaRuntime
     {
-        private readonly MachinaRuntime parent;
+        private readonly IMachinaRuntime parent;
         private readonly UIWindow window;
         private readonly GameCartridge cartridge;
 
-        public SubRuntime(MachinaRuntime parent, UIWindow window, GameCartridge cartridge)
+        public SubRuntime(IMachinaRuntime parent, UIWindow window, GameCartridge cartridge)
         {
             this.parent = parent;
             this.window = window;
