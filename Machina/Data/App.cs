@@ -21,6 +21,8 @@ namespace Machina.Data
         public App(GameCartridge gameCartridge, GameSpecification gameSpecification, bool isSingleton) : this(gameSpecification.gameTitle, isSingleton,
             new WindowBuilder(gameSpecification.settings.startingWindowSize)
             .SetCartridgeBundle(new CartridgeBundle(gameCartridge, gameSpecification))
+            .DestroyViaCloseButton()
+            .AllowKeyboardEvents()
             )
         {
         }

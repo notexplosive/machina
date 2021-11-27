@@ -44,10 +44,14 @@ namespace Machina.Engine
 
         public void InsertCartridge(Cartridge cartridge, GameSpecification specification)
         {
+            specification.commandLineArgs.ExecuteEarlyArgs();
+
             // This is extremely similar (but not the same) as MachinaRuntime.InsertCartridge
             CurrentCartridge = cartridge;
             CurrentCartridge.Setup(this, specification);
             CurrentCartridge.Viewport.SetWindowSize(WindowInterface.CurrentSize);
+
+            specification.commandLineArgs.ExecuteArgs();
         }
     }
 }
