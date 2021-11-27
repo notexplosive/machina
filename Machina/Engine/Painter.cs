@@ -8,7 +8,7 @@ namespace Machina.Engine
 {
     public class Painter
     {
-        public GraphicsDevice GraphicsDevice { get; }
+        private GraphicsDevice GraphicsDevice { get; }
         public SpriteBatch SpriteBatch { get; }
 
         public Painter(GraphicsDevice graphicsDevice)
