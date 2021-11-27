@@ -12,7 +12,7 @@ namespace Machina.Engine
     using System;
     using System.IO;
 
-    public class MachinaRuntime
+    public class MachinaRuntime : IMachinaRuntime
     {
         private readonly GameSpecification specification;
         private readonly MachinaGame game;

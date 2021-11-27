@@ -19,7 +19,7 @@ namespace Machina.Engine
         public Scene DebugScene { get; private set; }
         public readonly IGameViewport gameCanvas;
 
-        public MachinaRuntime Runtime { get; }
+        public IMachinaRuntime Runtime { get; }
         private readonly List<Scene> sceneList = new List<Scene>();
 
         public Color BackgroundColor = Color.SlateBlue;
@@ -32,10 +32,10 @@ namespace Machina.Engine
 
         private TextInputEventArgs? pendingTextInput;
 
-        public SceneLayers(IGameViewport gameCanvas, MachinaRuntime runtime)
+        public SceneLayers(IGameViewport gameCanvas, IMachinaRuntime runtime = null)
         {
             this.gameCanvas = gameCanvas;
-            Runtime = runtime;
+            Runtime = runtime ?? new EmptyMachinaRuntime();
         }
 
         public void BuildDebugScene(Cartridge cartridge)

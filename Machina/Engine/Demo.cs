@@ -153,7 +153,7 @@ namespace Machina.Engine
                 this.demo.Append(new DemoSerializableEntry(this.totalTime, inputState));
             }
 
-            public void WriteDemoToDisk(MachinaRuntime runtime)
+            public void WriteDemoToDisk()
             {
                 Directory.CreateDirectory(Path.Join(MachinaClient.FileSystem.AppDataPath, "Demos"));
                 MachinaClient.FileSystem.WriteStringToAppData(this.demo.EncodeRecords(), Path.Join("Demos", this.fileName));

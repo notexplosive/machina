@@ -41,7 +41,7 @@ namespace Machina.Components
         {
             if (key == Keys.P && modifiers.Control && state == ButtonState.Released)
             {
-                this.recorder.WriteDemoToDisk(Runtime);
+                this.recorder.WriteDemoToDisk();
             }
         }
     }
