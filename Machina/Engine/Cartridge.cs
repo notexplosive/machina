@@ -43,16 +43,16 @@ namespace Machina.Engine
             Random = new SeededRandom();
         }
 
-        public void Setup(MachinaRuntime runtime, Painter painter, GameSpecification specification, WindowInterface machinaWindow)
+        public void Setup(MachinaRuntime runtime, GameSpecification specification)
         {
             if (!this.hasBeenSetup)
             {
                 BuildSceneLayers(runtime);
 
-                CurrentGameCanvas.BuildCanvas(painter);
+                CurrentGameCanvas.BuildCanvas(runtime.Painter);
 
-                runtime.platformContext.OnCartridgeSetup(this, machinaWindow);
-                machinaWindow.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
+                runtime.platformContext.OnCartridgeSetup(this, runtime.WindowInterface);
+                runtime.WindowInterface.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
                 OnGameLoad(specification, runtime);
 

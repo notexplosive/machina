@@ -27,7 +27,7 @@ namespace Machina.Engine.Cartridges
 
             SceneLayers.OnError += (exception) =>
             {
-                runtime.InsertCartridge(new CrashCartridge(specification.settings, exception), machinaWindow);
+                runtime.InsertCartridge(new CrashCartridge(specification.settings, exception));
             };
         }
     }

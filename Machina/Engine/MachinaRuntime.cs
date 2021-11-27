@@ -39,11 +39,11 @@ namespace Machina.Engine
         public Demo.Playback DemoPlayback { get; set; }
         public DebugLevel DebugLevel { get; set; }
 
-        public void InsertCartridge(Cartridge cartridge, WindowInterface machinaWindow)
+        public void InsertCartridge(Cartridge cartridge)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(this, Painter, this.specification, machinaWindow);
-            CurrentCartridge.CurrentGameCanvas.SetWindowSize(machinaWindow.CurrentWindowSize);
+            CurrentCartridge.Setup(this, this.specification);
+            CurrentCartridge.CurrentGameCanvas.SetWindowSize(WindowInterface.CurrentWindowSize);
             MachinaClient.Graphics.ApplyChanges();
         }
 
@@ -80,7 +80,7 @@ namespace Machina.Engine
             this.WindowInterface.SetWindowSize(this.specification.settings.startingWindowSize);
 
             var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
-            InsertCartridge(loadingCartridge, this.WindowInterface);
+            InsertCartridge(loadingCartridge);
             loadingCartridge.PrepareLoadingScreen(gameCartridge, this, MachinaClient.Assets as AssetLibrary, this.WindowInterface, FinishLoadingContent);
         }
 
@@ -206,7 +206,7 @@ namespace Machina.Engine
         private void InsertGameCartridgeAndRun(GameCartridge gameCartridge)
         {
             this.specification.commandLineArgs.ExecuteEarlyArgs();
-            InsertCartridge(gameCartridge, this.WindowInterface);
+            InsertCartridge(gameCartridge);
             this.specification.commandLineArgs.ExecuteArgs();
 
             if (DebugLevel >= DebugLevel.Passive)
@@ -224,7 +224,7 @@ namespace Machina.Engine
                 // Start the actual game
                 InsertGameCartridgeAndRun(gameCartridge);
             }
-            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd), this.WindowInterface);
+            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd));
         }
     }
 }
