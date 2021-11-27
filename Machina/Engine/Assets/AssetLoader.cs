@@ -10,7 +10,7 @@ namespace Machina.Engine.Assets
         private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
         private readonly List<UnloadedDrawLoopAssetCallback> drawAssets = new List<UnloadedDrawLoopAssetCallback>();
         private readonly AssetLibrary library;
-        private int startingCount;
+        private int totalCount;
 
         public AssetLoader(AssetLibrary library)
         {
@@ -20,13 +20,13 @@ namespace Machina.Engine.Assets
         private void AddAsset(UnloadedAsset asset)
         {
             this.assets.Add(asset);
-            this.startingCount++;
+            this.totalCount++;
         }
 
         private void AddDrawAsset(UnloadedDrawLoopAssetCallback asset)
         {
             this.drawAssets.Add(asset);
-            this.startingCount++;
+            this.totalCount++;
         }
 
         public void AddImagePath(string name)
@@ -44,7 +44,7 @@ namespace Machina.Engine.Assets
             AddAsset(new UnloadedSound(name));
         }
 
-        public void UpdateLoadNextThing(AssetLibrary library)
+        public void UpdateLoadNextThing()
         {
             if (this.assets.Count == 0)
             {
@@ -56,7 +56,7 @@ namespace Machina.Engine.Assets
             assetToLoad.Load(library);
         }
 
-        public void DrawLoadNextThing(AssetLibrary library, SpriteBatch spriteBatch)
+        public void DrawLoadNextThing(SpriteBatch spriteBatch)
         {
             if (this.drawAssets.Count == 0)
             {
@@ -76,7 +76,7 @@ namespace Machina.Engine.Assets
 
         public float Progress()
         {
-            return 1f - (float) (this.assets.Count + this.drawAssets.Count) / this.startingCount;
+            return 1f - (float) (this.assets.Count + this.drawAssets.Count) / this.totalCount;
         }
 
         public void AddMachinaAssetCallback(string assetPath, Func<IAsset> callback)

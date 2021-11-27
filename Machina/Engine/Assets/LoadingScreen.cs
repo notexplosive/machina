@@ -45,7 +45,7 @@ namespace Machina.Engine.Assets
                 return;
             }
 
-            this.tree.UpdateLoadNextThing(assetLibrary);
+            this.tree.UpdateLoadNextThing();
         }
 
         public void Draw(SpriteBatch spriteBatch, Point currentWindowSize)
@@ -96,7 +96,7 @@ namespace Machina.Engine.Assets
                 return;
             }
 
-            this.tree.DrawLoadNextThing(assetLibrary, spriteBatch);
+            this.tree.DrawLoadNextThing(spriteBatch);
         }
 
         public bool IsDoneDrawLoading()
