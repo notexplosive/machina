@@ -3,7 +3,7 @@
     public interface IMachinaRuntime
     {
         Painter Painter { get; }
-        WindowInterface WindowInterface { get; }
+        OSWindow WindowInterface { get; }
         DebugLevel DebugLevel { get; set; }
         Cartridge CurrentCartridge { get; }
 

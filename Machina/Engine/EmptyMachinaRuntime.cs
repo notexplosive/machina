@@ -4,7 +4,7 @@
     {
         public Painter Painter => null;
 
-        public WindowInterface WindowInterface => null;
+        public OSWindow WindowInterface => null;
 
         public DebugLevel DebugLevel { get; set; }
 

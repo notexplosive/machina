@@ -7,7 +7,7 @@ namespace MachinaDesktop
 {
     public class DesktopPlatformContext : IPlatformContext
     {
-        public void OnCartridgeSetup(Cartridge cartridge, WindowInterface window)
+        public void OnCartridgeSetup(Cartridge cartridge, OSWindow window)
         {
             window.GameWindow.TextInput += cartridge.SceneLayers.AddPendingTextInput;
         }

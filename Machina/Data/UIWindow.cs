@@ -7,7 +7,7 @@ namespace Machina.Data
 {
     public delegate void WindowAction(UIWindow window);
 
-    public class UIWindow
+    public class UIWindow : IWindow
     {
         /// <summary>
         ///     Actor for the "Canvas" portion of the window
@@ -50,10 +50,9 @@ namespace Machina.Data
             bool canbeMinimized, SpriteFrame icon, UIStyle style)
         {
             this.style = style;
-            var headerSize = 32;
             var windowRoot = parentScene.AddActor("Window");
-            new BoundingRect(windowRoot,
-                contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
+            this.rootBoundingRect = new BoundingRect(windowRoot, Point.Zero);
+            SetSize(contentSize);
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
@@ -208,6 +207,14 @@ namespace Machina.Data
                     return rect;
                 });
         }
+
+        public void SetSize(Point contentSize)
+        {
+            var headerSize = 32;
+            this.rootBoundingRect.SetSize(contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
+        }
+
+        public Point CurrentSize => this.canvasActor.GetComponent<BoundingRect>().Size;
 
         public void Destroy()
         {

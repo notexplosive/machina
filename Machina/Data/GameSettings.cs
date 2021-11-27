@@ -24,7 +24,7 @@ namespace Machina.Data
         public float MusicVolumeAsFloat => Math.Clamp(musicVolume.State / 10f, 0, 1) * MasterVolume;
         public float SFXVolumeAsFloat => Math.Clamp(sfxVolume.State / 10f, 0, 1) * MasterVolume;
 
-        public void Apply(WindowInterface window)
+        public void Apply(OSWindow window)
         {
             var stateChanged = fullscreen.State != window.IsFullScreen;
             if (stateChanged)
@@ -35,7 +35,7 @@ namespace Machina.Data
             window.ApplyChanges();
         }
 
-        public void ApplyAndSave(MachinaFileSystem fileSystem, WindowInterface window)
+        public void ApplyAndSave(MachinaFileSystem fileSystem, OSWindow window)
         {
             Apply(window);
             SaveSettings(fileSystem);
@@ -46,7 +46,7 @@ namespace Machina.Data
             fileSystem.WriteStringToAppData(JsonConvert.SerializeObject(this), "settings.json", true);
         }
 
-        public void LoadSavedSettingsIfExist(MachinaFileSystem fileSystem, WindowInterface window)
+        public void LoadSavedSettingsIfExist(MachinaFileSystem fileSystem, OSWindow window)
         {
             try
             {

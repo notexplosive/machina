@@ -11,7 +11,7 @@ namespace MachinaAndroid
 
     public class AndroidPlatformContext : IPlatformContext
     {
-        public void OnCartridgeSetup(Cartridge cartridge, WindowInterface window)
+        public void OnCartridgeSetup(Cartridge cartridge, OSWindow window)
         {
         }
 
