@@ -56,7 +56,7 @@ namespace Machina.Engine.Cartridges
                     var increment = 3;
                     for (var i = 0; i < increment; i++)
                     {
-                        loadingScreen.Update(assets, dt / increment);
+                        loadingScreen.Update(dt / increment);
                     }
                 }
 

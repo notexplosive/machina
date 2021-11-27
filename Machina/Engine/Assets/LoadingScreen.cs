@@ -19,7 +19,7 @@ namespace Machina.Engine.Assets
             this.tree = tree;
         }
 
-        public void Update(AssetLibrary assetLibrary, float dt)
+        public void Update(float dt)
         {
             if (this.isDoneUpdating)
             {
