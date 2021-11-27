@@ -226,7 +226,7 @@ namespace Machina.Data
 
         public Point CurrentSize => this.canvasActor.GetComponent<BoundingRect>().Size;
 
-        public void Destroy()
+        public void Close()
         {
             foreach (var scene in this.scene.sceneLayers.AllScenes())
             {
@@ -234,11 +234,6 @@ namespace Machina.Data
             }
 
             this.rootTransform.actor.Destroy();
-        }
-
-        public void Delete()
-        {
-            this.rootTransform.actor.Delete();
         }
 
         public bool IsOpen()

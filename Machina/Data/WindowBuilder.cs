@@ -112,7 +112,7 @@ namespace Machina.Data
 
         public WindowBuilder DestroyViaCloseButton()
         {
-            return OnClose(win => { win.Destroy(); });
+            return OnClose(win => { win.Close(); });
         }
 
         public WindowBuilder OnMinimize(WindowAction onMinimized)
