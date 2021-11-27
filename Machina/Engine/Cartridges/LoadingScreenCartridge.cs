@@ -23,7 +23,7 @@ namespace Machina.Engine.Cartridges
         {
             var assetTree = assets.GetStaticAssetLoadTree();
             gameCartridge.PrepareDynamicAssets(assetTree, runtime);
-            PrepareLoadInitialStyle(assetTree, runtime);
+            PrepareDefaultStyle(assetTree, runtime);
 
             var loadingScreen =
                 new LoadingScreen(assetTree);
@@ -67,7 +67,7 @@ namespace Machina.Engine.Cartridges
             };
         }
 
-        private void PrepareLoadInitialStyle(AssetLoader loader, MachinaRuntime runtime)
+        private void PrepareDefaultStyle(AssetLoader loader, MachinaRuntime runtime)
         {
             loader.AddMachinaAssetCallback("ui-button",
                 () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), runtime.Painter));
