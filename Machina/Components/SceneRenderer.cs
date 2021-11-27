@@ -10,22 +10,27 @@ namespace Machina.Components
         private readonly BoundingRect boundingRect;
         private readonly BoundedCanvas canvas;
         private readonly Hoverable hoverable;
-        public readonly Scene primaryScene;
 
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         private Func<bool> bypassHoverConstraint;
         private Func<bool> shouldAllowKeyboardEvents;
 
-        public SceneRenderer(Actor actor) : base(actor)
+        public SceneLayers SceneLayers { get; set; }
+
+        public SceneRenderer(Actor actor, bool skipBuildingSceneLayers = false) : base(actor)
         {
             this.canvas = RequireComponent<BoundedCanvas>();
             this.boundingRect = RequireComponent<BoundingRect>();
             this.hoverable = RequireComponent<Hoverable>();
-            SceneLayers = new SceneLayers(this, Runtime); // SceneRenderer should provide its own Runtime (or be passed on as a constructor arg)
+
+            if (!skipBuildingSceneLayers)
+            {
+                SceneLayers = new SceneLayers(this, Runtime);
+                SceneLayers.AddNewScene();
+            }
+
             this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.hoverable.OnHoverEnd += ClearHitTesters;
-
-            this.primaryScene = SceneLayers.AddNewScene();
 
             this.shouldAllowKeyboardEvents = () => false;
             this.bypassHoverConstraint = () => false;
@@ -43,12 +48,12 @@ namespace Machina.Components
             }
         }
 
-        public SceneLayers SceneLayers { get; }
-
         public Point ViewportSize => this.boundingRect.Size;
         public Point WindowSize => this.boundingRect.Size;
         public float ScaleFactor => 1;
         public Rectangle CanvasRect => new Rectangle(new Point(0, 0), ViewportSize);
+
+        public Scene PrimaryScene => SceneLayers.AllScenes()[0];
 
         public SceneRenderer SetShouldAllowKeyboardEventsLambda(Func<bool> shouldAllowKeyboardEvents)
         {

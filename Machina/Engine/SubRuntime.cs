@@ -10,13 +10,11 @@ namespace Machina.Engine
     {
         private readonly IMachinaRuntime parent;
         private readonly UIWindow window;
-        private readonly GameCartridge cartridge;
 
-        public SubRuntime(IMachinaRuntime parent, UIWindow window, GameCartridge cartridge)
+        public SubRuntime(IMachinaRuntime parent, UIWindow window)
         {
             this.parent = parent;
             this.window = window;
-            this.cartridge = cartridge;
         }
 
         public Painter Painter => this.parent.Painter;
@@ -30,7 +28,7 @@ namespace Machina.Engine
             set => this.parent.DebugLevel = value;
         }
 
-        public Cartridge CurrentCartridge => this.cartridge;
+        public Cartridge CurrentCartridge { get; set; }
 
         public void Quit()
         {
