@@ -62,7 +62,7 @@ namespace Machina.Engine.Debugging.Data
                     .OnLaunch(window =>
                     {
                         var consoleActor = window.PrimaryScene.AddActor("StaticConsole");
-                        new WindowedConsoleRenderer(consoleActor, window.Scrollbar);
+                        new WindowedConsoleRenderer(consoleActor, window.Scrollbar, sceneLayers.Runtime);
                     })));
 
             return dock;

@@ -15,8 +15,10 @@ namespace Machina.Engine
         {
             this.parent = parent;
             this.window = window;
+            PlatformContext = new FenestraPlatformContext();
         }
 
+        public IPlatformContext PlatformContext { get; private set; }
         public Painter Painter => this.parent.Painter;
 
         public IWindow WindowInterface => this.window;
@@ -38,6 +40,14 @@ namespace Machina.Engine
         public void RunDemo(string demoPath)
         {
             MachinaClient.Print("Run demo in subruntime (not implemented)");
+        }
+
+        public void InsertCartridge(Cartridge cartridge, GameSpecification specification)
+        {
+            // This is extremely similar (but not the same) as MachinaRuntime.InsertCartridge
+            CurrentCartridge = cartridge;
+            CurrentCartridge.Setup(this, specification);
+            CurrentCartridge.Viewport.SetWindowSize(WindowInterface.CurrentSize);
         }
     }
 }

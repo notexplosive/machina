@@ -10,6 +10,8 @@
 
         public Cartridge CurrentCartridge => null;
 
+        public IPlatformContext PlatformContext => null;
+
         public void Quit()
         {
         }

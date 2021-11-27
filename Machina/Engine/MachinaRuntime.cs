@@ -16,7 +16,7 @@ namespace Machina.Engine
     {
         private readonly GameSpecification specification;
         private readonly MachinaGame game;
-        public readonly IPlatformContext platformContext;
+        public IPlatformContext PlatformContext { get; }
         public readonly MachinaInput input = new MachinaInput();
         public IWindow WindowInterface { get; private set; }
         public Painter Painter { get; }
@@ -25,7 +25,7 @@ namespace Machina.Engine
         {
             this.specification = specification;
             this.game = game;
-            this.platformContext = platformContext;
+            this.PlatformContext = platformContext;
             this.Painter = painter;
         }
 
@@ -36,7 +36,7 @@ namespace Machina.Engine
         {
             CurrentCartridge = cartridge;
             CurrentCartridge.Setup(this, this.specification);
-            CurrentCartridge.CurrentGameCanvas.SetWindowSize(WindowInterface.CurrentSize);
+            CurrentCartridge.Viewport.SetWindowSize(WindowInterface.CurrentSize);
             MachinaClient.Graphics.ApplyChanges();
         }
 
@@ -80,11 +80,11 @@ namespace Machina.Engine
         internal void Draw()
         {
             CurrentCartridge.SceneLayers.PreDraw(this.Painter.SpriteBatch);
-            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(this.Painter);
+            CurrentCartridge.Viewport.SetRenderTargetToCanvas(this.Painter);
             this.Painter.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
             CurrentCartridge.SceneLayers.DrawOnCanvas(this.Painter.SpriteBatch);
-            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(this, this.Painter);
+            CurrentCartridge.Viewport.DrawCanvasToScreen(this, this.Painter);
             CurrentCartridge.SceneLayers.DrawDebugScene(this.Painter.SpriteBatch);
         }
 

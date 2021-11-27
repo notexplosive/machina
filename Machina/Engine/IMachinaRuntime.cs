@@ -5,6 +5,7 @@
         Painter Painter { get; }
         IWindow WindowInterface { get; }
         DebugLevel DebugLevel { get; set; }
+        IPlatformContext PlatformContext { get; }
         Cartridge CurrentCartridge { get; }
 
         void Quit();

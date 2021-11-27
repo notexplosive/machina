@@ -1,5 +1,6 @@
 ﻿using Machina.Components;
 using Machina.Engine;
+using Machina.Engine.Cartridges;
 using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
 using System;
@@ -13,7 +14,7 @@ namespace Machina.Data
         /// <summary>
         ///     Actor for the "Canvas" portion of the window
         /// </summary>
-        public readonly Actor canvasActor;
+        public Actor canvasActor;
 
         /// <summary>
         ///     LayoutGroup of the "Content" area of the window
@@ -29,9 +30,6 @@ namespace Machina.Data
         /// </summary>
         public readonly Transform rootTransform;
 
-        /// <summary>
-        ///     Primary scene of the content within the window
-        /// </summary>
         public readonly SceneLayers sceneLayers;
         /*
          * [_Header_________]
@@ -52,7 +50,7 @@ namespace Machina.Data
         public bool IsFullScreen { get; private set; }
 
         public UIWindow(Scene parentScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
-            bool canbeMinimized, SpriteFrame icon, UIStyle style)
+            bool canbeMinimized, SpriteFrame icon, UIStyle style, CartridgeBundle? cartridgeBundle)
         {
             this.style = style;
             var windowRoot = parentScene.AddActor("Window");
@@ -111,7 +109,6 @@ namespace Machina.Data
             // These variables with _local at the end of their name are later assigned to readonly values
             // The locals are assigned in lambdas which is illegal for readonly assignment
             SceneRenderer sceneRenderer_local = null;
-            Actor canvasActor_local = null;
             LayoutGroup contentGroup_local = null;
 
             // "Content" means everything below the header
@@ -123,20 +120,28 @@ namespace Machina.Data
                     contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
                             .AddBothStretchedElement("Canvas", viewActor =>
                             {
-                                canvasActor_local = viewActor;
+                                this.canvasActor = viewActor;
                                 new BoundedCanvas(viewActor);
                                 new Hoverable(viewActor);
                                 new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
                                 sceneRenderer_local = new SceneRenderer(viewActor, true);
-                                sceneRenderer_local.SceneLayers = new SceneLayers(sceneRenderer_local, new SubRuntime(parentScene.sceneLayers.Runtime, this));
-                                sceneRenderer_local.SceneLayers.AddNewScene();
+                                var subruntime = new SubRuntime(parentScene.sceneLayers.Runtime, this);
+                                if (!cartridgeBundle.HasValue)
+                                {
+                                    sceneRenderer_local.SceneLayers = new SceneLayers(sceneRenderer_local, subruntime);
+                                    sceneRenderer_local.SceneLayers.AddNewScene();
+                                }
+                                else
+                                {
+                                    subruntime.InsertCartridge(cartridgeBundle.Value.cartridge, cartridgeBundle.Value.specification);
+                                    sceneRenderer_local.SceneLayers = cartridgeBundle.Value.cartridge.SceneLayers;
+                                }
                             })
                         ;
                 })
                 ;
 
             this.sceneRenderer = sceneRenderer_local;
-            this.canvasActor = canvasActor_local;
             this.sceneLayers = sceneRenderer_local.SceneLayers;
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
