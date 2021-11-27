@@ -2,6 +2,7 @@
 using Machina.Engine;
 using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Machina.Data
 {
@@ -20,6 +21,7 @@ namespace Machina.Data
         private readonly LayoutGroup contentGroup;
 
         private readonly int margin = 10;
+        public event Action<Point> Resized;
         private readonly BoundingRect rootBoundingRect;
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace Machina.Data
         public readonly SceneRenderer sceneRenderer;
         private readonly UIStyle style;
         private BoundedTextRenderer titleTextRenderer;
+
+        public bool IsFullScreen { get; private set; }
 
         public UIWindow(Scene parentScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
             bool canbeMinimized, SpriteFrame icon, UIStyle style)
@@ -196,16 +200,22 @@ namespace Machina.Data
             Scrollbar = scrollbar_local;
         }
 
+
         public BoundingRectResizer BecomeResizable(Point? minSize, Point? maxSize)
         {
             new Hoverable(this.rootTransform.actor);
-            return new BoundingRectResizer(this.rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize,
+            var resizer = new BoundingRectResizer(this.rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize,
                 maxSize, rect =>
                 {
                     rect.Y += this.margin;
                     rect.Height -= this.margin;
                     return rect;
                 });
+            resizer.Resized += (sender, eventArgs) =>
+            {
+                Resized?.Invoke(eventArgs.NewSize.ToPoint());
+            };
+            return resizer;
         }
 
         public void SetSize(Point contentSize)
@@ -234,6 +244,22 @@ namespace Machina.Data
         public bool IsOpen()
         {
             return !this.rootTransform.actor.IsDestroyed;
+        }
+
+        public void SetFullscreen(bool fullscreen)
+        {
+            IsFullScreen = fullscreen;
+            MachinaClient.Print("Not implemented");
+        }
+
+        public void ApplyChanges()
+        {
+            MachinaClient.Print("Apply changes (no op)");
+        }
+
+        public void AddOnTextInputEvent(EventHandler<TextInputEventArgs> callback)
+        {
+            MachinaClient.Print("Add OnTextInputEvent (no op??)");
         }
     }
 }

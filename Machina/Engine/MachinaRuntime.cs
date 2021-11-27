@@ -18,7 +18,7 @@ namespace Machina.Engine
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
-        public OSWindow WindowInterface { get; private set; }
+        public IWindow WindowInterface { get; private set; }
         public Painter Painter { get; }
 
         public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext, Painter painter)

@@ -70,5 +70,10 @@ namespace Machina.Engine
             var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
             Resized?.Invoke(windowSize);
         }
+
+        public void AddOnTextInputEvent(EventHandler<TextInputEventArgs> callback)
+        {
+            GameWindow.TextInput += callback;
+        }
     }
 }

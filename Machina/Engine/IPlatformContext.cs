@@ -2,7 +2,7 @@
 {
     public interface IPlatformContext
     {
-        public void OnCartridgeSetup(Cartridge cartridge, OSWindow window);
+        public void OnCartridgeSetup(Cartridge cartridge, IWindow window);
         public void OnGameConstructed(MachinaGame machinaGame);
     }
 }

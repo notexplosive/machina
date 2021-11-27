@@ -21,7 +21,7 @@ namespace Machina.Engine.Cartridges
         /// <param name="graphicsDevice">MonoGame GraphicsDevice, you might need this to build textures dynamically</param>
         public abstract void PrepareDynamicAssets(AssetLoader loader, MachinaRuntime runtime);
 
-        public void SetupSceneLayers(MachinaRuntime runtime, GameSpecification specification, OSWindow machinaWindow)
+        public void SetupSceneLayers(MachinaRuntime runtime, GameSpecification specification, IWindow machinaWindow)
         {
             BuildSceneLayers(runtime);
 

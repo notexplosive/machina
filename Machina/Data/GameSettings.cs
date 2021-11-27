@@ -24,7 +24,7 @@ namespace Machina.Data
         public float MusicVolumeAsFloat => Math.Clamp(musicVolume.State / 10f, 0, 1) * MasterVolume;
         public float SFXVolumeAsFloat => Math.Clamp(sfxVolume.State / 10f, 0, 1) * MasterVolume;
 
-        public void Apply(OSWindow window)
+        public void Apply(IWindow window)
         {
             var stateChanged = fullscreen.State != window.IsFullScreen;
             if (stateChanged)
@@ -35,7 +35,7 @@ namespace Machina.Data
             window.ApplyChanges();
         }
 
-        public void ApplyAndSave(MachinaFileSystem fileSystem, OSWindow window)
+        public void ApplyAndSave(MachinaFileSystem fileSystem, IWindow window)
         {
             Apply(window);
             SaveSettings(fileSystem);
