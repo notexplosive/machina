@@ -30,7 +30,7 @@ namespace Machina.Engine
 
         private static MouseCursor pendingCursor;
 
-        public MachinaGame(GameSpecification specification, GameCartridge gameCartridge, IPlatformContext platformContext)
+        public MachinaGame(GameSpecification specification, GameCartridge gameCartridge, IPlatformContext platformContext, string devContentPath = "")
         {
             this.specification = specification;
             this.gameCartridge = gameCartridge;
@@ -41,7 +41,7 @@ namespace Machina.Engine
             {
                 HardwareModeSwitch = false
             };
-            MachinaClient.Setup(new AssetLibrary(this), this.specification, graphics);
+            MachinaClient.Setup(new AssetLibrary(this), this.specification, graphics, devContentPath);
 
             this.platformContext.OnGameConstructed(this);
         }

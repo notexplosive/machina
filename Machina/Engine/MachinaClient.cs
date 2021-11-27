@@ -22,11 +22,11 @@ namespace Machina.Engine
         internal static LogBuffer LogBuffer { get; } = new LogBuffer();
         public static MachinaFileSystem FileSystem { get; private set; } = new MachinaFileSystem("Unknown");
 
-        public static void Setup(IAssetLibrary assetLibrary, GameSpecification specification, GraphicsDeviceManager graphics)
+        public static void Setup(IAssetLibrary assetLibrary, GameSpecification specification, GraphicsDeviceManager graphics, string devContentPath)
         {
             SoundEffectPlayer = new SoundEffectPlayer(specification.settings);
             Assets = assetLibrary;
-            FileSystem = new MachinaFileSystem(specification.gameTitle);
+            FileSystem = new MachinaFileSystem(specification.gameTitle, devContentPath);
             Graphics = graphics;
         }
 

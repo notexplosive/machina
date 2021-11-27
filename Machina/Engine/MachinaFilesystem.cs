@@ -7,10 +7,13 @@ namespace Machina.Engine
 {
     public class MachinaFileSystem
     {
-        public MachinaFileSystem(string gameTitle)
+        public MachinaFileSystem(string gameTitle, string contentDirectory = "")
         {
             this.AppDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "NotExplosive", gameTitle);
+
+            this.devPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", contentDirectory, "Content"));
+            MachinaClient.Print(this.devPath, Directory.Exists(this.devPath));
         }
 
         public async void WriteStringToAppData(string data, string path, bool skipDevPath = false,
@@ -26,9 +29,7 @@ namespace Machina.Engine
             {
                 if (!skipDevPath)
                 {
-                    var devContentPath =
-                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Content");
-                    var fullContentPath = Path.Combine(devContentPath, path);
+                    var fullContentPath = Path.Combine(this.devPath, path);
                     Directory.CreateDirectory(Path.GetDirectoryName(fullContentPath));
                     await File.WriteAllTextAsync(fullContentPath, data);
                     MachinaClient.Print("Saved:", fullContentPath);
@@ -44,6 +45,8 @@ namespace Machina.Engine
         /// Path to users AppData folder (or platform equivalent)
         /// </summary>
         public string AppDataPath { get; }
+
+        private readonly string devPath;
 
         public IEnumerable<string> GetFilesAt(string path, string suffix)
         {
