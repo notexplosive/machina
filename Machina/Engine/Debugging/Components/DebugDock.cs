@@ -73,7 +73,7 @@ namespace Machina.Engine.Debugging.Components
                 {
                     if (button == MouseButton.Left)
                     {
-                        app.Open(this.actor.scene.sceneLayers.DebugScene, this.windowManager);
+                        app.Launch(this.actor.scene.sceneLayers.DebugScene, this.windowManager);
                     }
                 };
 

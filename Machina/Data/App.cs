@@ -17,7 +17,7 @@ namespace Machina.Data
             this.windowBuilder = windowBuilder;
         }
 
-        public UIWindow Open(Scene creatingScene, WindowManager windowManager)
+        public UIWindow Launch(Scene parentScene, WindowManager windowManager)
         {
             if (this.isSingleton && this.latestInstance != null && this.latestInstance.IsOpen())
             {
@@ -25,7 +25,7 @@ namespace Machina.Data
                 return this.latestInstance;
             }
 
-            this.latestInstance = windowManager.CreateWindow(creatingScene, this.windowBuilder);
+            this.latestInstance = windowManager.CreateWindow(parentScene, this.windowBuilder);
             return this.latestInstance;
         }
     }
