@@ -12,7 +12,7 @@
     public class AssetLibrary : IAssetLibrary
     {
         private readonly Dictionary<string, IAsset> assets = new Dictionary<string, IAsset>();
-        private readonly ContentManager content;
+        private readonly ContentManager contentManager;
 
         private readonly Dictionary<string, SoundEffectInstance> soundEffectInstances =
             new Dictionary<string, SoundEffectInstance>();
@@ -23,12 +23,12 @@
 
         public AssetLibrary(MachinaGame game)
         {
-            this.content = game.Content;
+            this.contentManager = game.Content;
         }
 
-        public static AssetLoader GetStaticAssetLoadTree()
+        public AssetLoader GetStaticAssetLoadTree()
         {
-            var loadTree = new AssetLoader();
+            var loadTree = new AssetLoader(this);
             foreach (var imageName in GamePlatform.GetFilesAtContentDirectory("images"))
             {
                 loadTree.AddImagePath("images/" + Path.GetFileNameWithoutExtension(imageName));
@@ -117,7 +117,7 @@
         public void LoadTexture(string fullName)
         {
             var name = Path.GetFileName(fullName);
-            var texture = this.content.Load<Texture2D>(fullName);
+            var texture = this.contentManager.Load<Texture2D>(fullName);
             this.textures.Add(name, texture);
             Console.WriteLine("Loaded Texture: {0} {1}", name, this.textures[name].GetHashCode());
         }
@@ -126,7 +126,7 @@
         {
             var name = Path.GetFileName(fullName);
 
-            var spriteFont = this.content.Load<SpriteFont>(fullName);
+            var spriteFont = this.contentManager.Load<SpriteFont>(fullName);
             this.spriteFonts.Add(name, spriteFont);
             Console.WriteLine("Loaded SpriteFont: {0}", name);
         }
@@ -135,7 +135,7 @@
         {
             var name = Path.GetFileName(fullName);
 
-            var soundEffect = this.content.Load<SoundEffect>(fullName);
+            var soundEffect = this.contentManager.Load<SoundEffect>(fullName);
             this.soundEffects.Add(name, soundEffect);
             this.soundEffectInstances.Add(name, soundEffect.CreateInstance());
             Console.WriteLine("Loaded SoundEffect: {0}", name);

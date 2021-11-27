@@ -7,87 +7,15 @@ namespace Machina.Engine.Assets
 
     public class AssetLoader
     {
-        private abstract class UnloadedAsset
-        {
-            protected readonly string path;
-
-            protected UnloadedAsset(string path)
-            {
-                this.path = path;
-            }
-
-            public abstract void Load(AssetLibrary library);
-        }
-
-        private class UnloadedDrawLoopAssetCallback
-        {
-            private readonly Func<SpriteBatch, IAsset> callback;
-
-            public UnloadedDrawLoopAssetCallback(Func<SpriteBatch, IAsset> callback)
-            {
-                this.callback = callback;
-            }
-
-            public void Load(AssetLibrary library, SpriteBatch spriteBatch)
-            {
-                this.callback(spriteBatch);
-            }
-        }
-
-        private class UnloadedAssetCallback : UnloadedAsset
-        {
-            private readonly Func<IAsset> callback;
-
-            public UnloadedAssetCallback(string path, Func<IAsset> callback) : base(path)
-            {
-                this.callback = callback;
-            }
-
-            public override void Load(AssetLibrary library)
-            {
-                library.AddMachinaAsset(this.path, this.callback());
-            }
-        }
-
-        private class UnloadedTexture : UnloadedAsset
-        {
-            public UnloadedTexture(string path) : base(path)
-            {
-            }
-
-            public override void Load(AssetLibrary library)
-            {
-                library.LoadTexture(this.path);
-            }
-        }
-
-        private class UnloadedSound : UnloadedAsset
-        {
-            public UnloadedSound(string path) : base(path)
-            {
-            }
-
-            public override void Load(AssetLibrary library)
-            {
-                library.LoadSoundEffect(this.path);
-            }
-        }
-
-        private class UnloadedSpritefont : UnloadedAsset
-        {
-            public UnloadedSpritefont(string path) : base(path)
-            {
-            }
-
-            public override void Load(AssetLibrary library)
-            {
-                library.LoadSpriteFont(this.path);
-            }
-        }
-
         private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
         private readonly List<UnloadedDrawLoopAssetCallback> drawAssets = new List<UnloadedDrawLoopAssetCallback>();
+        private readonly AssetLibrary library;
         private int startingCount;
+
+        public AssetLoader(AssetLibrary library)
+        {
+            this.library = library;
+        }
 
         private void AddAsset(UnloadedAsset asset)
         {
@@ -164,6 +92,84 @@ namespace Machina.Engine.Assets
         public bool IsDoneDrawLoading()
         {
             return this.drawAssets.Count == 0;
+        }
+
+        private abstract class UnloadedAsset
+        {
+            protected readonly string path;
+
+            protected UnloadedAsset(string path)
+            {
+                this.path = path;
+            }
+
+            public abstract void Load(AssetLibrary library);
+        }
+
+        private class UnloadedDrawLoopAssetCallback
+        {
+            private readonly Func<SpriteBatch, IAsset> callback;
+
+            public UnloadedDrawLoopAssetCallback(Func<SpriteBatch, IAsset> callback)
+            {
+                this.callback = callback;
+            }
+
+            public void Load(AssetLibrary library, SpriteBatch spriteBatch)
+            {
+                this.callback(spriteBatch);
+            }
+        }
+
+        private class UnloadedAssetCallback : UnloadedAsset
+        {
+            private readonly Func<IAsset> callback;
+
+            public UnloadedAssetCallback(string path, Func<IAsset> callback) : base(path)
+            {
+                this.callback = callback;
+            }
+
+            public override void Load(AssetLibrary library)
+            {
+                library.AddMachinaAsset(this.path, this.callback());
+            }
+        }
+
+        private class UnloadedTexture : UnloadedAsset
+        {
+            public UnloadedTexture(string path) : base(path)
+            {
+            }
+
+            public override void Load(AssetLibrary library)
+            {
+                library.LoadTexture(this.path);
+            }
+        }
+
+        private class UnloadedSound : UnloadedAsset
+        {
+            public UnloadedSound(string path) : base(path)
+            {
+            }
+
+            public override void Load(AssetLibrary library)
+            {
+                library.LoadSoundEffect(this.path);
+            }
+        }
+
+        private class UnloadedSpritefont : UnloadedAsset
+        {
+            public UnloadedSpritefont(string path) : base(path)
+            {
+            }
+
+            public override void Load(AssetLibrary library)
+            {
+                library.LoadSpriteFont(this.path);
+            }
         }
     }
 }
