@@ -30,12 +30,12 @@ namespace Machina.Engine.Debugging.Components
                     titleActor =>
                     {
                         new BoundedTextRenderer(titleActor, "Machina Debug Dock",
-                            Runtime.defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center,
+                            MachinaClient.DefaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center,
                             VerticalAlignment.Center);
                     })
                 .SetMarginSize(new Point(this.dockMargin, this.dockMargin));
 
-            this.windowManager = new WindowManager(Runtime.defaultStyle, this.actor.transform.Depth - 100);
+            this.windowManager = new WindowManager(MachinaClient.DefaultStyle, this.actor.transform.Depth - 100);
 
             this.currentRow = AddRow();
         }

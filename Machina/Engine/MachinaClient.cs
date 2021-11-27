@@ -15,6 +15,7 @@ namespace Machina.Engine
     {
         public static SoundEffectPlayer SoundEffectPlayer { get; private set; } // Needs to be initialzed, should not be here!
         public static GraphicsDeviceManager Graphics { get; private set; } // Needs to be initialized, cannot provide a default
+        public static UIStyle DefaultStyle { get; private set; } // needs to be initialized
         public static NoiseBasedRNG RandomDirty { get; } = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
         public static FrameStep GlobalFrameStep { get; } = new FrameStep();
         public static IAssetLibrary Assets { get; private set; } = new EmptyAssetLibrary();
@@ -27,6 +28,22 @@ namespace Machina.Engine
             Assets = assetLibrary;
             FileSystem = new MachinaFileSystem(specification.gameTitle);
             Graphics = graphics;
+        }
+
+        public static void SetupDefaultStyle()
+        {
+            DefaultStyle = new UIStyle(
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
+                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
+                MachinaClient.Assets.GetSpriteFont("DefaultFontSmall"),
+                MachinaClient.Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
+                MachinaClient.Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
+            );
         }
 
         /// <summary>

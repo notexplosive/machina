@@ -37,15 +37,15 @@ namespace Machina.Engine.Cartridges
             new LayoutGroup(rootActor, Orientation.Vertical)
                 .AddHorizontallyStretchedElement("title", 64, titleActor =>
                 {
-                    new BoundedTextRenderer(titleActor, titleText, runtime.defaultStyle.uiElementFont);
+                    new BoundedTextRenderer(titleActor, titleText, MachinaClient.DefaultStyle.uiElementFont);
                 })
                 .AddHorizontallyStretchedElement("contact-info", 80, contactInfoActor =>
                 {
-                    new BoundedTextRenderer(contactInfoActor, contactInfoText, runtime.defaultStyle.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Top, Overflow.Ignore);
+                    new BoundedTextRenderer(contactInfoActor, contactInfoText, MachinaClient.DefaultStyle.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Top, Overflow.Ignore);
                 })
                 .AddBothStretchedElement("content", contentActor =>
                 {
-                    new BoundedTextRenderer(contentActor, errorText, runtime.defaultStyle.uiElementFont);
+                    new BoundedTextRenderer(contentActor, errorText, MachinaClient.DefaultStyle.uiElementFont);
                 });
         }
     }

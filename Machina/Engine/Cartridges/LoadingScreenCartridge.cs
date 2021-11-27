@@ -21,16 +21,16 @@ namespace Machina.Engine.Cartridges
 
         public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, WindowInterface machinaWindow, Action<GameCartridge> onFinished)
         {
-            var assetTree = assets.GetStaticAssetLoadTree();
-            gameCartridge.PrepareDynamicAssets(assetTree, runtime);
-            PrepareDefaultStyle(assetTree, runtime.Painter);
+            var loader = assets.GetStaticAssetLoadTree();
+            LoadDefaultStyle(loader, assets, runtime.Painter);
+            gameCartridge.PrepareDynamicAssets(loader, runtime);
 
             var loadingScreen =
-                new LoadingScreen(assetTree);
+                new LoadingScreen(loader);
 
             var introScene = SceneLayers.AddNewScene();
-            var loader = introScene.AddActor("Loader");
-            var adHoc = new AdHoc(loader);
+            var loaderActor = introScene.AddActor("Loader");
+            var adHoc = new AdHoc(loaderActor);
 
             adHoc.onPreDraw += (spriteBatch) =>
             {
@@ -67,30 +67,36 @@ namespace Machina.Engine.Cartridges
             };
         }
 
-        private void PrepareDefaultStyle(AssetLoader loader, Painter painter)
+        private void LoadDefaultStyle(AssetLoader loader, AssetLibrary library, Painter painter)
         {
-            loader.AddMachinaAssetCallback("ui-button",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), painter));
-            loader.AddMachinaAssetCallback("ui-button-hover",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
+            loader.ForceLoadAsset("images/button-ninepatches");
+            loader.ForceLoadAsset("images/window");
+            loader.ForceLoadAsset("fonts/DefaultFontSmall");
+
+            library.AddMachinaAsset("ui-button",
+                new NinepatchSheet("button-ninepatches", new Rectangle(0, 0, 24, 24), new Rectangle(8, 8, 8, 8), painter));
+            library.AddMachinaAsset("ui-button-hover",
+                new NinepatchSheet("button-ninepatches", new Rectangle(24, 0, 24, 24),
                     new Rectangle(8 + 24, 8, 8, 8), painter));
-            loader.AddMachinaAssetCallback("ui-button-press",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
+            library.AddMachinaAsset("ui-button-press",
+                new NinepatchSheet("button-ninepatches", new Rectangle(48, 0, 24, 24),
                     new Rectangle(8 + 48, 8, 8, 8), painter));
-            loader.AddMachinaAssetCallback("ui-slider-ninepatch",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
+            library.AddMachinaAsset("ui-slider-ninepatch",
+                new NinepatchSheet("button-ninepatches", new Rectangle(0, 144, 24, 24),
                     new Rectangle(8, 152, 8, 8), painter));
-            loader.AddMachinaAssetCallback("ui-checkbox-checkmark-image",
-                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
-            loader.AddMachinaAssetCallback("ui-radio-fill-image",
-                () => new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
-            loader.AddMachinaAssetCallback("ui-checkbox-radio-spritesheet",
-                () => new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
-            loader.AddMachinaAssetCallback("ui-textbox-ninepatch",
-                () => new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
+            library.AddMachinaAsset("ui-checkbox-checkmark-image",
+                new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 6));
+            library.AddMachinaAsset("ui-radio-fill-image",
+                new Image(new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)), 7));
+            library.AddMachinaAsset("ui-checkbox-radio-spritesheet",
+                new GridBasedSpriteSheet("button-ninepatches", new Point(24, 24)));
+            library.AddMachinaAsset("ui-textbox-ninepatch",
+                new NinepatchSheet("button-ninepatches", new Rectangle(0, 96, 24, 24),
                     new Rectangle(8, 104, 8, 8), painter));
-            loader.AddMachinaAssetCallback("ui-window-ninepatch",
-                () => new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52), painter));
+            library.AddMachinaAsset("ui-window-ninepatch",
+                new NinepatchSheet("window", new Rectangle(0, 0, 96, 96), new Rectangle(10, 34, 76, 52), painter));
+
+            MachinaClient.SetupDefaultStyle();
         }
     }
 }

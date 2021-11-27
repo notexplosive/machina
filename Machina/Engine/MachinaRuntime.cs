@@ -24,7 +24,6 @@ namespace Machina.Engine
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
-        public UIStyle defaultStyle;
         public WindowInterface WindowInterface { get; private set; }
         public Painter Painter { get; }
 
@@ -131,21 +130,6 @@ namespace Machina.Engine
 #if DEBUG
             DebugLevel = DebugLevel.Passive;
 #endif
-
-            var defaultFont = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
-
-            defaultStyle = new UIStyle(
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button"),
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-hover"),
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-button-press"),
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-textbox-ninepatch"),
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-window-ninepatch"),
-                MachinaClient.Assets.GetMachinaAsset<NinepatchSheet>("ui-slider-ninepatch"),
-                defaultFont,
-                MachinaClient.Assets.GetMachinaAsset<SpriteSheet>("ui-checkbox-radio-spritesheet"),
-                MachinaClient.Assets.GetMachinaAsset<Image>("ui-checkbox-checkmark-image"),
-                MachinaClient.Assets.GetMachinaAsset<Image>("ui-radio-fill-image")
-            );
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
             gameCartridge.SetupSceneLayers(this, specification, WindowInterface);

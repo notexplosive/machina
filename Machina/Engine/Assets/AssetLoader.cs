@@ -2,12 +2,13 @@ namespace Machina.Engine.Assets
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Data;
     using Microsoft.Xna.Framework.Graphics;
 
     public class AssetLoader
     {
-        private readonly List<UnloadedAsset> assets = new List<UnloadedAsset>();
+        private readonly List<UnloadedAsset> unloadedAssets = new List<UnloadedAsset>();
         private readonly List<UnloadedDrawLoopAssetCallback> drawAssets = new List<UnloadedDrawLoopAssetCallback>();
         private readonly AssetLibrary library;
         private int totalCount;
@@ -19,7 +20,7 @@ namespace Machina.Engine.Assets
 
         private void AddAsset(UnloadedAsset asset)
         {
-            this.assets.Add(asset);
+            this.unloadedAssets.Add(asset);
             this.totalCount++;
         }
 
@@ -46,13 +47,13 @@ namespace Machina.Engine.Assets
 
         public void UpdateLoadNextThing()
         {
-            if (this.assets.Count == 0)
+            if (this.unloadedAssets.Count == 0)
             {
                 return;
             }
 
-            var assetToLoad = this.assets[0];
-            this.assets.RemoveAt(0);
+            var assetToLoad = this.unloadedAssets[0];
+            this.unloadedAssets.RemoveAt(0);
             assetToLoad.Load(library);
         }
 
@@ -71,12 +72,12 @@ namespace Machina.Engine.Assets
 
         public bool IsDoneUpdateLoading()
         {
-            return this.assets.Count == 0;
+            return this.unloadedAssets.Count == 0;
         }
 
         public float Progress()
         {
-            return 1f - (float) (this.assets.Count + this.drawAssets.Count) / this.totalCount;
+            return 1f - (float) (this.unloadedAssets.Count + this.drawAssets.Count) / this.totalCount;
         }
 
         public void AddMachinaAssetCallback(string assetPath, Func<IAsset> callback)
@@ -89,6 +90,32 @@ namespace Machina.Engine.Assets
             AddDrawAsset(new UnloadedDrawLoopAssetCallback(callback));
         }
 
+        public void ForceLoadAsset(string assetPath)
+        {
+            int indexOfAsset = 0;
+            bool found = false;
+            foreach (var unloadedAsset in this.unloadedAssets)
+            {
+                if (assetPath == unloadedAsset.assetPath)
+                {
+                    found = true;
+                    break;
+                }
+                indexOfAsset++;
+            }
+
+            if (found)
+            {
+                this.unloadedAssets[indexOfAsset].Load(this.library);
+                this.unloadedAssets.RemoveAt(indexOfAsset);
+                return;
+            }
+            else
+            {
+                throw new ArgumentException($"Could not find unloaded asset {assetPath}");
+            }
+        }
+
         public bool IsDoneDrawLoading()
         {
             return this.drawAssets.Count == 0;
@@ -96,11 +123,11 @@ namespace Machina.Engine.Assets
 
         private abstract class UnloadedAsset
         {
-            protected readonly string path;
+            public readonly string assetPath;
 
             protected UnloadedAsset(string path)
             {
-                this.path = path;
+                this.assetPath = path;
             }
 
             public abstract void Load(AssetLibrary library);
@@ -132,7 +159,7 @@ namespace Machina.Engine.Assets
 
             public override void Load(AssetLibrary library)
             {
-                library.AddMachinaAsset(this.path, this.callback());
+                library.AddMachinaAsset(this.assetPath, this.callback());
             }
         }
 
@@ -144,7 +171,7 @@ namespace Machina.Engine.Assets
 
             public override void Load(AssetLibrary library)
             {
-                library.LoadTexture(this.path);
+                library.LoadTexture(this.assetPath);
             }
         }
 
@@ -156,7 +183,7 @@ namespace Machina.Engine.Assets
 
             public override void Load(AssetLibrary library)
             {
-                library.LoadSoundEffect(this.path);
+                library.LoadSoundEffect(this.assetPath);
             }
         }
 
@@ -168,7 +195,7 @@ namespace Machina.Engine.Assets
 
             public override void Load(AssetLibrary library)
             {
-                library.LoadSpriteFont(this.path);
+                library.LoadSpriteFont(this.assetPath);
             }
         }
     }
