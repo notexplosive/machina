@@ -18,7 +18,7 @@ namespace Machina.Data
         public readonly NinepatchRects rects;
         private readonly Texture2D[] textures;
 
-        public NinepatchSheet(Texture2D sourceTexture, Rectangle outerRect, Rectangle innerRect, MachinaRuntime runtime)
+        public NinepatchSheet(Texture2D sourceTexture, Rectangle outerRect, Rectangle innerRect, Painter painter)
         {
             this.originalTexture = sourceTexture;
             Debug.Assert(sourceTexture.Width >= outerRect.Width, "Texture is to small");
@@ -32,14 +32,14 @@ namespace Machina.Data
                 var rect = this.rects.raw[i];
                 if (rect.Width * rect.Height > 0)
                 {
-                    var cropTexture = runtime.Painter.CropTexture(rect, sourceTexture);
+                    var cropTexture = painter.CropTexture(rect, sourceTexture);
                     this.textures[i] = cropTexture;
                 }
             }
         }
 
-        public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect, MachinaRuntime runtime)
-            : this(MachinaClient.Assets.GetTexture(textureAssetName), outerRect, innerRect, runtime)
+        public NinepatchSheet(string textureAssetName, Rectangle outerRect, Rectangle innerRect, Painter painter)
+            : this(MachinaClient.Assets.GetTexture(textureAssetName), outerRect, innerRect, painter)
         {
         }
 
