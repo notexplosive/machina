@@ -47,6 +47,11 @@ namespace Machina.Engine
 
         public Cartridge CurrentCartridge { get; private set; }
 
+        /// <summary>
+        /// Since the MachinaRuntime's RenderTarget is the screen, the correct value here is null
+        /// </summary>
+        public RenderTarget2D DefaultRenderTarget => null;
+
         public void RunDemo(string demoName)
         {
             if (CurrentCartridge is GameCartridge gameCartridge)

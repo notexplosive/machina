@@ -1,4 +1,6 @@
-﻿namespace Machina.Engine
+﻿using Microsoft.Xna.Framework.Graphics;
+
+namespace Machina.Engine
 {
     public class EmptyMachinaRuntime : IMachinaRuntime
     {
@@ -11,6 +13,8 @@
         public Cartridge CurrentCartridge => null;
 
         public IPlatformContext PlatformContext => null;
+
+        public RenderTarget2D DefaultRenderTarget => null;
 
         public void Quit()
         {

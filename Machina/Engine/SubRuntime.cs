@@ -1,5 +1,6 @@
 ﻿using Machina.Data;
 using Machina.Engine.Cartridges;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Engine
 {
@@ -18,6 +19,7 @@ namespace Machina.Engine
             PlatformContext = new FenestraPlatformContext();
         }
 
+        public RenderTarget2D DefaultRenderTarget => this.window.Canvas.RenderTarget;
         public IPlatformContext PlatformContext { get; private set; }
         public Painter Painter => this.parent.Painter;
 
