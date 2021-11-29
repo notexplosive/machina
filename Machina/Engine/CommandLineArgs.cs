@@ -143,9 +143,6 @@ namespace Machina.Engine
             }
 
             this.onFinishExecute?.Invoke();
-
-            this.flagArgTable.Clear();
-            this.valueArgTable.Clear();
         }
 
         /// <summary>
@@ -170,9 +167,6 @@ namespace Machina.Engine
             }
 
             this.onFinishExecute?.Invoke();
-
-            this.earlyFlagArgTable.Clear();
-            this.earlyValueArgTable.Clear();
         }
 
         private class FlagArg

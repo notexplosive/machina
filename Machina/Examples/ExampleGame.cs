@@ -14,7 +14,7 @@ namespace Machina.Examples
         {
         }
 
-        public override void OnGameLoad(GameSpecification specification, IMachinaRuntime runtime)
+        public override void OnGameLoad(GameSpecification specification, MachinaRuntime runtime)
         {
             var gameScene = SceneLayers.AddNewScene();
 

@@ -18,7 +18,7 @@ namespace Machina.Engine.Cartridges
             this.exception = exception;
         }
 
-        public override void OnGameLoad(GameSpecification specification, IMachinaRuntime runtime)
+        public override void OnGameLoad(GameSpecification specification, MachinaRuntime runtime)
         {
             SceneLayers.BackgroundColor = Color.Maroon;
             var scene = SceneLayers.AddNewScene();

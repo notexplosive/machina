@@ -43,7 +43,6 @@ namespace Machina.Components
         ///     Top left corner of the Canvas, assuming no rotation
         /// </summary>
         public Point TopLeftCorner => this.boundingRect.Rect.Location;
-        public RenderTarget2D RenderTarget => this.renderTarget;
 
         private void BuildRenderTarget(Point newSize)
         {
@@ -75,7 +74,7 @@ namespace Machina.Components
 
             this.DrawAdditionalContent?.Invoke(spriteBatch);
 
-            Runtime.Painter.ClearRenderTarget(Runtime);
+            Runtime.Painter.ClearRenderTarget();
         }
 
         public override void PreDraw(SpriteBatch spriteBatch)

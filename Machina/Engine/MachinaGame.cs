@@ -62,7 +62,7 @@ namespace Machina.Engine
         protected override void LoadContent()
         {
             // GraphicsDevice is not available until now
-            var windowInterface = new OSWindow(this.specification.settings.startingWindowSize, Window, MachinaClient.Graphics, GraphicsDevice);
+            var windowInterface = new WindowInterface(this.specification.settings.startingWindowSize, Window, MachinaClient.Graphics, GraphicsDevice);
             Runtime = new MachinaRuntime(this, this.specification, platformContext, new Painter(GraphicsDevice));
             Runtime.LateSetup(this.gameCartridge, windowInterface);
         }

@@ -16,16 +16,16 @@ namespace Machina.Engine
     {
         private readonly GameSpecification specification;
         private readonly MachinaGame game;
-        public IPlatformContext PlatformContext { get; }
+        public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
-        public IWindow WindowInterface { get; private set; }
+        public WindowInterface WindowInterface { get; private set; }
         public Painter Painter { get; }
 
         public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext, Painter painter)
         {
             this.specification = specification;
             this.game = game;
-            this.PlatformContext = platformContext;
+            this.platformContext = platformContext;
             this.Painter = painter;
         }
 
@@ -36,7 +36,7 @@ namespace Machina.Engine
         {
             CurrentCartridge = cartridge;
             CurrentCartridge.Setup(this, this.specification);
-            CurrentCartridge.Viewport.SetWindowSize(WindowInterface.CurrentSize);
+            CurrentCartridge.CurrentGameCanvas.SetWindowSize(WindowInterface.CurrentWindowSize);
             MachinaClient.Graphics.ApplyChanges();
         }
 
@@ -46,11 +46,6 @@ namespace Machina.Engine
         }
 
         public Cartridge CurrentCartridge { get; private set; }
-
-        /// <summary>
-        /// Since the MachinaRuntime's RenderTarget is the screen, the correct value here is null
-        /// </summary>
-        public RenderTarget2D DefaultRenderTarget => null;
 
         public void RunDemo(string demoName)
         {
@@ -67,7 +62,7 @@ namespace Machina.Engine
             }
         }
 
-        public void LateSetup(GameCartridge gameCartridge, OSWindow windowInterface)
+        public void LateSetup(GameCartridge gameCartridge, WindowInterface windowInterface)
         {
             Console.Out.WriteLine("Constructing SpriteBatch");
             this.WindowInterface = windowInterface;
@@ -75,7 +70,7 @@ namespace Machina.Engine
             Console.Out.WriteLine("Applying settings");
             this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, windowInterface);
             Console.Out.WriteLine("Settings Window Size");
-            this.WindowInterface.SetSize(this.specification.settings.startingWindowSize);
+            this.WindowInterface.SetWindowSize(this.specification.settings.startingWindowSize);
 
             var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
             InsertCartridge(loadingCartridge);
@@ -85,11 +80,11 @@ namespace Machina.Engine
         internal void Draw()
         {
             CurrentCartridge.SceneLayers.PreDraw(this.Painter.SpriteBatch);
-            CurrentCartridge.Viewport.SetRenderTargetToCanvas(this.Painter);
+            CurrentCartridge.CurrentGameCanvas.SetRenderTargetToCanvas(this.Painter);
             this.Painter.Clear(CurrentCartridge.SceneLayers.BackgroundColor);
 
             CurrentCartridge.SceneLayers.DrawOnCanvas(this.Painter.SpriteBatch);
-            CurrentCartridge.Viewport.DrawCanvasToScreen(this, this.Painter);
+            CurrentCartridge.CurrentGameCanvas.DrawCanvasToScreen(this, this.Painter);
             CurrentCartridge.SceneLayers.DrawDebugScene(this.Painter.SpriteBatch);
         }
 

@@ -5,7 +5,7 @@ namespace Machina.Engine
     public class GameSpecification
     {
         public readonly string gameTitle;
-        public CommandLineArgs commandLineArgs { get; }
+        public readonly CommandLineArgs commandLineArgs;
         /// <summary>
         /// Settings must be readonly, other things hold references to it and assume that they'll stay up to date
         /// </summary>

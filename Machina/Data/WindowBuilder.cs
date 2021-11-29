@@ -9,6 +9,7 @@ namespace Machina.Data
     public class WindowBuilder
     {
         private readonly Point contentSize;
+        private readonly List<Action<Scene>> perLayerSceneFunctions = new List<Action<Scene>>();
         private bool canBeResized;
         private SpriteFrame icon;
         private bool isScrollable;
@@ -21,7 +22,6 @@ namespace Machina.Data
         private WindowAction onMinimized;
         private Func<bool> shouldAllowKeyboardEventsLambda = () => false;
         private Vector2 startingPosition;
-        private CartridgeBundle? cartridgeBundle;
 
         private string title = string.Empty;
 
@@ -39,7 +39,7 @@ namespace Machina.Data
         public UIWindow Build(Scene creatingScene, UIStyle style)
         {
             var window = new UIWindow(creatingScene, this.contentSize, CanBeClosed, CanBeMaximized, CanBeMinimized,
-                this.icon, style, cartridgeBundle);
+                this.icon, style);
 
             window.Closed += this.onClosed;
             window.Minimized += this.onMinimized;
@@ -63,12 +63,6 @@ namespace Machina.Data
             window.sceneRenderer.SetShouldAllowKeyboardEventsLambda(this.shouldAllowKeyboardEventsLambda);
 
             return window;
-        }
-
-        public WindowBuilder SetCartridgeBundle(CartridgeBundle cartridgeBundle)
-        {
-            this.cartridgeBundle = cartridgeBundle;
-            return this;
         }
 
         public WindowBuilder Title(string title)
@@ -118,7 +112,7 @@ namespace Machina.Data
 
         public WindowBuilder DestroyViaCloseButton()
         {
-            return OnClose(win => { win.Close(); });
+            return OnClose(win => { win.Destroy(); });
         }
 
         public WindowBuilder OnMinimize(WindowAction onMinimized)

@@ -1,20 +1,18 @@
 ﻿using Machina.Components;
 using Machina.Engine;
-using Machina.Engine.Cartridges;
 using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace Machina.Data
 {
     public delegate void WindowAction(UIWindow window);
 
-    public class UIWindow : IWindow
+    public class UIWindow
     {
         /// <summary>
         ///     Actor for the "Canvas" portion of the window
         /// </summary>
-        public Actor canvasActor;
+        public readonly Actor canvasActor;
 
         /// <summary>
         ///     LayoutGroup of the "Content" area of the window
@@ -22,7 +20,6 @@ namespace Machina.Data
         private readonly LayoutGroup contentGroup;
 
         private readonly int margin = 10;
-        public event Action<Point> Resized;
         private readonly BoundingRect rootBoundingRect;
 
         /// <summary>
@@ -30,7 +27,10 @@ namespace Machina.Data
         /// </summary>
         public readonly Transform rootTransform;
 
-        public readonly SceneLayers sceneLayers;
+        /// <summary>
+        ///     Primary scene of the content within the window
+        /// </summary>
+        public readonly Scene scene;
         /*
          * [_Header_________]
          * | C O N T E N T s|
@@ -45,17 +45,15 @@ namespace Machina.Data
         public readonly SceneRenderer sceneRenderer;
         private readonly UIStyle style;
         private BoundedTextRenderer titleTextRenderer;
-        public Scene PrimaryScene => this.sceneRenderer.PrimaryScene;
-
-        public bool IsFullScreen { get; private set; }
 
         public UIWindow(Scene parentScene, Point contentSize, bool canBeClosed, bool canBeMaximized,
-            bool canbeMinimized, SpriteFrame icon, UIStyle style, CartridgeBundle? cartridgeBundle)
+            bool canbeMinimized, SpriteFrame icon, UIStyle style)
         {
             this.style = style;
+            var headerSize = 32;
             var windowRoot = parentScene.AddActor("Window");
-            this.rootBoundingRect = new BoundingRect(windowRoot, Point.Zero);
-            SetSize(contentSize);
+            new BoundingRect(windowRoot,
+                contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
 
             var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
 
@@ -109,6 +107,7 @@ namespace Machina.Data
             // These variables with _local at the end of their name are later assigned to readonly values
             // The locals are assigned in lambdas which is illegal for readonly assignment
             SceneRenderer sceneRenderer_local = null;
+            Actor canvasActor_local = null;
             LayoutGroup contentGroup_local = null;
 
             // "Content" means everything below the header
@@ -120,29 +119,19 @@ namespace Machina.Data
                     contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
                             .AddBothStretchedElement("Canvas", viewActor =>
                             {
-                                this.canvasActor = viewActor;
+                                canvasActor_local = viewActor;
                                 new BoundedCanvas(viewActor);
                                 new Hoverable(viewActor);
                                 new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
-                                sceneRenderer_local = new SceneRenderer(viewActor, true);
-                                var subruntime = new SubRuntime(parentScene.sceneLayers.Runtime, this);
-                                if (!cartridgeBundle.HasValue)
-                                {
-                                    sceneRenderer_local.SceneLayers = new SceneLayers(sceneRenderer_local, subruntime);
-                                    sceneRenderer_local.SceneLayers.AddNewScene();
-                                }
-                                else
-                                {
-                                    subruntime.InsertCartridge(cartridgeBundle.Value.cartridge, cartridgeBundle.Value.specification);
-                                    sceneRenderer_local.SceneLayers = cartridgeBundle.Value.cartridge.SceneLayers;
-                                }
+                                sceneRenderer_local = new SceneRenderer(viewActor);
                             })
                         ;
                 })
                 ;
 
             this.sceneRenderer = sceneRenderer_local;
-            this.sceneLayers = sceneRenderer_local.SceneLayers;
+            this.canvasActor = canvasActor_local;
+            this.scene = this.sceneRenderer.primaryScene;
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
             this.contentGroup = contentGroup_local;
@@ -199,44 +188,30 @@ namespace Machina.Data
                 new NinepatchRenderer(scrollbarActor, this.style.buttonDefault);
 
                 scrollbar_local = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(),
-                    PrimaryScene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
+                    this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
 
                 // Scrollbar listener could be applied to any actor, but we'll just create one in this case
-                new ScrollbarListener(PrimaryScene.AddActor("Scrollbar Listener"), scrollbar_local);
+                new ScrollbarListener(this.scene.AddActor("Scrollbar Listener"), scrollbar_local);
             });
 
             Scrollbar = scrollbar_local;
         }
 
-
         public BoundingRectResizer BecomeResizable(Point? minSize, Point? maxSize)
         {
             new Hoverable(this.rootTransform.actor);
-            var resizer = new BoundingRectResizer(this.rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize,
+            return new BoundingRectResizer(this.rootTransform.actor, new XYPair<int>(this.margin, this.margin), minSize,
                 maxSize, rect =>
                 {
                     rect.Y += this.margin;
                     rect.Height -= this.margin;
                     return rect;
                 });
-            resizer.Resized += (sender, eventArgs) =>
-            {
-                Resized?.Invoke(eventArgs.NewSize.ToPoint());
-            };
-            return resizer;
         }
 
-        public void SetSize(Point contentSize)
+        public void Destroy()
         {
-            var headerSize = 32;
-            this.rootBoundingRect.SetSize(contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
-        }
-
-        public Point CurrentSize => this.canvasActor.GetComponent<BoundingRect>().Size;
-
-        public void Close()
-        {
-            foreach (var scene in this.sceneLayers.AllScenes())
+            foreach (var scene in this.scene.sceneLayers.AllScenes())
             {
                 scene.DeleteAllActors();
             }
@@ -244,25 +219,14 @@ namespace Machina.Data
             this.rootTransform.actor.Destroy();
         }
 
+        public void Delete()
+        {
+            this.rootTransform.actor.Delete();
+        }
+
         public bool IsOpen()
         {
             return !this.rootTransform.actor.IsDestroyed;
-        }
-
-        public void SetFullscreen(bool fullscreen)
-        {
-            IsFullScreen = fullscreen;
-            MachinaClient.Print("Not implemented");
-        }
-
-        public void ApplyChanges()
-        {
-            MachinaClient.Print("Apply changes (no op)");
-        }
-
-        public void AddOnTextInputEvent(EventHandler<TextInputEventArgs> callback)
-        {
-            MachinaClient.Print("Add OnTextInputEvent (no op??)");
         }
     }
 }

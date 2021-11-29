@@ -14,12 +14,12 @@ namespace Machina.Engine.Cartridges
         {
         }
 
-        public override void OnGameLoad(GameSpecification specification, IMachinaRuntime runtime)
+        public override void OnGameLoad(GameSpecification specification, MachinaRuntime runtime)
         {
             SceneLayers.BackgroundColor = Color.Black;
         }
 
-        public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, IWindow window, Action<GameCartridge> onFinished)
+        public void PrepareLoadingScreen(GameCartridge gameCartridge, MachinaRuntime runtime, AssetLibrary assets, WindowInterface machinaWindow, Action<GameCartridge> onFinished)
         {
             var loader = assets.GetStaticAssetLoadTree();
             LoadDefaultStyle(loader, assets, runtime.Painter);
@@ -46,7 +46,7 @@ namespace Machina.Engine.Cartridges
 
             adHoc.onDraw += (spriteBatch) =>
             {
-                loadingScreen.Draw(spriteBatch, window.CurrentSize);
+                loadingScreen.Draw(spriteBatch, machinaWindow.CurrentWindowSize);
             };
 
             adHoc.onUpdate += (dt) =>

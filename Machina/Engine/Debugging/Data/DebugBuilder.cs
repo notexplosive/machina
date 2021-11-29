@@ -46,7 +46,7 @@ namespace Machina.Engine.Debugging.Data
                     .DestroyViaCloseButton()
                     .OnLaunch(window =>
                     {
-                        var sceneGraphActor = window.PrimaryScene.AddActor("SceneGraphActor");
+                        var sceneGraphActor = window.scene.AddActor("SceneGraphActor");
                         new BoundingRect(sceneGraphActor, Point.Zero);
                         new SceneGraphData(sceneGraphActor, sceneLayers);
                         new Hoverable(sceneGraphActor);
@@ -61,8 +61,8 @@ namespace Machina.Engine.Debugging.Data
                     .Title("Machina Console")
                     .OnLaunch(window =>
                     {
-                        var consoleActor = window.PrimaryScene.AddActor("StaticConsole");
-                        new WindowedConsoleRenderer(consoleActor, window.Scrollbar, sceneLayers.Runtime);
+                        var consoleActor = window.scene.AddActor("StaticConsole");
+                        new WindowedConsoleRenderer(consoleActor, window.Scrollbar);
                     })));
 
             return dock;

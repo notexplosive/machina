@@ -68,7 +68,7 @@ namespace Machina.Engine.Debugging.Components
                             .Title(hoveredActor.name)
                             .OnLaunch(window =>
                             {
-                                var renderActor = window.PrimaryScene.AddActor("renderActor");
+                                var renderActor = window.scene.AddActor("renderActor");
                                 new RemoteActorRenderer(renderActor, hoveredActor, true);
                             })
                     );

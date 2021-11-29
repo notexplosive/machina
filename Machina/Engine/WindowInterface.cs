@@ -4,10 +4,7 @@ namespace Machina.Engine
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    /// <summary>
-    /// Actual Window used to render the whole game (as opposed to a UIWindow)
-    /// </summary>
-    public class OSWindow : IWindow
+    public class WindowInterface
     {
         private readonly Point startingWindowSize;
         private readonly GraphicsDeviceManager graphics;
@@ -16,7 +13,8 @@ namespace Machina.Engine
         public event Action<Point> Resized;
         public GameWindow GameWindow { get; }
 
-        public OSWindow(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics, GraphicsDevice device)
+        public WindowInterface(Point startingWindowSize, GameWindow window, GraphicsDeviceManager graphics,
+            GraphicsDevice device)
         {
             this.startingWindowSize = startingWindowSize;
             this.graphics = graphics;
@@ -27,11 +25,11 @@ namespace Machina.Engine
             window.ClientSizeChanged += OnResize;
         }
 
-        public Point CurrentSize => new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
+        public Point CurrentWindowSize => new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
 
         public bool IsFullScreen => this.graphics.IsFullScreen;
 
-        public void SetSize(Point windowSize)
+        public void SetWindowSize(Point windowSize)
         {
             MachinaClient.Print("Window size changed to", windowSize);
             if (!GamePlatform.IsAndroid)
@@ -69,11 +67,6 @@ namespace Machina.Engine
         {
             var windowSize = new Point(this.GameWindow.ClientBounds.Width, this.GameWindow.ClientBounds.Height);
             Resized?.Invoke(windowSize);
-        }
-
-        public void AddOnTextInputEvent(EventHandler<TextInputEventArgs> callback)
-        {
-            GameWindow.TextInput += callback;
         }
     }
 }

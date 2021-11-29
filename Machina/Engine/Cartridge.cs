@@ -13,7 +13,7 @@ namespace Machina.Engine
         private bool hasBeenSetup = false;
         public SceneLayers SceneLayers { get; private set; }
         public SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
-        public GameViewport Viewport => this.SceneLayers.gameCanvas as GameViewport;
+        public GameViewport CurrentGameCanvas => this.SceneLayers.gameCanvas as GameViewport;
         public Stack<ILogger> loggerStack = new Stack<ILogger>();
 
         public ILogger Logger
@@ -43,15 +43,15 @@ namespace Machina.Engine
             Random = new SeededRandom();
         }
 
-        public void Setup(IMachinaRuntime runtime, GameSpecification specification)
+        public void Setup(MachinaRuntime runtime, GameSpecification specification)
         {
             if (!this.hasBeenSetup)
             {
                 BuildSceneLayers(runtime);
-                Viewport.BuildCanvas(runtime.Painter);
+                CurrentGameCanvas.BuildCanvas(runtime.Painter);
 
-                runtime.PlatformContext.OnCartridgeSetup(this, runtime.WindowInterface);
-                runtime.WindowInterface.Resized += (size) => Viewport.SetWindowSize(size);
+                runtime.platformContext.OnCartridgeSetup(this, runtime.WindowInterface);
+                runtime.WindowInterface.Resized += (size) => CurrentGameCanvas.SetWindowSize(size);
 
                 OnGameLoad(specification, runtime);
 
@@ -64,9 +64,9 @@ namespace Machina.Engine
         /// </summary>
         /// <param name="specification"></param>
         /// <param name="runtime"></param>
-        public abstract void OnGameLoad(GameSpecification specification, IMachinaRuntime runtime);
+        public abstract void OnGameLoad(GameSpecification specification, MachinaRuntime runtime);
 
-        protected void BuildSceneLayers(IMachinaRuntime runtime)
+        protected void BuildSceneLayers(MachinaRuntime runtime)
         {
             if (SceneLayers == null)
             {

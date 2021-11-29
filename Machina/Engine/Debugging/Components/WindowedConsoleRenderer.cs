@@ -13,14 +13,12 @@ namespace Machina.Engine.Debugging.Components
         private readonly SpriteFont font;
         public readonly List<string> lines = new List<string>();
         private readonly Scrollbar scrollbar;
-        private readonly IMachinaRuntime parentRuntime;
 
-        public WindowedConsoleRenderer(Actor actor, Scrollbar scrollbar, IMachinaRuntime parentRuntime) : base(actor)
+        public WindowedConsoleRenderer(Actor actor, Scrollbar scrollbar) : base(actor)
         {
             this.font = MachinaClient.Assets.GetSpriteFont("DefaultFontSmall");
             this.scrollbar = scrollbar;
-            this.parentRuntime = parentRuntime;
-            parentRuntime.CurrentCartridge.PushLogger(this);
+            Runtime.CurrentCartridge.PushLogger(this);
             MachinaClient.Print("Logger pushed");
         }
 
@@ -40,7 +38,7 @@ namespace Machina.Engine.Debugging.Components
 
         public override void OnDeleteFinished()
         {
-            this.parentRuntime.CurrentCartridge.PopLogger();
+            Runtime.CurrentCartridge.PopLogger();
             MachinaClient.Print("Logger popped");
         }
 

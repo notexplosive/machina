@@ -28,9 +28,9 @@ namespace Machina.Engine
             return new Texture2D(GraphicsDevice, size.X, size.Y);
         }
 
-        public void ClearRenderTarget(IMachinaRuntime runtime)
+        public void ClearRenderTarget()
         {
-            GraphicsDevice.SetRenderTarget(runtime.DefaultRenderTarget);
+            GraphicsDevice.SetRenderTarget(null);
         }
 
         public void Clear(Color color)
