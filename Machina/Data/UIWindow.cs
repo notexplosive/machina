@@ -30,7 +30,7 @@ namespace Machina.Data
         /// <summary>
         ///     Primary scene of the content within the window
         /// </summary>
-        public readonly Scene scene;
+        public Scene PrimaryScene => this.sceneRenderer.PrimaryScene;
         /*
          * [_Header_________]
          * | C O N T E N T s|
@@ -131,7 +131,6 @@ namespace Machina.Data
 
             this.sceneRenderer = sceneRenderer_local;
             this.canvasActor = canvasActor_local;
-            this.scene = this.sceneRenderer.primaryScene;
             this.rootTransform = windowRoot.transform;
             this.rootBoundingRect = windowRoot.GetComponent<BoundingRect>();
             this.contentGroup = contentGroup_local;
@@ -188,10 +187,10 @@ namespace Machina.Data
                 new NinepatchRenderer(scrollbarActor, this.style.buttonDefault);
 
                 scrollbar_local = new Scrollbar(scrollbarActor, this.canvasActor.GetComponent<BoundingRect>(),
-                    this.scene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
+                    this.PrimaryScene.camera, new MinMax<int>(0, maxScrollPos), this.style.buttonHover);
 
                 // Scrollbar listener could be applied to any actor, but we'll just create one in this case
-                new ScrollbarListener(this.scene.AddActor("Scrollbar Listener"), scrollbar_local);
+                new ScrollbarListener(this.PrimaryScene.AddActor("Scrollbar Listener"), scrollbar_local);
             });
 
             Scrollbar = scrollbar_local;
@@ -211,7 +210,7 @@ namespace Machina.Data
 
         public void Destroy()
         {
-            foreach (var scene in this.scene.sceneLayers.AllScenes())
+            foreach (var scene in this.PrimaryScene.sceneLayers.AllScenes())
             {
                 scene.DeleteAllActors();
             }

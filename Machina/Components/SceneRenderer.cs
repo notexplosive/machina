@@ -10,7 +10,7 @@ namespace Machina.Components
         private readonly BoundingRect boundingRect;
         private readonly BoundedCanvas canvas;
         private readonly Hoverable hoverable;
-        public readonly Scene primaryScene;
+        public Scene PrimaryScene { get; }
 
         // Normally we only recieve mouse inputs if we're being hovered, this lambda lets you bypass that.
         private Func<bool> bypassHoverConstraint;
@@ -25,7 +25,7 @@ namespace Machina.Components
             this.canvas.DrawAdditionalContent += DrawInnerScene;
             this.hoverable.OnHoverEnd += ClearHitTesters;
 
-            this.primaryScene = SceneLayers.AddNewScene();
+            this.PrimaryScene = SceneLayers.AddNewScene();
 
             this.shouldAllowKeyboardEvents = () => false;
             this.bypassHoverConstraint = () => false;
