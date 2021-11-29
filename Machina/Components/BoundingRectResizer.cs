@@ -122,6 +122,11 @@ namespace Machina.Components
             {
                 MachinaGame.SetCursor(MouseCursor.SizeNS);
             }
+
+            if (edge != RectEdge.None)
+            {
+                this.actor.scene.hitTester.AddCandidate(new HitTestResult(this.actor, (approval) => { }));
+            }
         }
 
         public override void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
