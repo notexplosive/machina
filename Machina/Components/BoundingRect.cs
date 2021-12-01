@@ -14,7 +14,6 @@ namespace Machina.Components
         public BoundingRect(Actor actor, Point size, Vector2 offset) : base(actor)
         {
             this.size = size;
-
             Offset = offset;
         }
 
