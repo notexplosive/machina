@@ -13,11 +13,11 @@ namespace Machina.Engine
     /// </summary>
     public static class MachinaClient
     {
-        public static SoundEffectPlayer SoundEffectPlayer { get; private set; } // Needs to be initialzed, should not be here!
         public static GraphicsDeviceManager Graphics { get; private set; } // Needs to be initialized, cannot provide a default
         public static UIStyle DefaultStyle { get; private set; } // needs to be initialized
         public static NoiseBasedRNG RandomDirty { get; } = new NoiseBasedRNG((uint) DateTime.Now.Ticks & 0x0000FFFF);
         public static FrameStep GlobalFrameStep { get; } = new FrameStep();
+        public static ISoundEffectPlayer SoundEffectPlayer { get; private set; } = new EmptySoundEffectPlayer();
         public static IAssetLibrary Assets { get; private set; } = new EmptyAssetLibrary();
         internal static LogBuffer LogBuffer { get; } = new LogBuffer();
         public static MachinaFileSystem FileSystem { get; private set; } = new MachinaFileSystem("Unknown");

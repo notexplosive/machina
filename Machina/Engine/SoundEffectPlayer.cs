@@ -3,7 +3,13 @@ namespace Machina.Engine
     using Data;
     using Microsoft.Xna.Framework.Audio;
 
-    public class SoundEffectPlayer
+    public interface ISoundEffectPlayer
+    {
+        public SoundEffectInstance PlaySound(string soundEffectName, float baseVolume = 0.5f, float pitch = 0f,
+            bool useCache = true);
+    }
+
+    public class SoundEffectPlayer : ISoundEffectPlayer
     {
         private readonly GameSettings settings;
 
