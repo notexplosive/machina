@@ -222,5 +222,18 @@ namespace Machina.Engine
 
             return null;
         }
+
+        public static bool AreAllActorsDestroyed(List<Actor> actors)
+        {
+            foreach (var actor in actors)
+            {
+                if (!actor.IsDestroyed)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
