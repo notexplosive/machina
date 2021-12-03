@@ -9,9 +9,34 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
+    public class CoroutineWrapper
+    {
+        public readonly IEnumerator<ICoroutineAction> content;
+        private bool hasFinished;
+
+        public CoroutineWrapper(IEnumerator<ICoroutineAction> content)
+        {
+            this.content = content;
+        }
+
+        public ICoroutineAction Current => this.content.Current;
+
+        public bool IsDone()
+        {
+            return this.content.Current == null || this.hasFinished;
+        }
+
+        public bool MoveNext()
+        {
+            var hasNext = this.content.MoveNext();
+            this.hasFinished = !hasNext;
+            return hasNext;
+        }
+    }
+
     public class Scene : Crane<Actor>
     {
-        private readonly List<IEnumerator<ICoroutineAction>> coroutines = new List<IEnumerator<ICoroutineAction>>();
+        private readonly List<CoroutineWrapper> coroutines = new List<CoroutineWrapper>();
         public readonly IFrameStep frameStep;
         public readonly HitTester hitTester = new HitTester();
         public readonly SceneLayers sceneLayers;
@@ -50,9 +75,10 @@ namespace Machina.Engine
 
         public WaitUntil StartCoroutine(IEnumerator<ICoroutineAction> coroutine)
         {
-            this.coroutines.Add(coroutine);
+            var wrapper = new CoroutineWrapper(coroutine);
+            this.coroutines.Add(wrapper);
             coroutine.MoveNext();
-            return new WaitUntil(() => coroutine.Current == null);
+            return new WaitUntil(wrapper.IsDone);
         }
 
         public List<Actor> GetRootLevelActors()
@@ -122,7 +148,7 @@ namespace Machina.Engine
 
             this.deferredActions.Clear();
 
-            var coroutinesCopy = new List<IEnumerator<ICoroutineAction>>(this.coroutines);
+            var coroutinesCopy = new List<CoroutineWrapper>(this.coroutines);
             foreach (var coroutine in coroutinesCopy)
             {
                 if (coroutine.Current == null)

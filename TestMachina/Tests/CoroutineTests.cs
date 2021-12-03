@@ -23,7 +23,6 @@ namespace TestMachina.Tests
                 yield return new WaitSeconds(0.1f);
                 yield return new WaitSeconds(0.1f);
                 flag.isDone = true;
-                yield return null;
             }
 
             var flag = new IsDoneFlag();
@@ -38,6 +37,32 @@ namespace TestMachina.Tests
         }
 
         [Fact]
+        public void ask_a_coroutine_if_done()
+        {
+            IEnumerator<ICoroutineAction> Subject(IsDoneFlag flag)
+            {
+                yield return new WaitSeconds(1);
+                yield return new WaitSeconds(1);
+                flag.isDone = true;
+            }
+
+            var flag = new IsDoneFlag();
+            var scene = new Scene(null);
+            var coroutine = scene.StartCoroutine(Subject(flag));
+
+            var isDoneBeforeStart = coroutine.IsComplete(0);
+            scene.Update(1);
+            var isDoneInTheMiddle = coroutine.IsComplete(0);
+            scene.Update(2);
+            var isDoneAtEnd = coroutine.IsComplete(0);
+
+            isDoneBeforeStart.Should().BeFalse();
+            isDoneInTheMiddle.Should().BeFalse();
+            isDoneAtEnd.Should().BeTrue();
+
+        }
+
+        [Fact]
         public void nested_coroutines_work()
         {
             var scene = new Scene(null);
@@ -48,7 +73,6 @@ namespace TestMachina.Tests
                 yield return scene.StartCoroutine(InnerCoroutine(inner));
                 yield return new WaitSeconds(1);
                 outer.isDone = true;
-                yield return null;
             }
 
             IEnumerator<ICoroutineAction> InnerCoroutine(IsDoneFlag inner)
@@ -57,7 +81,6 @@ namespace TestMachina.Tests
                 yield return new WaitSeconds(1);
                 yield return new WaitSeconds(1);
                 inner.isDone = true;
-                yield return null;
             }
 
             var inner = new IsDoneFlag();
