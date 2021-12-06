@@ -88,21 +88,21 @@ namespace Machina.Data
                 return this;
             }
         }
-        public interface IGroup
+        public interface IGroup<TCreationData>
         {
-            public IGroup SetPaddingBetweenElements(int padding);
-            public IGroup SetMarginSize(Point marginSize);
+            public IGroup<TCreationData> SetPaddingBetweenElements(int padding);
+            public IGroup<TCreationData> SetMarginSize(Point marginSize);
             public void ExecuteLayout();
-            public IGroup HorizontallyStretchedSpacer();
-            public IElement AddElement(string name, Point size, Action<Actor> callback); // prefer AddSpecificElement
-            public IGroup AddVerticallyStretchedElement(string name, int width, Action<Actor> callback);
-            public IGroup AddHorizontallyStretchedElement(string name, int height, Action<Actor> callback);
-            public IGroup AddBothStretchedElement(string name, Action<Actor> callback);
-            public IGroup AddSpecificSizeElement(string name, Point point, Action<Actor> callback);
-            public IGroup VerticallyStretchedSpacer();
+            public IGroup<TCreationData> HorizontallyStretchedSpacer();
+            public IElement AddElement(string name, Point size, Action<TCreationData> callback); // prefer AddSpecificElement
+            public IGroup<TCreationData> AddVerticallyStretchedElement(string name, int width, Action<TCreationData> callback);
+            public IGroup<TCreationData> AddHorizontallyStretchedElement(string name, int height, Action<TCreationData> callback);
+            public IGroup<TCreationData> AddBothStretchedElement(string name, Action<TCreationData> callback);
+            public IGroup<TCreationData> AddSpecificSizeElement(string name, Point point, Action<TCreationData> callback);
+            public IGroup<TCreationData> VerticallyStretchedSpacer();
         }
 
-        public class Group : Element, IGroup
+        public class Group<T> : Element, IGroup<T>
         {
             public int Padding { get; private set; }
             public Orientation Orientation { get; }
@@ -114,13 +114,13 @@ namespace Machina.Data
                 Orientation = orientation;
             }
 
-            public IGroup SetMarginSize(Point marginSize)
+            public IGroup<T> SetMarginSize(Point marginSize)
             {
                 MarginSize = marginSize;
                 return this;
             }
 
-            public IGroup SetPaddingBetweenElements(int padding)
+            public IGroup<T> SetPaddingBetweenElements(int padding)
             {
                 this.Padding = padding;
                 return this;
@@ -240,49 +240,49 @@ namespace Machina.Data
                 // If we have groups within groups, now we layout the subgroups.
                 foreach (var element in elements)
                 {
-                    if (element is Group subgroup)
+                    if (element is IGroup<T> subgroup)
                     {
                         subgroup.ExecuteLayout();
                     }
                 }
             }
 
-            public IElement AddElement(string name, Point size, Action<Actor> callback)
+            public IElement AddElement(string name, Point size, Action<T> callback)
             {
                 return AddElement(new Element { Size = size });
             }
 
-            public IGroup AddVerticallyStretchedElement(string name, int width, Action<Actor> callback)
+            public IGroup<T> AddVerticallyStretchedElement(string name, int width, Action<T> callback)
             {
                 AddElement(new Element().SetWidth(width).StretchVertically());
                 return this;
             }
 
-            public IGroup AddHorizontallyStretchedElement(string name, int height, Action<Actor> callback)
+            public IGroup<T> AddHorizontallyStretchedElement(string name, int height, Action<T> callback)
             {
                 AddElement(new Element().SetHeight(height).StretchHorizontally());
                 return this;
             }
 
-            public IGroup AddBothStretchedElement(string name, Action<Actor> callback)
+            public IGroup<T> AddBothStretchedElement(string name, Action<T> callback)
             {
                 AddElement(new Element().StretchHorizontally().StretchVertically());
                 return this;
             }
 
-            public IGroup AddSpecificSizeElement(string name, Point point, Action<Actor> callback)
+            public IGroup<T> AddSpecificSizeElement(string name, Point point, Action<T> callback)
             {
                 AddElement(new Element().SetWidth(point.X).SetHeight(point.Y));
                 return this;
             }
 
-            public IGroup HorizontallyStretchedSpacer()
+            public IGroup<T> HorizontallyStretchedSpacer()
             {
                 AddElement(new Element().StretchHorizontally());
                 return this;
             }
 
-            public IGroup VerticallyStretchedSpacer()
+            public IGroup<T> VerticallyStretchedSpacer()
             {
                 AddElement(new Element().StretchVertically());
                 return this;

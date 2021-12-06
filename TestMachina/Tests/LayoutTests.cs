@@ -8,7 +8,7 @@ namespace TestMachina.Tests
 {
     public abstract class LayoutTests<TElement, TGroup>
         where TElement : Layout.IElement
-        where TGroup : Layout.IGroup
+        where TGroup : Layout.IGroup<Actor>
     {
         [Fact]
         public void basic_vertical_layout()
@@ -130,17 +130,17 @@ namespace TestMachina.Tests
         }
     }
 
-    public class LayoutTests_WithAbstraction : LayoutTests<Layout.Element, Layout.Group>
+    public class LayoutTests_WithAbstraction : LayoutTests<Layout.Element, Layout.Group<Actor>>
     {
-        protected override Layout.Group CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
+        protected override Layout.Group<Actor> CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
         {
-            var group = new Layout.Group(orientation);
+            var group = new Layout.Group<Actor>(orientation);
             group.Size = size;
             group.Position = position;
             return group;
         }
 
-        protected override Layout.Element CreateLayoutElement(Layout.Group group, string name, Point size)
+        protected override Layout.Element CreateLayoutElement(Layout.Group<Actor> group, string name, Point size)
         {
             var element = new Layout.Element();
             element.Size = size;

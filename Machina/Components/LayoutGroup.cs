@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Machina.Components
 {
-    public class LayoutGroup : BaseComponent, Layout.IGroup
+    public class LayoutGroup : BaseComponent, Layout.IGroup<Actor>
     {
         private readonly BoundingRect boundingRect;
 
@@ -139,14 +139,14 @@ namespace Machina.Components
             }
         }
 
-        public Layout.IGroup SetMarginSize(Point margin)
+        public Layout.IGroup<Actor> SetMarginSize(Point margin)
         {
             this.margin = margin;
             ExecuteLayout();
             return this;
         }
 
-        public Layout.IGroup SetPaddingBetweenElements(int padding)
+        public Layout.IGroup<Actor> SetPaddingBetweenElements(int padding)
         {
             this.padding = padding;
             ExecuteLayout();
@@ -168,7 +168,7 @@ namespace Machina.Components
             return result;
         }
 
-        public Layout.IGroup HorizontallyStretchedSpacer()
+        public Layout.IGroup<Actor> HorizontallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(0));
@@ -178,7 +178,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup VerticallyStretchedSpacer()
+        public Layout.IGroup<Actor> VerticallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(0));
@@ -188,7 +188,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup PixelSpacer(int size)
+        public Layout.IGroup<Actor> PixelSpacer(int size)
         {
             var spacer = transform.AddActorAsChild("ps" + size);
             new BoundingRect(spacer, new Point(size, size));
@@ -198,7 +198,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup PixelSpacer(int width, int height)
+        public Layout.IGroup<Actor> PixelSpacer(int width, int height)
         {
             var spacer = transform.AddActorAsChild("ps" + width + "x" + height);
             new BoundingRect(spacer, new Point(width, height));
@@ -227,25 +227,25 @@ namespace Machina.Components
             return element;
         }
 
-        public Layout.IGroup AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
+        public Layout.IGroup<Actor> AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
         {
             AddElement(name, size, onPostCreate);
             return this;
         }
 
-        public Layout.IGroup AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public Layout.IGroup<Actor> AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
             return this;
         }
 
-        public Layout.IGroup AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public Layout.IGroup<Actor> AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
             return this;
         }
 
-        public Layout.IGroup AddBothStretchedElement(string name, Action<Actor> onPostCreate)
+        public Layout.IGroup<Actor> AddBothStretchedElement(string name, Action<Actor> onPostCreate)
         {
             AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
             return this;
