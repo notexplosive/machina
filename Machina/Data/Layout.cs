@@ -88,18 +88,18 @@ namespace Machina.Data
                 return this;
             }
         }
-        public interface IGroup<TCreationData>
+        public interface IGroup<TInnerData>
         {
-            public IGroup<TCreationData> SetPaddingBetweenElements(int padding);
-            public IGroup<TCreationData> SetMarginSize(Point marginSize);
+            public IGroup<TInnerData> SetPaddingBetweenElements(int padding);
+            public IGroup<TInnerData> SetMarginSize(Point marginSize);
             public void ExecuteLayout();
-            public IGroup<TCreationData> HorizontallyStretchedSpacer();
-            public IElement AddElement(string name, Point size, Action<TCreationData> callback); // prefer AddSpecificElement
-            public IGroup<TCreationData> AddVerticallyStretchedElement(string name, int width, Action<TCreationData> callback);
-            public IGroup<TCreationData> AddHorizontallyStretchedElement(string name, int height, Action<TCreationData> callback);
-            public IGroup<TCreationData> AddBothStretchedElement(string name, Action<TCreationData> callback);
-            public IGroup<TCreationData> AddSpecificSizeElement(string name, Point point, Action<TCreationData> callback);
-            public IGroup<TCreationData> VerticallyStretchedSpacer();
+            public IGroup<TInnerData> HorizontallyStretchedSpacer();
+            public IElement AddElement(string name, Point size, Action<TInnerData> callback); // prefer AddSpecificElement
+            public IGroup<TInnerData> AddVerticallyStretchedElement(string name, int width, Action<TInnerData> callback);
+            public IGroup<TInnerData> AddHorizontallyStretchedElement(string name, int height, Action<TInnerData> callback);
+            public IGroup<TInnerData> AddBothStretchedElement(string name, Action<TInnerData> callback);
+            public IGroup<TInnerData> AddSpecificSizeElement(string name, Point point, Action<TInnerData> callback);
+            public IGroup<TInnerData> VerticallyStretchedSpacer();
         }
 
         public class Group<T> : Element, IGroup<T>
