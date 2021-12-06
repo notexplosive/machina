@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElement : BaseComponent
+    public class LayoutElement : BaseComponent, Layout.IElement
     {
         public readonly BoundingRect boundingRect;
         private readonly LayoutGroup parentGroup;
@@ -23,14 +24,20 @@ namespace Machina.Components
 
         public Orientation GroupOrientation => this.parentGroup.orientation;
 
-        public LayoutElement StretchVertically()
+        public Point Size => this.boundingRect.Size;
+
+        public Point Position { get => transform.Position.ToPoint(); set => transform.Position = value.ToVector2(); }
+
+        public Point Offset => this.boundingRect.Offset.ToPoint();
+
+        public Layout.IElement StretchVertically()
         {
             this.stretchVertically = true;
             this.parentGroup.ExecuteLayout();
             return this;
         }
 
-        public LayoutElement StretchHorizontally()
+        public Layout.IElement StretchHorizontally()
         {
             this.stretchHorizontally = true;
             this.parentGroup.ExecuteLayout();
@@ -66,6 +73,18 @@ namespace Machina.Components
             }
 
             return this.stretchVertically;
+        }
+
+        public Layout.IElement SetHeight(int height)
+        {
+            this.boundingRect.Height = height;
+            return this;
+        }
+
+        public Layout.IElement SetWidth(int width)
+        {
+            this.boundingRect.Width = width;
+            return this;
         }
     }
 }

@@ -4,12 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public enum Orientation
-    {
-        Horizontal,
-        Vertical
-    }
-
     internal class ThreepatchRenderer : NinepatchRenderer
     {
         private readonly Orientation orientation;

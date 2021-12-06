@@ -51,7 +51,7 @@ namespace Machina.Engine.Debugging.Components
             this.layoutGroup.AddHorizontallyStretchedElement("Row", this.rowHeight, rowActor =>
             {
                 row = new LayoutGroup(rowActor, Orientation.Horizontal)
-                    .SetPaddingBetweenElements(this.iconPadding);
+                    .SetPaddingBetweenElements(this.iconPadding) as LayoutGroup;
             });
             return row;
         }

@@ -124,7 +124,7 @@ namespace Machina.Data
                                 new Hoverable(viewActor);
                                 new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
                                 sceneRenderer_local = new SceneRenderer(viewActor);
-                            })
+                            }) as LayoutGroup
                         ;
                 })
                 ;
