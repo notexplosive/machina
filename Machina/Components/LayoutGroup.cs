@@ -138,15 +138,6 @@ namespace Machina.Components
             }
         }
 
-        [Obsolete("Prefer SetMarginSize")]
-        public LayoutGroup SetMargin(int margin)
-        {
-            this.margin.X = margin;
-            this.margin.Y = margin;
-            ExecuteLayout();
-            return this;
-        }
-
         public LayoutGroup SetMarginSize(Point margin)
         {
             this.margin = margin;
