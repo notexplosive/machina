@@ -6,23 +6,23 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElement : BaseComponent, Layout.IElement
+    public class LayoutElementComponent : BaseComponent, Layout.IElement
     {
         public readonly BoundingRect boundingRect;
-        private readonly LayoutGroup parentGroup;
+        private readonly LayoutGroupComponent parentGroup;
         private bool stretchHorizontally;
         private bool stretchVertically;
 
-        public LayoutElement(Actor actor) : base(actor)
+        public LayoutElementComponent(Actor actor) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.parentGroup = this.actor.GetComponentInImmediateParent<LayoutGroup>();
+            this.parentGroup = this.actor.GetComponentInImmediateParent<LayoutGroupComponent>();
             Debug.Assert(this.parentGroup != null, "LayoutElement does not have a LayoutGroup parent");
         }
 
         public Rectangle Rect => this.boundingRect.Rect;
 
-        public Orientation GroupOrientation => this.parentGroup.orientation;
+        public Orientation GroupOrientation => this.parentGroup.Orientation;
 
         public Point Size => this.boundingRect.Size;
 

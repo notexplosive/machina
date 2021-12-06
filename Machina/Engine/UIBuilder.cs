@@ -15,7 +15,7 @@ namespace Machina.Engine
             this.style = style;
         }
 
-        public Actor BuildButton(LayoutGroup group, string buttonLabelText, Action onPressCallback, int height = 48)
+        public Actor BuildButton(LayoutGroupComponent group, string buttonLabelText, Action onPressCallback, int height = 48)
         {
             var scene = group.actor.scene;
             var buttonActor = scene.AddActor("Button");
@@ -26,12 +26,12 @@ namespace Machina.Engine
             new Clickable(buttonActor);
             new CallbackOnClick(buttonActor, onPressCallback);
             new ButtonNinepatchHandler(buttonActor, this.style.buttonHover, this.style.buttonPress);
-            new LayoutElement(buttonActor).StretchHorizontally();
-            new LayoutGroup(buttonActor, Orientation.Vertical).SetMarginSize(new Point(5, 5));
+            new LayoutElementComponent(buttonActor).StretchHorizontally();
+            new LayoutGroupComponent(buttonActor, Orientation.Vertical).SetMarginSize(new Point(5, 5));
             var buttonLabelActor = scene.AddActor("Button Label");
             buttonLabelActor.transform.SetParent(buttonActor);
             new BoundingRect(buttonLabelActor, Point.Zero);
-            var buttonLabelElement = new LayoutElement(buttonLabelActor);
+            var buttonLabelElement = new LayoutElementComponent(buttonLabelActor);
             buttonLabelElement.StretchHorizontally();
             buttonLabelElement.StretchVertically();
             new BoundedTextRenderer(buttonLabelActor, buttonLabelText, this.style.uiElementFont, Color.White,
@@ -43,18 +43,18 @@ namespace Machina.Engine
             return buttonActor;
         }
 
-        public CheckboxState BuildCheckbox(LayoutGroup uiGroup, string labelText, bool startChecked = false)
+        public CheckboxState BuildCheckbox(LayoutGroupComponent uiGroup, string labelText, bool startChecked = false)
         {
             var actor = BuildCheckboxOrRadioButton(uiGroup, labelText, startChecked, true);
             return actor.GetComponent<CheckboxState>();
         }
 
-        public void BuildRadioButton(LayoutGroup uiGroup, string labelText, bool startFilled = false)
+        public void BuildRadioButton(LayoutGroupComponent uiGroup, string labelText, bool startFilled = false)
         {
             BuildCheckboxOrRadioButton(uiGroup, labelText, startFilled, false);
         }
 
-        private Actor BuildCheckboxOrRadioButton(LayoutGroup uiGroup, string labelText, bool startChecked,
+        private Actor BuildCheckboxOrRadioButton(LayoutGroupComponent uiGroup, string labelText, bool startChecked,
             bool isCheckbox)
         {
             var scene = uiGroup.actor.scene;
@@ -85,13 +85,13 @@ namespace Machina.Engine
                 stateProvider = new RadioButtonState(checkboxContainer, radioButtonGroup, startChecked);
             }
 
-            new LayoutElement(checkboxContainer).StretchHorizontally();
-            new LayoutGroup(checkboxContainer, Orientation.Horizontal).SetPaddingBetweenElements(5);
+            new LayoutElementComponent(checkboxContainer).StretchHorizontally();
+            new LayoutGroupComponent(checkboxContainer, Orientation.Horizontal).SetPaddingBetweenElements(5);
 
             var checkboxBox = scene.AddActor("Checkbox-Box");
             checkboxBox.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxBox, new Point(24, 24));
-            new LayoutElement(checkboxBox).StretchVertically();
+            new LayoutElementComponent(checkboxBox).StretchVertically();
             if (isCheckbox)
             {
                 new CheckboxRenderer(checkboxBox, this.style.uiSpriteSheet, this.style.checkboxImage, stateProvider,
@@ -106,7 +106,7 @@ namespace Machina.Engine
             var checkboxLabel = scene.AddActor("Checkbox-Label");
             checkboxLabel.transform.SetParent(checkboxContainer);
             new BoundingRect(checkboxLabel, new Point(0, 24));
-            new LayoutElement(checkboxLabel).StretchHorizontally().StretchVertically();
+            new LayoutElementComponent(checkboxLabel).StretchHorizontally().StretchVertically();
             new BoundedTextRenderer(checkboxLabel, labelText, this.style.uiElementFont, Color.White,
                 HorizontalAlignment.Left, VerticalAlignment.Center);
 
@@ -117,11 +117,11 @@ namespace Machina.Engine
             return checkboxContainer;
         }
 
-        public Slider BuildSlider(LayoutGroup uiGroup)
+        public Slider BuildSlider(LayoutGroupComponent uiGroup)
         {
             var sliderActor = uiGroup.actor.transform.AddActorAsChild("Slider");
             new BoundingRect(sliderActor, new Point(0, 24));
-            new LayoutElement(sliderActor).StretchHorizontally();
+            new LayoutElementComponent(sliderActor).StretchHorizontally();
             new Hoverable(sliderActor);
             var slider = new Slider(sliderActor, this.style.sliderSheet, this.style.uiSpriteSheet,
                 this.style.sliderThumbFrames);
@@ -130,7 +130,7 @@ namespace Machina.Engine
             return slider;
         }
 
-        public Actor BuildLabel(LayoutGroup group, string textLabel)
+        public Actor BuildLabel(LayoutGroupComponent group, string textLabel)
         {
             var scene = group.actor.scene;
             var labelActor = scene.AddActor("Label");
@@ -138,7 +138,7 @@ namespace Machina.Engine
             new BoundingRect(labelActor, new Point(32, 32));
             new BoundedTextRenderer(labelActor, textLabel, this.style.uiElementFont, Color.White,
                 HorizontalAlignment.Left, VerticalAlignment.Bottom);
-            var e = new LayoutElement(labelActor);
+            var e = new LayoutElementComponent(labelActor);
             e.StretchHorizontally();
 
             labelActor.transform.LocalDepth = new Depth(-1);
@@ -146,12 +146,12 @@ namespace Machina.Engine
             return labelActor;
         }
 
-        public DropdownTrigger BuildDropdownMenu(LayoutGroup group, params DropdownContent.DropdownItem[] items)
+        public DropdownTrigger BuildDropdownMenu(LayoutGroupComponent group, params DropdownContent.DropdownItem[] items)
         {
             var actor = group.actor;
             var dropdown = actor.transform.AddActorAsChild("Dropdown");
             new BoundingRect(dropdown, new Point(32, 24));
-            new LayoutElement(dropdown).StretchHorizontally();
+            new LayoutElementComponent(dropdown).StretchHorizontally();
             new Hoverable(dropdown);
             new Clickable(dropdown);
             var dropdownContent = dropdown.transform.AddActorAsChild("Dropdown-Content");
@@ -172,20 +172,20 @@ namespace Machina.Engine
                 this.style.buttonDefault);
         }
 
-        public EditableText BuildTextField(LayoutGroup uiGroup)
+        public EditableText BuildTextField(LayoutGroupComponent uiGroup)
         {
             var textInput = uiGroup.actor.transform.AddActorAsChild("TextInput");
             textInput.transform.LocalDepth = new Depth(-1);
             new BoundingRect(textInput, new Point(32, 28));
-            new LayoutElement(textInput).StretchHorizontally();
+            new LayoutElementComponent(textInput).StretchHorizontally();
             new NinepatchRenderer(textInput, this.style.textboxSheet);
-            new LayoutGroup(textInput, Orientation.Vertical).SetMarginSize(new Point(3, 3));
+            new LayoutGroupComponent(textInput, Orientation.Vertical).SetMarginSize(new Point(3, 3));
             new Hoverable(textInput);
             var clickable = new Clickable(textInput);
             var text = textInput.transform.AddActorAsChild("TextInput - Text");
             text.transform.LocalDepth = new Depth(-1);
             new BoundingRect(text, new Point(32, 32));
-            new LayoutElement(text).StretchHorizontally().StretchVertically();
+            new LayoutElementComponent(text).StretchHorizontally().StretchVertically();
             new BoundedTextRenderer(text, "", this.style.uiElementFont, Color.Black, overflow: Overflow.Ignore);
             return new EditableText(text, clickable);
         }

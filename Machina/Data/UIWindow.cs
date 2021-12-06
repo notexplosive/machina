@@ -17,7 +17,7 @@ namespace Machina.Data
         /// <summary>
         ///     LayoutGroup of the "Content" area of the window
         /// </summary>
-        private readonly LayoutGroup contentGroup;
+        private readonly LayoutGroupComponent contentGroup;
 
         private readonly int margin = 10;
         private readonly BoundingRect rootBoundingRect;
@@ -55,7 +55,7 @@ namespace Machina.Data
             new BoundingRect(windowRoot,
                 contentSize + new Point(0, headerSize) + new Point(this.margin * 2, this.margin * 2));
 
-            var rootGroup = new LayoutGroup(windowRoot, Orientation.Vertical);
+            var rootGroup = new LayoutGroupComponent(windowRoot, Orientation.Vertical);
 
             rootGroup.SetMarginSize(new Point(this.margin, this.margin));
             rootGroup.AddHorizontallyStretchedElement("HeaderContent", 32, headerContentActor =>
@@ -65,7 +65,7 @@ namespace Machina.Data
                     (position, delta) => OnAnyPartOfWindowClicked(MouseButton.Left);
                 new MoveOnDrag(headerContentActor, windowRoot.transform);
 
-                var headerGroup = new LayoutGroup(headerContentActor, Orientation.Horizontal);
+                var headerGroup = new LayoutGroupComponent(headerContentActor, Orientation.Horizontal);
                 if (icon != null)
                 {
                     headerGroup.AddVerticallyStretchedElement("Icon", 32, iconActor =>
@@ -108,7 +108,7 @@ namespace Machina.Data
             // The locals are assigned in lambdas which is illegal for readonly assignment
             SceneRenderer sceneRenderer_local = null;
             Actor canvasActor_local = null;
-            LayoutGroup contentGroup_local = null;
+            LayoutGroupComponent contentGroup_local = null;
 
             // "Content" means everything below the header
 
@@ -116,7 +116,7 @@ namespace Machina.Data
                 {
                     new NinepatchRenderer(contentActor, style.windowSheet, NinepatchSheet.GenerationDirection.Outer);
 
-                    contentGroup_local = new LayoutGroup(contentActor, Orientation.Horizontal)
+                    contentGroup_local = new LayoutGroupComponent(contentActor, Orientation.Horizontal)
                             .AddBothStretchedElement("Canvas", viewActor =>
                             {
                                 canvasActor_local = viewActor;
@@ -124,7 +124,7 @@ namespace Machina.Data
                                 new Hoverable(viewActor);
                                 new Clickable(viewActor).ClickStarted += OnAnyPartOfWindowClicked;
                                 sceneRenderer_local = new SceneRenderer(viewActor);
-                            }) as LayoutGroup
+                            }) as LayoutGroupComponent
                         ;
                 })
                 ;
@@ -151,7 +151,7 @@ namespace Machina.Data
         public event WindowAction Maximized;
         public event WindowAction AnyPartOfWindowClicked;
 
-        private void CreateControlButton(LayoutGroup headerGroup, Actor windowRoot, WindowAction controlButtonEvent,
+        private void CreateControlButton(LayoutGroupComponent headerGroup, Actor windowRoot, WindowAction controlButtonEvent,
             IFrameAnimation frames)
         {
             headerGroup.AddVerticallyStretchedElement("ControlButton", 32, closeButtonActor =>

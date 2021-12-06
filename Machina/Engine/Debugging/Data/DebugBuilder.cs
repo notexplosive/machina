@@ -35,7 +35,7 @@ namespace Machina.Engine.Debugging.Data
             new Draggable(dockActor);
             new MoveOnDrag(dockActor);
             new BoundingRectFill(dockActor, new Color(Color.Black, 0.5f));
-            new LayoutGroup(dockActor, Orientation.Vertical);
+            new LayoutGroupComponent(dockActor, Orientation.Vertical);
             var dock = new DebugDock(dockActor);
 
             dock.AddApp(new App("Scene Graph", true,

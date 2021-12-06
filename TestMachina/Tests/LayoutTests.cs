@@ -19,7 +19,7 @@ namespace TestMachina.Tests
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
-            group.ExecuteLayout();
+            Layout.Group<Actor>.ExecuteLayout(group);
 
             Assert.Equal(110, e4.Position.Y);
         }
@@ -34,7 +34,7 @@ namespace TestMachina.Tests
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
-            group.ExecuteLayout();
+            Layout.Group<Actor>.ExecuteLayout(group);
 
             Assert.Equal(125, e4.Position.Y);
         }
@@ -49,7 +49,7 @@ namespace TestMachina.Tests
             e1.StretchVertically();
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             e2.StretchVertically();
-            group.ExecuteLayout();
+            Layout.Group<Actor>.ExecuteLayout(group);
 
             Assert.Equal(50, e1.Position.Y);
             Assert.Equal(146, e1.Size.Y);
@@ -68,7 +68,7 @@ namespace TestMachina.Tests
             e2.StretchHorizontally();
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             e3.StretchVertically();
-            group.ExecuteLayout();
+            Layout.Group<Actor>.ExecuteLayout(group);
 
             Assert.Equal(50, e1.Position.Y);
             Assert.Equal(140, e1.Size.Y);
@@ -83,15 +83,15 @@ namespace TestMachina.Tests
             var scene = new Scene(null);
             var uiBuilder = new UIBuilder(UIStyle.Empty);
             var horizontalLayout = scene.AddActor("Layout");
-            var uiGroup = CreateGroup(horizontalLayout, Orientation.Horizontal, new Point(256, 128), Point.Zero);
-            uiGroup.SetPaddingBetweenElements(5);
-            uiGroup.SetMarginSize(new Point(15, 15));
+            var group = CreateGroup(horizontalLayout, Orientation.Horizontal, new Point(256, 128), Point.Zero);
+            group.SetPaddingBetweenElements(5);
+            group.SetMarginSize(new Point(15, 15));
 
-            Layout.IElement e1 = CreateLayoutElement(uiGroup, "e1", new Point(32, 32));
-            Layout.IElement e2 = CreateLayoutElement(uiGroup, "e2", new Point(64, 32)).StretchVertically();
-            Layout.IElement e3 = CreateLayoutElement(uiGroup, "e3", new Point(32, 32)).StretchHorizontally().StretchVertically();
+            Layout.IElement e1 = CreateLayoutElement(group, "e1", new Point(32, 32));
+            Layout.IElement e2 = CreateLayoutElement(group, "e2", new Point(64, 32)).StretchVertically();
+            Layout.IElement e3 = CreateLayoutElement(group, "e3", new Point(32, 32)).StretchHorizontally().StretchVertically();
             scene.FlushBuffers();
-            uiGroup.ExecuteLayout();
+            Layout.Group<Actor>.ExecuteLayout(group);
 
             Assert.Equal(15, e1.Position.X);
             Assert.Equal(52, e2.Position.X);
@@ -110,23 +110,23 @@ namespace TestMachina.Tests
         protected abstract TGroup CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position);
     }
 
-    public class LayoutTests_WithComponent : LayoutTests<LayoutElement, LayoutGroup>
+    public class LayoutTests_WithComponent : LayoutTests<LayoutElementComponent, LayoutGroupComponent>
     {
-        protected override LayoutElement CreateLayoutElement(LayoutGroup group, string name, Point size)
+        protected override LayoutElementComponent CreateLayoutElement(LayoutGroupComponent group, string name, Point size)
         {
             var actor = new Actor(name, null);
             new BoundingRect(actor, size);
             actor.transform.SetParent(group.actor);
-            var e = new LayoutElement(actor);
+            var e = new LayoutElementComponent(actor);
             group.actor.FlushBuffers();
             return e;
         }
 
-        protected override LayoutGroup CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
+        protected override LayoutGroupComponent CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
         {
             groupActor.transform.Position = position.ToVector2();
             new BoundingRect(groupActor, size);
-            return new LayoutGroup(groupActor, orientation);
+            return new LayoutGroupComponent(groupActor, orientation);
         }
     }
 

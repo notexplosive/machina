@@ -4,12 +4,12 @@ namespace Machina.Components
 {
     internal class RadioButtonGroup : BaseComponent
     {
-        private readonly LayoutGroup layoutGroup;
+        private readonly LayoutGroupComponent layoutGroup;
         private int currentIndex = -1;
 
         public RadioButtonGroup(Actor actor) : base(actor)
         {
-            this.layoutGroup = RequireComponent<LayoutGroup>();
+            this.layoutGroup = RequireComponent<LayoutGroupComponent>();
         }
 
         public Actor CurrentSelectedActor
@@ -32,13 +32,13 @@ namespace Machina.Components
                 var i = 0;
                 foreach (var element in this.layoutGroup.GetAllElements())
                 {
-                    if (element.actor == radioButtonState.actor)
+                    if ((element as LayoutElementComponent).actor == radioButtonState.actor)
                     {
                         this.currentIndex = i;
                     }
                     else
                     {
-                        var radioState = element.actor.GetComponent<RadioButtonState>();
+                        var radioState = (element as LayoutElementComponent).actor.GetComponent<RadioButtonState>();
                         if (radioState != null)
                         {
                             radioState.IsFilled = false;

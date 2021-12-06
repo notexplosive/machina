@@ -11,12 +11,12 @@ namespace Machina.Engine.Debugging.Components
         private readonly int iconPadding = 5;
         private readonly int iconWidth = 90;
         private readonly InvokableDebugTool invokable;
-        private readonly LayoutGroup layoutGroup;
+        private readonly LayoutGroupComponent layoutGroup;
         private readonly int rowHeight = 90;
         private readonly int titleHeight = 32;
         public readonly WindowManager windowManager;
 
-        private LayoutGroup currentRow;
+        private LayoutGroupComponent currentRow;
 
         public DebugDock(Actor actor) : base(actor)
         {
@@ -25,7 +25,7 @@ namespace Machina.Engine.Debugging.Components
             boundingRect.SetSize(new Point(this.iconWidth * 3 + this.iconPadding * 2 + this.dockMargin * 2,
                 this.rowHeight * 2 + this.titleHeight + this.dockMargin * 2));
 
-            this.layoutGroup = RequireComponent<LayoutGroup>();
+            this.layoutGroup = RequireComponent<LayoutGroupComponent>();
             this.layoutGroup.AddHorizontallyStretchedElement("Title", this.titleHeight,
                     titleActor =>
                     {
@@ -45,13 +45,13 @@ namespace Machina.Engine.Debugging.Components
             this.invokable.Close();
         }
 
-        private LayoutGroup AddRow()
+        private LayoutGroupComponent AddRow()
         {
-            LayoutGroup row = null;
+            LayoutGroupComponent row = null;
             this.layoutGroup.AddHorizontallyStretchedElement("Row", this.rowHeight, rowActor =>
             {
-                row = new LayoutGroup(rowActor, Orientation.Horizontal)
-                    .SetPaddingBetweenElements(this.iconPadding) as LayoutGroup;
+                row = new LayoutGroupComponent(rowActor, Orientation.Horizontal)
+                    .SetPaddingBetweenElements(this.iconPadding) as LayoutGroupComponent;
             });
             return row;
         }
@@ -78,7 +78,7 @@ namespace Machina.Engine.Debugging.Components
                 };
 
                 new DebugIconHoverRenderer(iconActor);
-                new LayoutGroup(iconActor, Orientation.Vertical)
+                new LayoutGroupComponent(iconActor, Orientation.Vertical)
                     .SetMarginSize(new Point(5, 5))
                     .AddHorizontallyStretchedElement("IconImage", 50,
                         iconImageActor => { new BoundingRectFill(iconImageActor, Color.Orange); })
