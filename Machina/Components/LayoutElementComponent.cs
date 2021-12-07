@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using Machina.Data;
+using Machina.Data.Layout;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElementComponent : BaseComponent, Layout.IElement
+    public class LayoutElementComponent : BaseComponent, IElement
     {
         public readonly BoundingRect boundingRect;
         private readonly LayoutGroupComponent parentGroup;
@@ -30,14 +31,14 @@ namespace Machina.Components
 
         public Point Offset => this.boundingRect.Offset.ToPoint();
 
-        public Layout.IElement StretchVertically()
+        public IElement StretchVertically()
         {
             this.stretchVertically = true;
             this.parentGroup.ExecuteLayout();
             return this;
         }
 
-        public Layout.IElement StretchHorizontally()
+        public IElement StretchHorizontally()
         {
             this.stretchHorizontally = true;
             this.parentGroup.ExecuteLayout();
@@ -75,13 +76,13 @@ namespace Machina.Components
             return this.stretchVertically;
         }
 
-        public Layout.IElement SetHeight(int height)
+        public IElement SetHeight(int height)
         {
             this.boundingRect.Height = height;
             return this;
         }
 
-        public Layout.IElement SetWidth(int width)
+        public IElement SetWidth(int width)
         {
             this.boundingRect.Width = width;
             return this;

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using Machina.Data;
+using Machina.Data.Layout;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 
 namespace Machina.Components
 {
-    public class LayoutGroupComponent : BaseComponent, Layout.IGroup<Actor>
+    public class LayoutGroupComponent : BaseComponent, IGroup<Actor>
     {
         private readonly BoundingRect boundingRect;
 
@@ -17,12 +18,12 @@ namespace Machina.Components
         public Point Offset => this.boundingRect.Offset.ToPoint();
         public Point Position { get => this.transform.Position.ToPoint(); set => this.transform.Position = value.ToVector2(); }
 
-        public Layout.IElement SetWidth(int width)
+        public IElement SetWidth(int width)
         {
             this.boundingRect.Width = width;
             return this.actor.GetComponent<LayoutElementComponent>();
         }
-        public Layout.IElement SetHeight(int height)
+        public IElement SetHeight(int height)
         {
             this.boundingRect.Height = height;
             return this.actor.GetComponent<LayoutElementComponent>();
@@ -43,26 +44,26 @@ namespace Machina.Components
 
         public void ExecuteLayout()
         {
-            Layout.Group<Actor>.ExecuteLayout(this);
+            Group<Actor>.ExecuteLayout(this);
         }
 
-        public Layout.IGroup<Actor> SetMarginSize(Point margin)
+        public IGroup<Actor> SetMarginSize(Point margin)
         {
             this.MarginSize = margin;
             ExecuteLayout();
             return this;
         }
 
-        public Layout.IGroup<Actor> SetPaddingBetweenElements(int padding)
+        public IGroup<Actor> SetPaddingBetweenElements(int padding)
         {
             this.Padding = padding;
             ExecuteLayout();
             return this;
         }
 
-        public List<Layout.IElement> GetAllElements()
+        public List<IElement> GetAllElements()
         {
-            var result = new List<Layout.IElement>();
+            var result = new List<IElement>();
             for (var i = 0; i < transform.ChildCount; i++)
             {
                 var element = transform.ChildAt(i).GetComponent<LayoutElementComponent>();
@@ -75,7 +76,7 @@ namespace Machina.Components
             return result;
         }
 
-        public Layout.IGroup<Actor> HorizontallyStretchedSpacer()
+        public IGroup<Actor> HorizontallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(0));
@@ -85,7 +86,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup<Actor> VerticallyStretchedSpacer()
+        public IGroup<Actor> VerticallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(0));
@@ -95,7 +96,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup<Actor> PixelSpacer(int size)
+        public IGroup<Actor> PixelSpacer(int size)
         {
             var spacer = transform.AddActorAsChild("ps" + size);
             new BoundingRect(spacer, new Point(size, size));
@@ -105,7 +106,7 @@ namespace Machina.Components
             return this;
         }
 
-        public Layout.IGroup<Actor> PixelSpacer(int width, int height)
+        public IGroup<Actor> PixelSpacer(int width, int height)
         {
             var spacer = transform.AddActorAsChild("ps" + width + "x" + height);
             new BoundingRect(spacer, new Point(width, height));
@@ -122,7 +123,7 @@ namespace Machina.Components
         /// <param name="size"></param>
         /// <param name="onPostCreate"></param>
         /// <returns></returns>
-        public Layout.IElement AddElement(string name, Point size, Action<Actor> onPostCreate)
+        public IElement AddElement(string name, Point size, Action<Actor> onPostCreate)
         {
             var elementActor = transform.AddActorAsChild(name);
             elementActor.transform.LocalDepth = -1;
@@ -134,25 +135,25 @@ namespace Machina.Components
             return element;
         }
 
-        public Layout.IGroup<Actor> AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
+        public IGroup<Actor> AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
         {
             AddElement(name, size, onPostCreate);
             return this;
         }
 
-        public Layout.IGroup<Actor> AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public IGroup<Actor> AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
             return this;
         }
 
-        public Layout.IGroup<Actor> AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public IGroup<Actor> AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
             return this;
         }
 
-        public Layout.IGroup<Actor> AddBothStretchedElement(string name, Action<Actor> onPostCreate)
+        public IGroup<Actor> AddBothStretchedElement(string name, Action<Actor> onPostCreate)
         {
             AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
             return this;
@@ -168,12 +169,12 @@ namespace Machina.Components
             return this.actor.GetComponent<LayoutElementComponent>().IsStretchPerpendicular(orientation);
         }
 
-        public Layout.IElement StretchHorizontally()
+        public IElement StretchHorizontally()
         {
             return this.actor.GetComponent<LayoutElementComponent>().StretchHorizontally();
         }
 
-        public Layout.IElement StretchVertically()
+        public IElement StretchVertically()
         {
             return this.actor.GetComponent<LayoutElementComponent>().StretchVertically();
         }
