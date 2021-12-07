@@ -11,13 +11,13 @@ namespace Machina.Data
     {
         private List<LayoutNode> children;
 
-        public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal)
+        public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal, Point margin = default, int padding = 0)
         {
             Name = name;
             Size = size;
             Orientation = orientation;
-            Margin = new Point(0);
-            Padding = 0;
+            Margin = margin;
+            Padding = padding;
         }
 
         private Point ComputeConstSize()
