@@ -8,8 +8,8 @@ using Xunit;
 namespace TestMachina.Tests
 {
     public abstract class LayoutTests<TElement, TGroup>
-        where TElement : IElement
-        where TGroup : IGroup<Actor>
+        where TElement : ILayoutElement
+        where TGroup : ILayoutGroup<Actor>
     {
         [Fact]
         public void basic_vertical_layout()
@@ -20,7 +20,7 @@ namespace TestMachina.Tests
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
-            Group<Actor>.ExecuteLayout(group);
+            LayoutGroup<Actor>.ExecuteLayout(group);
 
             Assert.Equal(110, e4.Position.Y);
         }
@@ -35,7 +35,7 @@ namespace TestMachina.Tests
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             var e4 = CreateLayoutElement(group, "E4", new Point(20, 20));
-            Group<Actor>.ExecuteLayout(group);
+            LayoutGroup<Actor>.ExecuteLayout(group);
 
             Assert.Equal(125, e4.Position.Y);
         }
@@ -50,7 +50,7 @@ namespace TestMachina.Tests
             e1.StretchVertically();
             var e2 = CreateLayoutElement(group, "E2", new Point(20, 20));
             e2.StretchVertically();
-            Group<Actor>.ExecuteLayout(group);
+            LayoutGroup<Actor>.ExecuteLayout(group);
 
             Assert.Equal(50, e1.Position.Y);
             Assert.Equal(146, e1.Size.Y);
@@ -69,7 +69,7 @@ namespace TestMachina.Tests
             e2.StretchHorizontally();
             var e3 = CreateLayoutElement(group, "E3", new Point(20, 20));
             e3.StretchVertically();
-            Group<Actor>.ExecuteLayout(group);
+            LayoutGroup<Actor>.ExecuteLayout(group);
 
             Assert.Equal(50, e1.Position.Y);
             Assert.Equal(140, e1.Size.Y);
@@ -88,11 +88,11 @@ namespace TestMachina.Tests
             group.SetPaddingBetweenElements(5);
             group.SetMarginSize(new Point(15, 15));
 
-            IElement e1 = CreateLayoutElement(group, "e1", new Point(32, 32));
-            IElement e2 = CreateLayoutElement(group, "e2", new Point(64, 32)).StretchVertically();
-            IElement e3 = CreateLayoutElement(group, "e3", new Point(32, 32)).StretchHorizontally().StretchVertically();
+            ILayoutElement e1 = CreateLayoutElement(group, "e1", new Point(32, 32));
+            ILayoutElement e2 = CreateLayoutElement(group, "e2", new Point(64, 32)).StretchVertically();
+            ILayoutElement e3 = CreateLayoutElement(group, "e3", new Point(32, 32)).StretchHorizontally().StretchVertically();
             scene.FlushBuffers();
-            Group<Actor>.ExecuteLayout(group);
+            LayoutGroup<Actor>.ExecuteLayout(group);
 
             Assert.Equal(15, e1.Position.X);
             Assert.Equal(52, e2.Position.X);
@@ -131,19 +131,19 @@ namespace TestMachina.Tests
         }
     }
 
-    public class LayoutTests_WithAbstraction : LayoutTests<Element, Group<Actor>>
+    public class LayoutTests_WithAbstraction : LayoutTests<LayoutElement, LayoutGroup<Actor>>
     {
-        protected override Group<Actor> CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
+        protected override LayoutGroup<Actor> CreateGroup(Actor groupActor, Orientation orientation, Point size, Point position)
         {
-            var group = new Group<Actor>(orientation);
+            var group = new LayoutGroup<Actor>(orientation);
             group.Size = size;
             group.Position = position;
             return group;
         }
 
-        protected override Element CreateLayoutElement(Group<Actor> group, string name, Point size)
+        protected override LayoutElement CreateLayoutElement(LayoutGroup<Actor> group, string name, Point size)
         {
-            var element = new Element();
+            var element = new LayoutElement();
             element.Size = size;
             group.AddElement(element);
             return element;

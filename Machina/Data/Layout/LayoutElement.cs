@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Machina.Data.Layout
 {
-    public class Element : IElement
+    public class LayoutElement : ILayoutElement
     {
         private Point size;
 
         private bool isStretchedVertically = false;
         private bool isStretchedHorizontally = false;
 
-        public IElement StretchVertically()
+        public ILayoutElement StretchVertically()
         {
             this.isStretchedVertically = true;
             return this;
         }
 
-        public IElement StretchHorizontally()
+        public ILayoutElement StretchHorizontally()
         {
             this.isStretchedHorizontally = true;
             return this;
@@ -58,13 +58,13 @@ namespace Machina.Data.Layout
         public Point Offset { get; set; }
         public Point Position { get; set; }
         public Rectangle Rect => new Rectangle(Position - Offset, Size);
-        public IElement SetHeight(int height)
+        public ILayoutElement SetHeight(int height)
         {
             this.size.Y = height;
             return this;
         }
 
-        public IElement SetWidth(int width)
+        public ILayoutElement SetWidth(int width)
         {
             this.size.X = width;
             return this;

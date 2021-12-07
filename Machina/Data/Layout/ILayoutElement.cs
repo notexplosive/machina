@@ -2,7 +2,7 @@
 
 namespace Machina.Data.Layout
 {
-    public interface IElement
+    public interface ILayoutElement
     {
         Point Size { get; }
         Point Position { get; set; }
@@ -10,9 +10,9 @@ namespace Machina.Data.Layout
 
         bool IsStretchedAlong(Orientation orientation);
         bool IsStretchPerpendicular(Orientation orientation);
-        IElement SetHeight(int height);
-        IElement SetWidth(int width);
-        public IElement StretchHorizontally();
-        public IElement StretchVertically();
+        ILayoutElement SetHeight(int height);
+        ILayoutElement SetWidth(int width);
+        public ILayoutElement StretchHorizontally();
+        public ILayoutElement StretchVertically();
     }
 }

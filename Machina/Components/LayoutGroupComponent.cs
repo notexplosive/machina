@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace Machina.Components
 {
-    public class LayoutGroupComponent : BaseComponent, IGroup<Actor>
+    public class LayoutGroupComponent : BaseComponent, ILayoutGroup<Actor>
     {
         private readonly BoundingRect boundingRect;
 
@@ -18,12 +18,12 @@ namespace Machina.Components
         public Point Offset => this.boundingRect.Offset.ToPoint();
         public Point Position { get => this.transform.Position.ToPoint(); set => this.transform.Position = value.ToVector2(); }
 
-        public IElement SetWidth(int width)
+        public ILayoutElement SetWidth(int width)
         {
             this.boundingRect.Width = width;
             return this.actor.GetComponent<LayoutElementComponent>();
         }
-        public IElement SetHeight(int height)
+        public ILayoutElement SetHeight(int height)
         {
             this.boundingRect.Height = height;
             return this.actor.GetComponent<LayoutElementComponent>();
@@ -44,26 +44,26 @@ namespace Machina.Components
 
         public void ExecuteLayout()
         {
-            Group<Actor>.ExecuteLayout(this);
+            LayoutGroup<Actor>.ExecuteLayout(this);
         }
 
-        public IGroup<Actor> SetMarginSize(Point margin)
+        public ILayoutGroup<Actor> SetMarginSize(Point margin)
         {
             this.MarginSize = margin;
             ExecuteLayout();
             return this;
         }
 
-        public IGroup<Actor> SetPaddingBetweenElements(int padding)
+        public ILayoutGroup<Actor> SetPaddingBetweenElements(int padding)
         {
             this.Padding = padding;
             ExecuteLayout();
             return this;
         }
 
-        public List<IElement> GetAllElements()
+        public List<ILayoutElement> GetAllElements()
         {
-            var result = new List<IElement>();
+            var result = new List<ILayoutElement>();
             for (var i = 0; i < transform.ChildCount; i++)
             {
                 var element = transform.ChildAt(i).GetComponent<LayoutElementComponent>();
@@ -76,7 +76,7 @@ namespace Machina.Components
             return result;
         }
 
-        public IGroup<Actor> HorizontallyStretchedSpacer()
+        public ILayoutGroup<Actor> HorizontallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(0));
@@ -86,7 +86,7 @@ namespace Machina.Components
             return this;
         }
 
-        public IGroup<Actor> VerticallyStretchedSpacer()
+        public ILayoutGroup<Actor> VerticallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(0));
@@ -96,7 +96,7 @@ namespace Machina.Components
             return this;
         }
 
-        public IGroup<Actor> PixelSpacer(int size)
+        public ILayoutGroup<Actor> PixelSpacer(int size)
         {
             var spacer = transform.AddActorAsChild("ps" + size);
             new BoundingRect(spacer, new Point(size, size));
@@ -106,7 +106,7 @@ namespace Machina.Components
             return this;
         }
 
-        public IGroup<Actor> PixelSpacer(int width, int height)
+        public ILayoutGroup<Actor> PixelSpacer(int width, int height)
         {
             var spacer = transform.AddActorAsChild("ps" + width + "x" + height);
             new BoundingRect(spacer, new Point(width, height));
@@ -123,7 +123,7 @@ namespace Machina.Components
         /// <param name="size"></param>
         /// <param name="onPostCreate"></param>
         /// <returns></returns>
-        public IElement AddElement(string name, Point size, Action<Actor> onPostCreate)
+        public ILayoutElement AddElement(string name, Point size, Action<Actor> onPostCreate)
         {
             var elementActor = transform.AddActorAsChild(name);
             elementActor.transform.LocalDepth = -1;
@@ -135,25 +135,25 @@ namespace Machina.Components
             return element;
         }
 
-        public IGroup<Actor> AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
+        public ILayoutGroup<Actor> AddSpecificSizeElement(string name, Point size, Action<Actor> onPostCreate)
         {
             AddElement(name, size, onPostCreate);
             return this;
         }
 
-        public IGroup<Actor> AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public ILayoutGroup<Actor> AddVerticallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchVertically();
             return this;
         }
 
-        public IGroup<Actor> AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
+        public ILayoutGroup<Actor> AddHorizontallyStretchedElement(string name, int size, Action<Actor> onPostCreate)
         {
             AddElement(name, new Point(size, size), onPostCreate).StretchHorizontally();
             return this;
         }
 
-        public IGroup<Actor> AddBothStretchedElement(string name, Action<Actor> onPostCreate)
+        public ILayoutGroup<Actor> AddBothStretchedElement(string name, Action<Actor> onPostCreate)
         {
             AddElement(name, Point.Zero, onPostCreate).StretchHorizontally().StretchVertically();
             return this;
@@ -169,12 +169,12 @@ namespace Machina.Components
             return this.actor.GetComponent<LayoutElementComponent>().IsStretchPerpendicular(orientation);
         }
 
-        public IElement StretchHorizontally()
+        public ILayoutElement StretchHorizontally()
         {
             return this.actor.GetComponent<LayoutElementComponent>().StretchHorizontally();
         }
 
-        public IElement StretchVertically()
+        public ILayoutElement StretchVertically()
         {
             return this.actor.GetComponent<LayoutElementComponent>().StretchVertically();
         }

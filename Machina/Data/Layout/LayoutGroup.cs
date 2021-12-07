@@ -4,83 +4,83 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    public class Group<T> : Element, IGroup<T>
+    public class LayoutGroup<T> : LayoutElement, ILayoutGroup<T>
     {
         public int Padding { get; private set; }
         public Point MarginSize { get; private set; }
-        private readonly List<IElement> elements = new List<IElement>();
+        private readonly List<ILayoutElement> elements = new List<ILayoutElement>();
         public Orientation Orientation { get; }
 
-        public Group(Orientation orientation)
+        public LayoutGroup(Orientation orientation)
         {
             Orientation = orientation;
         }
 
-        public IGroup<T> SetMarginSize(Point marginSize)
+        public ILayoutGroup<T> SetMarginSize(Point marginSize)
         {
             MarginSize = marginSize;
             return this;
         }
 
-        public IGroup<T> SetPaddingBetweenElements(int padding)
+        public ILayoutGroup<T> SetPaddingBetweenElements(int padding)
         {
             this.Padding = padding;
             return this;
         }
 
-        public List<IElement> GetAllElements()
+        public List<ILayoutElement> GetAllElements()
         {
             return this.elements;
         }
 
-        public IElement AddElement(IElement element)
+        public ILayoutElement AddElement(ILayoutElement element)
         {
             this.elements.Add(element);
             return element;
         }
 
-        public IElement AddElement(string name, Point size, Action<T> callback)
+        public ILayoutElement AddElement(string name, Point size, Action<T> callback)
         {
-            return AddElement(new Element { Size = size });
+            return AddElement(new LayoutElement { Size = size });
         }
 
-        public IGroup<T> AddVerticallyStretchedElement(string name, int width, Action<T> callback)
+        public ILayoutGroup<T> AddVerticallyStretchedElement(string name, int width, Action<T> callback)
         {
-            AddElement(new Element().SetWidth(width).StretchVertically());
+            AddElement(new LayoutElement().SetWidth(width).StretchVertically());
             return this;
         }
 
-        public IGroup<T> AddHorizontallyStretchedElement(string name, int height, Action<T> callback)
+        public ILayoutGroup<T> AddHorizontallyStretchedElement(string name, int height, Action<T> callback)
         {
-            AddElement(new Element().SetHeight(height).StretchHorizontally());
+            AddElement(new LayoutElement().SetHeight(height).StretchHorizontally());
             return this;
         }
 
-        public IGroup<T> AddBothStretchedElement(string name, Action<T> callback)
+        public ILayoutGroup<T> AddBothStretchedElement(string name, Action<T> callback)
         {
-            AddElement(new Element().StretchHorizontally().StretchVertically());
+            AddElement(new LayoutElement().StretchHorizontally().StretchVertically());
             return this;
         }
 
-        public IGroup<T> AddSpecificSizeElement(string name, Point point, Action<T> callback)
+        public ILayoutGroup<T> AddSpecificSizeElement(string name, Point point, Action<T> callback)
         {
-            AddElement(new Element().SetWidth(point.X).SetHeight(point.Y));
+            AddElement(new LayoutElement().SetWidth(point.X).SetHeight(point.Y));
             return this;
         }
 
-        public IGroup<T> HorizontallyStretchedSpacer()
+        public ILayoutGroup<T> HorizontallyStretchedSpacer()
         {
-            AddElement(new Element().StretchHorizontally());
+            AddElement(new LayoutElement().StretchHorizontally());
             return this;
         }
 
-        public IGroup<T> VerticallyStretchedSpacer()
+        public ILayoutGroup<T> VerticallyStretchedSpacer()
         {
-            AddElement(new Element().StretchVertically());
+            AddElement(new LayoutElement().StretchVertically());
             return this;
         }
 
-        public static void ExecuteLayout(IGroup<T> group)
+        public static void ExecuteLayout(ILayoutGroup<T> group)
         {
             var isVertical = group.Orientation == Orientation.Vertical;
             var groupSize = group.Size;
@@ -89,8 +89,8 @@ namespace Machina.Data.Layout
 
             var elements = group.GetAllElements();
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
-            var stretchAlong = new List<IElement>();
-            var stretchPerpendicular = new List<IElement>();
+            var stretchAlong = new List<ILayoutElement>();
+            var stretchPerpendicular = new List<ILayoutElement>();
 
             var last = elements.Count - 1;
             var index = 0;
@@ -183,7 +183,7 @@ namespace Machina.Data.Layout
             // If we have groups within groups, now we layout the subgroups.
             foreach (var element in elements)
             {
-                if (element is IGroup<T> subgroup)
+                if (element is ILayoutGroup<T> subgroup)
                 {
                     ExecuteLayout(subgroup);
                 }

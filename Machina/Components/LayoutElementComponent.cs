@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElementComponent : BaseComponent, IElement
+    public class LayoutElementComponent : BaseComponent, ILayoutElement
     {
         public readonly BoundingRect boundingRect;
         private readonly LayoutGroupComponent parentGroup;
@@ -31,14 +31,14 @@ namespace Machina.Components
 
         public Point Offset => this.boundingRect.Offset.ToPoint();
 
-        public IElement StretchVertically()
+        public ILayoutElement StretchVertically()
         {
             this.stretchVertically = true;
             this.parentGroup.ExecuteLayout();
             return this;
         }
 
-        public IElement StretchHorizontally()
+        public ILayoutElement StretchHorizontally()
         {
             this.stretchHorizontally = true;
             this.parentGroup.ExecuteLayout();
@@ -76,13 +76,13 @@ namespace Machina.Components
             return this.stretchVertically;
         }
 
-        public IElement SetHeight(int height)
+        public ILayoutElement SetHeight(int height)
         {
             this.boundingRect.Height = height;
             return this;
         }
 
-        public IElement SetWidth(int width)
+        public ILayoutElement SetWidth(int width)
         {
             this.boundingRect.Width = width;
             return this;
