@@ -76,7 +76,7 @@ namespace Machina.Components
             return result;
         }
 
-        public ILayoutGroup<Actor> HorizontallyStretchedSpacer()
+        public ILayoutGroup<Actor> AddHorizontallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(0));
@@ -86,7 +86,7 @@ namespace Machina.Components
             return this;
         }
 
-        public ILayoutGroup<Actor> VerticallyStretchedSpacer()
+        public ILayoutGroup<Actor> AddVerticallyStretchedSpacer()
         {
             var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(0));

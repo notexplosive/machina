@@ -68,13 +68,13 @@ namespace Machina.Data.Layout
             return this;
         }
 
-        public ILayoutGroup<T> HorizontallyStretchedSpacer()
+        public ILayoutGroup<T> AddHorizontallyStretchedSpacer()
         {
             AddElement(new LayoutElement().StretchHorizontally());
             return this;
         }
 
-        public ILayoutGroup<T> VerticallyStretchedSpacer()
+        public ILayoutGroup<T> AddVerticallyStretchedSpacer()
         {
             AddElement(new LayoutElement().StretchVertically());
             return this;

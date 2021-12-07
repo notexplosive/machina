@@ -8,8 +8,8 @@ namespace Machina.Data.Layout
     {
         public ILayoutGroup<TInnerData> SetPaddingBetweenElements(int padding);
         public ILayoutGroup<TInnerData> SetMarginSize(Point marginSize);
-        public ILayoutGroup<TInnerData> HorizontallyStretchedSpacer();
-        public ILayoutGroup<TInnerData> VerticallyStretchedSpacer();
+        public ILayoutGroup<TInnerData> AddHorizontallyStretchedSpacer();
+        public ILayoutGroup<TInnerData> AddVerticallyStretchedSpacer();
         public ILayoutElement AddElement(string name, Point size, Action<TInnerData> callback); // prefer AddSpecificElement
         public ILayoutGroup<TInnerData> AddVerticallyStretchedElement(string name, int width, Action<TInnerData> callback);
         public ILayoutGroup<TInnerData> AddHorizontallyStretchedElement(string name, int height, Action<TInnerData> callback);
