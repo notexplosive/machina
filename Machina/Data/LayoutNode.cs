@@ -236,5 +236,17 @@ namespace Machina.Data
         {
             return content[name];
         }
+
+        public Rectangle[] GetAll()
+        {
+            var result = new Rectangle[this.content.Values.Count];
+            this.content.Values.CopyTo(result, 0);
+            return result;
+        }
+
+        public IEnumerable<string> Keys()
+        {
+            return this.content.Keys;
+        }
     }
 }

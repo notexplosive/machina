@@ -366,3 +366,6 @@ todo.txt
 screenshots
 launchSettings.json
 *.demo
+
+# ApprovalTests
+*.received.*
