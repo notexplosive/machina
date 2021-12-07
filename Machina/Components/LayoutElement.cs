@@ -1,44 +1,36 @@
 ﻿using System.Diagnostics;
-using Machina.Data;
-using Machina.Data.Layout;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElementComponent : BaseComponent, ILayoutElement
+    public class LayoutElement : BaseComponent
     {
         public readonly BoundingRect boundingRect;
-        private readonly LayoutGroupComponent parentGroup;
+        private readonly LayoutGroup parentGroup;
         private bool stretchHorizontally;
         private bool stretchVertically;
 
-        public LayoutElementComponent(Actor actor) : base(actor)
+        public LayoutElement(Actor actor) : base(actor)
         {
             this.boundingRect = RequireComponent<BoundingRect>();
-            this.parentGroup = this.actor.GetComponentInImmediateParent<LayoutGroupComponent>();
+            this.parentGroup = this.actor.GetComponentInImmediateParent<LayoutGroup>();
             Debug.Assert(this.parentGroup != null, "LayoutElement does not have a LayoutGroup parent");
         }
 
         public Rectangle Rect => this.boundingRect.Rect;
 
-        public Orientation GroupOrientation => this.parentGroup.Orientation;
+        public Orientation GroupOrientation => this.parentGroup.orientation;
 
-        public Point Size => this.boundingRect.Size;
-
-        public Point Position { get => transform.Position.ToPoint(); set => transform.Position = value.ToVector2(); }
-
-        public Point Offset => this.boundingRect.Offset.ToPoint();
-
-        public ILayoutElement StretchVertically()
+        public LayoutElement StretchVertically()
         {
             this.stretchVertically = true;
             this.parentGroup.ExecuteLayout();
             return this;
         }
 
-        public ILayoutElement StretchHorizontally()
+        public LayoutElement StretchHorizontally()
         {
             this.stretchHorizontally = true;
             this.parentGroup.ExecuteLayout();
@@ -74,18 +66,6 @@ namespace Machina.Components
             }
 
             return this.stretchVertically;
-        }
-
-        public ILayoutElement SetHeight(int height)
-        {
-            this.boundingRect.Height = height;
-            return this;
-        }
-
-        public ILayoutElement SetWidth(int width)
-        {
-            this.boundingRect.Width = width;
-            return this;
         }
     }
 }

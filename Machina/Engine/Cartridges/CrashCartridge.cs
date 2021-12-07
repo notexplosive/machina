@@ -34,7 +34,7 @@ namespace Machina.Engine.Cartridges
 
             new BoundingRect(rootActor, Point.Zero);
             new BoundingRectToViewportSize(rootActor);
-            new LayoutGroupComponent(rootActor, Orientation.Vertical)
+            new LayoutGroup(rootActor, Orientation.Vertical)
                 .AddHorizontallyStretchedElement("title", 64, titleActor =>
                 {
                     new BoundedTextRenderer(titleActor, titleText, MachinaClient.DefaultStyle.uiElementFont);
