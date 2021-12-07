@@ -33,10 +33,10 @@ namespace Machina.Data
 
         public LayoutResult Bake()
         {
-            return Bake(new LayoutResult());
+            return Bake(new LayoutResult(), Point.Zero);
         }
 
-        private LayoutResult Bake(LayoutResult layoutResult)
+        private LayoutResult Bake(LayoutResult layoutResult, Point startingLocation)
         {
             if (layoutResult == null)
             {
@@ -121,11 +121,11 @@ namespace Machina.Data
             }
 
             // Place elements
-            var nextLocation = new Point(Margin.X, Margin.Y);
+            var nextLocation = startingLocation + new Point(Margin.X, Margin.Y);
             foreach (var element in elements)
             {
-                var position = nextLocation;
-                layoutResult.Add(position, element);
+                var elementPosition = nextLocation;
+                layoutResult.Add(elementPosition, element);
                 if (isVertical)
                 {
                     nextLocation += new Point(0, element.Size.Y as ConstLayoutEdge + Padding);
@@ -134,14 +134,10 @@ namespace Machina.Data
                 {
                     nextLocation += new Point(element.Size.X as ConstLayoutEdge + Padding, 0);
                 }
-            }
 
-            // If we have groups within groups, now we layout the subgroups.
-            foreach (var element in elements)
-            {
                 if (element.HasChildren())
                 {
-                    element.Bake(layoutResult);
+                    element.Bake(layoutResult, elementPosition);
                 }
             }
 

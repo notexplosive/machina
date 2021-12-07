@@ -120,7 +120,7 @@ namespace TestMachina.Tests
                             new LayoutNode("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                             new LayoutNode("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                         ),
-                    new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical)
+                    new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, margin: new Point(0, 2), padding: 3)
                         .AddChildren(
                             new LayoutNode("item-3a", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                             new LayoutNode("item-3b", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
