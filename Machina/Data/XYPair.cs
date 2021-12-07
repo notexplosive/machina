@@ -1,4 +1,7 @@
-﻿namespace Machina.Data
+﻿using Machina.Components;
+using System;
+
+namespace Machina.Data
 {
     public class XYPair<T>
     {
@@ -9,6 +12,21 @@
         {
             this.X = x;
             this.Y = y;
+        }
+
+        public T GetValueFromOrientation(Orientation orientation)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return X;
+            }
+
+            if (orientation == Orientation.Vertical)
+            {
+                return Y;
+            }
+
+            throw new ArgumentException("Invalid orientation");
         }
     }
 }
