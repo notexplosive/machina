@@ -167,7 +167,7 @@ namespace Machina.Components
             return result;
         }
 
-        public LayoutGroup HorizontallyStretchedSpacer(int size = 0)
+        public LayoutGroup AddHorizontallyStretchedSpacer(int size = 0)
         {
             var spacer = transform.AddActorAsChild("h");
             new BoundingRect(spacer, new Point(size));
@@ -177,7 +177,7 @@ namespace Machina.Components
             return this;
         }
 
-        public LayoutGroup VerticallyStretchedSpacer(int size = 0)
+        public LayoutGroup AddVerticallyStretchedSpacer(int size = 0)
         {
             var spacer = transform.AddActorAsChild("v");
             new BoundingRect(spacer, new Point(size));
