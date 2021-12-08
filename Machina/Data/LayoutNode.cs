@@ -242,7 +242,7 @@ namespace Machina.Data
         public readonly ILayoutEdge X;
         public readonly ILayoutEdge Y;
 
-        public LayoutSize(ILayoutEdge x, ILayoutEdge y)
+        private LayoutSize(ILayoutEdge x, ILayoutEdge y)
         {
             X = x;
             Y = y;
@@ -278,53 +278,53 @@ namespace Machina.Data
 
             throw new ArgumentException("Invalid orientation");
         }
+
+        private struct ConstLayoutEdge : ILayoutEdge
+        {
+            public ConstLayoutEdge(int value)
+            {
+                Value = value;
+            }
+
+            public int Value { get; }
+
+            public static implicit operator int(ConstLayoutEdge edge)
+            {
+                return edge.Value;
+            }
+
+            public bool IsStretched => false;
+            public int ActualSize => Value;
+        }
+
+        private struct StretchedLayoutEdge : ILayoutEdge
+        {
+            public bool IsStretched => true;
+            public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
+
+            /// <summary>
+            /// Do not delete! Important hack here
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode()
+            {
+                // Hacky thing to make every single instance of StretchedLayoutEdge unique
+                if (!this.hash.HasValue)
+                {
+                    this.hash = hashPool++;
+                }
+                return this.hash.Value;
+            }
+
+            private static int hashPool = 0;
+            private int? hash;
+        }
     }
 
     public interface ILayoutEdge
     {
         public bool IsStretched { get; }
         public int ActualSize { get; }
-    }
-
-    public struct ConstLayoutEdge : ILayoutEdge
-    {
-        public ConstLayoutEdge(int value)
-        {
-            Value = value;
-        }
-
-        public int Value { get; }
-
-        public static implicit operator int(ConstLayoutEdge edge)
-        {
-            return edge.Value;
-        }
-
-        public bool IsStretched => false;
-        public int ActualSize => Value;
-    }
-
-    public struct StretchedLayoutEdge : ILayoutEdge
-    {
-        public bool IsStretched => true;
-        public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
-
-        /// <summary>
-        /// Do not delete! Important hack here
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            // Hacky thing to make every single instance of StretchedLayoutEdge unique
-            if (!this.hash.HasValue)
-            {
-                this.hash = hashPool++;
-            }
-            return this.hash.Value;
-        }
-
-        private static int hashPool = 0;
-        private int? hash;
     }
 
     public class LayoutResult
@@ -340,9 +340,9 @@ namespace Machina.Data
 
         public int GetEdgeValue(ILayoutEdge edge)
         {
-            if (edge is ConstLayoutEdge constEdge)
+            if (!edge.IsStretched)
             {
-                return constEdge;
+                return edge.ActualSize;
             }
 
             return sizeLookupTable[edge];
