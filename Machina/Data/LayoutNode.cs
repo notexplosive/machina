@@ -203,23 +203,8 @@ namespace Machina.Data
 
     public abstract class LayoutEdge
     {
-        public static int id = 0;
-        private readonly int myId;
-
         public LayoutEdge()
         {
-            id++;
-            this.myId = id;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(this.myId);
         }
     }
 
