@@ -140,9 +140,9 @@ namespace TestMachina.Tests
         public void spacer_test()
         {
             var layout = new LayoutNode("root", new LayoutSize(50, 10), orientation: Orientation.Horizontal, children: new LayoutNode[] {
-                new LayoutNode(LayoutNodeName.Spacer, new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
+                LayoutNode.Spacer(new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                 new LayoutNode("item-2", new LayoutSize(new ConstLayoutEdge(10), new StretchedLayoutEdge())),
-                new LayoutNode(LayoutNodeName.Spacer, new LayoutSize(new ConstLayoutEdge(5), new StretchedLayoutEdge())),
+                LayoutNode.Spacer(new LayoutSize(new ConstLayoutEdge(5), new StretchedLayoutEdge())),
             });
 
             var firstBakeResult = layout.Build();

@@ -19,6 +19,11 @@ namespace Machina.Data
             Children = children;
         }
 
+        public static LayoutNode Spacer(LayoutSize size)
+        {
+            return new LayoutNode(LayoutNodeName.Spacer, size);
+        }
+
         public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
         {
             return new Rectangle(position, GetMeasuredSize(layoutResult));
