@@ -21,12 +21,17 @@ namespace Machina.Data
 
         public static LayoutNode Spacer(LayoutSize size)
         {
-            return new LayoutNode(LayoutNodeName.Spacer, size);
+            return new LayoutNode(LayoutNodeName.Nameless, size);
         }
 
         public static LayoutNode Leaf(string name, LayoutSize size)
         {
             return new LayoutNode(name, size);
+        }
+
+        public static LayoutNode IntermediateNode(string name, LayoutSize size, Orientation orientation, Point margin, int padding, params LayoutNode[] children)
+        {
+            return new LayoutNode(name, size, orientation, margin: margin, padding: padding, children: children);
         }
 
         public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
@@ -210,7 +215,7 @@ namespace Machina.Data
 
         public bool Exists => this.internalString != null;
 
-        public static LayoutNodeName Spacer => new LayoutNodeName(null);
+        public static LayoutNodeName Nameless => new LayoutNodeName(null);
     }
 
     public struct LayoutSize
