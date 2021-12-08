@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public struct LayoutNode
+    public class LayoutNode
     {
         public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
         {
@@ -158,7 +158,7 @@ namespace Machina.Data
         }
     }
 
-    public struct LayoutSize
+    public class LayoutSize
     {
         public readonly ILayoutEdge X;
         public readonly ILayoutEdge Y;
