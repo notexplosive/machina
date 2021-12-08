@@ -243,12 +243,7 @@ namespace Machina.Data
             Y = y;
         }
 
-        public LayoutSize(int x, int y)
-        {
-            X = new ConstLayoutEdge(x);
-            Y = new ConstLayoutEdge(y);
-        }
-
+        public static LayoutSize Pixels(int x, int y) => new LayoutSize(new ConstLayoutEdge(x), new ConstLayoutEdge(y));
         public static LayoutSize StretchedVertically(int width) => new LayoutSize(new ConstLayoutEdge(width), new StretchedLayoutEdge());
         public static LayoutSize StretchedHorizontally(int height) => new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(height));
         public static LayoutSize StretchedBoth() => new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge());

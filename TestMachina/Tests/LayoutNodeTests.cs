@@ -27,7 +27,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(new Point(10, 5), 0), Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(new Point(10, 5), 0), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -57,7 +57,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_padding()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(Point.Zero, 5), Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(Point.Zero, 5), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -72,7 +72,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin_and_padding()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)), Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -87,7 +87,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void nested_layout_test()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Parent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0), Orientation.Horizontal,
                         LayoutNode.Leaf("item-2a", LayoutSize.StretchedHorizontally(10)),
@@ -110,7 +110,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void resize_and_rebake_test()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 50), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 50), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Parent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0), Orientation.Horizontal,
                         LayoutNode.Leaf("item-2a", LayoutSize.StretchedHorizontally(10)),
@@ -124,7 +124,7 @@ namespace TestMachina.Tests
                     )
             );
 
-            var resizedLayout = layout.GetResized(new LayoutSize(60, 60));
+            var resizedLayout = layout.GetResized(LayoutSize.Pixels(60, 60));
 
             var firstBakeResult = layout.Build();
             var secondBakeResult = resizedLayout.Build();
@@ -137,7 +137,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
-            var layout = LayoutNode.Parent("root", new LayoutSize(50, 10), new LayoutStyle(Point.Zero, 0), Orientation.Horizontal,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 10), new LayoutStyle(Point.Zero, 0), Orientation.Horizontal,
                 LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                 LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
                 LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
@@ -153,12 +153,12 @@ namespace TestMachina.Tests
         public void create_window_test()
         {
             var headerHeight = 8;
-            var layout = LayoutNode.Parent("root", new LayoutSize(80, 40), new LayoutStyle(Point.Zero, 0), Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(80, 40), new LayoutStyle(Point.Zero, 0), Orientation.Vertical,
                 LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
                     LayoutNode.Spacer(LayoutSize.StretchedBoth()),
-                    LayoutNode.Leaf("minimize", new LayoutSize(headerHeight, headerHeight)),
-                    LayoutNode.Leaf("fullscreen", new LayoutSize(headerHeight, headerHeight)),
-                    LayoutNode.Leaf("close", new LayoutSize(headerHeight, headerHeight))
+                    LayoutNode.Leaf("minimize", LayoutSize.Pixels(headerHeight, headerHeight)),
+                    LayoutNode.Leaf("fullscreen", LayoutSize.Pixels(headerHeight, headerHeight)),
+                    LayoutNode.Leaf("close", LayoutSize.Pixels(headerHeight, headerHeight))
                 ),
                 LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
             );
