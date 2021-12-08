@@ -29,12 +29,15 @@ namespace Machina.Data
             return new Point(layoutResult.GetEdgeValue(Size.X), layoutResult.GetEdgeValue(Size.Y));
         }
 
-        public LayoutResult Bake()
+        public LayoutResult Build()
         {
-            return Bake(new LayoutResult(this), Point.Zero);
+            var layoutResult = new LayoutResult(this);
+            var startingLocation = Point.Zero;
+            layoutResult.Add(startingLocation, this);
+            return Build(layoutResult, startingLocation);
         }
 
-        private LayoutResult Bake(LayoutResult layoutResult, Point startingLocation)
+        private LayoutResult Build(LayoutResult layoutResult, Point startingLocation)
         {
             var isVertical = Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(layoutResult);
@@ -132,7 +135,7 @@ namespace Machina.Data
 
                 if (element.HasChildren)
                 {
-                    element.Bake(layoutResult, elementPosition);
+                    element.Build(layoutResult, elementPosition);
                 }
             }
 
@@ -182,7 +185,7 @@ namespace Machina.Data
         {
             get
             {
-                if (this.internalString != null)
+                if (HasRealName)
                 {
                     return this.internalString;
                 }
@@ -191,7 +194,8 @@ namespace Machina.Data
             }
         }
 
-        public static LayoutNodeName Root => new LayoutNodeName(null);
+        public bool HasRealName => this.internalString != null;
+
         public static LayoutNodeName Spacer => new LayoutNodeName(null);
     }
 

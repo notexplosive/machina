@@ -33,7 +33,7 @@ namespace TestMachina.Tests
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
             });
 
-            var layoutResult = layout.Bake();
+            var layoutResult = layout.Build();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -48,7 +48,7 @@ namespace TestMachina.Tests
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
             });
 
-            var layoutResult = layout.Bake();
+            var layoutResult = layout.Build();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -64,7 +64,7 @@ namespace TestMachina.Tests
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
             });
 
-            var layoutResult = layout.Bake();
+            var layoutResult = layout.Build();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -80,7 +80,7 @@ namespace TestMachina.Tests
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
             });
 
-            var layoutResult = layout.Bake();
+            var layoutResult = layout.Build();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -103,7 +103,7 @@ namespace TestMachina.Tests
                     })
             });
 
-            var layoutResult = layout.Bake();
+            var layoutResult = layout.Build();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -128,8 +128,8 @@ namespace TestMachina.Tests
 
             var resizedLayout = layout.GetResized(new LayoutSize(60, 60));
 
-            var firstBakeResult = layout.Bake();
-            var secondBakeResult = resizedLayout.Bake();
+            var firstBakeResult = layout.Build();
+            var secondBakeResult = resizedLayout.Build();
 
             Approvals.Verify(DrawResult(firstBakeResult) + "\n\n" + DrawResult(secondBakeResult));
         }
