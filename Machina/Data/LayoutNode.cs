@@ -203,14 +203,11 @@ namespace Machina.Data
 
     public abstract class LayoutEdge
     {
-        public LayoutEdge()
-        {
-        }
     }
 
     public class ConstLayoutEdge : LayoutEdge
     {
-        public ConstLayoutEdge(int value) : base()
+        public ConstLayoutEdge(int value)
         {
             Value = value;
         }
@@ -225,9 +222,6 @@ namespace Machina.Data
 
     public class StretchedLayoutEdge : LayoutEdge
     {
-        public StretchedLayoutEdge() : base()
-        {
-        }
     }
 
     public class LayoutResult
