@@ -207,7 +207,7 @@ namespace Machina.Data
         public int ActualSize { get; }
     }
 
-    public class ConstLayoutEdge : ILayoutEdge
+    public struct ConstLayoutEdge : ILayoutEdge
     {
         public ConstLayoutEdge(int value)
         {
@@ -225,10 +225,23 @@ namespace Machina.Data
         public int ActualSize => Value;
     }
 
-    public class StretchedLayoutEdge : ILayoutEdge
+    public struct StretchedLayoutEdge : ILayoutEdge
     {
         public bool IsStretched => true;
         public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
+
+        public override int GetHashCode()
+        {
+            // Hacky thing to make every single instance of StretchedLayoutEdge unique
+            if (!this.hash.HasValue)
+            {
+                this.hash = hashPool++;
+            }
+            return this.hash.Value;
+        }
+
+        private static int hashPool = 0;
+        private int? hash;
     }
 
     public class LayoutResult
