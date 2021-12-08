@@ -156,9 +156,9 @@ namespace TestMachina.Tests
             var layout = LayoutNode.Parent("root", LayoutSize.Pixels(80, 40), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
                     LayoutNode.Spacer(LayoutSize.StretchedBoth()),
-                    LayoutNode.Leaf("minimize", LayoutSize.Pixels(headerHeight, headerHeight)),
-                    LayoutNode.Leaf("fullscreen", LayoutSize.Pixels(headerHeight, headerHeight)),
-                    LayoutNode.Leaf("close", LayoutSize.Pixels(headerHeight, headerHeight))
+                    LayoutNode.Leaf("minimize", LayoutSize.Square(headerHeight)),
+                    LayoutNode.Leaf("fullscreen", LayoutSize.Square(headerHeight)),
+                    LayoutNode.Leaf("close", LayoutSize.Square(headerHeight))
                 ),
                 LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
             );
