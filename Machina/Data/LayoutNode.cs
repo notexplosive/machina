@@ -29,9 +29,9 @@ namespace Machina.Data
             return new LayoutNode(name, size);
         }
 
-        public static LayoutNode Parent(string name, LayoutSize size, Orientation orientation, Point margin, int padding, params LayoutNode[] children)
+        public static LayoutNode Parent(string name, LayoutSize size, Orientation orientation, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, orientation, margin: margin, padding: padding, children: children);
+            return new LayoutNode(name, size, orientation, margin: style.Margin, padding: style.Padding, children: children);
         }
 
         public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
@@ -178,6 +178,20 @@ namespace Machina.Data
         {
             return new LayoutNode(Name, newSize, Orientation, Children, Margin, Padding);
         }
+    }
+
+    public struct LayoutStyle
+    {
+        public Point Margin { get; }
+        public int Padding { get; }
+
+        public LayoutStyle(Point margin = default, int padding = default)
+        {
+            Margin = margin;
+            Padding = padding;
+        }
+
+        public static readonly LayoutStyle Empty = new LayoutStyle();
     }
 
     public struct LayoutNodeName
