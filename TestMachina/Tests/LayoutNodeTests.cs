@@ -13,12 +13,12 @@ namespace TestMachina.Tests
     {
         public static string DrawResult(LayoutResult layoutResult)
         {
-            var drawPanel = new AsciiDrawPanel(layoutResult.RootRectangle.Size);
+            var drawPanel = new AsciiDrawPanel(layoutResult.RootNode.Size);
             foreach (var key in layoutResult.Keys())
             {
-                var rect = layoutResult.Get(key);
-                drawPanel.DrawRectangle(rect, '.');
-                drawPanel.DrawStringAt(rect.Location + new Point(1, 1), key.Text);
+                var node = layoutResult.Get(key);
+                drawPanel.DrawRectangle(node.Rectangle, '.');
+                drawPanel.DrawStringAt(node.Rectangle.Location + new Point(1, 1), key);
             }
             return drawPanel.GetImage();
         }

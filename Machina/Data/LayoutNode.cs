@@ -39,16 +39,6 @@ namespace Machina.Data
             return new LayoutNode(name, size, Orientation.Horizontal, margin: style.Margin, padding: style.Padding, children: children);
         }
 
-        public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
-        {
-            return new Rectangle(position, GetMeasuredSize(layoutResult));
-        }
-
-        public Point GetMeasuredSize(LayoutResult layoutResult)
-        {
-            return new Point(layoutResult.GetEdgeValue(Size.X), layoutResult.GetEdgeValue(Size.Y));
-        }
-
         public LayoutResult Build()
         {
             return Build(Point.Zero);
@@ -64,7 +54,7 @@ namespace Machina.Data
         private LayoutResult Build(LayoutResult layoutResult, Point startingLocation)
         {
             var isVertical = Orientation == Orientation.Vertical;
-            var groupSize = GetMeasuredSize(layoutResult);
+            var groupSize = layoutResult.GetMeasuredSize(this);
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? Margin.Y : Margin.X;
 
@@ -327,15 +317,29 @@ namespace Machina.Data
         public int ActualSize { get; }
     }
 
+    public struct LayoutResultNode
+    {
+        public Point PositionRelativeToRoot { get; }
+        public Point Size { get; }
+        public Rectangle Rectangle { get; }
+
+        public LayoutResultNode(Point position, Point size)
+        {
+            PositionRelativeToRoot = position;
+            Size = size;
+            Rectangle = new Rectangle(PositionRelativeToRoot, Size);
+        }
+    }
+
     public class LayoutResult
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        private readonly Dictionary<LayoutNodeName, Rectangle> content = new Dictionary<LayoutNodeName, Rectangle>();
-
+        private readonly Dictionary<string, LayoutResultNode> content = new Dictionary<string, LayoutResultNode>();
+        public LayoutResultNode RootNode { get; }
 
         public LayoutResult(LayoutNode rootNode)
         {
-            RootRectangle = rootNode.GetRectangle(Point.Zero, this);
+            RootNode = new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode));
         }
 
         public int GetEdgeValue(ILayoutEdge edge)
@@ -352,28 +356,30 @@ namespace Machina.Data
         {
             if (node.Name.Exists)
             {
-                var rect = node.GetRectangle(position, this);
-                this.content.Add(node.Name, rect);
+                this.content.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node)));
             }
         }
 
-        public Rectangle Get(LayoutNodeName name)
+        public LayoutResultNode Get(string name)
         {
             return content[name];
         }
 
-        public Rectangle[] GetAll()
+        public LayoutResultNode[] GetAll()
         {
-            var result = new Rectangle[this.content.Values.Count];
+            var result = new LayoutResultNode[this.content.Values.Count];
             this.content.Values.CopyTo(result, 0);
             return result;
         }
 
-        public IEnumerable<LayoutNodeName> Keys()
+        public IEnumerable<string> Keys()
         {
             return this.content.Keys;
         }
 
-        public Rectangle RootRectangle { get; }
+        public Point GetMeasuredSize(LayoutNode node)
+        {
+            return new Point(GetEdgeValue(node.Size.X), GetEdgeValue(node.Size.Y));
+        }
     }
 }
