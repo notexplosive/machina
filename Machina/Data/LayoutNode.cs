@@ -331,15 +331,11 @@ namespace Machina.Data
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private readonly Dictionary<LayoutNodeName, Rectangle> content = new Dictionary<LayoutNodeName, Rectangle>();
-        private Rectangle? rootRectangle = null;
 
 
         public LayoutResult(LayoutNode rootNode)
         {
-            if (this.rootRectangle == null)
-            {
-                this.rootRectangle = rootNode.GetRectangle(Point.Zero, this);
-            }
+            RootRectangle = rootNode.GetRectangle(Point.Zero, this);
         }
 
         public int GetEdgeValue(ILayoutEdge edge)
@@ -378,6 +374,6 @@ namespace Machina.Data
             return this.content.Keys;
         }
 
-        public Rectangle RootRectangle => this.rootRectangle.Value;
+        public Rectangle RootRectangle { get; }
     }
 }
