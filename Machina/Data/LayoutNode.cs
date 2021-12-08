@@ -182,8 +182,8 @@ namespace Machina.Data
 
     public struct LayoutStyle
     {
-        public Point Margin { get; }
-        public int Padding { get; }
+        public readonly Point Margin { get; }
+        public readonly int Padding { get; }
 
         public LayoutStyle(Point margin = default, int padding = default)
         {
