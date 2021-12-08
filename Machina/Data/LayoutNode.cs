@@ -31,8 +31,12 @@ namespace Machina.Data
 
         public LayoutResult Build()
         {
+            return Build(Point.Zero);
+        }
+
+        public LayoutResult Build(Point startingLocation)
+        {
             var layoutResult = new LayoutResult(this);
-            var startingLocation = Point.Zero;
             layoutResult.Add(startingLocation, this);
             return Build(layoutResult, startingLocation);
         }
