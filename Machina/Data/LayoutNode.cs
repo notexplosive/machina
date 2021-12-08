@@ -9,7 +9,7 @@ namespace Machina.Data
 {
     public class LayoutNode
     {
-        public LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
+        private LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
         {
             Name = name;
             Size = size;
@@ -29,7 +29,7 @@ namespace Machina.Data
             return new LayoutNode(name, size);
         }
 
-        public static LayoutNode Parent(string name, LayoutSize size, Orientation orientation, LayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode Parent(string name, LayoutSize size, LayoutStyle style, Orientation orientation, params LayoutNode[] children)
         {
             return new LayoutNode(name, size, orientation, margin: style.Margin, padding: style.Padding, children: children);
         }
