@@ -19,6 +19,16 @@ namespace Machina.Data
             Children = children;
         }
 
+        public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
+        {
+            return new Rectangle(position, GetMeasuredSize(layoutResult));
+        }
+
+        public Point GetMeasuredSize(LayoutResult layoutResult)
+        {
+            return new Point(layoutResult.GetEdgeValue(Size.X), layoutResult.GetEdgeValue(Size.Y));
+        }
+
         public LayoutResult Bake()
         {
             return Bake(new LayoutResult(this), Point.Zero);
@@ -27,7 +37,7 @@ namespace Machina.Data
         private LayoutResult Bake(LayoutResult layoutResult, Point startingLocation)
         {
             var isVertical = Orientation == Orientation.Vertical;
-            var groupSize = Size.ComputeConstSize();
+            var groupSize = GetMeasuredSize(layoutResult);
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? Margin.Y : Margin.X;
 
@@ -79,14 +89,16 @@ namespace Machina.Data
                 {
                     if (isVertical)
                     {
-                        alongElement.Size.Y = new ConstLayoutEdge(alongSizeOfEachStretchedElement);
+                        layoutResult.sizeLookupTable[alongElement.Size.Y] = alongSizeOfEachStretchedElement;
                     }
                     else
                     {
-                        alongElement.Size.X = new ConstLayoutEdge(alongSizeOfEachStretchedElement);
+                        layoutResult.sizeLookupTable[alongElement.Size.X] = alongSizeOfEachStretchedElement;
                     }
                 }
             }
+
+            var perpendicularStretchSize = groupSize.X - Margin.X * 2;
 
             if (stretchPerpendicular.Count > 0)
             {
@@ -94,11 +106,11 @@ namespace Machina.Data
                 {
                     if (isVertical)
                     {
-                        perpElement.Size.X = new ConstLayoutEdge(groupSize.X - Margin.X * 2);
+                        layoutResult.sizeLookupTable[perpElement.Size.X] = perpendicularStretchSize;
                     }
                     else
                     {
-                        perpElement.Size.Y = new ConstLayoutEdge(groupSize.Y - Margin.Y * 2);
+                        layoutResult.sizeLookupTable[perpElement.Size.Y] = perpendicularStretchSize;
                     }
                 }
             }
@@ -111,11 +123,11 @@ namespace Machina.Data
                 layoutResult.Add(elementPosition, element);
                 if (isVertical)
                 {
-                    nextLocation += new Point(0, element.Size.Y as ConstLayoutEdge + Padding);
+                    nextLocation += new Point(0, layoutResult.GetEdgeValue(element.Size.Y) + Padding);
                 }
                 else
                 {
-                    nextLocation += new Point(element.Size.X as ConstLayoutEdge + Padding, 0);
+                    nextLocation += new Point(layoutResult.GetEdgeValue(element.Size.X) + Padding, 0);
                 }
 
                 if (element.HasChildren)
@@ -134,11 +146,6 @@ namespace Machina.Data
         public Orientation Orientation { get; }
         public Point Margin { get; }
         public int Padding { get; }
-
-        public Rectangle GetRectangle(Point position)
-        {
-            return new Rectangle(position, new Point(Size.X as ConstLayoutEdge, Size.Y as ConstLayoutEdge));
-        }
 
         /// <summary>
         /// Returns a LayoutNode just like this one
@@ -186,11 +193,29 @@ namespace Machina.Data
 
     public abstract class LayoutEdge
     {
+        public static int id = 0;
+        private readonly int myId;
+
+        public LayoutEdge()
+        {
+            id++;
+            this.myId = id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.myId);
+        }
     }
 
     public class ConstLayoutEdge : LayoutEdge
     {
-        public ConstLayoutEdge(int value)
+        public ConstLayoutEdge(int value) : base()
         {
             Value = value;
         }
@@ -205,28 +230,39 @@ namespace Machina.Data
 
     public class StretchedLayoutEdge : LayoutEdge
     {
-        public StretchedLayoutEdge()
+        public StretchedLayoutEdge() : base()
         {
         }
     }
 
     public class LayoutResult
     {
+        public readonly Dictionary<LayoutEdge, int> sizeLookupTable = new Dictionary<LayoutEdge, int>();
         private Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
         private Rectangle? rootRectangle = null;
+
 
         public LayoutResult(LayoutNode rootNode)
         {
             if (this.rootRectangle == null)
             {
-                this.rootRectangle = rootNode.GetRectangle(Point.Zero);
+                this.rootRectangle = rootNode.GetRectangle(Point.Zero, this);
             }
+        }
+
+        public int GetEdgeValue(LayoutEdge edge)
+        {
+            if (edge is ConstLayoutEdge constEdge)
+            {
+                return constEdge;
+            }
+
+            return sizeLookupTable[edge];
         }
 
         public void Add(Point position, LayoutNode node)
         {
-            Debug.Assert(!node.Size.IsDynamic);
-            var rect = node.GetRectangle(position);
+            var rect = node.GetRectangle(position, this);
             this.content.Add(node.Name, rect);
         }
 
