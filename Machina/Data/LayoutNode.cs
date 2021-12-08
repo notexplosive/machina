@@ -55,11 +55,11 @@ namespace Machina.Data
                 {
                     if (isVertical)
                     {
-                        remainingAlongSize -= element.Size.Y as ConstLayoutEdge;
+                        remainingAlongSize -= element.Size.Y.ActualSize;
                     }
                     else
                     {
-                        remainingAlongSize -= element.Size.X as ConstLayoutEdge;
+                        remainingAlongSize -= element.Size.X.ActualSize;
                     }
                 }
                 else
@@ -203,6 +203,8 @@ namespace Machina.Data
 
     public abstract class LayoutEdge
     {
+        public abstract bool IsStretched { get; }
+        public abstract int ActualSize { get; }
     }
 
     public class ConstLayoutEdge : LayoutEdge
@@ -218,10 +220,15 @@ namespace Machina.Data
         {
             return edge.Value;
         }
+
+        public override bool IsStretched => false;
+        public override int ActualSize => Value;
     }
 
     public class StretchedLayoutEdge : LayoutEdge
     {
+        public override bool IsStretched => true;
+        public override int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
     }
 
     public class LayoutResult
