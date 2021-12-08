@@ -9,7 +9,7 @@ namespace Machina.Data
 {
     public class LayoutNode
     {
-        public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
+        public LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
         {
             Name = name;
             Size = size;
@@ -141,7 +141,7 @@ namespace Machina.Data
 
         private readonly LayoutNode[] Children;
         private bool HasChildren => Children != null;
-        public string Name { get; }
+        public LayoutNodeName Name { get; }
         public LayoutSize Size { get; }
         public Orientation Orientation { get; }
         public Point Margin { get; }
@@ -156,6 +156,43 @@ namespace Machina.Data
         {
             return new LayoutNode(Name, newSize, Orientation, Children, Margin, Padding);
         }
+    }
+
+    public struct LayoutNodeName
+    {
+        private readonly string internalString;
+        public bool IsNameless => this.internalString == null;
+
+        public LayoutNodeName(string text)
+        {
+            this.internalString = text;
+        }
+
+        public static implicit operator LayoutNodeName(string text)
+        {
+            return new LayoutNodeName(text);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(this.internalString);
+        }
+
+        public string Text
+        {
+            get
+            {
+                if (this.internalString != null)
+                {
+                    return this.internalString;
+                }
+
+                throw new Exception("Node does not have a name (is spacer, root, or null)");
+            }
+        }
+
+        public static LayoutNodeName Root => new LayoutNodeName(null);
+        public static LayoutNodeName Spacer => new LayoutNodeName(null);
     }
 
     public struct LayoutSize
@@ -251,7 +288,7 @@ namespace Machina.Data
     public class LayoutResult
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        private readonly Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
+        private readonly Dictionary<LayoutNodeName, Rectangle> content = new Dictionary<LayoutNodeName, Rectangle>();
         private Rectangle? rootRectangle = null;
 
 
@@ -279,7 +316,7 @@ namespace Machina.Data
             this.content.Add(node.Name, rect);
         }
 
-        public Rectangle Get(string name)
+        public Rectangle Get(LayoutNodeName name)
         {
             return content[name];
         }
@@ -291,7 +328,7 @@ namespace Machina.Data
             return result;
         }
 
-        public IEnumerable<string> Keys()
+        public IEnumerable<LayoutNodeName> Keys()
         {
             return this.content.Keys;
         }
