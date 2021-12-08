@@ -24,6 +24,11 @@ namespace Machina.Data
             return new LayoutNode(LayoutNodeName.Spacer, size);
         }
 
+        public static LayoutNode Leaf(string name, LayoutSize size)
+        {
+            return new LayoutNode(name, size);
+        }
+
         public Rectangle GetRectangle(Point position, LayoutResult layoutResult)
         {
             return new Rectangle(position, GetMeasuredSize(layoutResult));
