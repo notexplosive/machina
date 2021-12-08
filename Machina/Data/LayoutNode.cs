@@ -9,26 +9,14 @@ namespace Machina.Data
 {
     public class LayoutNode
     {
-        private List<LayoutNode> children;
-
-        public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal, Point margin = default, int padding = 0)
+        public LayoutNode(string name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
         {
             Name = name;
             Size = size;
             Orientation = orientation;
             Margin = margin;
             Padding = padding;
-        }
-
-        private Point ComputeConstSize()
-        {
-            if (!Size.IsDynamic)
-            {
-                CachedSize = new Point(Size.X as ConstLayoutEdge, Size.Y as ConstLayoutEdge);
-                return CachedSize.Value;
-            }
-
-            throw new Exception("Cannot compute const size of dynamic node");
+            Children = children;
         }
 
         public LayoutResult Bake()
@@ -44,16 +32,16 @@ namespace Machina.Data
             }
 
             var isVertical = Orientation == Orientation.Vertical;
-            var groupSize = ComputeConstSize();
+            var groupSize = Size.ComputeConstSize();
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? Margin.Y : Margin.X;
 
-            var elements = this.children;
+            var elements = Children;
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
             var stretchAlong = new List<LayoutNode>();
             var stretchPerpendicular = new List<LayoutNode>();
 
-            var last = elements.Count - 1;
+            var last = elements.Length - 1;
             var index = 0;
 
             foreach (var element in elements)
@@ -135,7 +123,7 @@ namespace Machina.Data
                     nextLocation += new Point(element.Size.X as ConstLayoutEdge + Padding, 0);
                 }
 
-                if (element.HasChildren())
+                if (element.HasChildren)
                 {
                     element.Bake(layoutResult, elementPosition);
                 }
@@ -144,23 +132,8 @@ namespace Machina.Data
             return layoutResult;
         }
 
-        public Point? CachedSize;
-
-        public LayoutNode AddChildren(params LayoutNode[] children)
-        {
-            if (!HasChildren())
-            {
-                this.children = new List<LayoutNode>();
-            }
-            this.children.AddRange(children);
-            return this;
-        }
-
-        public bool HasChildren()
-        {
-            return this.children != null;
-        }
-
+        private readonly LayoutNode[] Children;
+        private bool HasChildren => Children != null;
         public string Name { get; }
         public LayoutSize Size { get; }
         public Orientation Orientation { get; }
@@ -188,6 +161,16 @@ namespace Machina.Data
         public bool IsStretchedPerpendicular(Orientation orientation)
         {
             return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
+        }
+
+        public Point ComputeConstSize()
+        {
+            if (!IsDynamic)
+            {
+                return new Point(X as ConstLayoutEdge, Y as ConstLayoutEdge);
+            }
+
+            throw new Exception("Cannot compute const size of dynamic node");
         }
     }
 
