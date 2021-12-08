@@ -201,10 +201,10 @@ namespace Machina.Data
         }
     }
 
-    public abstract class LayoutEdge
+    public interface LayoutEdge
     {
-        public abstract bool IsStretched { get; }
-        public abstract int ActualSize { get; }
+        public bool IsStretched { get; }
+        public int ActualSize { get; }
     }
 
     public class ConstLayoutEdge : LayoutEdge
@@ -221,14 +221,14 @@ namespace Machina.Data
             return edge.Value;
         }
 
-        public override bool IsStretched => false;
-        public override int ActualSize => Value;
+        public bool IsStretched => false;
+        public int ActualSize => Value;
     }
 
     public class StretchedLayoutEdge : LayoutEdge
     {
-        public override bool IsStretched => true;
-        public override int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
+        public bool IsStretched => true;
+        public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
     }
 
     public class LayoutResult
