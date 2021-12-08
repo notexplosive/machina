@@ -158,7 +158,7 @@ namespace Machina.Data
         }
     }
 
-    public class LayoutSize
+    public struct LayoutSize
     {
         public readonly ILayoutEdge X;
         public readonly ILayoutEdge Y;
