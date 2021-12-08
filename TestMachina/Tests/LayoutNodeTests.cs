@@ -137,7 +137,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 10), new LayoutStyle(Point.Zero, 0), Orientation.Horizontal,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 10), LayoutStyle.Empty, Orientation.Horizontal,
                 LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                 LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
                 LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
@@ -153,7 +153,7 @@ namespace TestMachina.Tests
         public void create_window_test()
         {
             var headerHeight = 8;
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(80, 40), new LayoutStyle(Point.Zero, 0), Orientation.Vertical,
+            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(80, 40), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
                     LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                     LayoutNode.Leaf("minimize", LayoutSize.Pixels(headerHeight, headerHeight)),
