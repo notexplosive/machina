@@ -158,14 +158,21 @@ namespace Machina.Data
         }
     }
 
-    public class LayoutSize : XYPair<LayoutEdge>
+    public class LayoutSize
     {
-        public LayoutSize(LayoutEdge x, LayoutEdge y) : base(x, y)
+        public LayoutEdge X;
+        public LayoutEdge Y;
+
+        public LayoutSize(LayoutEdge x, LayoutEdge y)
         {
+            X = x;
+            Y = y;
         }
 
-        public LayoutSize(int x, int y) : base(new ConstLayoutEdge(x), new ConstLayoutEdge(y))
+        public LayoutSize(int x, int y)
         {
+            X = new ConstLayoutEdge(x);
+            Y = new ConstLayoutEdge(y);
         }
 
         public bool IsStretchedAlong(Orientation orientation)
@@ -176,6 +183,21 @@ namespace Machina.Data
         public bool IsStretchedPerpendicular(Orientation orientation)
         {
             return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
+        }
+
+        public LayoutEdge GetValueFromOrientation(Orientation orientation)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return X;
+            }
+
+            if (orientation == Orientation.Vertical)
+            {
+                return Y;
+            }
+
+            throw new ArgumentException("Invalid orientation");
         }
     }
 
@@ -210,9 +232,9 @@ namespace Machina.Data
 
         public int Value { get; }
 
-        public static implicit operator int(ConstLayoutEdge d)
+        public static implicit operator int(ConstLayoutEdge edge)
         {
-            return d.Value;
+            return edge.Value;
         }
     }
 

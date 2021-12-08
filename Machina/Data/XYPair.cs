@@ -3,7 +3,7 @@ using System;
 
 namespace Machina.Data
 {
-    public class XYPair<T>
+    public struct XYPair<T>
     {
         public T X;
         public T Y;
