@@ -30,7 +30,7 @@ namespace TestMachina.Tests
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), LayoutStyle.Empty, Orientation.Vertical,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
-                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth)
+                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
             var layoutResult = layout.Build();
@@ -45,7 +45,7 @@ namespace TestMachina.Tests
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(new Point(10, 5), 0), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
-                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth)
+                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
             var layoutResult = layout.Build();
@@ -60,7 +60,7 @@ namespace TestMachina.Tests
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(Point.Zero, 5), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
-                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth)
+                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
             var layoutResult = layout.Build();
@@ -75,7 +75,7 @@ namespace TestMachina.Tests
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)), Orientation.Vertical,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
-                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth)
+                LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
             var layoutResult = layout.Build();
@@ -94,9 +94,9 @@ namespace TestMachina.Tests
                         LayoutNode.Leaf("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     ),
-                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth, new LayoutStyle(new Point(0, 2), 3), Orientation.Vertical,
-                        LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth),
-                        LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth),
+                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(0, 2), 3), Orientation.Vertical,
+                        LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth()),
+                        LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     )
             );
@@ -117,9 +117,9 @@ namespace TestMachina.Tests
                         LayoutNode.Leaf("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     ),
-                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth, new LayoutStyle(new Point(5, 2), 1), Orientation.Vertical,
-                        LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth),
-                        LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth),
+                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(5, 2), 1), Orientation.Vertical,
+                        LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth()),
+                        LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     )
             );
@@ -138,7 +138,7 @@ namespace TestMachina.Tests
         public void spacer_test()
         {
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 10), new LayoutStyle(Point.Zero, 0), Orientation.Horizontal,
-                LayoutNode.Spacer(LayoutSize.StretchedBoth),
+                LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                 LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
                 LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
             );
@@ -155,12 +155,12 @@ namespace TestMachina.Tests
             var headerHeight = 8;
             var layout = LayoutNode.Parent("root", new LayoutSize(80, 40), new LayoutStyle(Point.Zero, 0), Orientation.Vertical,
                 LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
-                    LayoutNode.Spacer(LayoutSize.StretchedBoth),
+                    LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                     LayoutNode.Leaf("minimize", new LayoutSize(headerHeight, headerHeight)),
                     LayoutNode.Leaf("fullscreen", new LayoutSize(headerHeight, headerHeight)),
                     LayoutNode.Leaf("close", new LayoutSize(headerHeight, headerHeight))
                 ),
-                LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth)
+                LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
             );
 
             var firstBakeResult = layout.Build();
