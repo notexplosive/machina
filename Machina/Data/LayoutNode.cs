@@ -29,9 +29,14 @@ namespace Machina.Data
             return new LayoutNode(name, size);
         }
 
-        public static LayoutNode Parent(string name, LayoutSize size, LayoutStyle style, Orientation orientation, params LayoutNode[] children)
+        public static LayoutNode VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, orientation, margin: style.Margin, padding: style.Padding, children: children);
+            return new LayoutNode(name, size, Orientation.Vertical, margin: style.Margin, padding: style.Padding, children: children);
+        }
+
+        public static LayoutNode HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        {
+            return new LayoutNode(name, size, Orientation.Horizontal, margin: style.Margin, padding: style.Padding, children: children);
         }
 
         public Rectangle GetRectangle(Point position, LayoutResult layoutResult)

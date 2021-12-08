@@ -27,7 +27,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(new Point(10, 5), 0), Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(new Point(10, 5), 0),
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -57,7 +57,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_padding()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(Point.Zero, 5), Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(Point.Zero, 5),
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -72,7 +72,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin_and_padding()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)), Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)),
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
                 LayoutNode.Leaf("item-2", LayoutSize.StretchedHorizontally(20)),
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
@@ -87,14 +87,14 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void nested_layout_test()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
-                LayoutNode.Parent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0), Orientation.Horizontal,
+                LayoutNode.HorizontalParent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0),
                         LayoutNode.Leaf("item-2a", LayoutSize.StretchedHorizontally(10)),
                         LayoutNode.Leaf("item-2b", LayoutSize.StretchedHorizontally(10)),
                         LayoutNode.Leaf("item-2c", LayoutSize.StretchedHorizontally(10))
                     ),
-                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(0, 2), 3), Orientation.Vertical,
+                LayoutNode.VerticalParent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(0, 2), 3),
                         LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3c", LayoutSize.StretchedHorizontally(10))
@@ -110,14 +110,14 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void resize_and_rebake_test()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 50), LayoutStyle.Empty, Orientation.Vertical,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 50), LayoutStyle.Empty,
                 LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
-                LayoutNode.Parent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0), Orientation.Horizontal,
+                LayoutNode.HorizontalParent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0),
                         LayoutNode.Leaf("item-2a", LayoutSize.StretchedHorizontally(10)),
                         LayoutNode.Leaf("item-2b", LayoutSize.StretchedHorizontally(10)),
                         LayoutNode.Leaf("item-2c", LayoutSize.StretchedHorizontally(10))
                     ),
-                LayoutNode.Parent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(5, 2), 1), Orientation.Vertical,
+                LayoutNode.VerticalParent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(5, 2), 1),
                         LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth()),
                         LayoutNode.Leaf("item-3c", LayoutSize.StretchedHorizontally(10))
@@ -137,7 +137,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(50, 10), LayoutStyle.Empty, Orientation.Horizontal,
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(50, 10), LayoutStyle.Empty,
                 LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                 LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
                 LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
@@ -153,8 +153,8 @@ namespace TestMachina.Tests
         public void create_window_test()
         {
             var headerHeight = 8;
-            var layout = LayoutNode.Parent("root", LayoutSize.Pixels(80, 40), LayoutStyle.Empty, Orientation.Vertical,
-                LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(80, 40), LayoutStyle.Empty,
+                LayoutNode.HorizontalParent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2),
                     LayoutNode.Spacer(LayoutSize.StretchedBoth()),
                     LayoutNode.Leaf("minimize", LayoutSize.Square(headerHeight)),
                     LayoutNode.Leaf("fullscreen", LayoutSize.Square(headerHeight)),
