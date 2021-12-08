@@ -19,9 +19,14 @@ namespace Machina.Data
             Children = children;
         }
 
-        public static LayoutNode Spacer(LayoutSize size)
+        public static LayoutNode StretchedSpacer()
         {
-            return new LayoutNode(LayoutNodeName.Nameless, size);
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth());
+        }
+
+        public static LayoutNode Spacer(int size)
+        {
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Square(size));
         }
 
         public static LayoutNode Leaf(string name, LayoutSize size)
@@ -47,11 +52,12 @@ namespace Machina.Data
         public LayoutResult Build(Point startingLocation)
         {
             var layoutResult = new LayoutResult(this);
-            layoutResult.AddLayoutNode(startingLocation, this);
-            return Build(layoutResult, startingLocation);
+            int nestingLevel = 0;
+            layoutResult.AddLayoutNode(startingLocation, this, nestingLevel);
+            return Build(layoutResult, startingLocation, nestingLevel);
         }
 
-        private LayoutResult Build(LayoutResult layoutResult, Point startingLocation)
+        private LayoutResult Build(LayoutResult layoutResult, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = Orientation == Orientation.Vertical;
             var groupSize = layoutResult.GetMeasuredSize(this);
@@ -115,6 +121,7 @@ namespace Machina.Data
                 }
             }
 
+            // We're using the same value for all perpendicular stretches, maybe we can simplify this?
             var perpendicularStretchSize = groupSize.X - Margin.X * 2;
 
             if (stretchPerpendicular.Count > 0)
@@ -132,12 +139,14 @@ namespace Machina.Data
                 }
             }
 
+            int myNestingLevel = parentNestingLevel + 1;
+
             // Place elements
             var nextLocation = startingLocation + new Point(Margin.X, Margin.Y);
             foreach (var element in elements)
             {
                 var elementPosition = nextLocation;
-                layoutResult.AddLayoutNode(elementPosition, element);
+                layoutResult.AddLayoutNode(elementPosition, element, myNestingLevel);
                 if (isVertical)
                 {
                     nextLocation += new Point(0, layoutResult.GetEdgeValue(element.Size.Y) + Padding);
@@ -149,7 +158,7 @@ namespace Machina.Data
 
                 if (element.HasChildren)
                 {
-                    element.Build(layoutResult, elementPosition);
+                    element.Build(layoutResult, elementPosition, myNestingLevel);
                 }
             }
 
@@ -322,12 +331,14 @@ namespace Machina.Data
         public Point PositionRelativeToRoot { get; }
         public Point Size { get; }
         public Rectangle Rectangle { get; }
+        public int NestingLevel { get; }
 
-        public LayoutResultNode(Point position, Point size)
+        public LayoutResultNode(Point position, Point size, int nestingLevel)
         {
             PositionRelativeToRoot = position;
             Size = size;
             Rectangle = new Rectangle(PositionRelativeToRoot, Size);
+            NestingLevel = nestingLevel;
         }
     }
 
@@ -339,7 +350,7 @@ namespace Machina.Data
 
         public LayoutResult(LayoutNode rootNode)
         {
-            RootNode = new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode));
+            RootNode = new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode), 0);
         }
 
         public int GetEdgeValue(ILayoutEdge edge)
@@ -352,11 +363,11 @@ namespace Machina.Data
             return sizeLookupTable[edge];
         }
 
-        public void AddLayoutNode(Point position, LayoutNode node)
+        public void AddLayoutNode(Point position, LayoutNode node, int nestingLevel)
         {
             if (node.Name.Exists)
             {
-                this.content.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node)));
+                this.content.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node), nestingLevel));
             }
         }
 

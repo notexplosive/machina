@@ -10,12 +10,12 @@ namespace TestMachina.Utility
     {
         private readonly Point size;
         private readonly char[,] content;
+        private List<CharAndPostion> offscreenPixels = new List<CharAndPostion>();
 
         public AsciiDrawPanel(Point size)
         {
             this.size = size;
             this.content = new char[this.size.X, this.size.Y];
-
             Clear(' ');
         }
 
@@ -34,7 +34,7 @@ namespace TestMachina.Utility
         {
             if (position.X < 0 || position.Y < 0 || position.X >= size.X || position.Y >= size.Y)
             {
-                Console.Write($"Skipped pixel {position.X},{position.Y}");
+                offscreenPixels.Add(new CharAndPostion(position, pixel));
                 return;
             }
 
@@ -77,7 +77,30 @@ namespace TestMachina.Utility
                 }
                 result.Append('\n');
             }
+            if (this.offscreenPixels.Count > 0)
+            {
+                result.Append('\n').Append($"{this.offscreenPixels.Count} chars were rendered offscreen and were skipped\n");
+                foreach (var pixel in this.offscreenPixels)
+                {
+                    result.Append($"`{pixel.Char}` at {pixel.Position}").Append('\n');
+                }
+                result.Append('\n');
+            }
+
+
             return result.ToString();
+        }
+
+        private struct CharAndPostion
+        {
+            public CharAndPostion(Point position, char text)
+            {
+                Char = text;
+                Position = position;
+            }
+
+            public char Char { get; }
+            public Point Position { get; }
         }
     }
 }

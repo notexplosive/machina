@@ -17,7 +17,7 @@ namespace TestMachina.Tests
             foreach (var key in layoutResult.Keys())
             {
                 var node = layoutResult.Get(key);
-                drawPanel.DrawRectangle(node.Rectangle, '.');
+                drawPanel.DrawRectangle(node.Rectangle, node.NestingLevel.ToString()[0]);
                 drawPanel.DrawStringAt(node.Rectangle.Location + new Point(1, 1), key);
             }
             return drawPanel.GetImage();
@@ -137,10 +137,31 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
-            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(50, 10), LayoutStyle.Empty,
-                LayoutNode.Spacer(LayoutSize.StretchedBoth()),
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(50, 20), LayoutStyle.Empty,
+                LayoutNode.StretchedSpacer(),
                 LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
-                LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
+                LayoutNode.Spacer(5)
+            );
+
+            var firstBakeResult = layout.Build();
+
+            Approvals.Verify(DrawResult(firstBakeResult));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void vertical_stretch_test()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), LayoutStyle.Empty,
+                LayoutNode.HorizontalParent("group-1", LayoutSize.Pixels(50, 20), new LayoutStyle(margin: new Point(3, 3)),
+                    LayoutNode.Leaf("tall-item", LayoutSize.StretchedVertically(15)),
+                    LayoutNode.Leaf("both-item", LayoutSize.StretchedBoth())
+                ),
+                LayoutNode.StretchedSpacer(),
+                LayoutNode.VerticalParent("group-2", LayoutSize.Pixels(50, 20), new LayoutStyle(margin: new Point(3, 3)),
+                    LayoutNode.Leaf("tall-item-2", LayoutSize.StretchedVertically(15)),
+                    LayoutNode.Leaf("both-item-2", LayoutSize.StretchedBoth())
+                )
             );
 
             var firstBakeResult = layout.Build();
@@ -155,7 +176,7 @@ namespace TestMachina.Tests
             var headerHeight = 8;
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(80, 40), LayoutStyle.Empty,
                 LayoutNode.HorizontalParent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2),
-                    LayoutNode.Spacer(LayoutSize.StretchedBoth()),
+                    LayoutNode.StretchedSpacer(),
                     LayoutNode.Leaf("minimize", LayoutSize.Square(headerHeight)),
                     LayoutNode.Leaf("fullscreen", LayoutSize.Square(headerHeight)),
                     LayoutNode.Leaf("close", LayoutSize.Square(headerHeight))
