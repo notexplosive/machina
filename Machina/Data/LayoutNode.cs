@@ -160,8 +160,8 @@ namespace Machina.Data
 
     public class LayoutSize
     {
-        public LayoutEdge X;
-        public LayoutEdge Y;
+        public readonly LayoutEdge X;
+        public readonly LayoutEdge Y;
 
         public LayoutSize(LayoutEdge x, LayoutEdge y)
         {
