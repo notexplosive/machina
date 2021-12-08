@@ -21,16 +21,11 @@ namespace Machina.Data
 
         public LayoutResult Bake()
         {
-            return Bake(new LayoutResult(), Point.Zero);
+            return Bake(new LayoutResult(this), Point.Zero);
         }
 
         private LayoutResult Bake(LayoutResult layoutResult, Point startingLocation)
         {
-            if (layoutResult == null)
-            {
-                layoutResult = new LayoutResult();
-            }
-
             var isVertical = Orientation == Orientation.Vertical;
             var groupSize = Size.ComputeConstSize();
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
@@ -139,6 +134,21 @@ namespace Machina.Data
         public Orientation Orientation { get; }
         public Point Margin { get; }
         public int Padding { get; }
+
+        public Rectangle GetRectangle(Point position)
+        {
+            return new Rectangle(position, new Point(Size.X as ConstLayoutEdge, Size.Y as ConstLayoutEdge));
+        }
+
+        /// <summary>
+        /// Returns a LayoutNode just like this one
+        /// </summary>
+        /// <param name="newSize"></param>
+        /// <returns></returns>
+        public LayoutNode GetResized(LayoutSize newSize)
+        {
+            return new LayoutNode(Name, newSize, Orientation, Children, Margin, Padding);
+        }
     }
 
     public class LayoutSize : XYPair<LayoutEdge>
@@ -203,11 +213,20 @@ namespace Machina.Data
     public class LayoutResult
     {
         private Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
+        private Rectangle? rootRectangle = null;
+
+        public LayoutResult(LayoutNode rootNode)
+        {
+            if (this.rootRectangle == null)
+            {
+                this.rootRectangle = rootNode.GetRectangle(Point.Zero);
+            }
+        }
 
         public void Add(Point position, LayoutNode node)
         {
             Debug.Assert(!node.Size.IsDynamic);
-            var rect = new Rectangle(position, new Point(node.Size.X as ConstLayoutEdge, node.Size.Y as ConstLayoutEdge));
+            var rect = node.GetRectangle(position);
             this.content.Add(node.Name, rect);
         }
 
@@ -227,5 +246,7 @@ namespace Machina.Data
         {
             return this.content.Keys;
         }
+
+        public Rectangle RootRectangle => this.rootRectangle.Value;
     }
 }

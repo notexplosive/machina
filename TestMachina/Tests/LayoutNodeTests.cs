@@ -13,7 +13,7 @@ namespace TestMachina.Tests
     {
         public static string DrawResult(LayoutResult layoutResult)
         {
-            var drawPanel = new AsciiDrawPanel(new Point(50, 100));
+            var drawPanel = new AsciiDrawPanel(layoutResult.RootRectangle.Size);
             foreach (var key in layoutResult.Keys())
             {
                 var rect = layoutResult.Get(key);
@@ -106,6 +106,32 @@ namespace TestMachina.Tests
             var layoutResult = layout.Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void resize_and_rebake_test()
+        {
+            var layout = new LayoutNode("root", new LayoutSize(50, 50), orientation: Orientation.Vertical, children: new LayoutNode[] {
+                new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
+                new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), orientation: Orientation.Horizontal, margin: new Point(2, 3), children: new[] {
+                        new LayoutNode("item-2a", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
+                        new LayoutNode("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
+                        new LayoutNode("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
+                    }),
+                new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, margin: new Point(5, 2), padding: 1, children: new[] {
+                        new LayoutNode("item-3a", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
+                        new LayoutNode("item-3b", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
+                        new LayoutNode("item-3c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
+                    })
+            });
+
+            var resizedLayout = layout.GetResized(new LayoutSize(60, 60));
+
+            var firstBakeResult = layout.Bake();
+            var secondBakeResult = resizedLayout.Bake();
+
+            Approvals.Verify(DrawResult(firstBakeResult) + "\n\n" + DrawResult(secondBakeResult));
         }
     }
 }
