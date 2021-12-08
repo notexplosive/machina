@@ -158,7 +158,7 @@ namespace Machina.Data
         }
     }
 
-    public class LayoutSize
+    public struct LayoutSize
     {
         public readonly ILayoutEdge X;
         public readonly ILayoutEdge Y;
@@ -230,6 +230,10 @@ namespace Machina.Data
         public bool IsStretched => true;
         public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
 
+        /// <summary>
+        /// Do not delete! Important hack here
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             // Hacky thing to make every single instance of StretchedLayoutEdge unique
@@ -247,7 +251,7 @@ namespace Machina.Data
     public class LayoutResult
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        private Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
+        private readonly Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
         private Rectangle? rootRectangle = null;
 
 
