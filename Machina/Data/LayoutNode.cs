@@ -37,7 +37,7 @@ namespace Machina.Data
         public LayoutResult Build(Point startingLocation)
         {
             var layoutResult = new LayoutResult(this);
-            layoutResult.Add(startingLocation, this);
+            layoutResult.AddLayoutNode(startingLocation, this);
             return Build(layoutResult, startingLocation);
         }
 
@@ -127,7 +127,7 @@ namespace Machina.Data
             foreach (var element in elements)
             {
                 var elementPosition = nextLocation;
-                layoutResult.Add(elementPosition, element);
+                layoutResult.AddLayoutNode(elementPosition, element);
                 if (isVertical)
                 {
                     nextLocation += new Point(0, layoutResult.GetEdgeValue(element.Size.Y) + Padding);
@@ -189,16 +189,16 @@ namespace Machina.Data
         {
             get
             {
-                if (HasRealName)
+                if (Exists)
                 {
                     return this.internalString;
                 }
 
-                throw new Exception("Node does not have a name (is spacer, root, or null)");
+                throw new Exception("Node does not have a name (is spacer or null)");
             }
         }
 
-        public bool HasRealName => this.internalString != null;
+        public bool Exists => this.internalString != null;
 
         public static LayoutNodeName Spacer => new LayoutNodeName(null);
     }
@@ -318,10 +318,13 @@ namespace Machina.Data
             return sizeLookupTable[edge];
         }
 
-        public void Add(Point position, LayoutNode node)
+        public void AddLayoutNode(Point position, LayoutNode node)
         {
-            var rect = node.GetRectangle(position, this);
-            this.content.Add(node.Name, rect);
+            if (node.Name.Exists)
+            {
+                var rect = node.GetRectangle(position, this);
+                this.content.Add(node.Name, rect);
+            }
         }
 
         public Rectangle Get(LayoutNodeName name)
