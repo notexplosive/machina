@@ -249,6 +249,8 @@ namespace Machina.Data
             Y = new ConstLayoutEdge(y);
         }
 
+        public static LayoutSize StretchedBoth => new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge());
+
         public bool IsStretchedAlong(Orientation orientation)
         {
             return GetValueFromOrientation(orientation) is StretchedLayoutEdge;
