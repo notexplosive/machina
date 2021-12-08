@@ -168,8 +168,6 @@ namespace Machina.Data
         {
         }
 
-        public bool IsDynamic => X is StretchedLayoutEdge || Y is StretchedLayoutEdge;
-
         public bool IsStretchedAlong(Orientation orientation)
         {
             return GetValueFromOrientation(orientation) is StretchedLayoutEdge;
@@ -178,16 +176,6 @@ namespace Machina.Data
         public bool IsStretchedPerpendicular(Orientation orientation)
         {
             return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
-        }
-
-        public Point ComputeConstSize()
-        {
-            if (!IsDynamic)
-            {
-                return new Point(X as ConstLayoutEdge, Y as ConstLayoutEdge);
-            }
-
-            throw new Exception("Cannot compute const size of dynamic node");
         }
     }
 
