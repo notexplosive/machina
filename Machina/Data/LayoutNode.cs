@@ -29,7 +29,7 @@ namespace Machina.Data
             return new LayoutNode(name, size);
         }
 
-        public static LayoutNode IntermediateNode(string name, LayoutSize size, Orientation orientation, Point margin, int padding, params LayoutNode[] children)
+        public static LayoutNode Parent(string name, LayoutSize size, Orientation orientation, Point margin, int padding, params LayoutNode[] children)
         {
             return new LayoutNode(name, size, orientation, margin: margin, padding: padding, children: children);
         }

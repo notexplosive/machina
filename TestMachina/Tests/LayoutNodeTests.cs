@@ -27,7 +27,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 0,
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 0,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
                 LayoutNode.Leaf("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, new Point(10, 5), 0,
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, new Point(10, 5), 0,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
                 LayoutNode.Leaf("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
@@ -57,7 +57,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_padding()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 5, children: new[]
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 5, children: new[]
             {
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
@@ -73,7 +73,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin_and_padding()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, margin: new Point(3, 6), children: new[]
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, margin: new Point(3, 6), children: new[]
             {
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 LayoutNode.Leaf("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
@@ -89,14 +89,14 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void nested_layout_test()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 0,
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 100), Orientation.Vertical, Point.Zero, 0,
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
-                LayoutNode.IntermediateNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), Orientation.Horizontal, new Point(2, 3), 0,
+                LayoutNode.Parent("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), Orientation.Horizontal, new Point(2, 3), 0,
                         LayoutNode.Leaf("item-2a", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     ),
-                LayoutNode.IntermediateNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, margin: new Point(0, 2), 3,
+                LayoutNode.Parent("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, margin: new Point(0, 2), 3,
                         LayoutNode.Leaf("item-3a", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                         LayoutNode.Leaf("item-3b", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                         LayoutNode.Leaf("item-3c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
@@ -114,12 +114,12 @@ namespace TestMachina.Tests
         {
             var layout = new LayoutNode("root", new LayoutSize(50, 50), orientation: Orientation.Vertical, children: new LayoutNode[] {
                 LayoutNode.Leaf("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
-                LayoutNode.IntermediateNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), Orientation.Horizontal, new Point(2, 3), 0,
+                LayoutNode.Parent("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), Orientation.Horizontal, new Point(2, 3), 0,
                         LayoutNode.Leaf("item-2a", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2b", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                         LayoutNode.Leaf("item-2c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
                     ),
-                LayoutNode.IntermediateNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, new Point(5, 2), 1,
+                LayoutNode.Parent("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()), Orientation.Vertical, new Point(5, 2), 1,
                         LayoutNode.Leaf("item-3a", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                         LayoutNode.Leaf("item-3b", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                         LayoutNode.Leaf("item-3c", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10)))
@@ -139,7 +139,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
-            var layout = LayoutNode.IntermediateNode("root", new LayoutSize(50, 10), Orientation.Horizontal, Point.Zero, 0,
+            var layout = LayoutNode.Parent("root", new LayoutSize(50, 10), Orientation.Horizontal, Point.Zero, 0,
                 LayoutNode.Spacer(new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge())),
                 LayoutNode.Leaf("item-2", new LayoutSize(new ConstLayoutEdge(10), new StretchedLayoutEdge())),
                 LayoutNode.Spacer(new LayoutSize(new ConstLayoutEdge(5), new StretchedLayoutEdge()))
