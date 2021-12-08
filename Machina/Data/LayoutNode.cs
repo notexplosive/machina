@@ -160,10 +160,10 @@ namespace Machina.Data
 
     public class LayoutSize
     {
-        public readonly LayoutEdge X;
-        public readonly LayoutEdge Y;
+        public readonly ILayoutEdge X;
+        public readonly ILayoutEdge Y;
 
-        public LayoutSize(LayoutEdge x, LayoutEdge y)
+        public LayoutSize(ILayoutEdge x, ILayoutEdge y)
         {
             X = x;
             Y = y;
@@ -185,7 +185,7 @@ namespace Machina.Data
             return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
         }
 
-        public LayoutEdge GetValueFromOrientation(Orientation orientation)
+        public ILayoutEdge GetValueFromOrientation(Orientation orientation)
         {
             if (orientation == Orientation.Horizontal)
             {
@@ -201,13 +201,13 @@ namespace Machina.Data
         }
     }
 
-    public interface LayoutEdge
+    public interface ILayoutEdge
     {
         public bool IsStretched { get; }
         public int ActualSize { get; }
     }
 
-    public class ConstLayoutEdge : LayoutEdge
+    public class ConstLayoutEdge : ILayoutEdge
     {
         public ConstLayoutEdge(int value)
         {
@@ -225,7 +225,7 @@ namespace Machina.Data
         public int ActualSize => Value;
     }
 
-    public class StretchedLayoutEdge : LayoutEdge
+    public class StretchedLayoutEdge : ILayoutEdge
     {
         public bool IsStretched => true;
         public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
@@ -233,7 +233,7 @@ namespace Machina.Data
 
     public class LayoutResult
     {
-        public readonly Dictionary<LayoutEdge, int> sizeLookupTable = new Dictionary<LayoutEdge, int>();
+        public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private Dictionary<string, Rectangle> content = new Dictionary<string, Rectangle>();
         private Rectangle? rootRectangle = null;
 
@@ -246,7 +246,7 @@ namespace Machina.Data
             }
         }
 
-        public int GetEdgeValue(LayoutEdge edge)
+        public int GetEdgeValue(ILayoutEdge edge)
         {
             if (edge is ConstLayoutEdge constEdge)
             {
