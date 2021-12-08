@@ -27,7 +27,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 100), Orientation.Vertical, new[] {
+            var layout = new LayoutNode("root", new LayoutSize(50, 100), Orientation.Vertical, new[] {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 100), orientation: Orientation.Vertical, margin: new Point(10, 5), children: new[] {
+            var layout = new LayoutNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, margin: new Point(10, 5), children: new[] {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
                 new LayoutNode("item-3", new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge()))
@@ -57,7 +57,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_padding()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, children: new[]
+            var layout = new LayoutNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, children: new[]
             {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
@@ -73,7 +73,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin_and_padding()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, margin: new Point(3, 6), children: new[]
+            var layout = new LayoutNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, padding: 5, margin: new Point(3, 6), children: new[]
             {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20))),
@@ -89,7 +89,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void nested_layout_test()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 100), orientation: Orientation.Vertical, children: new LayoutNode[] {
+            var layout = new LayoutNode("root", new LayoutSize(50, 100), orientation: Orientation.Vertical, children: new LayoutNode[] {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), orientation: Orientation.Horizontal, margin: new Point(2, 3), children: new[] {
                         new LayoutNode("item-2a", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
@@ -112,7 +112,7 @@ namespace TestMachina.Tests
         [UseReporter(typeof(DiffReporter))]
         public void resize_and_rebake_test()
         {
-            var layout = new LayoutNode(LayoutNodeName.Root, new LayoutSize(50, 50), orientation: Orientation.Vertical, children: new LayoutNode[] {
+            var layout = new LayoutNode("root", new LayoutSize(50, 50), orientation: Orientation.Vertical, children: new LayoutNode[] {
                 new LayoutNode("item-1", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
                 new LayoutNode("item-2", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(20)), orientation: Orientation.Horizontal, margin: new Point(2, 3), children: new[] {
                         new LayoutNode("item-2a", new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(10))),
