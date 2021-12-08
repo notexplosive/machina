@@ -139,8 +139,28 @@ namespace TestMachina.Tests
         {
             var layout = LayoutNode.Parent("root", new LayoutSize(50, 10), new LayoutStyle(Point.Zero, 0), Orientation.Horizontal,
                 LayoutNode.Spacer(LayoutSize.StretchedBoth),
-                LayoutNode.Leaf("item-2", new LayoutSize(new ConstLayoutEdge(10), new StretchedLayoutEdge())),
-                LayoutNode.Spacer(new LayoutSize(new ConstLayoutEdge(5), new StretchedLayoutEdge()))
+                LayoutNode.Leaf("nudged-item", LayoutSize.StretchedVertically(10)),
+                LayoutNode.Spacer(LayoutSize.StretchedVertically(5))
+            );
+
+            var firstBakeResult = layout.Build();
+
+            Approvals.Verify(DrawResult(firstBakeResult));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void create_window_test()
+        {
+            var headerHeight = 8;
+            var layout = LayoutNode.Parent("root", new LayoutSize(80, 40), new LayoutStyle(Point.Zero, 0), Orientation.Vertical,
+                LayoutNode.Parent("header", LayoutSize.StretchedHorizontally(headerHeight), new LayoutStyle(padding: 2), Orientation.Horizontal,
+                    LayoutNode.Spacer(LayoutSize.StretchedBoth),
+                    LayoutNode.Leaf("minimize", new LayoutSize(headerHeight, headerHeight)),
+                    LayoutNode.Leaf("fullscreen", new LayoutSize(headerHeight, headerHeight)),
+                    LayoutNode.Leaf("close", new LayoutSize(headerHeight, headerHeight))
+                ),
+                LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth)
             );
 
             var firstBakeResult = layout.Build();
