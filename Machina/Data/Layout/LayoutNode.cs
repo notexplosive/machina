@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace Machina.Data
+namespace Machina.Data.Layout
 {
     public class LayoutNode
     {

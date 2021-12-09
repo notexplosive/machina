@@ -2,7 +2,7 @@
 using ApprovalTests.Reporters;
 using FluentAssertions;
 using Machina.Components;
-using Machina.Data;
+using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
 using TestMachina.Utility;
 using Xunit;
