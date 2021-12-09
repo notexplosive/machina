@@ -55,7 +55,7 @@ namespace Machina.Data.Layout
         {
             var bakedLayoutNode = layout.GetNode(actorName);
             var size = bakedLayoutNode.Size;
-            actor.GetComponent<BoundingRect>().SetSize(size);
+            actor.GetComponent<BoundingRect>().SetSize(size); // we might want to cache the Component lookup for perf
             actor.transform.Position = this.rootActor.transform.Position + bakedLayoutNode.PositionRelativeToRoot.ToVector2();
             actor.transform.LocalDepth = -bakedLayoutNode.NestingLevel;
 
@@ -63,7 +63,7 @@ namespace Machina.Data.Layout
 
         private void SetupRootActor(Actor actor, string actorName, BakedLayout layout, Vector2 absolutePosition)
         {
-            actor.GetComponent<BoundingRect>().SetSize(layout.GetNode(actorName).Size);
+            actor.GetComponent<BoundingRect>().SetSize(layout.GetNode(actorName).Size); // we might want to cache the Component lookup for perf
             actor.transform.Position = absolutePosition;
         }
 
