@@ -14,7 +14,7 @@ namespace Machina.Data.Layout
         public LayoutBaker(LayoutNode rootNode)
         {
             this.rootNode = rootNode;
-            this.LayoutResult = new BakedLayout(new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
+            this.LayoutResult = new BakedLayout(rootNode, new NodePositionAndSize(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
         }
 
         public int MeasureEdge(ILayoutEdge edge)
@@ -36,7 +36,7 @@ namespace Machina.Data.Layout
         {
             if (node.Name.Exists)
             {
-                this.LayoutResult.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node.Size), nestingLevel));
+                this.LayoutResult.Add(node.Name.Text, new NodePositionAndSize(position, GetMeasuredSize(node.Size), nestingLevel));
             }
         }
 

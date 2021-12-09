@@ -7,22 +7,24 @@ namespace Machina.Data.Layout
     public class BakedLayout
     {
 
-        private readonly Dictionary<string, LayoutResultNode> content = new Dictionary<string, LayoutResultNode>();
-        public LayoutResultNode RootNode { get; }
+        private readonly Dictionary<string, NodePositionAndSize> content = new Dictionary<string, NodePositionAndSize>();
+        public NodePositionAndSize BakedRootNode { get; }
+        public LayoutNode OriginalRoot { get; }
 
-        public BakedLayout(LayoutResultNode rootNode)
+        public BakedLayout(LayoutNode originalRoot, NodePositionAndSize bakedRoot)
         {
-            RootNode = rootNode;
+            BakedRootNode = bakedRoot;
+            OriginalRoot = originalRoot;
         }
 
-        public LayoutResultNode GetNode(string name)
+        public NodePositionAndSize GetNode(string name)
         {
             return content[name];
         }
 
-        public LayoutResultNode[] GetAllResultNodes()
+        public NodePositionAndSize[] GetAllResultNodes()
         {
-            var result = new LayoutResultNode[this.content.Values.Count];
+            var result = new NodePositionAndSize[this.content.Values.Count];
             this.content.Values.CopyTo(result, 0);
             return result;
         }
@@ -32,7 +34,7 @@ namespace Machina.Data.Layout
             return this.content.Keys;
         }
 
-        public void Add(string key, LayoutResultNode value)
+        public void Add(string key, NodePositionAndSize value)
         {
             this.content[key] = value;
         }

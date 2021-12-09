@@ -10,7 +10,7 @@ namespace TestMachina.Utility
     {
         public static string DrawResult(BakedLayout layoutResult)
         {
-            var drawPanel = new AsciiDrawPanel(layoutResult.RootNode.Size);
+            var drawPanel = new AsciiDrawPanel(layoutResult.BakedRootNode.Size);
             foreach (var key in layoutResult.ResultNodeNames())
             {
                 var node = layoutResult.GetNode(key);

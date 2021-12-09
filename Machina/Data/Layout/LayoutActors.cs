@@ -10,15 +10,17 @@ namespace Machina.Data.Layout
     public class LayoutActors
     {
         private readonly Dictionary<string, Actor> actorTable = new Dictionary<string, Actor>();
-
-        public Actor RootActor { get; }
+        private readonly Actor rootActor;
 
         public LayoutActors(Scene scene, LayoutNode rootNode, Point position = default)
         {
             var layout = new LayoutBaker(rootNode).Bake();
 
-            RootActor = scene.AddActor(rootNode.Name.Text);
-            RootActor.transform.Position = position.ToVector2();
+            var actorName = rootNode.Name.Text;
+            this.rootActor = scene.AddActor(actorName);
+            new BoundingRect(this.rootActor, layout.BakedRootNode.Size);
+            rootActor.transform.Position = position.ToVector2();
+            AddActorToTable(actorName, rootActor);
 
             // Create hierarchy
             CreateActorForChildren(rootNode, layout);
@@ -31,20 +33,31 @@ namespace Machina.Data.Layout
                 return;
             }
 
+            var parentActor = GetActor(parent.Name.Text);
+
             foreach (var node in parent.Children)
             {
-                var actorName = node.Name.Text;
-                var bakedLayoutNode = layout.GetNode(actorName);
-                var actor = GetActor(parent.Name.Text).transform.AddActorAsChild(actorName, bakedLayoutNode.PositionRelativeToRoot.ToVector2());
-                actorTable[actorName] = actor;
+                if (node.Name.Exists)
+                {
+                    var actorName = node.Name.Text;
+                    var bakedLayoutNode = layout.GetNode(actorName);
+                    var actor = parentActor.transform.AddActorAsChild(actorName);
+                    actor.transform.Position = this.rootActor.transform.Position + bakedLayoutNode.PositionRelativeToRoot.ToVector2();
+                    AddActorToTable(actorName, actor);
 
-                new BoundingRect(actor, bakedLayoutNode.Size);
+                    new BoundingRect(actor, bakedLayoutNode.Size);
 
-                CreateActorForChildren(node, layout);
+                    CreateActorForChildren(node, layout);
+                }
             }
         }
 
-        private Actor GetActor(string actorName)
+        private void AddActorToTable(string text, Actor actor)
+        {
+            actorTable[text] = actor;
+        }
+
+        public Actor GetActor(string actorName)
         {
             return this.actorTable[actorName];
         }
