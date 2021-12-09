@@ -18,7 +18,7 @@ namespace Machina.Data.Layout
 
             var actorName = rootNode.Name.Text;
             this.rootActor = scene.AddActor(actorName);
-            new BoundingRect(this.rootActor, layout.BakedRootNode.Size);
+            new BoundingRect(this.rootActor, layout.GetNode(actorName).Size);
             rootActor.transform.Position = position.ToVector2();
             AddActorToTable(actorName, rootActor);
 
@@ -46,6 +46,7 @@ namespace Machina.Data.Layout
                     AddActorToTable(actorName, actor);
 
                     new BoundingRect(actor, bakedLayoutNode.Size);
+                    new LayoutSiblingWithCachedOrientation(actor, parent.Orientation);
 
                     CreateActorForChildren(node, layout);
                 }

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace TestMachina.Tests
 {
-    public class LayoutTests
+    public class LegacyLayoutTests
     {
         [Fact]
         public void basic_vertical_layout()

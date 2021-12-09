@@ -5,7 +5,21 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Components
 {
-    public class LayoutElement : BaseComponent
+    public interface ILayoutSibling
+    {
+        public Orientation ParentOrientation { get; }
+    }
+    public class LayoutSiblingWithCachedOrientation : BaseComponent, ILayoutSibling
+    {
+        public LayoutSiblingWithCachedOrientation(Actor actor, Orientation orientation) : base(actor)
+        {
+            ParentOrientation = orientation;
+        }
+
+        public Orientation ParentOrientation { get; }
+    }
+
+    public class LayoutElement : BaseComponent, ILayoutSibling
     {
         public readonly BoundingRect boundingRect;
         private readonly LayoutGroup parentGroup;
@@ -21,7 +35,7 @@ namespace Machina.Components
 
         public Rectangle Rect => this.boundingRect.Rect;
 
-        public Orientation GroupOrientation => this.parentGroup.orientation;
+        public Orientation ParentOrientation => this.parentGroup.orientation;
 
         public LayoutElement StretchVertically()
         {

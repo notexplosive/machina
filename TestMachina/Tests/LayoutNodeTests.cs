@@ -120,6 +120,29 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult) + "\n\n" + LayoutNodeUtils.DrawResult(secondBakeResult));
         }
 
+        [Fact]
+        public void resize_performance_test()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 50), LayoutStyle.Empty,
+                LayoutNode.Leaf("item-1", LayoutSize.StretchedHorizontally(10)),
+                LayoutNode.HorizontalParent("item-2", LayoutSize.StretchedHorizontally(20), new LayoutStyle(new Point(2, 3), 0),
+                        LayoutNode.Leaf("item-2a", LayoutSize.StretchedHorizontally(10)),
+                        LayoutNode.Leaf("item-2b", LayoutSize.StretchedHorizontally(10)),
+                        LayoutNode.Leaf("item-2c", LayoutSize.StretchedHorizontally(10))
+                    ),
+                LayoutNode.VerticalParent("item-3", LayoutSize.StretchedBoth(), new LayoutStyle(new Point(5, 2), 1),
+                        LayoutNode.Leaf("item-3a", LayoutSize.StretchedBoth()),
+                        LayoutNode.Leaf("item-3b", LayoutSize.StretchedBoth()),
+                        LayoutNode.Leaf("item-3c", LayoutSize.StretchedHorizontally(10))
+                    )
+            );
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var resizedLayout = layout.GetResized(LayoutSize.Pixels(i * 10, i * 10));
+                new LayoutBaker(resizedLayout).Bake();
+            }
+        }
 
         [Fact]
         [UseReporter(typeof(DiffReporter))]

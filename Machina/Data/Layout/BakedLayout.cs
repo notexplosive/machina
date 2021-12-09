@@ -8,12 +8,10 @@ namespace Machina.Data.Layout
     {
 
         private readonly Dictionary<string, NodePositionAndSize> content = new Dictionary<string, NodePositionAndSize>();
-        public NodePositionAndSize BakedRootNode { get; }
         public LayoutNode OriginalRoot { get; }
 
-        public BakedLayout(LayoutNode originalRoot, NodePositionAndSize bakedRoot)
+        public BakedLayout(LayoutNode originalRoot)
         {
-            BakedRootNode = bakedRoot;
             OriginalRoot = originalRoot;
         }
 

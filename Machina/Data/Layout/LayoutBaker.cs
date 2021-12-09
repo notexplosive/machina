@@ -9,12 +9,9 @@ namespace Machina.Data.Layout
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private readonly LayoutNode rootNode;
 
-        public BakedLayout LayoutResult { get; } // todo, remove this
-
         public LayoutBaker(LayoutNode rootNode)
         {
             this.rootNode = rootNode;
-            this.LayoutResult = new BakedLayout(rootNode, new NodePositionAndSize(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
         }
 
         public int MeasureEdge(ILayoutEdge edge)
@@ -32,27 +29,27 @@ namespace Machina.Data.Layout
             return new Point(MeasureEdge(size.X), MeasureEdge(size.Y));
         }
 
-        public void AddLayoutNode(Point position, LayoutNode node, int nestingLevel)
+        public void AddLayoutNode(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
         {
             if (node.Name.Exists)
             {
-                this.LayoutResult.Add(node.Name.Text, new NodePositionAndSize(position, GetMeasuredSize(node.Size), nestingLevel));
+                inProgressLayout.Add(node.Name.Text, new NodePositionAndSize(position, GetMeasuredSize(node.Size), nestingLevel));
             }
         }
 
         public BakedLayout Bake()
         {
-            return BakeAtLocation(Point.Zero);
+            return BakeAtLocation(new BakedLayout(this.rootNode), Point.Zero);
         }
 
-        public BakedLayout BakeAtLocation(Point startingLocation)
+        public BakedLayout BakeAtLocation(BakedLayout inProgressLayout, Point startingLocation)
         {
             int nestingLevel = 0;
-            AddLayoutNode(startingLocation, this.rootNode, nestingLevel);
-            return BakeGroup(this.rootNode, startingLocation, nestingLevel);
+            AddLayoutNode(inProgressLayout, startingLocation, this.rootNode, nestingLevel);
+            return BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
         }
 
-        private BakedLayout BakeGroup(LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
+        private BakedLayout BakeGroup(BakedLayout inProgressLayout, LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = currentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(currentNode.Size);
@@ -141,7 +138,7 @@ namespace Machina.Data.Layout
             foreach (var element in elements)
             {
                 var elementPosition = nextLocation;
-                AddLayoutNode(elementPosition, element, currentNestingLevel);
+                AddLayoutNode(inProgressLayout, elementPosition, element, currentNestingLevel);
                 if (isVertical)
                 {
                     nextLocation += new Point(0, MeasureEdge(element.Size.Y) + currentNode.Padding);
@@ -153,11 +150,11 @@ namespace Machina.Data.Layout
 
                 if (element.HasChildren)
                 {
-                    BakeGroup(element, elementPosition, currentNestingLevel);
+                    BakeGroup(inProgressLayout, element, elementPosition, currentNestingLevel);
                 }
             }
 
-            return LayoutResult;
+            return inProgressLayout;
         }
     }
 }
