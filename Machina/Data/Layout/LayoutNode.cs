@@ -52,7 +52,7 @@ namespace Machina.Data.Layout
         public int Padding { get; }
 
         /// <summary>
-        /// Returns a LayoutNode just like this one
+        /// Returns a LayoutNode just like this one with the same children, only resized
         /// </summary>
         /// <param name="newSize"></param>
         /// <returns></returns>

@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    public class LayoutIntermediate
+    public class LayoutBaker
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private readonly LayoutNode rootNode;
 
-        public LayoutResult LayoutResult { get; }
+        public BakedLayout LayoutResult { get; }
 
-        public LayoutIntermediate(LayoutNode rootNode)
+        public LayoutBaker(LayoutNode rootNode)
         {
             this.rootNode = rootNode;
-            this.LayoutResult = new LayoutResult(new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
+            this.LayoutResult = new BakedLayout(new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
         }
 
         public int MeasureEdge(ILayoutEdge edge)
@@ -40,19 +40,19 @@ namespace Machina.Data.Layout
             }
         }
 
-        public LayoutResult Bake()
+        public BakedLayout Bake()
         {
             return BakeAtLocation(Point.Zero);
         }
 
-        public LayoutResult BakeAtLocation(Point startingLocation)
+        public BakedLayout BakeAtLocation(Point startingLocation)
         {
             int nestingLevel = 0;
             AddLayoutNode(startingLocation, this.rootNode, nestingLevel);
             return BakeGroup(this.rootNode, startingLocation, nestingLevel);
         }
 
-        private LayoutResult BakeGroup(LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
+        private BakedLayout BakeGroup(LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = currentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(currentNode.Size);

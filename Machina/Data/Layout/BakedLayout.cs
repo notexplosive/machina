@@ -4,13 +4,13 @@ using System.Collections.Generic;
 namespace Machina.Data.Layout
 {
 
-    public class LayoutResult
+    public class BakedLayout
     {
 
         private readonly Dictionary<string, LayoutResultNode> content = new Dictionary<string, LayoutResultNode>();
         public LayoutResultNode RootNode { get; }
 
-        public LayoutResult(LayoutResultNode rootNode)
+        public BakedLayout(LayoutResultNode rootNode)
         {
             RootNode = rootNode;
         }
