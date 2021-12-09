@@ -1,6 +1,5 @@
 ﻿using Machina.Components;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -51,16 +50,16 @@ namespace Machina.Data.Layout
 
         public LayoutResult Build(Point startingLocation)
         {
-            var layoutResult = new LayoutResult(this);
+            var layoutIntermediate = new LayoutIntermediate(this);
             int nestingLevel = 0;
-            layoutResult.AddLayoutNode(startingLocation, this, nestingLevel);
-            return Build(layoutResult, startingLocation, nestingLevel);
+            layoutIntermediate.AddLayoutNode(startingLocation, this, nestingLevel);
+            return Build(layoutIntermediate, startingLocation, nestingLevel);
         }
 
-        private LayoutResult Build(LayoutResult layoutResult, Point startingLocation, int parentNestingLevel)
+        private LayoutResult Build(LayoutIntermediate layoutIntermediate, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = Orientation == Orientation.Vertical;
-            var groupSize = layoutResult.GetMeasuredSize(this);
+            var groupSize = layoutIntermediate.GetMeasuredSize(this);
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? Margin.Y : Margin.X;
 
@@ -112,11 +111,11 @@ namespace Machina.Data.Layout
                 {
                     if (isVertical)
                     {
-                        layoutResult.sizeLookupTable[alongElement.Size.Y] = alongSizeOfEachStretchedElement;
+                        layoutIntermediate.sizeLookupTable[alongElement.Size.Y] = alongSizeOfEachStretchedElement;
                     }
                     else
                     {
-                        layoutResult.sizeLookupTable[alongElement.Size.X] = alongSizeOfEachStretchedElement;
+                        layoutIntermediate.sizeLookupTable[alongElement.Size.X] = alongSizeOfEachStretchedElement;
                     }
                 }
             }
@@ -130,11 +129,11 @@ namespace Machina.Data.Layout
                 {
                     if (isVertical)
                     {
-                        layoutResult.sizeLookupTable[perpElement.Size.X] = perpendicularStretchSize;
+                        layoutIntermediate.sizeLookupTable[perpElement.Size.X] = perpendicularStretchSize;
                     }
                     else
                     {
-                        layoutResult.sizeLookupTable[perpElement.Size.Y] = perpendicularStretchSize;
+                        layoutIntermediate.sizeLookupTable[perpElement.Size.Y] = perpendicularStretchSize;
                     }
                 }
             }
@@ -146,23 +145,23 @@ namespace Machina.Data.Layout
             foreach (var element in elements)
             {
                 var elementPosition = nextLocation;
-                layoutResult.AddLayoutNode(elementPosition, element, myNestingLevel);
+                layoutIntermediate.AddLayoutNode(elementPosition, element, myNestingLevel);
                 if (isVertical)
                 {
-                    nextLocation += new Point(0, layoutResult.GetEdgeValue(element.Size.Y) + Padding);
+                    nextLocation += new Point(0, layoutIntermediate.MeasureEdge(element.Size.Y) + Padding);
                 }
                 else
                 {
-                    nextLocation += new Point(layoutResult.GetEdgeValue(element.Size.X) + Padding, 0);
+                    nextLocation += new Point(layoutIntermediate.MeasureEdge(element.Size.X) + Padding, 0);
                 }
 
                 if (element.HasChildren)
                 {
-                    element.Build(layoutResult, elementPosition, myNestingLevel);
+                    element.Build(layoutIntermediate, elementPosition, myNestingLevel);
                 }
             }
 
-            return layoutResult;
+            return layoutIntermediate.LayoutResult;
         }
 
         private readonly LayoutNode[] Children;
@@ -187,248 +186,6 @@ namespace Machina.Data.Layout
         {
             var childCount = HasChildren ? Children.Length : 0;
             return $"{Name}, {Size}, {childCount} children";
-        }
-    }
-
-    public struct LayoutStyle
-    {
-        public readonly Point Margin { get; }
-        public readonly int Padding { get; }
-
-        public LayoutStyle(Point margin = default, int padding = default)
-        {
-            Margin = margin;
-            Padding = padding;
-        }
-
-        public static readonly LayoutStyle Empty = new LayoutStyle();
-    }
-
-    public struct LayoutNodeName
-    {
-        private readonly string internalString;
-        public bool IsNameless => this.internalString == null;
-
-        public LayoutNodeName(string text)
-        {
-            this.internalString = text;
-        }
-
-        public static implicit operator LayoutNodeName(string text)
-        {
-            return new LayoutNodeName(text);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(this.internalString);
-        }
-
-        public string Text
-        {
-            get
-            {
-                if (Exists)
-                {
-                    return this.internalString;
-                }
-
-                throw new Exception("Node does not have a name (is spacer or null)");
-            }
-        }
-
-        public bool Exists => this.internalString != null;
-
-        public static LayoutNodeName Nameless => new LayoutNodeName(null);
-
-        public override string ToString()
-        {
-            if (Exists)
-            {
-                return this.internalString;
-            }
-            else
-            {
-                return "(nameless)";
-            }
-        }
-    }
-
-    public struct LayoutSize
-    {
-        public readonly ILayoutEdge X;
-        public readonly ILayoutEdge Y;
-
-        private LayoutSize(ILayoutEdge x, ILayoutEdge y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public static LayoutSize Pixels(int x, int y) => new LayoutSize(new ConstLayoutEdge(x), new ConstLayoutEdge(y));
-        public static LayoutSize Square(int x) => new LayoutSize(new ConstLayoutEdge(x), new ConstLayoutEdge(x));
-        public static LayoutSize StretchedVertically(int width) => new LayoutSize(new ConstLayoutEdge(width), new StretchedLayoutEdge());
-        public static LayoutSize StretchedHorizontally(int height) => new LayoutSize(new StretchedLayoutEdge(), new ConstLayoutEdge(height));
-        public static LayoutSize StretchedBoth() => new LayoutSize(new StretchedLayoutEdge(), new StretchedLayoutEdge());
-
-        public bool IsStretchedAlong(Orientation orientation)
-        {
-            return GetValueFromOrientation(orientation) is StretchedLayoutEdge;
-        }
-
-        public bool IsStretchedPerpendicular(Orientation orientation)
-        {
-            return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
-        }
-
-        public ILayoutEdge GetValueFromOrientation(Orientation orientation)
-        {
-            if (orientation == Orientation.Horizontal)
-            {
-                return X;
-            }
-
-            if (orientation == Orientation.Vertical)
-            {
-                return Y;
-            }
-
-            throw new ArgumentException("Invalid orientation");
-        }
-
-        private struct ConstLayoutEdge : ILayoutEdge
-        {
-            public ConstLayoutEdge(int value)
-            {
-                Value = value;
-            }
-
-            public int Value { get; }
-
-            public static implicit operator int(ConstLayoutEdge edge)
-            {
-                return edge.Value;
-            }
-
-            public bool IsStretched => false;
-            public int ActualSize => Value;
-
-            public override string ToString()
-            {
-                return ActualSize.ToString();
-            }
-        }
-
-        private struct StretchedLayoutEdge : ILayoutEdge
-        {
-            public bool IsStretched => true;
-            public int ActualSize => throw new Exception("StretchedLayoutEdge does not have an actual size");
-
-            /// <summary>
-            /// Do not delete! Important hack here
-            /// </summary>
-            /// <returns></returns>
-            public override int GetHashCode()
-            {
-                // Hacky thing to make every single instance of StretchedLayoutEdge unique
-                if (!this.hash.HasValue)
-                {
-                    this.hash = hashPool++;
-                }
-                return this.hash.Value;
-            }
-
-            private static int hashPool = 0;
-            private int? hash;
-
-            public override string ToString()
-            {
-                return $"stretched {this.hash}";
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"{X}, {Y}";
-        }
-    }
-
-    public interface ILayoutEdge
-    {
-        public bool IsStretched { get; }
-        public int ActualSize { get; }
-    }
-
-    public struct LayoutResultNode
-    {
-        public Point PositionRelativeToRoot { get; }
-        public Point Size { get; }
-        public Rectangle Rectangle { get; }
-        public int NestingLevel { get; }
-
-        public LayoutResultNode(Point position, Point size, int nestingLevel)
-        {
-            PositionRelativeToRoot = position;
-            Size = size;
-            Rectangle = new Rectangle(PositionRelativeToRoot, Size);
-            NestingLevel = nestingLevel;
-        }
-
-        public override string ToString()
-        {
-            return $"{Size}, level={NestingLevel}";
-        }
-    }
-
-    public class LayoutResult
-    {
-        public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        private readonly Dictionary<string, LayoutResultNode> content = new Dictionary<string, LayoutResultNode>();
-        public LayoutResultNode RootNode { get; }
-
-        public LayoutResult(LayoutNode rootNode)
-        {
-            RootNode = new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode), 0);
-        }
-
-        public int GetEdgeValue(ILayoutEdge edge)
-        {
-            if (!edge.IsStretched)
-            {
-                return edge.ActualSize;
-            }
-
-            return sizeLookupTable[edge];
-        }
-
-        public void AddLayoutNode(Point position, LayoutNode node, int nestingLevel)
-        {
-            if (node.Name.Exists)
-            {
-                this.content.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node), nestingLevel));
-            }
-        }
-
-        public LayoutResultNode Get(string name)
-        {
-            return content[name];
-        }
-
-        public LayoutResultNode[] GetAll()
-        {
-            var result = new LayoutResultNode[this.content.Values.Count];
-            this.content.Values.CopyTo(result, 0);
-            return result;
-        }
-
-        public IEnumerable<string> Keys()
-        {
-            return this.content.Keys;
-        }
-
-        public Point GetMeasuredSize(LayoutNode node)
-        {
-            return new Point(GetEdgeValue(node.Size.X), GetEdgeValue(node.Size.Y));
         }
     }
 }
