@@ -112,7 +112,7 @@ namespace TestMachina.Tests
                     )
             );
 
-            var resizedLayout = layout.GetResized(LayoutSize.Pixels(60, 60));
+            var resizedLayout = layout.GetResized(new Point(60, 60));
 
             var firstBakeResult = new LayoutBaker(layout).Bake();
             var secondBakeResult = new LayoutBaker(resizedLayout).Bake();
@@ -139,7 +139,7 @@ namespace TestMachina.Tests
 
             for (int i = 0; i < 1000; i++)
             {
-                var resizedLayout = layout.GetResized(LayoutSize.Pixels(i * 10, i * 10));
+                var resizedLayout = layout.GetResized(new Point(i * 10, i * 10));
                 new LayoutBaker(resizedLayout).Bake();
             }
         }

@@ -39,17 +39,19 @@ namespace Machina.Data.Layout
 
         public BakedLayout Bake()
         {
-            return BakeAtLocation(new BakedLayout(this.rootNode), Point.Zero);
+            var bakedLayout = new BakedLayout(this.rootNode);
+            BakeAtLocation(bakedLayout, Point.Zero);
+            return bakedLayout;
         }
 
-        public BakedLayout BakeAtLocation(BakedLayout inProgressLayout, Point startingLocation)
+        public void BakeAtLocation(BakedLayout inProgressLayout, Point startingLocation)
         {
             int nestingLevel = 0;
             AddLayoutNode(inProgressLayout, startingLocation, this.rootNode, nestingLevel);
-            return BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
+            BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
         }
 
-        private BakedLayout BakeGroup(BakedLayout inProgressLayout, LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
+        private void BakeGroup(BakedLayout inProgressLayout, LayoutNode currentNode, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = currentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(currentNode.Size);
@@ -153,8 +155,6 @@ namespace Machina.Data.Layout
                     BakeGroup(inProgressLayout, element, elementPosition, currentNestingLevel);
                 }
             }
-
-            return inProgressLayout;
         }
     }
 }

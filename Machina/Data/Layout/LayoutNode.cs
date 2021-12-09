@@ -18,6 +18,11 @@ namespace Machina.Data.Layout
             Children = children;
         }
 
+        public BakedLayout Bake()
+        {
+            return new LayoutBaker(this).Bake();
+        }
+
         public static LayoutNode StretchedSpacer()
         {
             return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth());
