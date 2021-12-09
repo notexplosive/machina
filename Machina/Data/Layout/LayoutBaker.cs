@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    public class LayoutBaker
+    internal class LayoutBaker
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private readonly LayoutNode rootNode;

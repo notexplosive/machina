@@ -21,7 +21,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = new LayoutBaker(layout).Bake();
+            var layoutResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
@@ -36,7 +36,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = new LayoutBaker(layout).Bake();
+            var layoutResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
@@ -51,7 +51,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = new LayoutBaker(layout).Bake();
+            var layoutResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
@@ -66,7 +66,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = new LayoutBaker(layout).Bake();
+            var layoutResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
@@ -89,7 +89,7 @@ namespace TestMachina.Tests
                     )
             );
 
-            var layoutResult = new LayoutBaker(layout).Bake();
+            var layoutResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
@@ -114,8 +114,8 @@ namespace TestMachina.Tests
 
             var resizedLayout = layout.GetResized(new Point(60, 60));
 
-            var firstBakeResult = new LayoutBaker(layout).Bake();
-            var secondBakeResult = new LayoutBaker(resizedLayout).Bake();
+            var firstBakeResult = layout.Bake();
+            var secondBakeResult = resizedLayout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult) + "\n\n" + LayoutNodeUtils.DrawResult(secondBakeResult));
         }
@@ -140,7 +140,7 @@ namespace TestMachina.Tests
             for (int i = 0; i < 1000; i++)
             {
                 var resizedLayout = layout.GetResized(new Point(i * 10, i * 10));
-                new LayoutBaker(resizedLayout).Bake();
+                layout.Bake();
             }
         }
 
@@ -154,7 +154,7 @@ namespace TestMachina.Tests
                 LayoutNode.Spacer(5)
             );
 
-            var firstBakeResult = new LayoutBaker(layout).Bake();
+            var firstBakeResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
@@ -175,7 +175,7 @@ namespace TestMachina.Tests
                 )
             );
 
-            var firstBakeResult = new LayoutBaker(layout).Bake();
+            var firstBakeResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
@@ -195,7 +195,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
             );
 
-            var firstBakeResult = new LayoutBaker(layout).Bake();
+            var firstBakeResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
