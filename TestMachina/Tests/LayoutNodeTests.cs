@@ -11,18 +11,6 @@ namespace TestMachina.Tests
 {
     public class LayoutNodeTests
     {
-        public static string DrawResult(BakedLayout layoutResult)
-        {
-            var drawPanel = new AsciiDrawPanel(layoutResult.RootNode.Size);
-            foreach (var key in layoutResult.ResultNodeNames())
-            {
-                var node = layoutResult.GetNode(key);
-                drawPanel.DrawRectangle(node.Rectangle, node.NestingLevel.ToString()[0]);
-                drawPanel.DrawStringAt(node.Rectangle.Location + new Point(1, 1), key);
-            }
-            return drawPanel.GetImage();
-        }
-
         [Fact]
         [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
@@ -35,7 +23,7 @@ namespace TestMachina.Tests
 
             var layoutResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(layoutResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
 
         [Fact]
@@ -50,7 +38,7 @@ namespace TestMachina.Tests
 
             var layoutResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(layoutResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
 
         [Fact]
@@ -65,7 +53,7 @@ namespace TestMachina.Tests
 
             var layoutResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(layoutResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
 
         [Fact]
@@ -80,7 +68,7 @@ namespace TestMachina.Tests
 
             var layoutResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(layoutResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
 
         [Fact]
@@ -103,7 +91,7 @@ namespace TestMachina.Tests
 
             var layoutResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(layoutResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(layoutResult));
         }
 
         [Fact]
@@ -129,7 +117,7 @@ namespace TestMachina.Tests
             var firstBakeResult = new LayoutBaker(layout).Bake();
             var secondBakeResult = new LayoutBaker(resizedLayout).Bake();
 
-            Approvals.Verify(DrawResult(firstBakeResult) + "\n\n" + DrawResult(secondBakeResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult) + "\n\n" + LayoutNodeUtils.DrawResult(secondBakeResult));
         }
 
 
@@ -145,7 +133,7 @@ namespace TestMachina.Tests
 
             var firstBakeResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(firstBakeResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
 
         [Fact]
@@ -166,7 +154,7 @@ namespace TestMachina.Tests
 
             var firstBakeResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(firstBakeResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
 
         [Fact]
@@ -186,7 +174,7 @@ namespace TestMachina.Tests
 
             var firstBakeResult = new LayoutBaker(layout).Bake();
 
-            Approvals.Verify(DrawResult(firstBakeResult));
+            Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
         }
     }
 }
