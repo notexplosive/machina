@@ -59,7 +59,7 @@ namespace Machina.Data.Layout
         private LayoutResult Build(LayoutIntermediate layoutIntermediate, Point startingLocation, int parentNestingLevel)
         {
             var isVertical = Orientation == Orientation.Vertical;
-            var groupSize = layoutIntermediate.GetMeasuredSize(this);
+            var groupSize = layoutIntermediate.GetMeasuredSize(Size);
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? Margin.Y : Margin.X;
 

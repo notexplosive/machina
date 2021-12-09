@@ -11,7 +11,7 @@ namespace Machina.Data.Layout
 
         public LayoutIntermediate(LayoutNode rootNode)
         {
-            this.LayoutResult = new LayoutResult(new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode), 0));
+            this.LayoutResult = new LayoutResult(new LayoutResultNode(Point.Zero, GetMeasuredSize(rootNode.Size), 0));
         }
 
         public int MeasureEdge(ILayoutEdge edge)
@@ -24,16 +24,16 @@ namespace Machina.Data.Layout
             return sizeLookupTable[edge];
         }
 
-        public Point GetMeasuredSize(LayoutNode node)
+        public Point GetMeasuredSize(LayoutSize size)
         {
-            return new Point(MeasureEdge(node.Size.X), MeasureEdge(node.Size.Y));
+            return new Point(MeasureEdge(size.X), MeasureEdge(size.Y));
         }
 
         public void AddLayoutNode(Point position, LayoutNode node, int nestingLevel)
         {
             if (node.Name.Exists)
             {
-                this.LayoutResult.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node), nestingLevel));
+                this.LayoutResult.Add(node.Name.Text, new LayoutResultNode(position, GetMeasuredSize(node.Size), nestingLevel));
             }
         }
     }
