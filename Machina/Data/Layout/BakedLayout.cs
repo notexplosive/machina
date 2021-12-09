@@ -15,19 +15,19 @@ namespace Machina.Data.Layout
             RootNode = rootNode;
         }
 
-        public LayoutResultNode Get(string name)
+        public LayoutResultNode GetNode(string name)
         {
             return content[name];
         }
 
-        public LayoutResultNode[] GetAll()
+        public LayoutResultNode[] GetAllResultNodes()
         {
             var result = new LayoutResultNode[this.content.Values.Count];
             this.content.Values.CopyTo(result, 0);
             return result;
         }
 
-        public IEnumerable<string> Keys()
+        public IEnumerable<string> ResultNodeNames()
         {
             return this.content.Keys;
         }

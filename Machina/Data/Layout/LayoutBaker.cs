@@ -9,7 +9,7 @@ namespace Machina.Data.Layout
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
         private readonly LayoutNode rootNode;
 
-        public BakedLayout LayoutResult { get; }
+        public BakedLayout LayoutResult { get; } // todo, remove this
 
         public LayoutBaker(LayoutNode rootNode)
         {
@@ -151,7 +151,7 @@ namespace Machina.Data.Layout
                     nextLocation += new Point(MeasureEdge(element.Size.X) + currentNode.Padding, 0);
                 }
 
-                if (element.IsGroup)
+                if (element.HasChildren)
                 {
                     BakeGroup(element, elementPosition, currentNestingLevel);
                 }

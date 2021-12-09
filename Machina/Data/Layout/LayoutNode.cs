@@ -44,7 +44,7 @@ namespace Machina.Data.Layout
         }
 
         public readonly LayoutNode[] Children;
-        public bool IsGroup => Children != null;
+        public bool HasChildren => Children != null;
         public LayoutNodeName Name { get; }
         public LayoutSize Size { get; }
         public Orientation Orientation { get; }
@@ -63,7 +63,7 @@ namespace Machina.Data.Layout
 
         public override string ToString()
         {
-            var childCount = IsGroup ? Children.Length : 0;
+            var childCount = HasChildren ? Children.Length : 0;
             return $"{Name}, {Size}, {childCount} children";
         }
     }
