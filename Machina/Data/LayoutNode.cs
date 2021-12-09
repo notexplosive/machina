@@ -122,7 +122,7 @@ namespace Machina.Data
             }
 
             // We're using the same value for all perpendicular stretches, maybe we can simplify this?
-            var perpendicularStretchSize = groupSize.X - Margin.X * 2;
+            var perpendicularStretchSize = isVertical ? groupSize.X - Margin.X * 2 : groupSize.Y - Margin.Y * 2;
 
             if (stretchPerpendicular.Count > 0)
             {
@@ -182,6 +182,12 @@ namespace Machina.Data
         {
             return new LayoutNode(Name, newSize, Orientation, Children, Margin, Padding);
         }
+
+        public override string ToString()
+        {
+            var childCount = HasChildren ? Children.Length : 0;
+            return $"{Name}, {Size}, {childCount} children";
+        }
     }
 
     public struct LayoutStyle
@@ -234,6 +240,18 @@ namespace Machina.Data
         public bool Exists => this.internalString != null;
 
         public static LayoutNodeName Nameless => new LayoutNodeName(null);
+
+        public override string ToString()
+        {
+            if (Exists)
+            {
+                return this.internalString;
+            }
+            else
+            {
+                return "(nameless)";
+            }
+        }
     }
 
     public struct LayoutSize
@@ -294,6 +312,11 @@ namespace Machina.Data
 
             public bool IsStretched => false;
             public int ActualSize => Value;
+
+            public override string ToString()
+            {
+                return ActualSize.ToString();
+            }
         }
 
         private struct StretchedLayoutEdge : ILayoutEdge
@@ -317,6 +340,16 @@ namespace Machina.Data
 
             private static int hashPool = 0;
             private int? hash;
+
+            public override string ToString()
+            {
+                return $"stretched {this.hash}";
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{X}, {Y}";
         }
     }
 
@@ -339,6 +372,11 @@ namespace Machina.Data
             Size = size;
             Rectangle = new Rectangle(PositionRelativeToRoot, Size);
             NestingLevel = nestingLevel;
+        }
+
+        public override string ToString()
+        {
+            return $"{Size}, level={NestingLevel}";
         }
     }
 
