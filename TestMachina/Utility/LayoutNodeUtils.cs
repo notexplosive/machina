@@ -11,7 +11,7 @@ namespace TestMachina.Utility
         public static string DrawResult(BakedLayout layoutResult)
         {
             var drawPanel = new AsciiDrawPanel(layoutResult.GetNode(layoutResult.OriginalRoot.Name.Text).Size);
-            foreach (var key in layoutResult.ResultNodeNames())
+            foreach (var key in layoutResult.AllResultNodeNames())
             {
                 var node = layoutResult.GetNode(key);
                 drawPanel.DrawRectangle(node.Rectangle, node.NestingLevel.ToString()[0]);

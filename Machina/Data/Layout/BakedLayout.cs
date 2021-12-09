@@ -27,7 +27,7 @@ namespace Machina.Data.Layout
             return result;
         }
 
-        public IEnumerable<string> ResultNodeNames()
+        public IEnumerable<string> AllResultNodeNames()
         {
             return this.content.Keys;
         }

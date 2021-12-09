@@ -56,9 +56,9 @@ namespace Machina.Data.Layout
         /// </summary>
         /// <param name="newSize"></param>
         /// <returns></returns>
-        public LayoutNode GetResized(LayoutSize newSize)
+        public LayoutNode GetResized(Point newSize)
         {
-            return new LayoutNode(Name, newSize, Orientation, Children, Margin, Padding);
+            return new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Children, Margin, Padding);
         }
 
         public override string ToString()

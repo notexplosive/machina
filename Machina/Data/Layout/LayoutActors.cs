@@ -18,7 +18,9 @@ namespace Machina.Data.Layout
 
             var actorName = rootNode.Name.Text;
             this.rootActor = scene.AddActor(actorName);
+            new BoundingRect(this.rootActor, layout.GetNode(actorName).Size);
 
+            AddActorToTable(actorName, this.rootActor);
             SetupRootActor(this.rootActor, actorName, layout, position.ToVector2());
             CreateActorsForChildren(rootNode, layout);
         }
@@ -38,8 +40,11 @@ namespace Machina.Data.Layout
                 {
                     var actorName = childNode.Name.Text;
                     var actor = parentActor.transform.AddActorAsChild(actorName);
-                    new LayoutSiblingWithCachedOrientation(actor, parent.Orientation);
 
+                    new LayoutSiblingWithCachedOrientation(actor, parent.Orientation);
+                    new BoundingRect(actor, layout.GetNode(actorName).Size);
+
+                    AddActorToTable(actorName, actor);
                     SetupChildActor(actor, actorName, layout);
                     CreateActorsForChildren(childNode, layout);
                 }
@@ -49,23 +54,38 @@ namespace Machina.Data.Layout
         private void SetupChildActor(Actor actor, string actorName, BakedLayout layout)
         {
             var bakedLayoutNode = layout.GetNode(actorName);
-            new BoundingRect(actor, bakedLayoutNode.Size);
+            var size = bakedLayoutNode.Size;
+            actor.GetComponent<BoundingRect>().SetSize(size);
             actor.transform.Position = this.rootActor.transform.Position + bakedLayoutNode.PositionRelativeToRoot.ToVector2();
             actor.transform.LocalDepth = -bakedLayoutNode.NestingLevel;
-            AddActorToTable(actorName, actor);
 
         }
 
         private void SetupRootActor(Actor actor, string actorName, BakedLayout layout, Vector2 absolutePosition)
         {
-            new BoundingRect(actor, layout.GetNode(actorName).Size);
+            actor.GetComponent<BoundingRect>().SetSize(layout.GetNode(actorName).Size);
             actor.transform.Position = absolutePosition;
-            AddActorToTable(actorName, actor);
         }
 
-        public void ReapplyLayout(LayoutNode rootNode)
+        /// <summary>
+        /// Using the existing pool of actors, but a new layout, change the hierarchy
+        /// </summary>
+        /// <param name="resizedRootNode"></param>
+        public void ReapplyLayout(LayoutNode resizedRootNode)
         {
-
+            var newLayout = new LayoutBaker(resizedRootNode).Bake();
+            foreach (var actorName in newLayout.AllResultNodeNames())
+            {
+                var actor = this.actorTable[actorName];
+                if (actor == this.rootActor)
+                {
+                    SetupRootActor(actor, actorName, newLayout, this.rootActor.transform.Position);
+                }
+                else
+                {
+                    SetupChildActor(actor, actorName, newLayout);
+                }
+            }
         }
 
         private void AddActorToTable(string text, Actor actor)
