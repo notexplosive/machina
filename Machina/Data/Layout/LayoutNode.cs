@@ -16,11 +16,13 @@ namespace Machina.Data.Layout
             Margin = margin;
             Padding = padding;
             Children = children;
+
+            Baker = new LayoutBaker(this);
         }
 
         public BakedLayout Bake()
         {
-            return new LayoutBaker(this).Bake();
+            return Baker.Bake();
         }
 
         public static LayoutNode StretchedSpacer()
@@ -49,6 +51,7 @@ namespace Machina.Data.Layout
         }
 
         public readonly LayoutNode[] Children;
+        private LayoutBaker Baker { get; }
         public bool HasChildren => Children != null;
         public LayoutNodeName Name { get; }
         public LayoutSize Size { get; }

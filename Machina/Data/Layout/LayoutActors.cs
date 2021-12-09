@@ -14,7 +14,7 @@ namespace Machina.Data.Layout
 
         public LayoutActors(Scene scene, LayoutNode rootNode, Point position = default)
         {
-            var layout = new LayoutBaker(rootNode).Bake();
+            var layout = rootNode.Bake();
 
             var actorName = rootNode.Name.Text;
             this.rootActor = scene.AddActor(actorName);
@@ -73,7 +73,7 @@ namespace Machina.Data.Layout
         /// <param name="resizedRootNode"></param>
         public void ReapplyLayout(LayoutNode resizedRootNode)
         {
-            var newLayout = new LayoutBaker(resizedRootNode).Bake();
+            var newLayout = resizedRootNode.Bake();
             foreach (var actorName in newLayout.AllResultNodeNames())
             {
                 var actor = this.actorTable[actorName];
