@@ -18,15 +18,12 @@ namespace Machina.Data.Layout
 
             var actorName = rootNode.Name.Text;
             this.rootActor = scene.AddActor(actorName);
-            new BoundingRect(this.rootActor, layout.GetNode(actorName).Size);
-            rootActor.transform.Position = position.ToVector2();
-            AddActorToTable(actorName, rootActor);
 
-            // Create hierarchy
-            CreateActorForChildren(rootNode, layout);
+            SetupRootActor(this.rootActor, actorName, layout, position.ToVector2());
+            CreateActorsForChildren(rootNode, layout);
         }
 
-        private void CreateActorForChildren(LayoutNode parent, BakedLayout layout)
+        private void CreateActorsForChildren(LayoutNode parent, BakedLayout layout)
         {
             if (!parent.HasChildren)
             {
@@ -35,22 +32,40 @@ namespace Machina.Data.Layout
 
             var parentActor = GetActor(parent.Name.Text);
 
-            foreach (var node in parent.Children)
+            foreach (var childNode in parent.Children)
             {
-                if (node.Name.Exists)
+                if (childNode.Name.Exists)
                 {
-                    var actorName = node.Name.Text;
-                    var bakedLayoutNode = layout.GetNode(actorName);
+                    var actorName = childNode.Name.Text;
                     var actor = parentActor.transform.AddActorAsChild(actorName);
-                    actor.transform.Position = this.rootActor.transform.Position + bakedLayoutNode.PositionRelativeToRoot.ToVector2();
-                    AddActorToTable(actorName, actor);
-
-                    new BoundingRect(actor, bakedLayoutNode.Size);
                     new LayoutSiblingWithCachedOrientation(actor, parent.Orientation);
 
-                    CreateActorForChildren(node, layout);
+                    SetupChildActor(actor, actorName, layout);
+                    CreateActorsForChildren(childNode, layout);
                 }
             }
+        }
+
+        private void SetupChildActor(Actor actor, string actorName, BakedLayout layout)
+        {
+            var bakedLayoutNode = layout.GetNode(actorName);
+            new BoundingRect(actor, bakedLayoutNode.Size);
+            actor.transform.Position = this.rootActor.transform.Position + bakedLayoutNode.PositionRelativeToRoot.ToVector2();
+            actor.transform.LocalDepth = -bakedLayoutNode.NestingLevel;
+            AddActorToTable(actorName, actor);
+
+        }
+
+        private void SetupRootActor(Actor actor, string actorName, BakedLayout layout, Vector2 absolutePosition)
+        {
+            new BoundingRect(actor, layout.GetNode(actorName).Size);
+            actor.transform.Position = absolutePosition;
+            AddActorToTable(actorName, actor);
+        }
+
+        public void ReapplyLayout(LayoutNode rootNode)
+        {
+
         }
 
         private void AddActorToTable(string text, Actor actor)
