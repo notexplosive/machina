@@ -33,7 +33,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = layout.Build();
+            var layoutResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -48,7 +48,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = layout.Build();
+            var layoutResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -63,7 +63,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = layout.Build();
+            var layoutResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -78,7 +78,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("item-3", LayoutSize.StretchedBoth())
             );
 
-            var layoutResult = layout.Build();
+            var layoutResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -101,7 +101,7 @@ namespace TestMachina.Tests
                     )
             );
 
-            var layoutResult = layout.Build();
+            var layoutResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(layoutResult));
         }
@@ -126,8 +126,8 @@ namespace TestMachina.Tests
 
             var resizedLayout = layout.GetResized(LayoutSize.Pixels(60, 60));
 
-            var firstBakeResult = layout.Build();
-            var secondBakeResult = resizedLayout.Build();
+            var firstBakeResult = new LayoutIntermediate(layout).Bake();
+            var secondBakeResult = new LayoutIntermediate(resizedLayout).Bake();
 
             Approvals.Verify(DrawResult(firstBakeResult) + "\n\n" + DrawResult(secondBakeResult));
         }
@@ -143,7 +143,7 @@ namespace TestMachina.Tests
                 LayoutNode.Spacer(5)
             );
 
-            var firstBakeResult = layout.Build();
+            var firstBakeResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(firstBakeResult));
         }
@@ -164,7 +164,7 @@ namespace TestMachina.Tests
                 )
             );
 
-            var firstBakeResult = layout.Build();
+            var firstBakeResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(firstBakeResult));
         }
@@ -184,7 +184,7 @@ namespace TestMachina.Tests
                 LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
             );
 
-            var firstBakeResult = layout.Build();
+            var firstBakeResult = new LayoutIntermediate(layout).Bake();
 
             Approvals.Verify(DrawResult(firstBakeResult));
         }
