@@ -55,28 +55,7 @@ namespace Machina.Data.Layout
         {
             var isVertical = currentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(currentNode.Size);
-            var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
-            var alongMargin = isVertical ? currentNode.Margin.Y : currentNode.Margin.X;
-
-            var remainingAlongSize = totalAlongSize - alongMargin * 2;
-
-            var last = currentNode.Children.Length - 1;
-            var index = 0;
-
-            foreach (var element in currentNode.Children)
-            {
-                if (element.Size.IsMeasurableAlong(currentNode.Orientation))
-                {
-                    remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
-                }
-
-                if (index != last)
-                {
-                    remainingAlongSize -= currentNode.Padding;
-                }
-
-                index++;
-            }
+            int remainingAlongSize = HandleEasyNodes(currentNode, isVertical, groupSize);
 
             var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
             HandleStretchedNodes(currentNode, remainingAlongSize, perpendicularStretchSize);
@@ -103,6 +82,31 @@ namespace Machina.Data.Layout
                     BakeGroup(inProgressLayout, element, elementPosition, currentNestingLevel);
                 }
             }
+        }
+
+        private static int HandleEasyNodes(LayoutNode currentNode, bool isVertical, Point groupSize)
+        {
+            var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
+            var alongMargin = isVertical ? currentNode.Margin.Y : currentNode.Margin.X;
+            var remainingAlongSize = totalAlongSize - alongMargin * 2;
+            var last = currentNode.Children.Length - 1;
+            var index = 0;
+            foreach (var element in currentNode.Children)
+            {
+                if (element.Size.IsMeasurableAlong(currentNode.Orientation))
+                {
+                    remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
+                }
+
+                if (index != last)
+                {
+                    remainingAlongSize -= currentNode.Padding;
+                }
+
+                index++;
+            }
+
+            return remainingAlongSize;
         }
 
         private void HandleStretchedNodes(LayoutNode currentNode, int remainingAlongSize, int perpendicularStretchSize)
