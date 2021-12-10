@@ -68,7 +68,11 @@ namespace Machina.Data.Layout
 
             foreach (var element in elements)
             {
-                if (!element.Size.IsStretchedAlong(currentNode.Orientation))
+                if (element.Size.IsStretchedAlong(currentNode.Orientation))
+                {
+                    stretchAlong.Add(element);
+                }
+                else
                 {
                     if (isVertical)
                     {
@@ -78,10 +82,6 @@ namespace Machina.Data.Layout
                     {
                         remainingAlongSize -= element.Size.X.ActualSize;
                     }
-                }
-                else
-                {
-                    stretchAlong.Add(element);
                 }
 
                 if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
