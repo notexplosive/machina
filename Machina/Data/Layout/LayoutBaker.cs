@@ -69,14 +69,9 @@ namespace Machina.Data.Layout
             {
                 var elementPosition = nextLocation;
                 AddLayoutNode(inProgressLayout, elementPosition, element, currentNestingLevel);
-                if (isVertical)
-                {
-                    nextLocation += new Point(0, MeasureEdge(element.Size.Y) + currentNode.Padding);
-                }
-                else
-                {
-                    nextLocation += new Point(MeasureEdge(element.Size.X) + currentNode.Padding, 0);
-                }
+                var alongValue = MeasureEdge(element.Size.GetValueFromOrientation(currentNode.Orientation)) + currentNode.Padding;
+
+                nextLocation += isVertical ? new Point(0, alongValue) : new Point(alongValue, 0);
 
                 if (element.HasChildren)
                 {
