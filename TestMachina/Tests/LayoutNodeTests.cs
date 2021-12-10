@@ -1,7 +1,5 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
-using FluentAssertions;
-using Machina.Components;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
 using TestMachina.Utility;
@@ -9,6 +7,7 @@ using Xunit;
 
 namespace TestMachina.Tests
 {
+
     public class LayoutNodeTests
     {
         [Fact]
@@ -193,6 +192,48 @@ namespace TestMachina.Tests
                     LayoutNode.Leaf("close", LayoutSize.Square(headerHeight))
                 ),
                 LayoutNode.Leaf("canvas", LayoutSize.StretchedBoth())
+            );
+
+            var firstBakeResult = layout.Bake();
+
+            Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void fixed_aspect_no_spacers()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(36, 64), LayoutStyle.Empty,
+                LayoutNode.HorizontalParent("fixed-aspect", LayoutSize.FixedAspectRatio(16, 9), new LayoutStyle(margin: new Point(3, 3)),
+                    LayoutNode.Leaf("tall-item", LayoutSize.StretchedVertically(15))
+                )
+            );
+
+            var firstBakeResult = layout.Bake(); // wide in tall
+            var secondBakeResult = layout.GetResized(new Point(64, 36)).Bake(); // wide in wide (perfect match)
+            var thirdBakeResult = layout.GetResized(new Point(100, 36)).Bake(); // wide in wider
+
+            Approvals.Verify(
+                LayoutNodeUtils.DrawResult(firstBakeResult)
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(secondBakeResult)
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(thirdBakeResult)
+                );
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void fixed_aspect_with_spacers()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), LayoutStyle.Empty,
+                LayoutNode.StretchedSpacer(),
+                LayoutNode.HorizontalParent("aligner", LayoutSize.StretchedBoth(), LayoutStyle.Empty,
+                    LayoutNode.StretchedSpacer(),
+                    LayoutNode.Leaf("fixed-aspect", LayoutSize.FixedAspectRatio(16, 9)),
+                    LayoutNode.StretchedSpacer()
+                    ),
+                LayoutNode.StretchedSpacer()
             );
 
             var firstBakeResult = layout.Bake();

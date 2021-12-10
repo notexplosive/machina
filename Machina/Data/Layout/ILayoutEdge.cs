@@ -2,7 +2,8 @@
 {
     public interface ILayoutEdge
     {
-        public bool IsStretched { get; }
+        public bool IsConstant { get; }
         public int ActualSize { get; }
+        public int AspectSize { get; }
     }
 }
