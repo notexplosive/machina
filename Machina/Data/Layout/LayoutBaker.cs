@@ -96,15 +96,18 @@ namespace Machina.Data.Layout
             {
                 var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlong.Count;
 
-                foreach (var alongElement in stretchAlong)
+                foreach (var element in elements)
                 {
-                    if (isVertical)
+                    if (element.Size.IsStretchedAlong(currentNode.Orientation))
                     {
-                        sizeLookupTable[alongElement.Size.Y] = alongSizeOfEachStretchedElement;
-                    }
-                    else
-                    {
-                        sizeLookupTable[alongElement.Size.X] = alongSizeOfEachStretchedElement;
+                        if (isVertical)
+                        {
+                            sizeLookupTable[element.Size.Y] = alongSizeOfEachStretchedElement;
+                        }
+                        else
+                        {
+                            sizeLookupTable[element.Size.X] = alongSizeOfEachStretchedElement;
+                        }
                     }
                 }
             }
