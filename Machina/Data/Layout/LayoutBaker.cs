@@ -100,14 +100,7 @@ namespace Machina.Data.Layout
                 {
                     if (element.Size.IsStretchedAlong(currentNode.Orientation))
                     {
-                        if (isVertical)
-                        {
-                            sizeLookupTable[element.Size.Y] = alongSizeOfEachStretchedElement;
-                        }
-                        else
-                        {
-                            sizeLookupTable[element.Size.X] = alongSizeOfEachStretchedElement;
-                        }
+                        sizeLookupTable[element.Size.GetValueFromOrientation(currentNode.Orientation)] = alongSizeOfEachStretchedElement;
                     }
                 }
             }
