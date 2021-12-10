@@ -61,7 +61,7 @@ namespace Machina.Data.Layout
             var elements = currentNode.Children;
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
             int stretchAlongCount = 0;
-            var stretchPerpendicular = new List<LayoutNode>();
+            int stretchPerpendicularCount = 0;
 
             var last = elements.Length - 1;
             var index = 0;
@@ -75,7 +75,7 @@ namespace Machina.Data.Layout
 
                 if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
                 {
-                    stretchPerpendicular.Add(element);
+                    stretchPerpendicularCount++;
                 }
 
                 if (!element.Size.IsStretchedAlong(currentNode.Orientation))
@@ -105,8 +105,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-
-            if (stretchPerpendicular.Count > 0)
+            if (stretchPerpendicularCount > 0)
             {
                 // We're using the same value for all perpendicular stretches, maybe we can simplify this?
                 var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
