@@ -111,9 +111,12 @@ namespace Machina.Data.Layout
                 // We're using the same value for all perpendicular stretches, maybe we can simplify this?
                 var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
 
-                foreach (var perpElement in stretchPerpendicular)
+                foreach (var element in elements)
                 {
-                    sizeLookupTable[perpElement.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
+                    if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
+                    {
+                        sizeLookupTable[element.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
+                    }
                 }
             }
 
