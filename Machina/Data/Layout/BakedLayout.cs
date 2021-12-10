@@ -27,6 +27,30 @@ namespace Machina.Data.Layout
             return result;
         }
 
+        public List<NodePositionAndSize> GetAllResultNodesInHierarchyOrder()
+        {
+            var result = new List<NodePositionAndSize>();
+            result.Add(content[OriginalRoot.Name.Text]);
+
+            void AddAndRecurse(LayoutNode node)
+            {
+                if (node.Name.Exists)
+                {
+                    result.Add(content[node.Name.Text]);
+                    if (node.HasChildren)
+                    {
+                        foreach (var child in node.Children)
+                        {
+                            AddAndRecurse(child);
+                        }
+                    }
+                }
+            }
+
+            AddAndRecurse(OriginalRoot);
+            return result;
+        }
+
         public IEnumerable<string> AllResultNodeNames()
         {
             return this.content.Keys;
