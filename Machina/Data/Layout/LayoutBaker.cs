@@ -74,7 +74,7 @@ namespace Machina.Data.Layout
                 }
                 else
                 {
-                    remainingAlongSize -= isVertical ? element.Size.Y.ActualSize : element.Size.X.ActualSize;
+                    remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
                 }
 
                 if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
