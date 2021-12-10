@@ -56,7 +56,7 @@ namespace Machina.Data.Layout
             var isVertical = currentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(currentNode.Size);
 
-            int remainingAlongSize = GetRemainingAlongSizeFromEasyNodes(currentNode, isVertical, groupSize);
+            int remainingAlongSize = GetRemainingAlongSizeFromEasyNodes(currentNode, groupSize);
 
             var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
             HandleStretchedNodes(currentNode, remainingAlongSize, perpendicularStretchSize);
@@ -80,8 +80,9 @@ namespace Machina.Data.Layout
             }
         }
 
-        private static int GetRemainingAlongSizeFromEasyNodes(LayoutNode currentNode, bool isVertical, Point groupSize)
+        private static int GetRemainingAlongSizeFromEasyNodes(LayoutNode currentNode, Point groupSize)
         {
+            var isVertical = currentNode.Orientation == Orientation.Vertical;
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? currentNode.Margin.Y : currentNode.Margin.X;
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
