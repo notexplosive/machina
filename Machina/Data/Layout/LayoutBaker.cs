@@ -72,14 +72,15 @@ namespace Machina.Data.Layout
                 {
                     stretchAlong.Add(element);
                 }
-                else
-                {
-                    remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
-                }
 
                 if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
                 {
                     stretchPerpendicular.Add(element);
+                }
+
+                if (!element.Size.IsStretchedAlong(currentNode.Orientation))
+                {
+                    remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
                 }
 
                 if (index != last)
