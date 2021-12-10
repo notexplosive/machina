@@ -21,7 +21,7 @@ namespace Machina.Data.Layout
                 return edge.ActualSize;
             }
 
-            return sizeLookupTable[edge];
+            return this.sizeLookupTable[edge];
         }
 
         public Point GetMeasuredSize(LayoutSize size)
