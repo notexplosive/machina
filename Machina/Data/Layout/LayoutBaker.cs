@@ -60,7 +60,7 @@ namespace Machina.Data.Layout
 
             var elements = currentNode.Children;
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
-            var stretchAlong = new List<LayoutNode>();
+            int stretchAlongCount = 0;
             var stretchPerpendicular = new List<LayoutNode>();
 
             var last = elements.Length - 1;
@@ -70,7 +70,7 @@ namespace Machina.Data.Layout
             {
                 if (element.Size.IsStretchedAlong(currentNode.Orientation))
                 {
-                    stretchAlong.Add(element);
+                    stretchAlongCount++;
                 }
 
                 if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
@@ -92,9 +92,9 @@ namespace Machina.Data.Layout
             }
 
             // Update size of stretch elements
-            if (stretchAlong.Count > 0)
+            if (stretchAlongCount > 0)
             {
-                var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlong.Count;
+                var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlongCount;
 
                 foreach (var element in elements)
                 {
