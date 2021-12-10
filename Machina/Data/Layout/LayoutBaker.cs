@@ -104,7 +104,7 @@ namespace Machina.Data.Layout
                     {
                         if (element.Size.IsStretchedAlong(currentNode.Orientation))
                         {
-                            sizeLookupTable[element.Size.GetValueFromOrientation(currentNode.Orientation)] = alongSizeOfEachStretchedElement;
+                            this.sizeLookupTable[element.Size.GetValueFromOrientation(currentNode.Orientation)] = alongSizeOfEachStretchedElement;
                         }
                     }
                 }
@@ -118,7 +118,7 @@ namespace Machina.Data.Layout
                     {
                         if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
                         {
-                            sizeLookupTable[element.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
+                            this.sizeLookupTable[element.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
                         }
                     }
                 }
