@@ -58,13 +58,12 @@ namespace Machina.Data.Layout
             var totalAlongSize = isVertical ? groupSize.Y : groupSize.X;
             var alongMargin = isVertical ? currentNode.Margin.Y : currentNode.Margin.X;
 
-            var elements = currentNode.Children;
             var remainingAlongSize = totalAlongSize - alongMargin * 2;
 
-            var last = elements.Length - 1;
+            var last = currentNode.Children.Length - 1;
             var index = 0;
 
-            foreach (var element in elements)
+            foreach (var element in currentNode.Children)
             {
                 if (!element.Size.IsStretchedAlong(currentNode.Orientation))
                 {
@@ -83,7 +82,7 @@ namespace Machina.Data.Layout
             {
                 int stretchAlongCount = 0;
                 int stretchPerpendicularCount = 0;
-                foreach (var element in elements)
+                foreach (var element in currentNode.Children)
                 {
                     if (element.Size.IsStretchedAlong(currentNode.Orientation))
                     {
@@ -101,7 +100,7 @@ namespace Machina.Data.Layout
                 {
                     var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlongCount;
 
-                    foreach (var element in elements)
+                    foreach (var element in currentNode.Children)
                     {
                         if (element.Size.IsStretchedAlong(currentNode.Orientation))
                         {
@@ -115,7 +114,7 @@ namespace Machina.Data.Layout
                     // We're using the same value for all perpendicular stretches, maybe we can simplify this?
                     var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
 
-                    foreach (var element in elements)
+                    foreach (var element in currentNode.Children)
                     {
                         if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
                         {
@@ -129,7 +128,7 @@ namespace Machina.Data.Layout
 
             // Place elements
             var nextLocation = startingLocation + new Point(currentNode.Margin.X, currentNode.Margin.Y);
-            foreach (var element in elements)
+            foreach (var element in currentNode.Children)
             {
                 var elementPosition = nextLocation;
                 AddLayoutNode(inProgressLayout, elementPosition, element, currentNestingLevel);
