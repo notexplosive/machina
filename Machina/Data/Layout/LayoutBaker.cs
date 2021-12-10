@@ -65,7 +65,7 @@ namespace Machina.Data.Layout
 
             foreach (var element in currentNode.Children)
             {
-                if (!element.Size.IsStretchedAlong(currentNode.Orientation))
+                if (element.Size.IsMeasurableAlong(currentNode.Orientation))
                 {
                     remainingAlongSize -= element.Size.GetValueFromOrientation(currentNode.Orientation).ActualSize;
                 }

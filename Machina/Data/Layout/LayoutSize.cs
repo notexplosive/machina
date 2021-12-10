@@ -32,6 +32,11 @@ namespace Machina.Data.Layout
             return GetValueFromOrientation(OrientationUtils.Opposite(orientation)) is StretchedLayoutEdge;
         }
 
+        public bool IsMeasurableAlong(Orientation orientation)
+        {
+            return GetValueFromOrientation(orientation) is ConstLayoutEdge;
+        }
+
         public ILayoutEdge GetValueFromOrientation(Orientation orientation)
         {
             if (orientation == Orientation.Horizontal)
