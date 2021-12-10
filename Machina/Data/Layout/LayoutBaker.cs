@@ -78,51 +78,8 @@ namespace Machina.Data.Layout
                 index++;
             }
 
-
-            {
-                int stretchAlongCount = 0;
-                int stretchPerpendicularCount = 0;
-                foreach (var element in currentNode.Children)
-                {
-                    if (element.Size.IsStretchedAlong(currentNode.Orientation))
-                    {
-                        stretchAlongCount++;
-                    }
-
-                    if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
-                    {
-                        stretchPerpendicularCount++;
-                    }
-                }
-
-                // Update size of stretch elements
-                if (stretchAlongCount > 0)
-                {
-                    var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlongCount;
-
-                    foreach (var element in currentNode.Children)
-                    {
-                        if (element.Size.IsStretchedAlong(currentNode.Orientation))
-                        {
-                            this.sizeLookupTable[element.Size.GetValueFromOrientation(currentNode.Orientation)] = alongSizeOfEachStretchedElement;
-                        }
-                    }
-                }
-
-                if (stretchPerpendicularCount > 0)
-                {
-                    // We're using the same value for all perpendicular stretches, maybe we can simplify this?
-                    var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
-
-                    foreach (var element in currentNode.Children)
-                    {
-                        if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
-                        {
-                            this.sizeLookupTable[element.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
-                        }
-                    }
-                }
-            }
+            var perpendicularStretchSize = isVertical ? groupSize.X - currentNode.Margin.X * 2 : groupSize.Y - currentNode.Margin.Y * 2;
+            HandleStretchedNodes(currentNode, remainingAlongSize, perpendicularStretchSize);
 
             int currentNestingLevel = parentNestingLevel + 1;
 
@@ -144,6 +101,49 @@ namespace Machina.Data.Layout
                 if (element.HasChildren)
                 {
                     BakeGroup(inProgressLayout, element, elementPosition, currentNestingLevel);
+                }
+            }
+        }
+
+        private void HandleStretchedNodes(LayoutNode currentNode, int remainingAlongSize, int perpendicularStretchSize)
+        {
+            int stretchAlongCount = 0;
+            int stretchPerpendicularCount = 0;
+            foreach (var element in currentNode.Children)
+            {
+                if (element.Size.IsStretchedAlong(currentNode.Orientation))
+                {
+                    stretchAlongCount++;
+                }
+
+                if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
+                {
+                    stretchPerpendicularCount++;
+                }
+            }
+
+            // Update size of stretch elements
+            if (stretchAlongCount > 0)
+            {
+                var alongSizeOfEachStretchedElement = remainingAlongSize / stretchAlongCount;
+
+                foreach (var element in currentNode.Children)
+                {
+                    if (element.Size.IsStretchedAlong(currentNode.Orientation))
+                    {
+                        this.sizeLookupTable[element.Size.GetValueFromOrientation(currentNode.Orientation)] = alongSizeOfEachStretchedElement;
+                    }
+                }
+            }
+
+            if (stretchPerpendicularCount > 0)
+            {
+                foreach (var element in currentNode.Children)
+                {
+                    if (element.Size.IsStretchedPerpendicular(currentNode.Orientation))
+                    {
+                        this.sizeLookupTable[element.Size.GetValueFromOrientation(OrientationUtils.Opposite(currentNode.Orientation))] = perpendicularStretchSize;
+                    }
                 }
             }
         }
