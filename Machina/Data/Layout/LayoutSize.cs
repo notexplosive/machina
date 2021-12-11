@@ -7,13 +7,13 @@ namespace Machina.Data.Layout
 {
     public struct LayoutSize
     {
-        public readonly ILayoutEdge X;
-        public readonly ILayoutEdge Y;
+        public readonly ILayoutEdge Width;
+        public readonly ILayoutEdge Height;
 
         private LayoutSize(ILayoutEdge x, ILayoutEdge y)
         {
-            X = x;
-            Y = y;
+            Width = x;
+            Height = y;
         }
 
         public static LayoutSize Pixels(int x, int y) => new LayoutSize(new ConstLayoutEdge(x), new ConstLayoutEdge(y));
@@ -26,8 +26,8 @@ namespace Machina.Data.Layout
 
         public bool IsFixedAspectRatio()
         {
-            var xIsFixed = X is FixedAspectRatioLayoutEdge;
-            var yIsFixed = Y is FixedAspectRatioLayoutEdge;
+            var xIsFixed = Width is FixedAspectRatioLayoutEdge;
+            var yIsFixed = Height is FixedAspectRatioLayoutEdge;
             Debug.Assert(xIsFixed == yIsFixed); // it only makes sense to have both edges be fixed
 
             return xIsFixed && yIsFixed;
@@ -35,7 +35,7 @@ namespace Machina.Data.Layout
 
         public AspectRatio GetAspectRatio()
         {
-            return new AspectRatio(X.AspectSize, Y.AspectSize);
+            return new AspectRatio(Width.AspectSize, Height.AspectSize);
         }
 
         public bool IsStretchedAlong(Orientation orientation, AspectRatio parentAspect)
@@ -83,12 +83,12 @@ namespace Machina.Data.Layout
         {
             if (orientation == Orientation.Horizontal)
             {
-                return X;
+                return Width;
             }
 
             if (orientation == Orientation.Vertical)
             {
-                return Y;
+                return Height;
             }
 
             throw new ArgumentException("Invalid orientation");
@@ -186,7 +186,7 @@ namespace Machina.Data.Layout
 
         public override string ToString()
         {
-            return $"{X}, {Y}";
+            return $"{Width}, {Height}";
         }
     }
 }

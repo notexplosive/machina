@@ -31,7 +31,7 @@ namespace Machina.Data.Layout
 
         public Point GetMeasuredSize(LayoutSize size)
         {
-            return new Point(GetMeasuredEdge(size.X), GetMeasuredEdge(size.Y));
+            return new Point(GetMeasuredEdge(size.Width), GetMeasuredEdge(size.Height));
         }
 
         public void AddLayoutNode(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
@@ -74,15 +74,15 @@ namespace Machina.Data.Layout
                     var aspect = child.Size.GetAspectRatio();
 
                     // either X or Y of the FixedAspect has already been measured, we need to now calculate the other one
-                    if (CanMeasureEdge(child.Size.X))
+                    if (CanMeasureEdge(child.Size.Width))
                     {
-                        var x = GetMeasuredEdge(child.Size.X);
-                        this.sizeLookupTable[child.Size.Y] = (int) (x * aspect.HeightOverWidth);
+                        var x = GetMeasuredEdge(child.Size.Width);
+                        this.sizeLookupTable[child.Size.Height] = (int) (x * aspect.HeightOverWidth);
                     }
                     else
                     {
-                        var y = GetMeasuredEdge(child.Size.Y);
-                        this.sizeLookupTable[child.Size.X] = (int) (y * aspect.WidthOverHeight);
+                        var y = GetMeasuredEdge(child.Size.Height);
+                        this.sizeLookupTable[child.Size.Width] = (int) (y * aspect.WidthOverHeight);
                     }
                 }
             }
