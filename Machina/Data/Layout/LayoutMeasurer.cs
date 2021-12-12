@@ -6,7 +6,7 @@ namespace Machina.Data.Layout
     internal class LayoutMeasurer
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        public int GetMeasuredEdge(ILayoutEdge edge)
+        public int MeasureEdge(ILayoutEdge edge)
         {
             if (edge.IsConstant)
             {
@@ -22,7 +22,7 @@ namespace Machina.Data.Layout
         }
         public Point GetMeasuredSize(LayoutSize size)
         {
-            return new Point(GetMeasuredEdge(size.Width), GetMeasuredEdge(size.Height));
+            return new Point(MeasureEdge(size.Width), MeasureEdge(size.Height));
         }
 
         public void Add(ILayoutEdge key, int value)
