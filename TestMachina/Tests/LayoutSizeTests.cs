@@ -15,8 +15,8 @@ namespace TestMachina.Tests
             size.IsFixedAspectRatio().Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Horizontal).Should().BeTrue();
             size.IsMeasurableAlong(Orientation.Vertical).Should().BeTrue();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
+            size.IsStretchedAlong(Orientation.Vertical).Should().BeFalse();
+            size.IsStretchedPerpendicular(Orientation.Vertical).Should().BeFalse();
         }
 
         [Fact]
@@ -27,8 +27,8 @@ namespace TestMachina.Tests
             size.IsFixedAspectRatio().Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Horizontal).Should().BeTrue();
             size.IsMeasurableAlong(Orientation.Vertical).Should().BeTrue();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
+            size.IsStretchedAlong(Orientation.Vertical).Should().BeFalse();
+            size.IsStretchedPerpendicular(Orientation.Vertical).Should().BeFalse();
         }
 
         [Fact]
@@ -39,8 +39,8 @@ namespace TestMachina.Tests
             size.IsFixedAspectRatio().Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Horizontal).Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Vertical).Should().BeFalse();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeTrue();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeTrue();
+            size.IsStretchedAlong(Orientation.Vertical).Should().BeTrue();
+            size.IsStretchedPerpendicular(Orientation.Vertical).Should().BeTrue();
         }
 
         [Fact]
@@ -51,8 +51,8 @@ namespace TestMachina.Tests
             size.IsFixedAspectRatio().Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Horizontal).Should().BeTrue();
             size.IsMeasurableAlong(Orientation.Vertical).Should().BeFalse();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeTrue();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
+            size.IsStretchedAlong(Orientation.Vertical).Should().BeTrue();
+            size.IsStretchedPerpendicular(Orientation.Vertical).Should().BeFalse();
         }
 
         [Fact]
@@ -63,22 +63,8 @@ namespace TestMachina.Tests
             size.IsFixedAspectRatio().Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Horizontal).Should().BeFalse();
             size.IsMeasurableAlong(Orientation.Vertical).Should().BeTrue();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeTrue();
-        }
-
-        [Fact]
-        public void fixed_aspect()
-        {
-            var size = LayoutSize.FixedAspectRatio(16, 9);
-
-            size.IsFixedAspectRatio().Should().BeTrue();
-            size.IsMeasurableAlong(Orientation.Horizontal).Should().BeFalse();
-            size.IsMeasurableAlong(Orientation.Vertical).Should().BeFalse();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeFalse();
-            size.IsStretchedAlong(Orientation.Vertical, new AspectRatio(9, 16)).Should().BeFalse();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(16, 9)).Should().BeTrue();
-            size.IsStretchedPerpendicular(Orientation.Vertical, new AspectRatio(9, 16)).Should().BeTrue();
+            size.IsStretchedAlong(Orientation.Vertical).Should().BeFalse();
+            size.IsStretchedPerpendicular(Orientation.Vertical).Should().BeTrue();
         }
     }
 }

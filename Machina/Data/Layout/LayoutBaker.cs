@@ -66,23 +66,34 @@ namespace Machina.Data.Layout
             var perpendicularStretchSize = isVertical ? groupSize.X - parentNode.Margin.X * 2 : groupSize.Y - parentNode.Margin.Y * 2;
             HandleStretchedNodes(parentNode, remainingAlongSize, perpendicularStretchSize);
 
-            // At this point, everything except the dependent edge of FixedAspect nodes have been measured.
             foreach (var child in parentNode.Children)
             {
                 if (child.Size.IsFixedAspectRatio())
                 {
-                    var aspect = child.Size.GetAspectRatio();
 
-                    // either X or Y of the FixedAspect has already been measured, we need to now calculate the other one
-                    if (CanMeasureEdge(child.Size.Width))
+                    // Right now both sides of FixedAspectRatio think they're streched, we need to figure out which one is actually stretched based on how much room is thinks it has
+                    var aspectRatioOfAvailableSpace = new AspectRatio(GetMeasuredSize(child.Size));
+                    var childAspectRatio = child.Size.GetAspectRatio();
+                    var isStretchedAlong = AspectRatio.IsStretchedAlong(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
+                    var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
+                    var isStretchedBoth = isStretchedAlong && isStretchedPerpendicular;
+
+                    var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation); // todo: parentNode.OppositeOrientation
+
+                    // We started out assuming it's stretched on both axes, if it is then just roll with it
+                    if (!isStretchedBoth)
                     {
-                        var x = GetMeasuredEdge(child.Size.Width);
-                        this.sizeLookupTable[child.Size.Height] = (int) (x * aspect.HeightOverWidth);
-                    }
-                    else
-                    {
-                        var y = GetMeasuredEdge(child.Size.Height);
-                        this.sizeLookupTable[child.Size.Width] = (int) (y * aspect.WidthOverHeight);
+                        if (isStretchedAlong)
+                        {
+                            var alongSize = GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                            this.sizeLookupTable[child.Size.GetValueFromOrientation(oppositeOrientation)] = (int) (alongSize * childAspectRatio.AlongOverPerpendicular(OrientationUtils.Opposite(parentNode.Orientation)));
+                        }
+
+                        if (isStretchedPerpendicular)
+                        {
+                            var perpendicularSize = GetMeasuredEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
+                            this.sizeLookupTable[child.Size.GetValueFromOrientation(parentNode.Orientation)] = (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation));
+                        }
                     }
                 }
             }
@@ -138,12 +149,12 @@ namespace Machina.Data.Layout
             var parentAspectRatio = new AspectRatio(GetMeasuredSize(parentNode.Size));
             foreach (var child in parentNode.Children)
             {
-                if (child.Size.IsStretchedAlong(parentNode.Orientation, parentAspectRatio))
+                if (child.Size.IsStretchedAlong(parentNode.Orientation))
                 {
                     stretchAlongCount++;
                 }
 
-                if (child.Size.IsStretchedPerpendicular(parentNode.Orientation, parentAspectRatio))
+                if (child.Size.IsStretchedPerpendicular(parentNode.Orientation))
                 {
                     stretchPerpendicularCount++;
                 }
@@ -156,7 +167,7 @@ namespace Machina.Data.Layout
 
                 foreach (var child in parentNode.Children)
                 {
-                    if (child.Size.IsStretchedAlong(parentNode.Orientation, parentAspectRatio))
+                    if (child.Size.IsStretchedAlong(parentNode.Orientation))
                     {
                         this.sizeLookupTable[child.Size.GetValueFromOrientation(parentNode.Orientation)] = alongSizeOfEachStretchedChild;
 
@@ -170,7 +181,7 @@ namespace Machina.Data.Layout
             {
                 foreach (var child in parentNode.Children)
                 {
-                    if (child.Size.IsStretchedPerpendicular(parentNode.Orientation, parentAspectRatio))
+                    if (child.Size.IsStretchedPerpendicular(parentNode.Orientation))
                     {
                         this.sizeLookupTable[child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))] = perpendicularStretchSize;
                     }

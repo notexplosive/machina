@@ -66,26 +66,6 @@ namespace Machina.Data.Layout
             throw new Exception("Impossible aspect ratio");
         }
 
-        public bool IsStretchedAlongAssumingParentHasSameAspectClass(Orientation orientation)
-        {
-            if (IsSquare())
-            {
-                return true;
-            }
-
-            if (IsNarrowAndTall())
-            {
-                return orientation == Orientation.Vertical;
-            }
-
-            if (IsWideAndShort())
-            {
-                return orientation == Orientation.Horizontal;
-            }
-
-            throw new Exception("Impossible aspect ratio");
-        }
-
         public static bool IsStretchedAlong(AspectRatio inner, AspectRatio outer, Orientation along)
         {
             if (inner.WidthOverHeight == outer.WidthOverHeight)
@@ -134,6 +114,18 @@ namespace Machina.Data.Layout
             }
 
             throw new Exception("Does not have natural long side");
+        }
+
+        public float AlongOverPerpendicular(Orientation orientation)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return WidthOverHeight;
+            }
+            else
+            {
+                return HeightOverWidth;
+            }
         }
     }
 }

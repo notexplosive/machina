@@ -38,7 +38,7 @@ namespace Machina.Data.Layout
             return new AspectRatio(Width.AspectSize, Height.AspectSize);
         }
 
-        public bool IsStretchedAlong(Orientation orientation, AspectRatio parentAspect)
+        public bool IsStretchedAlong(Orientation orientation)
         {
             var edge = GetValueFromOrientation(orientation);
             if (edge is StretchedLayoutEdge)
@@ -48,16 +48,16 @@ namespace Machina.Data.Layout
 
             if (edge is FixedAspectRatioLayoutEdge)
             {
-                var parentAspectRatio = parentAspect;
-                var childAspectRatio = GetAspectRatio();
-                return AspectRatio.IsStretchedAlong(childAspectRatio, parentAspectRatio, orientation);
+                // Fixed aspect ratio assumes it's stretched along both sides until we've measured out everything
+                return true;
             }
 
             return false;
         }
 
-        public bool IsStretchedPerpendicular(Orientation orientation, AspectRatio parentAspect)
+        public bool IsStretchedPerpendicular(Orientation orientation)
         {
+            // TODO: couldn't this just be "return IsStretchedAlong(opposite(orientation))"?
             var edge = GetValueFromOrientation(OrientationUtils.Opposite(orientation));
             if (edge is StretchedLayoutEdge)
             {
@@ -66,9 +66,8 @@ namespace Machina.Data.Layout
 
             if (edge is FixedAspectRatioLayoutEdge)
             {
-                var parentAspectRatio = parentAspect;
-                var childAspectRatio = GetAspectRatio();
-                return AspectRatio.IsStretchedPerpendicular(childAspectRatio, parentAspectRatio, orientation);
+                // Fixed aspect ratio assumes it's stretched along both sides until we've measured out everything
+                return true;
             }
 
             return false;
