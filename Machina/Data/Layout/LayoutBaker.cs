@@ -99,20 +99,13 @@ namespace Machina.Data.Layout
             }
 
             // Place elements
-            PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel, isVertical);
+            PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel);
         }
 
-        private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel, bool isVertical)
+        private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel)
         {
             int currentNestingLevel = parentNestingLevel + 1;
-
-            var paddingAsPoint = isVertical ? new Point(0, parentNode.Padding) : new Point(parentNode.Padding, 0); // todo: OrientationUtils.GetPointForAlongValue(int,Orientation), can remove isVertical
-
-            var totalUsedSpace = Point.Zero - paddingAsPoint; // subtract one padding because we're going to add one too many in the loop
-            foreach (var child in parentNode.Children)
-            {
-                totalUsedSpace += GetMeasuredSize(child.Size) + paddingAsPoint;
-            }
+            Point totalUsedSpace = CalculateTotalUsedSpace(parentNode);
 
             var nextPosition = parentNodeLocation
                 + parentNode.Alignment.GetRelativePositionOfElement(GetMeasuredSize(parentNode.Size), totalUsedSpace)
@@ -125,13 +118,28 @@ namespace Machina.Data.Layout
                 AddLayoutNode(inProgressLayout, childPosition, child, currentNestingLevel);
                 var alongValue = GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding;
 
-                nextPosition += isVertical ? new Point(0, alongValue) : new Point(alongValue, 0);
+                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, alongValue);
 
                 if (child.HasChildren)
                 {
                     BakeGroup(inProgressLayout, child, childPosition, currentNestingLevel);
                 }
             }
+        }
+
+        private Point CalculateTotalUsedSpace(LayoutNode parentNode)
+        {
+            var paddingAsPoint = OrientationUtils.GetPointForAlongNode(parentNode.Orientation, parentNode.Padding);
+            var totalUsedSpace = Point.Zero;
+            foreach (var child in parentNode.Children)
+            {
+                totalUsedSpace += GetMeasuredSize(child.Size) + paddingAsPoint;
+            }
+
+            // subtract 1 padding since the previous loop adds an extra (thanks foreach)
+            totalUsedSpace -= paddingAsPoint;
+
+            return totalUsedSpace;
         }
 
         private static int GetRemainingAlongSizeFromEasyNodes(LayoutNode parentNode, Point groupSize)
