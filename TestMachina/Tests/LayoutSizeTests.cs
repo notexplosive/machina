@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Machina.Components;
+using Machina.Data;
 using Machina.Data.Layout;
 using Xunit;
 

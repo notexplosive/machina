@@ -16,6 +16,11 @@ namespace Machina.Data.Layout
             return this.sizeLookupTable[edge];
         }
 
+        public int MeasureEdgeOfNode(LayoutNode node, Orientation orientation)
+        {
+            return MeasureEdge(node.Size.GetValueFromOrientation(orientation));
+        }
+
         public bool CanMeasureEdge(ILayoutEdge edge)
         {
             return this.sizeLookupTable.ContainsKey(edge);

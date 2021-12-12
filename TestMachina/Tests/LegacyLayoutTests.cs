@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Xunit;

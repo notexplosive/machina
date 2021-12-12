@@ -1,5 +1,4 @@
-﻿using Machina.Components;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 
 namespace Machina.Data.Layout
@@ -63,7 +62,7 @@ namespace Machina.Data.Layout
                 var childPosition = nextPosition;
                 AddNodeToLayout(inProgressLayout, childPosition, child, currentNestingLevel);
 
-                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, this.measurer.MeasureEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding);
+                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation) + parentNode.Padding);
 
                 if (child.HasChildren)
                 {
@@ -79,9 +78,9 @@ namespace Machina.Data.Layout
 
             foreach (var child in parentNode.Children)
             {
-                totalUsedAlongSpace += this.measurer.MeasureEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                totalUsedAlongSpace += this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation);
                 totalUsedAlongSpace += parentNode.Padding;
-                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, this.measurer.MeasureEdge(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))));
+                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, this.measurer.MeasureEdgeOfNode(child, OrientationUtils.Opposite(parentNode.Orientation)));
             }
 
             // subtract 1 padding since the previous loop adds an extra (thanks foreach)
@@ -173,20 +172,20 @@ namespace Machina.Data.Layout
                 var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
                 var isStretchedBoth = isStretchedAlong && isStretchedPerpendicular;
 
-                var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation); // todo: parentNode.OppositeOrientation
+                var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation);
 
                 // If it's stretched both we do nothing because we already assume it's stretched on both sides
                 if (!isStretchedBoth)
                 {
                     if (isStretchedAlong)
                     {
-                        var alongSize = this.measurer.MeasureEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                        var alongSize = this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation);
                         this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
                     }
 
                     if (isStretchedPerpendicular)
                     {
-                        var perpendicularSize = this.measurer.MeasureEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
+                        var perpendicularSize = this.measurer.MeasureEdgeOfNode(child, oppositeOrientation);
                         this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
                     }
                 }
