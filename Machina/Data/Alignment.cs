@@ -55,10 +55,21 @@ namespace Machina.Data
                 xFactor = -1;
             }
 
+            if (Horizontal == HorizontalAlignment.Center)
+            {
+                xFactor = 0;
+            }
+
             if (Vertical == VerticalAlignment.Bottom)
             {
                 yFactor = -1;
             }
+
+            if (Vertical == VerticalAlignment.Center)
+            {
+                yFactor = 0;
+            }
+
             return new Point(margin.X * xFactor, margin.Y * yFactor);
         }
 

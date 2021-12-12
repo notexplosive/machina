@@ -95,6 +95,15 @@ namespace Machina.Data.Layout
             return new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Children, Margin, Padding, Alignment);
         }
 
+        /// <summary>
+        /// Returns a LayoutNode just like this one with the same children, only realigned
+        /// </summary>
+        /// <returns></returns>
+        public LayoutNode GetRealigned(Alignment newAlignment)
+        {
+            return new LayoutNode(Name, Size, Orientation, Children, Margin, Padding, newAlignment);
+        }
+
         public override string ToString()
         {
             var childCount = HasChildren ? Children.Length : 0;

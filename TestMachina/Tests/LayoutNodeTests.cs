@@ -256,5 +256,46 @@ namespace TestMachina.Tests
                 LayoutNodeUtils.DrawResult(firstBakeResult)
                 );
         }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void all_alignment_scenarios_single_object()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(20, 20), new LayoutStyle(margin: new Point(3, 1), padding: 2, Alignment.TopLeft),
+                LayoutNode.Leaf("obj", LayoutSize.Pixels(6, 4))
+            );
+
+            var result = new[] {
+                layout.Bake(),
+                layout.GetRealigned(Alignment.TopCenter).Bake(),
+                layout.GetRealigned(Alignment.TopRight).Bake(),
+                layout.GetRealigned(Alignment.CenterLeft).Bake(),
+                layout.GetRealigned(Alignment.Center).Bake(),
+                layout.GetRealigned(Alignment.CenterRight).Bake(),
+                layout.GetRealigned(Alignment.BottomLeft).Bake(),
+                layout.GetRealigned(Alignment.BottomCenter).Bake(),
+                layout.GetRealigned(Alignment.BottomRight).Bake(),
+            };
+
+            Approvals.Verify(
+                LayoutNodeUtils.DrawResult(result[0])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[1])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[2])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[3])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[4])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[5])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[6])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[7])
+                + "\n\n" +
+                LayoutNodeUtils.DrawResult(result[8])
+                );
+        }
     }
 }
