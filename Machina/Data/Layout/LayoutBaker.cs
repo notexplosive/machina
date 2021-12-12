@@ -1,38 +1,9 @@
 ﻿using Machina.Components;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    internal class LayoutMeasurer
-    {
-        public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        public int GetMeasuredEdge(ILayoutEdge edge)
-        {
-            if (edge.IsConstant)
-            {
-                return edge.ActualSize;
-            }
-
-            return this.sizeLookupTable[edge];
-        }
-
-        public bool CanMeasureEdge(ILayoutEdge edge)
-        {
-            return this.sizeLookupTable.ContainsKey(edge);
-        }
-        public Point GetMeasuredSize(LayoutSize size)
-        {
-            return new Point(GetMeasuredEdge(size.Width), GetMeasuredEdge(size.Height));
-        }
-
-        public void Add(ILayoutEdge key, int value)
-        {
-            this.sizeLookupTable[key] = value;
-        }
-    }
-
     internal class LayoutBaker
     {
         private readonly LayoutNode rootNode;
@@ -97,7 +68,7 @@ namespace Machina.Data.Layout
                         if (isStretchedAlong)
                         {
                             var alongSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
-                            this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(OrientationUtils.Opposite(parentNode.Orientation))));
+                            this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
                         }
 
                         if (isStretchedPerpendicular)
