@@ -53,10 +53,8 @@ namespace Machina.Data.Layout
 
         private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int currentNestingLevel)
         {
-            Point totalUsedSpace = CalculateTotalUsedSpace(parentNode);
-
             var nextPosition = parentNodeLocation
-                + parentNode.Alignment.GetRelativePositionOfElement(this.measurer.GetMeasuredSize(parentNode.Size), totalUsedSpace)
+                + parentNode.Alignment.GetRelativePositionOfElement(this.measurer.GetMeasuredSize(parentNode.Size), CalculateTotalUsedSpace(parentNode))
                 + parentNode.Alignment.AddPostionDeltaFromMargin(parentNode.Margin)
                 ;
 
