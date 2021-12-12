@@ -15,7 +15,7 @@ namespace Machina.Data.Layout
             this.measurer = new LayoutMeasurer();
         }
 
-        public void AddLayoutNode(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
+        public void AddNodeToLayout(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
         {
             if (node.Name.Exists)
             {
@@ -33,7 +33,7 @@ namespace Machina.Data.Layout
         public void BakeAtLocation(BakedLayout inProgressLayout, Point startingLocation)
         {
             int nestingLevel = 0;
-            AddLayoutNode(inProgressLayout, startingLocation, this.rootNode, nestingLevel);
+            AddNodeToLayout(inProgressLayout, startingLocation, this.rootNode, nestingLevel);
             BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
         }
 
@@ -61,10 +61,9 @@ namespace Machina.Data.Layout
             foreach (var child in parentNode.Children)
             {
                 var childPosition = nextPosition;
-                AddLayoutNode(inProgressLayout, childPosition, child, currentNestingLevel);
-                var alongValue = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding;
+                AddNodeToLayout(inProgressLayout, childPosition, child, currentNestingLevel);
 
-                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, alongValue);
+                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding);
 
                 if (child.HasChildren)
                 {
