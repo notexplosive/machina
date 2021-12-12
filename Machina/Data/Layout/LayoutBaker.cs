@@ -5,16 +5,9 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    internal class LayoutBaker
+    internal class LayoutMeasurer
     {
         public readonly Dictionary<ILayoutEdge, int> sizeLookupTable = new Dictionary<ILayoutEdge, int>();
-        private readonly LayoutNode rootNode;
-
-        public LayoutBaker(LayoutNode rootNode)
-        {
-            this.rootNode = rootNode;
-        }
-
         public int GetMeasuredEdge(ILayoutEdge edge)
         {
             if (edge.IsConstant)
@@ -29,17 +22,33 @@ namespace Machina.Data.Layout
         {
             return this.sizeLookupTable.ContainsKey(edge);
         }
-
         public Point GetMeasuredSize(LayoutSize size)
         {
             return new Point(GetMeasuredEdge(size.Width), GetMeasuredEdge(size.Height));
+        }
+
+        public void Add(ILayoutEdge key, int value)
+        {
+            this.sizeLookupTable[key] = value;
+        }
+    }
+
+    internal class LayoutBaker
+    {
+        private readonly LayoutNode rootNode;
+        private readonly LayoutMeasurer measurer;
+
+        public LayoutBaker(LayoutNode rootNode)
+        {
+            this.rootNode = rootNode;
+            this.measurer = new LayoutMeasurer();
         }
 
         public void AddLayoutNode(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
         {
             if (node.Name.Exists)
             {
-                inProgressLayout.Add(node.Name.Text, new NodePositionAndSize(position, GetMeasuredSize(node.Size), nestingLevel));
+                inProgressLayout.Add(node.Name.Text, new NodePositionAndSize(position, this.measurer.GetMeasuredSize(node.Size), nestingLevel));
             }
         }
 
@@ -60,7 +69,7 @@ namespace Machina.Data.Layout
         private void BakeGroup(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel)
         {
             var isVertical = parentNode.Orientation == Orientation.Vertical;
-            var groupSize = GetMeasuredSize(parentNode.Size);
+            var groupSize = this.measurer.GetMeasuredSize(parentNode.Size);
 
             int remainingAlongSize = GetRemainingAlongSizeFromEasyNodes(parentNode, groupSize);
 
@@ -74,7 +83,7 @@ namespace Machina.Data.Layout
                 {
 
                     // Right now both sides of FixedAspectRatio think they're streched, we need to figure out which one is actually stretched based on how much room is thinks it has
-                    var aspectRatioOfAvailableSpace = new AspectRatio(GetMeasuredSize(child.Size));
+                    var aspectRatioOfAvailableSpace = new AspectRatio(this.measurer.GetMeasuredSize(child.Size));
                     var childAspectRatio = child.Size.GetAspectRatio();
                     var isStretchedAlong = AspectRatio.IsStretchedAlong(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
                     var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
@@ -87,14 +96,14 @@ namespace Machina.Data.Layout
                     {
                         if (isStretchedAlong)
                         {
-                            var alongSize = GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
-                            this.sizeLookupTable[child.Size.GetValueFromOrientation(oppositeOrientation)] = (int) (alongSize * childAspectRatio.AlongOverPerpendicular(OrientationUtils.Opposite(parentNode.Orientation)));
+                            var alongSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                            this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(OrientationUtils.Opposite(parentNode.Orientation))));
                         }
 
                         if (isStretchedPerpendicular)
                         {
-                            var perpendicularSize = GetMeasuredEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
-                            this.sizeLookupTable[child.Size.GetValueFromOrientation(parentNode.Orientation)] = (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation));
+                            var perpendicularSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
+                            this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
                         }
                     }
                 }
@@ -110,7 +119,7 @@ namespace Machina.Data.Layout
             Point totalUsedSpace = CalculateTotalUsedSpace(parentNode);
 
             var nextPosition = parentNodeLocation
-                + parentNode.Alignment.GetRelativePositionOfElement(GetMeasuredSize(parentNode.Size), totalUsedSpace)
+                + parentNode.Alignment.GetRelativePositionOfElement(this.measurer.GetMeasuredSize(parentNode.Size), totalUsedSpace)
                 + parentNode.Alignment.AddPostionDeltaFromMargin(parentNode.Margin)
                 ;
 
@@ -118,7 +127,7 @@ namespace Machina.Data.Layout
             {
                 var childPosition = nextPosition;
                 AddLayoutNode(inProgressLayout, childPosition, child, currentNestingLevel);
-                var alongValue = GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding;
+                var alongValue = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation)) + parentNode.Padding;
 
                 nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, alongValue);
 
@@ -136,9 +145,9 @@ namespace Machina.Data.Layout
 
             foreach (var child in parentNode.Children)
             {
-                totalUsedAlongSpace += GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                totalUsedAlongSpace += this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
                 totalUsedAlongSpace += parentNode.Padding;
-                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, GetMeasuredEdge(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))));
+                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))));
             }
 
             // subtract 1 padding since the previous loop adds an extra (thanks foreach)
@@ -199,9 +208,9 @@ namespace Machina.Data.Layout
                 {
                     if (child.Size.IsStretchedAlong(parentNode.Orientation))
                     {
-                        this.sizeLookupTable[child.Size.GetValueFromOrientation(parentNode.Orientation)] = alongSizeOfEachStretchedChild;
+                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), alongSizeOfEachStretchedChild);
 
-                        // todo: we could do the fixed aspect stuff here, that way we don't need to look it up in the table later
+                        // todo: I think we could do the fixed aspect stuff here, that way we don't need to look it up in the table later
                     }
                 }
             }
@@ -213,7 +222,7 @@ namespace Machina.Data.Layout
                 {
                     if (child.Size.IsStretchedPerpendicular(parentNode.Orientation))
                     {
-                        this.sizeLookupTable[child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))] = perpendicularStretchSize;
+                        this.measurer.Add(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation)), perpendicularStretchSize);
                     }
                 }
             }
