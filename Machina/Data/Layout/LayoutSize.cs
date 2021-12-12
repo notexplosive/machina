@@ -56,20 +56,7 @@ namespace Machina.Data.Layout
 
         public bool IsStretchedPerpendicular(Orientation orientation)
         {
-            // TODO: couldn't this just be "return IsStretchedAlong(opposite(orientation))"?
-            var edge = GetValueFromOrientation(orientation.Opposite());
-            if (edge is StretchedLayoutEdge)
-            {
-                return true;
-            }
-
-            if (edge is FixedAspectRatioLayoutEdge)
-            {
-                // Fixed aspect ratio assumes it's stretched along both sides until we've measured out everything
-                return true;
-            }
-
-            return false;
+            return IsStretchedAlong(orientation.Opposite());
         }
 
         public bool IsMeasurableAlong(Orientation orientation)
