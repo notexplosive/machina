@@ -172,7 +172,6 @@ namespace Machina.Data.Layout
         {
             int stretchAlongCount = 0;
             int stretchPerpendicularCount = 0;
-            var parentAspectRatio = new AspectRatio(GetMeasuredSize(parentNode.Size));
             foreach (var child in parentNode.Children)
             {
                 if (child.Size.IsStretchedAlong(parentNode.Orientation))
