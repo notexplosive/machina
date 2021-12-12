@@ -46,13 +46,10 @@ namespace Machina.Data
         {
             return this == Vertical ? new Point(0, value) : new Point(value, 0);
         }
-    }
 
-    public static class OrientationUtils
-    {
-        public static Point GetPointFromAlongPerpendicular(Orientation orientation, int along, int perpendicular)
+        public Point GetPointFromAlongPerpendicular(int along, int perpendicular)
         {
-            return orientation == Orientation.Vertical ? new Point(perpendicular, along) : new Point(along, perpendicular);
+            return this == Orientation.Vertical ? new Point(perpendicular, along) : new Point(along, perpendicular);
         }
     }
 }

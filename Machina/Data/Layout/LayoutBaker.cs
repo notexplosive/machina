@@ -86,7 +86,7 @@ namespace Machina.Data.Layout
             // subtract 1 padding since the previous loop adds an extra (thanks foreach)
             totalUsedAlongSpace -= parentNode.Padding;
 
-            return OrientationUtils.GetPointFromAlongPerpendicular(parentNode.Orientation, totalUsedAlongSpace, totalUsedPerpendicularSpace);
+            return parentNode.Orientation.GetPointFromAlongPerpendicular(totalUsedAlongSpace, totalUsedPerpendicularSpace);
         }
 
         private static int GetRemainingAlongSizeFromEasyNodes(LayoutNode parentNode, Point groupSize)
