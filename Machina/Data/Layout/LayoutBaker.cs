@@ -47,39 +47,6 @@ namespace Machina.Data.Layout
             var perpendicularStretchSize = isVertical ? groupSize.X - parentNode.Margin.X * 2 : groupSize.Y - parentNode.Margin.Y * 2;
             HandleStretchedNodes(parentNode, remainingAlongSize, perpendicularStretchSize);
 
-            // handle fixed aspect ratio (todo: extract method)
-            foreach (var child in parentNode.Children)
-            {
-                if (child.Size.IsFixedAspectRatio())
-                {
-
-                    // Right now both sides of FixedAspectRatio think they're streched, we need to figure out which one is actually stretched based on how much room is thinks it has
-                    var aspectRatioOfAvailableSpace = new AspectRatio(this.measurer.GetMeasuredSize(child.Size));
-                    var childAspectRatio = child.Size.GetAspectRatio();
-                    var isStretchedAlong = AspectRatio.IsStretchedAlong(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
-                    var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
-                    var isStretchedBoth = isStretchedAlong && isStretchedPerpendicular;
-
-                    var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation); // todo: parentNode.OppositeOrientation
-
-                    // If it's stretched both we do nothing because we already assume it's stretched on both sides
-                    if (!isStretchedBoth)
-                    {
-                        if (isStretchedAlong)
-                        {
-                            var alongSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
-                            this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
-                        }
-
-                        if (isStretchedPerpendicular)
-                        {
-                            var perpendicularSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
-                            this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
-                        }
-                    }
-                }
-            }
-
             // Place elements
             PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel);
         }
@@ -180,8 +147,6 @@ namespace Machina.Data.Layout
                     if (child.Size.IsStretchedAlong(parentNode.Orientation))
                     {
                         this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), alongSizeOfEachStretchedChild);
-
-                        // todo: I think we could do the fixed aspect stuff here, that way we don't need to look it up in the table later
                     }
                 }
             }
@@ -194,6 +159,39 @@ namespace Machina.Data.Layout
                     if (child.Size.IsStretchedPerpendicular(parentNode.Orientation))
                     {
                         this.measurer.Add(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation)), perpendicularStretchSize);
+                        HandleFixedAspectRatio(parentNode, child);
+                    }
+                }
+            }
+        }
+
+        private void HandleFixedAspectRatio(LayoutNode parentNode, LayoutNode child)
+        {
+            if (child.Size.IsFixedAspectRatio())
+            {
+
+                // Right now both sides of FixedAspectRatio think they're streched, we need to figure out which one is actually stretched based on how much room is thinks it has
+                var aspectRatioOfAvailableSpace = new AspectRatio(this.measurer.GetMeasuredSize(child.Size));
+                var childAspectRatio = child.Size.GetAspectRatio();
+                var isStretchedAlong = AspectRatio.IsStretchedAlong(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
+                var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
+                var isStretchedBoth = isStretchedAlong && isStretchedPerpendicular;
+
+                var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation); // todo: parentNode.OppositeOrientation
+
+                // If it's stretched both we do nothing because we already assume it's stretched on both sides
+                if (!isStretchedBoth)
+                {
+                    if (isStretchedAlong)
+                    {
+                        var alongSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                        this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
+                    }
+
+                    if (isStretchedPerpendicular)
+                    {
+                        var perpendicularSize = this.measurer.GetMeasuredEdge(child.Size.GetValueFromOrientation(oppositeOrientation));
+                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
                     }
                 }
             }
