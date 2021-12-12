@@ -8,7 +8,6 @@ using Xunit;
 
 namespace TestMachina.Tests
 {
-
     public class LayoutNodeTests
     {
         [Fact]
