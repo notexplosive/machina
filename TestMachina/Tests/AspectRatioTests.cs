@@ -7,131 +7,43 @@ namespace TestMachina.Tests
 {
     public class AspectRatioTests
     {
-
-        [Fact]
-        public void tall_in_tall()
+        private void TestStretchInNestedAspectRatios(AspectRatio inner, AspectRatio outer, bool shouldBeStretchedHorizontal, bool shouldBeStretchedVertical)
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeFalse();
+            AspectRatio.IsStretchedAlong(inner, outer, Orientation.Horizontal)
+                .Should().Be(shouldBeStretchedHorizontal);
 
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeTrue();
+            AspectRatio.IsStretchedAlong(inner, outer, Orientation.Vertical)
+                .Should().Be(shouldBeStretchedVertical);
         }
 
         [Fact]
-        public void wide_in_wide()
+        public void test_16x9_in_16x9()
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeTrue();
+            TestStretchInNestedAspectRatios(new AspectRatio(16, 9), new AspectRatio(16, 9), shouldBeStretchedHorizontal: true, shouldBeStretchedVertical: true);
         }
 
         [Fact]
-        public void square_in_square()
+        public void test_16x9_in_16x10()
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeTrue();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeTrue();
+            TestStretchInNestedAspectRatios(new AspectRatio(16, 9), new AspectRatio(16, 10), shouldBeStretchedHorizontal: true, shouldBeStretchedVertical: false);
         }
 
         [Fact]
-        public void square_in_tall()
+        public void test_16x9_in_16x8()
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeTrue();
+            TestStretchInNestedAspectRatios(new AspectRatio(16, 9), new AspectRatio(16, 8), shouldBeStretchedHorizontal: false, shouldBeStretchedVertical: true);
         }
 
         [Fact]
-        public void wide_in_tall()
+        public void test_16x9_in_17x9()
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Tall, Orientation.Horizontal)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Tall, Orientation.Vertical)
-                .Should().BeTrue();
+            TestStretchInNestedAspectRatios(new AspectRatio(16, 9), new AspectRatio(17, 9), shouldBeStretchedHorizontal: false, shouldBeStretchedVertical: true);
         }
 
         [Fact]
-        public void tall_in_wide()
+        public void test_9x16_in_9x17()
         {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeTrue();
-        }
-
-        [Fact]
-        public void tall_in_square()
-        {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Tall, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Tall, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeTrue();
-        }
-
-        [Fact]
-        public void wide_in_square()
-        {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Wide, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Square, Orientation.Horizontal)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Wide, AspectRatio.Description.Square, Orientation.Vertical)
-                .Should().BeTrue();
-        }
-
-        [Fact]
-        public void square_in_wide()
-        {
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeTrue();
-            AspectRatio.IsStretchedAlong(AspectRatio.Description.Square, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeFalse();
-
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Wide, Orientation.Vertical)
-                .Should().BeFalse();
-            AspectRatio.IsStretchedPerpendicular(AspectRatio.Description.Square, AspectRatio.Description.Wide, Orientation.Horizontal)
-                .Should().BeTrue();
+            TestStretchInNestedAspectRatios(new AspectRatio(9, 16), new AspectRatio(9, 17), shouldBeStretchedHorizontal: true, shouldBeStretchedVertical: false);
         }
 
         [Fact]

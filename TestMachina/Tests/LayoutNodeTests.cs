@@ -211,7 +211,7 @@ namespace TestMachina.Tests
 
             var firstBakeResult = layout.Bake(); // wide in tall
             var secondBakeResult = layout.GetResized(new Point(64, 36)).Bake(); // wide in wide (perfect match)
-            var thirdBakeResult = layout.GetResized(new Point(100, 36)).Bake(); // wide in wider
+            var thirdBakeResult = layout.GetResized(new Point(100, 36)).Bake();
 
             Approvals.Verify(
                 LayoutNodeUtils.DrawResult(firstBakeResult)

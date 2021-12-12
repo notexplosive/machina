@@ -86,41 +86,36 @@ namespace Machina.Data.Layout
             throw new Exception("Impossible aspect ratio");
         }
 
-        public static bool IsStretchedAlong(Description inner, Description outer, Orientation along)
+        public static bool IsStretchedAlong(AspectRatio inner, AspectRatio outer, Orientation along)
         {
-            if (inner == Description.Square && outer == Description.Square)
+            if (inner.WidthOverHeight == outer.WidthOverHeight)
             {
                 return true;
             }
 
-            if (outer != inner)
+
+            if (inner.WidthOverHeight > outer.WidthOverHeight)
             {
-                if (inner == Description.Square)
+                if (along == Orientation.Horizontal)
                 {
-                    return OrientationUtils.Opposite(NaturalLongSide(outer)) == along;
-                }
-
-                if (inner == Description.Tall)
-                {
-                    return NaturalLongSide(inner) == along;
-                }
-
-                if (inner == Description.Wide)
-                {
-                    return NaturalLongSide(inner) == along;
+                    return true;
                 }
             }
-            else
+
+            if (inner.WidthOverHeight < outer.WidthOverHeight)
             {
-                return NaturalLongSide(outer) == along;
+                if (along == Orientation.Vertical)
+                {
+                    return true;
+                }
             }
 
-            throw new Exception("Missing case");
+            return false;
         }
 
-        public static bool IsStretchedPerpendicular(Description inner, Description outer, Orientation along)
+        public static bool IsStretchedPerpendicular(AspectRatio inner, AspectRatio outer, Orientation along)
         {
-            if (inner == Description.Square && outer == Description.Square)
+            if (inner.WidthOverHeight == outer.WidthOverHeight)
             {
                 return true;
             }

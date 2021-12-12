@@ -50,7 +50,7 @@ namespace Machina.Data.Layout
             {
                 var parentAspectRatio = parentAspect;
                 var childAspectRatio = GetAspectRatio();
-                return AspectRatio.IsStretchedAlong(childAspectRatio.Describe(), parentAspectRatio.Describe(), orientation);
+                return AspectRatio.IsStretchedAlong(childAspectRatio, parentAspectRatio, orientation);
             }
 
             return false;
@@ -68,7 +68,7 @@ namespace Machina.Data.Layout
             {
                 var parentAspectRatio = parentAspect;
                 var childAspectRatio = GetAspectRatio();
-                return AspectRatio.IsStretchedPerpendicular(childAspectRatio.Describe(), parentAspectRatio.Describe(), orientation);
+                return AspectRatio.IsStretchedPerpendicular(childAspectRatio, parentAspectRatio, orientation);
             }
 
             return false;
