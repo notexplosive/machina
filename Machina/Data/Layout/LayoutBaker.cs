@@ -62,7 +62,7 @@ namespace Machina.Data.Layout
                 var childPosition = nextPosition;
                 AddNodeToLayout(inProgressLayout, childPosition, child, currentNestingLevel);
 
-                nextPosition += OrientationUtils.GetPointForAlongNode(parentNode.Orientation, this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation) + parentNode.Padding);
+                nextPosition += parentNode.Orientation.GetPointForAlongAxis(this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation) + parentNode.Padding);
 
                 if (child.HasChildren)
                 {
