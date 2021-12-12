@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
+using Machina.Data;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
 using TestMachina.Utility;
@@ -239,6 +240,21 @@ namespace TestMachina.Tests
             var firstBakeResult = layout.Bake();
 
             Approvals.Verify(LayoutNodeUtils.DrawResult(firstBakeResult));
+        }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void fixed_aspect_with_alignment()
+        {
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), new LayoutStyle(alignment: Alignment.Center),
+                    LayoutNode.Leaf("fixed-aspect", LayoutSize.FixedAspectRatio(16, 9))
+            );
+
+            var firstBakeResult = layout.Bake();
+
+            Approvals.Verify(
+                LayoutNodeUtils.DrawResult(firstBakeResult)
+                );
         }
     }
 }

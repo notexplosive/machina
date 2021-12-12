@@ -8,7 +8,10 @@ namespace Machina.Data.Layout
 {
     public class LayoutNode
     {
-        private LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation = Orientation.Horizontal, LayoutNode[] children = null, Point margin = default, int padding = 0)
+        /// <summary>
+        /// This is only called by the static constructor methods. Most constructors ignore everything past "size"
+        /// </summary>
+        private LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation, LayoutNode[] children, Point margin, int padding, Alignment alignment)
         {
             Name = name;
             Size = size;
@@ -16,6 +19,7 @@ namespace Machina.Data.Layout
             Margin = margin;
             Padding = padding;
             Children = children;
+            Alignment = alignment;
 
             Baker = new LayoutBaker(this);
         }
@@ -27,27 +31,48 @@ namespace Machina.Data.Layout
 
         public static LayoutNode StretchedSpacer()
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth());
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth(),
+                /*Ignored params:*/
+                Orientation.Horizontal,
+                null,
+                Point.Zero,
+                0,
+                Alignment.TopLeft
+                );
         }
 
         public static LayoutNode Spacer(int size)
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Square(size));
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Square(size),
+                /*Ignored params:*/
+                Orientation.Horizontal,
+                null,
+                Point.Zero,
+                0,
+                Alignment.TopLeft
+                );
         }
 
         public static LayoutNode Leaf(string name, LayoutSize size)
         {
-            return new LayoutNode(name, size);
+            return new LayoutNode(name, size,
+                /*Ignored params:*/
+                Orientation.Horizontal,
+                null,
+                Point.Zero,
+                0,
+                Alignment.TopLeft
+                );
         }
 
         public static LayoutNode VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, Orientation.Vertical, margin: style.Margin, padding: style.Padding, children: children);
+            return new LayoutNode(name, size, Orientation.Vertical, children, style.Margin, style.Padding, style.Alignment);
         }
 
         public static LayoutNode HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, Orientation.Horizontal, margin: style.Margin, padding: style.Padding, children: children);
+            return new LayoutNode(name, size, Orientation.Horizontal, children, style.Margin, style.Padding, style.Alignment);
         }
 
         public readonly LayoutNode[] Children;
@@ -58,6 +83,7 @@ namespace Machina.Data.Layout
         public Orientation Orientation { get; }
         public Point Margin { get; }
         public int Padding { get; }
+        public Alignment Alignment { get; }
 
         /// <summary>
         /// Returns a LayoutNode just like this one with the same children, only resized
@@ -66,7 +92,7 @@ namespace Machina.Data.Layout
         /// <returns></returns>
         public LayoutNode GetResized(Point newSize)
         {
-            return new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Children, Margin, Padding);
+            return new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Children, Margin, Padding, Alignment);
         }
 
         public override string ToString()

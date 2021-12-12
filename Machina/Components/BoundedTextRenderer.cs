@@ -9,25 +9,6 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
-    public enum VerticalAlignment
-    {
-        Top,
-        Center,
-        Bottom
-    }
-
-    public enum HorizontalAlignment
-    {
-        Left,
-        Center,
-        Right
-    }
-
-    public enum Overflow
-    {
-        Elide,
-        Ignore
-    }
 
     public class BoundedTextRenderer : BaseComponent
     {

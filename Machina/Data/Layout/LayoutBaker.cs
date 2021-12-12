@@ -56,7 +56,7 @@ namespace Machina.Data.Layout
             BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
         }
 
-        private void BakeGroup(BakedLayout inProgressLayout, LayoutNode parentNode, Point startingLocation, int parentNestingLevel)
+        private void BakeGroup(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel)
         {
             var isVertical = parentNode.Orientation == Orientation.Vertical;
             var groupSize = GetMeasuredSize(parentNode.Size);
@@ -99,8 +99,26 @@ namespace Machina.Data.Layout
             }
 
             // Place elements
+            PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel, isVertical);
+        }
+
+        private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel, bool isVertical)
+        {
             int currentNestingLevel = parentNestingLevel + 1;
-            var nextPosition = startingLocation + new Point(parentNode.Margin.X, parentNode.Margin.Y);
+
+            var paddingAsPoint = isVertical ? new Point(0, parentNode.Padding) : new Point(parentNode.Padding, 0); // todo: OrientationUtils.GetPointForAlongValue(int,Orientation), can remove isVertical
+
+            var totalUsedSpace = Point.Zero - paddingAsPoint; // subtract one padding because we're going to add one too many in the loop
+            foreach (var child in parentNode.Children)
+            {
+                totalUsedSpace += GetMeasuredSize(child.Size) + paddingAsPoint;
+            }
+
+            var nextPosition = parentNodeLocation
+                + parentNode.Alignment.GetRelativePositionOfElement(GetMeasuredSize(parentNode.Size), totalUsedSpace)
+                + parentNode.Alignment.AddPostionDeltaFromMargin(parentNode.Margin)
+                ;
+
             foreach (var child in parentNode.Children)
             {
                 var childPosition = nextPosition;
