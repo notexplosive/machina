@@ -48,12 +48,11 @@ namespace Machina.Data.Layout
             HandleStretchedNodes(parentNode, remainingAlongSize, perpendicularStretchSize);
 
             // Place elements
-            PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel);
+            PlaceAndBakeMeasuredElements(inProgressLayout, parentNode, parentNodeLocation, parentNestingLevel + 1);
         }
 
-        private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel)
+        private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int currentNestingLevel)
         {
-            int currentNestingLevel = parentNestingLevel + 1;
             Point totalUsedSpace = CalculateTotalUsedSpace(parentNode);
 
             var nextPosition = parentNodeLocation
