@@ -380,5 +380,22 @@ namespace TestMachina.Tests
                 LayoutNodeUtils.DrawResult(result[8])
                 );
         }
+
+        [Fact]
+        [UseReporter(typeof(DiffReporter))]
+        public void does_not_stretch_evenly()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(20, 5), new LayoutStyle(margin: new Point(1, 1), padding: 1, Alignment.TopLeft),
+                LayoutNode.Leaf("a", LayoutSize.StretchedBoth()),
+                LayoutNode.Leaf("b", LayoutSize.StretchedBoth()),
+                LayoutNode.Leaf("c", LayoutSize.StretchedBoth())
+            );
+
+            var result = layout.Bake();
+
+            Approvals.Verify(
+                LayoutNodeUtils.DrawResult(result)
+                );
+        }
     }
 }

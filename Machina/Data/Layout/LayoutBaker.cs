@@ -136,12 +136,23 @@ namespace Machina.Data.Layout
             if (stretchAlongCount > 0)
             {
                 var alongSizeOfEachStretchedChild = remainingAlongSize / stretchAlongCount;
+                var fractionalLossIncrement = (float) remainingAlongSize / stretchAlongCount % 1;
+                var fractionalLoss = 0f;
 
                 foreach (var child in parentNode.Children)
                 {
                     if (child.Size.IsStretchedAlong(parentNode.Orientation))
                     {
-                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), alongSizeOfEachStretchedChild);
+                        fractionalLoss += fractionalLossIncrement;
+                        int extraPixelIfApplicable = 0;
+                        var epsilon = 0.001f;
+                        if (1 - fractionalLoss < epsilon)
+                        {
+                            extraPixelIfApplicable = 1;
+                            fractionalLoss -= 1;
+                        }
+
+                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), alongSizeOfEachStretchedChild + extraPixelIfApplicable);
                     }
                 }
             }
