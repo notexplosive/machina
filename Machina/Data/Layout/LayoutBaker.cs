@@ -1,5 +1,6 @@
 ﻿using Machina.Components;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Machina.Data.Layout
@@ -66,6 +67,7 @@ namespace Machina.Data.Layout
             var perpendicularStretchSize = isVertical ? groupSize.X - parentNode.Margin.X * 2 : groupSize.Y - parentNode.Margin.Y * 2;
             HandleStretchedNodes(parentNode, remainingAlongSize, perpendicularStretchSize);
 
+            // handle fixed aspect ratio (todo: extract method)
             foreach (var child in parentNode.Children)
             {
                 if (child.Size.IsFixedAspectRatio())
@@ -80,7 +82,7 @@ namespace Machina.Data.Layout
 
                     var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation); // todo: parentNode.OppositeOrientation
 
-                    // We started out assuming it's stretched on both axes, if it is then just roll with it
+                    // If it's stretched both we do nothing because we already assume it's stretched on both sides
                     if (!isStretchedBoth)
                     {
                         if (isStretchedAlong)
@@ -129,17 +131,20 @@ namespace Machina.Data.Layout
 
         private Point CalculateTotalUsedSpace(LayoutNode parentNode)
         {
-            var paddingAsPoint = OrientationUtils.GetPointForAlongNode(parentNode.Orientation, parentNode.Padding);
-            var totalUsedSpace = Point.Zero;
+            var totalUsedAlongSpace = 0;
+            var totalUsedPerpendicularSpace = 0;
+
             foreach (var child in parentNode.Children)
             {
-                totalUsedSpace += GetMeasuredSize(child.Size) + paddingAsPoint;
+                totalUsedAlongSpace += GetMeasuredEdge(child.Size.GetValueFromOrientation(parentNode.Orientation));
+                totalUsedAlongSpace += parentNode.Padding;
+                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, GetMeasuredEdge(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation))));
             }
 
             // subtract 1 padding since the previous loop adds an extra (thanks foreach)
-            totalUsedSpace -= paddingAsPoint;
+            totalUsedAlongSpace -= parentNode.Padding;
 
-            return totalUsedSpace;
+            return OrientationUtils.GetPointFromAlongPerpendicular(parentNode.Orientation, totalUsedAlongSpace, totalUsedPerpendicularSpace);
         }
 
         private static int GetRemainingAlongSizeFromEasyNodes(LayoutNode parentNode, Point groupSize)
