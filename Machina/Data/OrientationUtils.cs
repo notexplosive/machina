@@ -31,19 +31,20 @@ namespace Machina.Data
         {
             return !(left == right);
         }
+
+        public Orientation Opposite()
+        {
+            if (this == Vertical)
+            {
+                return Horizontal;
+            }
+
+            return Vertical;
+        }
     }
 
     public static class OrientationUtils
     {
-        public static Orientation Opposite(Orientation orientation)
-        {
-            if (orientation == Orientation.Vertical)
-            {
-                return Orientation.Horizontal;
-            }
-
-            return Orientation.Vertical;
-        }
 
         public static Point GetPointForAlongNode(Orientation orientation, int value)
         {

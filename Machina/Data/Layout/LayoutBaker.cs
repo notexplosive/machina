@@ -80,7 +80,7 @@ namespace Machina.Data.Layout
             {
                 totalUsedAlongSpace += this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation);
                 totalUsedAlongSpace += parentNode.Padding;
-                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, this.measurer.MeasureEdgeOfNode(child, OrientationUtils.Opposite(parentNode.Orientation)));
+                totalUsedPerpendicularSpace = Math.Max(totalUsedPerpendicularSpace, this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation.Opposite()));
             }
 
             // subtract 1 padding since the previous loop adds an extra (thanks foreach)
@@ -153,7 +153,7 @@ namespace Machina.Data.Layout
                 {
                     if (child.Size.IsStretchedPerpendicular(parentNode.Orientation))
                     {
-                        this.measurer.Add(child.Size.GetValueFromOrientation(OrientationUtils.Opposite(parentNode.Orientation)), perpendicularStretchSize);
+                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation.Opposite()), perpendicularStretchSize);
                         HandleFixedAspectRatio(parentNode, child);
                     }
                 }
@@ -172,7 +172,7 @@ namespace Machina.Data.Layout
                 var isStretchedPerpendicular = AspectRatio.IsStretchedPerpendicular(childAspectRatio, aspectRatioOfAvailableSpace, parentNode.Orientation);
                 var isStretchedBoth = isStretchedAlong && isStretchedPerpendicular;
 
-                var oppositeOrientation = OrientationUtils.Opposite(parentNode.Orientation);
+                var oppositeOrientation = parentNode.Orientation.Opposite();
 
                 // If it's stretched both we do nothing because we already assume it's stretched on both sides
                 if (!isStretchedBoth)

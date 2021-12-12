@@ -57,7 +57,7 @@ namespace Machina.Data.Layout
         public bool IsStretchedPerpendicular(Orientation orientation)
         {
             // TODO: couldn't this just be "return IsStretchedAlong(opposite(orientation))"?
-            var edge = GetValueFromOrientation(OrientationUtils.Opposite(orientation));
+            var edge = GetValueFromOrientation(orientation.Opposite());
             if (edge is StretchedLayoutEdge)
             {
                 return true;
