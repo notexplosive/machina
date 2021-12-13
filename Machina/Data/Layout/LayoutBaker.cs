@@ -24,6 +24,11 @@ namespace Machina.Data.Layout
 
         public BakedLayout Bake()
         {
+            if (!this.rootNode.Size.IsMeasurableAlong(Orientation.Horizontal) || !this.rootNode.Size.IsMeasurableAlong(Orientation.Vertical))
+            {
+                throw new ImpossibleLayoutException("Root node is not a constant size");
+            }
+
             var bakedLayout = new BakedLayout(this.rootNode);
             BakeAtLocation(bakedLayout, Point.Zero);
             return bakedLayout;

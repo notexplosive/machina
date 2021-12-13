@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
+using FluentAssertions;
 using Machina.Data;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
@@ -396,6 +397,22 @@ namespace TestMachina.Tests
             Approvals.Verify(
                 LayoutNodeUtils.DrawResult(result)
                 );
+        }
+
+        [Fact]
+        public void bake_a_stretched_node_without_parent()
+        {
+            var threw = false;
+            try
+            {
+                LayoutNode.Leaf("Stretch", LayoutSize.StretchedBoth()).Bake();
+            }
+            catch (ImpossibleLayoutException)
+            {
+                threw = true;
+            }
+
+            threw.Should().BeTrue();
         }
     }
 }
