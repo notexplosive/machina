@@ -43,13 +43,13 @@ namespace Machina.Components
             }
 
             this.checkboxSpriteSheet.DrawFrame(spriteBatch, this.animation.GetFrame(frameIndex),
-                this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new PointBool(false, false), transform.Depth,
+                this.boundingRect.Rect.Center.ToVector2(), 1f, 0f, new XYBool(false, false), transform.Depth,
                 Color.White);
 
             if (this.checkboxState.GetIsChecked())
             {
                 this.checkmark.Draw(spriteBatch, this.boundingRect.Rect.Center.ToVector2(), 1f, 0f,
-                    new PointBool(false, false), transform.Depth - 1, Color.White);
+                    new XYBool(false, false), transform.Depth - 1, Color.White);
             }
         }
     }

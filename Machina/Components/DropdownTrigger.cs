@@ -64,7 +64,7 @@ namespace Machina.Components
             var drawPos = new Vector2(rect.Right, transform.Position.Y) +
                           new Vector2(-rect.Height / 2, rect.Height / 2);
             this.spriteSheet.DrawFrame(spriteBatch, this.frames.GetFrame(frameIndex), drawPos, 1f, 0f,
-                new PointBool(false, false), transform.Depth - 1, Color.White);
+                new XYBool(false, false), transform.Depth - 1, Color.White);
         }
 
         private void OnOptionSelected(DropdownContent.DropdownItem item)

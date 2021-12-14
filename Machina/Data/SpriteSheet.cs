@@ -26,21 +26,21 @@ namespace Machina.Data
         }
 
         public abstract void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle,
-            PointBool flip, Depth layerDepth, Color tintColor, bool isCentered = true);
+            XYBool flip, Depth layerDepth, Color tintColor, bool isCentered = true);
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, float angle = 0f)
         {
-            DrawFrame(spriteBatch, index, position, 1f, angle, PointBool.False, layerDepth, Color.White);
+            DrawFrame(spriteBatch, index, position, 1f, angle, XYBool.False, layerDepth, Color.White);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, Depth layerDepth, Color color,
             bool isCentered = true)
         {
-            DrawFrame(spriteBatch, index, position, 1f, 0f, PointBool.False, layerDepth, color, isCentered);
+            DrawFrame(spriteBatch, index, position, 1f, 0f, XYBool.False, layerDepth, color, isCentered);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, int index, Transform transform, float scale = 1f,
-            PointBool flip = default)
+            XYBool flip = default)
         {
             DrawFrame(spriteBatch, index, transform.Position, scale, transform.Angle, flip, transform.Depth,
                 Color.White);

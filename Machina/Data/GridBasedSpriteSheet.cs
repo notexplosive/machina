@@ -42,7 +42,7 @@ namespace Machina.Data
         }
 
         public override void DrawFrame(SpriteBatch spriteBatch, int index, Vector2 position, float scale, float angle,
-            PointBool flip, Depth layerDepth, Color tintColor, bool isCentered = true)
+            XYBool flip, Depth layerDepth, Color tintColor, bool isCentered = true)
         {
             Debug.Assert(index >= 0 && index <= this.frameCount, "Index out of range");
 

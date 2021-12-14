@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data
 {
-    public struct PointBool
+    public struct XYBool
     {
-        public PointBool(bool x, bool y)
+        public XYBool(bool x, bool y)
         {
             this.x = x;
             this.y = y;
@@ -15,8 +15,8 @@ namespace Machina.Data
         public bool x;
         public bool y;
 
-        public static PointBool False = new PointBool(false, false);
-        public static PointBool True = new PointBool(true, true);
+        public static XYBool False = new XYBool(false, false);
+        public static XYBool True = new XYBool(true, true);
     }
 
     public class Image : IAsset
@@ -35,7 +35,7 @@ namespace Machina.Data
         {
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, PointBool flip,
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float scale, float angle, XYBool flip,
             Depth layerDepth, Color color)
         {
             this.spriteSheet.DrawFrame(spriteBatch, this.frame, position, scale, angle, flip, layerDepth, color);
