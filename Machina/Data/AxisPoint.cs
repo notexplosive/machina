@@ -8,17 +8,21 @@ namespace Machina.Data
     public struct AxisPoint
     {
         private Point point;
+        private readonly Axis alongAxis;
 
-        public AxisPoint(Point point)
+        public AxisPoint(Axis alongAxis, int along = 0, int perpendicular = 0)
         {
-            this.point = point;
+            this.alongAxis = alongAxis;
+            this.point = Point.Zero;
+            SetAlong(along);
+            SetPerpendicular(perpendicular);
         }
 
-        public static AxisPoint Zero => new AxisPoint(Point.Zero);
+        public static AxisPoint Zero(Axis axis) => new AxisPoint(axis);
 
-        public int AxisValue(Axis axis)
+        public int Along()
         {
-            if (axis == Axis.X)
+            if (this.alongAxis == Axis.X)
             {
                 return point.X;
             }
@@ -26,8 +30,21 @@ namespace Machina.Data
             return point.Y;
         }
 
-        public void SetAxisValue(Axis axis, int value)
+        public void SetAlong(int value)
         {
+            if (this.alongAxis == Axis.X)
+            {
+                point.X = value;
+            }
+            else
+            {
+                point.Y = value;
+            }
+        }
+
+        public void SetPerpendicular(int value)
+        {
+            var axis = AxisUtils.Opposite(this.alongAxis);
             if (axis == Axis.X)
             {
                 point.X = value;
@@ -38,22 +55,9 @@ namespace Machina.Data
             }
         }
 
-        public void SetOppositeAxisValue(Axis oppositeAxis, int value)
+        public int Perpendicular()
         {
-            var axis = AxisUtils.Opposite(oppositeAxis);
-            if (axis == Axis.X)
-            {
-                point.X = value;
-            }
-            else
-            {
-                point.Y = value;
-            }
-        }
-
-        public int OppositeAxisValue(Axis axis)
-        {
-            if (AxisUtils.Opposite(axis) == Axis.X)
+            if (AxisUtils.Opposite(this.alongAxis) == Axis.X)
             {
                 return point.X;
             }
@@ -61,14 +65,16 @@ namespace Machina.Data
             return point.Y;
         }
 
-        public Point AsPoint(Axis firstAxis = Axis.X)
+        public Point AsPoint()
         {
-            if (firstAxis == Axis.X)
+            if (this.alongAxis == Axis.X)
             {
-                return new Point(AxisValue(Axis.X), AxisValue(Axis.Y));
+                return new Point(Along(), Perpendicular());
             }
-
-            return new Point(AxisValue(Axis.Y), AxisValue(Axis.X));
+            else
+            {
+                return new Point(Perpendicular(), Along());
+            }
         }
 
         public override bool Equals(object obj)

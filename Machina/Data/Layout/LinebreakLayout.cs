@@ -28,9 +28,9 @@ namespace Machina.Data.Layout
 
         public Point TotalSize()
         {
-            var size = AxisPoint.Zero;
-            size.SetAxisValue(this.alongAxis, RestrictedAlongSize);
-            size.SetOppositeAxisValue(this.alongAxis, RestrictedPerpendicularSize);
+            var size = AxisPoint.Zero(this.alongAxis);
+            size.SetAlong(RestrictedAlongSize);
+            size.SetPerpendicular(RestrictedPerpendicularSize);
             return size.AsPoint();
         }
 
@@ -48,7 +48,7 @@ namespace Machina.Data.Layout
                 }
                 else
                 {
-                    if (layoutBlock.TotalSizeIfAdded(currentLine).AxisValue(perpendicularAxis) <= RestrictedPerpendicularSize) // duplicat1
+                    if (layoutBlock.TotalSizeIfAdded(currentLine).Perpendicular() <= RestrictedPerpendicularSize) // duplicat1
                     {
                         layoutBlock.AddLine(currentLine);
                         currentLine = new LayoutLine(alongAxis);
@@ -60,7 +60,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-            if (layoutBlock.TotalSizeIfAdded(currentLine).AxisValue(perpendicularAxis) <= RestrictedPerpendicularSize) // duplicat2
+            if (layoutBlock.TotalSizeIfAdded(currentLine).Perpendicular() <= RestrictedPerpendicularSize) // duplicat2
             {
                 layoutBlock.AddLine(currentLine);
             }
@@ -88,23 +88,23 @@ namespace Machina.Data.Layout
             public AxisPoint TotalSizeIfAdded(LayoutLine pendingLine)
             {
                 var newSize = this.pendingSize;
-                newSize.SetOppositeAxisValue(this.alongAxis, pendingLine.TotalSize.OppositeAxisValue(alongAxis));
+                newSize.SetPerpendicular(pendingLine.TotalSize.OppositeAxisValue(alongAxis));
                 return newSize;
             }
 
             public Rectangle[] Bake()
             {
-                AxisPoint currentPos = AxisPoint.Zero;
+                AxisPoint currentPos = AxisPoint.Zero(this.alongAxis);
                 var pendingRectangles = new List<Rectangle>();
                 foreach (var line in lines)
                 {
                     foreach (var size in line.sizes)
                     {
-                        pendingRectangles.Add(new Rectangle(currentPos.AsPoint(this.alongAxis), size));
-                        currentPos.SetAxisValue(this.alongAxis, currentPos.AxisValue(this.alongAxis) + size.X);
+                        pendingRectangles.Add(new Rectangle(currentPos.AsPoint(), size));
+                        currentPos.SetAlong(currentPos.Along() + size.X);
                     }
-                    currentPos.SetOppositeAxisValue(this.alongAxis, currentPos.OppositeAxisValue(this.alongAxis) + line.TotalSize.Y);
-                    currentPos.SetAxisValue(this.alongAxis, 0);
+                    currentPos.SetPerpendicular(currentPos.Perpendicular() + line.TotalSize.Y);
+                    currentPos.SetAlong(0);
                 }
 
                 return pendingRectangles.ToArray();
@@ -130,15 +130,15 @@ namespace Machina.Data.Layout
 
             public Point TotalSizeIfAdded(Point pendingAddedSize)
             {
-                var result = AxisPoint.Zero;
-                result.SetAxisValue(alongAxis, MeasureNewAlongSize(pendingAddedSize));
-                result.SetOppositeAxisValue(alongAxis, MeasureNewPerpendicularSize(pendingAddedSize));
+                var result = AxisPoint.Zero(this.alongAxis);
+                result.SetAlong(MeasureNewAlongSize(pendingAddedSize));
+                result.SetPerpendicular(MeasureNewPerpendicularSize(pendingAddedSize));
                 return result.AsPoint();
             }
 
             private int MeasureNewAlongSize(Point newSize)
             {
-                return this.pendingTotalSize.AxisValue(alongAxis) + new AxisPoint(newSize).AxisValue(alongAxis);
+                return this.pendingTotalSize.AxisValue(alongAxis) + newSize.AxisValue(alongAxis);
             }
 
             private int MeasureNewPerpendicularSize(Point newSize)

@@ -43,14 +43,14 @@ namespace Machina.Data
             return source.Y;
         }
 
-        public static Point CreatePoint(int x, int y, Axis axis)
+        public static Point CreatePoint(int along, int perpendicular, Axis axis)
         {
             if (axis == Axis.X)
             {
-                return new Point(x, y);
+                return new Point(along, perpendicular);
             }
 
-            return new Point(y, x);
+            return new Point(perpendicular, along);
         }
 
         public static void DoForBothAxes(Action<Axis> function)
