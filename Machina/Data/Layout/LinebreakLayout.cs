@@ -30,7 +30,7 @@ namespace Machina.Data.Layout
         {
             var size = AxisPoint.Zero;
             size.SetAxisValue(this.alongAxis, RestrictedAlongSize);
-            size.SetAxisValue(AxisUtils.Opposite(this.alongAxis), RestrictedPerpendicularSize);
+            size.SetOppositeAxisValue(this.alongAxis, RestrictedPerpendicularSize);
             return size.AsPoint();
         }
 
@@ -60,13 +60,10 @@ namespace Machina.Data.Layout
                 }
             }
 
-
             if (layoutBlock.TotalSizeIfAdded(currentLine).AxisValue(perpendicularAxis) <= RestrictedPerpendicularSize) // duplicat2
             {
                 layoutBlock.AddLine(currentLine);
             }
-
-
 
             return layoutBlock.Bake();
         }
@@ -91,24 +88,23 @@ namespace Machina.Data.Layout
             public AxisPoint TotalSizeIfAdded(LayoutLine pendingLine)
             {
                 var newSize = this.pendingSize;
-                var oppositeAxis = AxisUtils.Opposite(this.alongAxis);
-                newSize.SetAxisValue(oppositeAxis, pendingLine.TotalSize.AxisValue(oppositeAxis));
+                newSize.SetOppositeAxisValue(this.alongAxis, pendingLine.TotalSize.OppositeAxisValue(alongAxis));
                 return newSize;
             }
 
             public Rectangle[] Bake()
             {
-                Point currentPos = Point.Zero;
+                AxisPoint currentPos = AxisPoint.Zero;
                 var pendingRectangles = new List<Rectangle>();
                 foreach (var line in lines)
                 {
                     foreach (var size in line.sizes)
                     {
-                        pendingRectangles.Add(new Rectangle(currentPos, size));
-                        currentPos.X += size.X;
+                        pendingRectangles.Add(new Rectangle(currentPos.AsPoint(this.alongAxis), size));
+                        currentPos.SetAxisValue(this.alongAxis, currentPos.AxisValue(this.alongAxis) + size.X);
                     }
-                    currentPos.Y += line.TotalSize.Y;
-                    currentPos.X = 0;
+                    currentPos.SetOppositeAxisValue(this.alongAxis, currentPos.OppositeAxisValue(this.alongAxis) + line.TotalSize.Y);
+                    currentPos.SetAxisValue(this.alongAxis, 0);
                 }
 
                 return pendingRectangles.ToArray();
@@ -128,7 +124,6 @@ namespace Machina.Data.Layout
 
             public void Add(Point addedSize)
             {
-                var oppositeAxis = AxisUtils.Opposite(alongAxis);
                 this.sizes.Add(addedSize);
                 this.pendingTotalSize = TotalSizeIfAdded(addedSize);
             }
@@ -136,9 +131,8 @@ namespace Machina.Data.Layout
             public Point TotalSizeIfAdded(Point pendingAddedSize)
             {
                 var result = AxisPoint.Zero;
-                var oppositeAxis = AxisUtils.Opposite(alongAxis);
                 result.SetAxisValue(alongAxis, MeasureNewAlongSize(pendingAddedSize));
-                result.SetAxisValue(oppositeAxis, MeasureNewPerpendicularSize(pendingAddedSize));
+                result.SetOppositeAxisValue(alongAxis, MeasureNewPerpendicularSize(pendingAddedSize));
                 return result.AsPoint();
             }
 
@@ -149,8 +143,7 @@ namespace Machina.Data.Layout
 
             private int MeasureNewPerpendicularSize(Point newSize)
             {
-                var oppositeAxis = AxisUtils.Opposite(alongAxis);
-                return Math.Max(this.pendingTotalSize.AxisValue(oppositeAxis), newSize.AxisValue(oppositeAxis));
+                return Math.Max(this.pendingTotalSize.OppositeAxisValue(alongAxis), newSize.OppositeAxisValue(alongAxis));
             }
 
             public Point TotalSize => this.pendingTotalSize;

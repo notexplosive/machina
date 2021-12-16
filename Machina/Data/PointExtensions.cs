@@ -15,5 +15,41 @@ namespace Machina.Data
                 return point.Y;
             }
         }
+
+        public static int OppositeAxisValue(this Point point, Axis axis)
+        {
+            if (axis == Axis.Y)
+            {
+                return point.X;
+            }
+            else
+            {
+                return point.Y;
+            }
+        }
+
+        public static int SetOppositeAxisValue(this Point point, Axis axis, int value)
+        {
+            if (axis == Axis.Y)
+            {
+                return point.X = value;
+            }
+            else
+            {
+                return point.Y = value;
+            }
+        }
+
+        public static int SetAxisValue(this Point point, Axis axis, int value)
+        {
+            if (axis == Axis.X)
+            {
+                return point.X = value;
+            }
+            else
+            {
+                return point.Y = value;
+            }
+        }
     }
 }
