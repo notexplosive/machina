@@ -57,5 +57,21 @@ namespace TestMachina.Tests
 
             result.Should().BeEquivalentTo(new List<Point> { });
         }
+
+        [Fact]
+        public void set_axis_values()
+        {
+            var axisPoint = AxisPoint.Zero;
+            axisPoint.SetAxisValue(Axis.X, 10);
+            axisPoint.SetAxisValue(Axis.Y, -30);
+
+            axisPoint.AsPoint(Axis.X).Should().Be(new Point(10, -30));
+
+            var otherAxisPoint = AxisPoint.Zero;
+            otherAxisPoint.SetOppositeAxisValue(Axis.X, -21);
+            otherAxisPoint.SetOppositeAxisValue(Axis.Y, 55);
+
+            otherAxisPoint.AsPoint(Axis.X).Should().Be(new Point(55, -21));
+        }
     }
 }

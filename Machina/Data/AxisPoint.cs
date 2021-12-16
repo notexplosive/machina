@@ -5,14 +5,16 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public readonly struct AxisPoint
+    public struct AxisPoint
     {
-        private readonly Point point;
+        private Point point;
 
         public AxisPoint(Point point)
         {
             this.point = point;
         }
+
+        public static AxisPoint Zero => new AxisPoint(Point.Zero);
 
         public int AxisValue(Axis axis)
         {
@@ -22,6 +24,31 @@ namespace Machina.Data
             }
 
             return point.Y;
+        }
+
+        public void SetAxisValue(Axis axis, int value)
+        {
+            if (axis == Axis.X)
+            {
+                point.X = value;
+            }
+            else
+            {
+                point.Y = value;
+            }
+        }
+
+        public void SetOppositeAxisValue(Axis oppositeAxis, int value)
+        {
+            var axis = AxisUtils.Opposite(oppositeAxis);
+            if (axis == Axis.X)
+            {
+                point.X = value;
+            }
+            else
+            {
+                point.Y = value;
+            }
         }
 
         public int OppositeAxisValue(Axis axis)
@@ -34,7 +61,7 @@ namespace Machina.Data
             return point.Y;
         }
 
-        public Point AsPoint(Axis firstAxis)
+        public Point AsPoint(Axis firstAxis = Axis.X)
         {
             if (firstAxis == Axis.X)
             {
