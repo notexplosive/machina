@@ -10,12 +10,9 @@ namespace TestMachina.Tests
 {
     public class AxisTests
     {
-        private List<Point> AxisSpecificAction(Point rawAnchorPos, Point rawTargetPos)
+        private List<Point> AxisSpecificAction(Point anchorPos, Point targetPos)
         {
             var foundItems = new List<Point>();
-
-            var anchorPos = new AxisPoint(rawAnchorPos);
-            var targetPos = new AxisPoint(rawTargetPos);
 
             AxisUtils.DoForBothAxes((Axis axis) =>
             {
@@ -61,17 +58,17 @@ namespace TestMachina.Tests
         [Fact]
         public void set_axis_values()
         {
-            var axisPoint = AxisPoint.Zero;
-            axisPoint.SetAxisValue(Axis.X, 10);
-            axisPoint.SetAxisValue(Axis.Y, -30);
+            var point = Point.Zero;
+            point.SetAxisValue(Axis.X, 10);
+            point.SetAxisValue(Axis.Y, -30);
 
-            axisPoint.AsPoint(Axis.X).Should().Be(new Point(10, -30));
+            point.Should().Be(new Point(10, -30));
 
-            var otherAxisPoint = AxisPoint.Zero;
-            otherAxisPoint.SetOppositeAxisValue(Axis.X, -21);
-            otherAxisPoint.SetOppositeAxisValue(Axis.Y, 55);
+            var otherPoint = Point.Zero;
+            otherPoint.SetOppositeAxisValue(Axis.Y, 55);
+            otherPoint.SetOppositeAxisValue(Axis.X, -21);
 
-            otherAxisPoint.AsPoint(Axis.X).Should().Be(new Point(55, -21));
+            otherPoint.Should().Be(new Point(55, -21));
         }
     }
 }

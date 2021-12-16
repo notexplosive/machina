@@ -28,7 +28,7 @@ namespace Machina.Data
             }
         }
 
-        public static int SetOppositeAxisValue(this Point point, Axis axis, int value)
+        public static int SetOppositeAxisValue(ref this Point point, Axis axis, int value)
         {
             if (axis == Axis.Y)
             {
@@ -40,7 +40,7 @@ namespace Machina.Data
             }
         }
 
-        public static int SetAxisValue(this Point point, Axis axis, int value)
+        public static int SetAxisValue(ref this Point point, Axis axis, int value)
         {
             if (axis == Axis.X)
             {
