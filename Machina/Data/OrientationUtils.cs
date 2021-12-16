@@ -27,6 +27,16 @@ namespace Machina.Data
             return left.Equals(right);
         }
 
+        public Axis ToAxis()
+        {
+            if (this == Vertical)
+            {
+                return Axis.Y;
+            }
+
+            return Axis.X;
+        }
+
         public static bool operator !=(Orientation left, Orientation right)
         {
             return !(left == right);

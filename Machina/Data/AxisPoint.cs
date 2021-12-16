@@ -18,6 +18,11 @@ namespace Machina.Data
             SetPerpendicular(perpendicular);
         }
 
+        public AxisPoint(Orientation orientation, int along = 0, int perpendicular = 0) : this(orientation.ToAxis(), along, perpendicular)
+        {
+
+        }
+
         public static AxisPoint Zero(Axis axis) => new AxisPoint(axis);
 
         public int Along()
