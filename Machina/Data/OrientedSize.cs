@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Machina.Data
 {
-    public struct AxisPoint
+    public struct OrientedSize
     {
         private Point point;
         private readonly Axis alongAxis;
 
-        public AxisPoint(Axis alongAxis, int along = 0, int perpendicular = 0)
+        public OrientedSize(Axis alongAxis, int along = 0, int perpendicular = 0)
         {
             this.alongAxis = alongAxis;
             this.point = Point.Zero;
@@ -18,12 +18,12 @@ namespace Machina.Data
             SetPerpendicular(perpendicular);
         }
 
-        public AxisPoint(Orientation orientation, int along = 0, int perpendicular = 0) : this(orientation.ToAxis(), along, perpendicular)
+        public OrientedSize(Orientation orientation, int along = 0, int perpendicular = 0) : this(orientation.ToAxis(), along, perpendicular)
         {
 
         }
 
-        public static AxisPoint Zero(Axis axis) => new AxisPoint(axis);
+        public static OrientedSize Zero(Axis axis) => new OrientedSize(axis);
 
         public int Along()
         {
@@ -84,7 +84,7 @@ namespace Machina.Data
 
         public override bool Equals(object obj)
         {
-            return obj is AxisPoint point &&
+            return obj is OrientedSize point &&
                    this.point.Equals(point.point);
         }
 
@@ -93,12 +93,12 @@ namespace Machina.Data
             return HashCode.Combine(point);
         }
 
-        public static bool operator ==(AxisPoint left, AxisPoint right)
+        public static bool operator ==(OrientedSize left, OrientedSize right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(AxisPoint left, AxisPoint right)
+        public static bool operator !=(OrientedSize left, OrientedSize right)
         {
             return !(left == right);
         }

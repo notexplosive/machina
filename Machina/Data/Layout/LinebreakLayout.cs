@@ -28,7 +28,7 @@ namespace Machina.Data.Layout
 
         public Point TotalSize()
         {
-            var size = AxisPoint.Zero(this.alongAxis);
+            var size = OrientedSize.Zero(this.alongAxis);
             size.SetAlong(RestrictedAlongSize);
             size.SetPerpendicular(RestrictedPerpendicularSize);
             return size.AsPoint();
@@ -72,7 +72,7 @@ namespace Machina.Data.Layout
         {
             private readonly List<LayoutLine> lines = new List<LayoutLine>();
             private readonly Axis alongAxis;
-            private AxisPoint pendingSize;
+            private OrientedSize pendingSize;
 
             public LayoutBlock(Axis alongAxis)
             {
@@ -85,7 +85,7 @@ namespace Machina.Data.Layout
                 this.pendingSize = TotalSizeIfAdded(currentLayoutLine);
             }
 
-            public AxisPoint TotalSizeIfAdded(LayoutLine pendingLine)
+            public OrientedSize TotalSizeIfAdded(LayoutLine pendingLine)
             {
                 var newSize = this.pendingSize;
                 newSize.SetPerpendicular(pendingLine.TotalSize.OppositeAxisValue(alongAxis));
@@ -94,7 +94,7 @@ namespace Machina.Data.Layout
 
             public Rectangle[] Bake()
             {
-                AxisPoint currentPos = AxisPoint.Zero(this.alongAxis);
+                OrientedSize currentPos = OrientedSize.Zero(this.alongAxis);
                 var pendingRectangles = new List<Rectangle>();
                 foreach (var line in lines)
                 {
@@ -130,7 +130,7 @@ namespace Machina.Data.Layout
 
             public Point TotalSizeIfAdded(Point pendingAddedSize)
             {
-                var result = AxisPoint.Zero(this.alongAxis);
+                var result = OrientedSize.Zero(this.alongAxis);
                 result.SetAlong(MeasureNewAlongSize(pendingAddedSize));
                 result.SetPerpendicular(MeasureNewPerpendicularSize(pendingAddedSize));
                 return result.AsPoint();
