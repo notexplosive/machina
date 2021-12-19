@@ -414,42 +414,5 @@ namespace TestMachina.Tests
 
             threw.Should().BeTrue();
         }
-
-        [Fact]
-        [UseReporter(typeof(DiffReporter))]
-        public void linebreak_layout_basic()
-        {
-            var layout = new LinebreakLayout(Axis.X, 80, 50);
-            layout.AddItem(new Point(10, 10));
-            layout.AddItem(new Point(20, 10));
-            layout.AddItem(new Point(15, 15));
-            layout.AddItem(new Point(30, 17));
-            layout.AddItem(new Point(20, 12));
-            layout.AddItem(new Point(60, 10));
-            layout.AddItem(new Point(20, 10));
-            layout.AddItem(new Point(10, 10));
-            layout.AddItem(new Point(15, 10));
-            layout.AddItem(new Point(50, 10));
-            layout.AddItem(new Point(21, 10));
-            layout.AddItem(new Point(21, 10));
-            layout.AddItem(new Point(21, 10));
-            layout.AddItem(new Point(21, 10));
-            layout.AddItem(new Point(21, 10));
-
-            var rectangles = layout.Flow();
-
-            var drawPanel = new AsciiDrawPanel(layout.TotalSize());
-
-            foreach (var rectangle in rectangles)
-            {
-                drawPanel.DrawRectangle(rectangle, '.');
-            }
-
-            // test other axis direction too (it'll break)
-
-            Approvals.Verify(
-                drawPanel.GetImage()
-                );
-        }
     }
 }
