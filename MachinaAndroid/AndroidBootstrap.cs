@@ -27,10 +27,15 @@ namespace MachinaAndroid
     )]
     public class Activity1 : AndroidGameActivity
     {
+        protected override void OnCreate(Bundle bundle)
+        {
+            base.OnCreate(bundle);
+            MachinaAndroid.AndroidBootstrap.Run(new MyGame(), new Machina.Engine.GameSpecification("MyGameTitle", Array.Empty<string>(), new Machina.Data.GameSettings(new Point(1920,1080))));
+        }
     }
     */
 
-    public class AndroidBootstrap
+    public static class AndroidBootstrap
     {
         public static void Run(GameCartridge cartridge, GameSpecification spec, Activity activity)
         {
