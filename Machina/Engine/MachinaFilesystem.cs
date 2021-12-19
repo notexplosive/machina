@@ -12,7 +12,14 @@ namespace Machina.Engine
             this.AppDataPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "NotExplosive", gameTitle);
 
-            this.devPath = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", contentDirectory, "Content"));
+            var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            if (baseDirectory == null)
+            {
+                // This should literally never happen but on android it does
+                baseDirectory = "";
+            }
+
+            this.devPath = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", contentDirectory, "Content"));
             MachinaClient.Print(this.devPath, Directory.Exists(this.devPath));
         }
 
