@@ -51,6 +51,11 @@ namespace TestMachina.Utility
             }
         }
 
+        public char GetPixelAt(Point position)
+        {
+            return this.content[position.X, position.Y];
+        }
+
         public void DrawRectangle(Rectangle rectangle, char pixel)
         {
             for (var x = rectangle.X; x < rectangle.X + rectangle.Width; x++)
