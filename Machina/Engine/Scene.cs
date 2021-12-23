@@ -181,18 +181,19 @@ namespace Machina.Engine
             IsFrozen = false;
         }
 
+        public static BlendState DefaultBlend { get; set; } = new BlendState
+        {
+            ColorBlendFunction = BlendState.NonPremultiplied.ColorBlendFunction,
+            ColorDestinationBlend = BlendState.NonPremultiplied.ColorDestinationBlend,
+            ColorSourceBlend = BlendState.NonPremultiplied.ColorSourceBlend,
+            AlphaSourceBlend = BlendState.NonPremultiplied.AlphaSourceBlend,
+            AlphaDestinationBlend = Blend.DestinationAlpha,
+            AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction
+        };
+
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var blend = new BlendState
-            {
-                ColorBlendFunction = BlendState.NonPremultiplied.ColorBlendFunction,
-                ColorDestinationBlend = BlendState.NonPremultiplied.ColorDestinationBlend,
-                ColorSourceBlend = BlendState.NonPremultiplied.ColorSourceBlend,
-                AlphaSourceBlend = BlendState.NonPremultiplied.AlphaSourceBlend,
-                AlphaDestinationBlend = Blend.DestinationAlpha,
-                AlphaBlendFunction = BlendState.NonPremultiplied.AlphaBlendFunction
-            };
-            spriteBatch.Begin(SpriteSortMode.BackToFront, blend, this.sceneLayers.SamplerState,
+            spriteBatch.Begin(SpriteSortMode.BackToFront, DefaultBlend, this.sceneLayers.SamplerState,
                 DepthStencilState.DepthRead, null, null, this.camera.GraphicsTransformMatrix);
 
             base.Draw(spriteBatch);
