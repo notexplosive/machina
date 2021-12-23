@@ -25,7 +25,7 @@ namespace Machina.Components
             this.screenshotPath =
                 Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "screenshots"));
 #else
-            this.screenshotPath = MachinaClient.fileSystem.AppDataPath;
+            this.screenshotPath = MachinaClient.FileSystem.AppDataPath;
 #endif
         }
 
