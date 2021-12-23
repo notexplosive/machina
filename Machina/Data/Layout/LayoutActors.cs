@@ -95,7 +95,26 @@ namespace Machina.Data.Layout
 
         public Actor GetActor(string actorName)
         {
-            return this.actorTable[actorName];
+            try
+            {
+                return this.actorTable[actorName];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new Exception($"Actor not found `{actorName}`");
+            }
+        }
+
+        public Actor[] GetActors(params string[] actorsNames)
+        {
+            var result = new Actor[actorsNames.Length];
+            int i = 0;
+            foreach (var actorName in actorsNames)
+            {
+                result[i] = GetActor(actorName);
+                i++;
+            }
+            return result;
         }
     }
 }
