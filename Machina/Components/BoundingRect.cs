@@ -63,6 +63,16 @@ namespace Machina.Components
 
         public Vector2 SizeF => Size.ToVector2();
 
+        public Rectangle RectNormalized
+        {
+            get
+            {
+                var rect = Rect;
+                rect.Location = Point.Zero;
+                return rect;
+            }
+        }
+
         public BoundingRect SetSize(Point size)
         {
             this.size = size;

@@ -8,6 +8,7 @@ namespace Machina.Components
     {
         protected readonly BoundingRect boundingRect;
         private readonly NinepatchSheet.GenerationDirection generationDirection;
+        public Depth DepthOffset { get; set; }
 
         public NinepatchRenderer(Actor actor, NinepatchSheet spriteSheet,
             NinepatchSheet.GenerationDirection gen = NinepatchSheet.GenerationDirection.Inner) : base(actor)
@@ -22,7 +23,7 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             Sheet.DrawFullNinepatch(spriteBatch, this.boundingRect.Rect, this.generationDirection,
-                this.actor.transform.Depth);
+                this.actor.transform.Depth + DepthOffset);
         }
     }
 }

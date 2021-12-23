@@ -8,7 +8,7 @@ namespace Machina.Data
     /// <summary>
     ///     Pulls out all frames of a SpriteSheet as their own textures
     /// </summary>
-    public class TextureFrames : IDisposable
+    public class TextureFrames : IDisposable, IAsset
     {
         public readonly SpriteSheet sourceSpriteSheet;
         private readonly List<Texture2D> textures = new List<Texture2D>();
@@ -39,6 +39,11 @@ namespace Machina.Data
         public IList<Texture2D> GetAllTextures()
         {
             return this.textures.ToArray();
+        }
+
+        public void OnCleanup()
+        {
+            Dispose();
         }
     }
 }
