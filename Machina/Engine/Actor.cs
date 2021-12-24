@@ -11,6 +11,7 @@ namespace Machina.Engine
         public readonly string name;
         public readonly Scene scene;
         public readonly Transform transform;
+        private bool isDirectlyVisible;
 
         /// <summary>
         ///     Create an actor and add them to the given scene.
@@ -31,7 +32,22 @@ namespace Machina.Engine
             AddComponent(this.transform);
         }
 
-        public bool Visible { get; set; }
+        public bool Visible
+        {
+            set
+            {
+                this.isDirectlyVisible = value;
+            }
+            get
+            {
+                var parentIsVisible = true;
+                if (transform.Parent != null)
+                {
+                    parentIsVisible = transform.Parent.actor.Visible;
+                }
+                return this.isDirectlyVisible && parentIsVisible;
+            }
+        }
 
         public bool IsDestroyed { get; private set; }
 
