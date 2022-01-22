@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Machina.Data;
 using Machina.Engine.Debugging.Data;
@@ -9,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
-    public class CoroutineWrapper
+    public class CoroutineWrapper : IEnumerable<ICoroutineAction>
     {
         public readonly IEnumerator<ICoroutineAction> content;
         private bool hasFinished;
@@ -31,6 +32,16 @@ namespace Machina.Engine
             var hasNext = this.content.MoveNext();
             this.hasFinished = !hasNext;
             return hasNext;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.content;
+        }
+
+        public IEnumerator<ICoroutineAction> GetEnumerator()
+        {
+            return this.content;
         }
     }
 
