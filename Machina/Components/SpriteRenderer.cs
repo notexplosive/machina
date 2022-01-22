@@ -8,13 +8,13 @@ namespace Machina.Components
 {
     public class SpriteRenderer : BaseComponent
     {
-        private readonly int framesPerSecond = 15;
         public readonly SpriteSheet spriteSheet;
         public Color color;
         private IFrameAnimation currentAnimation;
         private float elapsedTime;
         private Vector2 offset;
         public float scale = 1f;
+        public int FramesPerSecond { get; set; } = 15;
 
         public SpriteRenderer(Actor actor, SpriteSheet spriteSheet) : base(actor)
         {
@@ -48,8 +48,8 @@ namespace Machina.Components
                 boundingRect = new BoundingRect(this.actor, 0, 0);
             }
 
-            boundingRect.Width = (int) (gridBasedSpriteSheet.frameSize.X * this.scale);
-            boundingRect.Height = (int) (gridBasedSpriteSheet.frameSize.Y * this.scale);
+            boundingRect.Width = (int)(gridBasedSpriteSheet.frameSize.X * this.scale);
+            boundingRect.Height = (int)(gridBasedSpriteSheet.frameSize.Y * this.scale);
 
             boundingRect.SetOffsetToCenter();
 
@@ -99,7 +99,7 @@ namespace Machina.Components
 
         private void IncrementTime(float dt)
         {
-            SetElapsedTime(this.elapsedTime + dt * this.framesPerSecond);
+            SetElapsedTime(this.elapsedTime + dt * FramesPerSecond);
         }
 
         private void SetElapsedTime(float newTime)
