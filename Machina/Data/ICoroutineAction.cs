@@ -20,6 +20,11 @@ namespace Machina.Data
         {
             return this.condition();
         }
+
+        public bool IsDone()
+        {
+            return this.condition();
+        }
     }
 
     public class WaitSeconds : ICoroutineAction
