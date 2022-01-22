@@ -45,11 +45,16 @@ namespace Machina.Data
             if (this.loopType == LoopType.Loop)
             {
                 var alongDuration = elapsedTime % this.length;
-                return (int) (alongDuration + this.firstFrame);
+                return (int)(alongDuration + this.firstFrame);
             }
 
-            var frame = (int) elapsedTime + this.firstFrame;
+            var frame = (int)elapsedTime + this.firstFrame;
             return Math.Min(LastFrame, frame);
+        }
+
+        public void OnCleanup()
+        {
+            // Nothing to do here, just making the interface happy
         }
     }
 }

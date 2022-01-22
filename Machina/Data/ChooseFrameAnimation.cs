@@ -34,10 +34,15 @@ namespace Machina.Data
 
             if (LoopType == LoopType.Loop)
             {
-                return this.frames[(int) elapsedTime % this.frames.Length];
+                return this.frames[(int)elapsedTime % this.frames.Length];
             }
 
-            return Math.Min(this.frames[this.frames.Length], this.frames[(int) elapsedTime]);
+            return Math.Min(this.frames[this.frames.Length], this.frames[(int)elapsedTime]);
+        }
+
+        public void OnCleanup()
+        {
+            // Nothing to do here, just making the interface happy
         }
     }
 }

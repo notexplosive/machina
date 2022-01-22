@@ -6,7 +6,7 @@
         Loop
     }
 
-    public interface IFrameAnimation
+    public interface IFrameAnimation : IAsset
     {
         public int Length { get; }
 
