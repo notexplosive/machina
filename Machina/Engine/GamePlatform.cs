@@ -119,6 +119,7 @@ namespace Machina.Engine
 
         public static List<string> GetFilesAtContentDirectory(string contentSubFolder, string extension = "*")
         {
+            // TODO: it would be really nice if this would recursively traverse down
             return GetFilesAtContentDirectoryFunc(contentSubFolder, extension);
         }
     }
