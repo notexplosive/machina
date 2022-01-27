@@ -9,6 +9,8 @@ namespace Machina.Components
         public readonly Texture2D texture;
         private Vector2 offset;
 
+        public float Opacity { get; set; }
+
         public TextureRenderer(Actor actor, Texture2D texture) : base(actor)
         {
             this.texture = texture;
@@ -29,7 +31,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.actor.transform.Position, null, Color.White, this.actor.transform.Angle,
+            spriteBatch.Draw(this.texture, this.actor.transform.Position, null, new Color(Color.White, Opacity), this.actor.transform.Angle,
                 this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
         }
 
