@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Machina.Components
 {
-    internal class ButtonNinepatchHandler : BaseComponent
+    public class ButtonNinepatchHandler : BaseComponent
     {
         private readonly Clickable clickable;
         private readonly NinepatchSheet defaultSheet;
