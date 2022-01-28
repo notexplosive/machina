@@ -9,7 +9,7 @@ namespace Machina.Components
         public readonly Texture2D texture;
         private Vector2 offset;
 
-        public float Opacity { get; set; }
+        public float Opacity { get; set; } = 1f;
 
         public TextureRenderer(Actor actor, Texture2D texture) : base(actor)
         {
