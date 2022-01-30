@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Machina.Engine
 {
-    public class CoroutineWrapper : IEnumerable<ICoroutineAction>
+    public class CoroutineWrapper : IEnumerable<ICoroutineAction>, IDisposable
     {
         public readonly IEnumerator<ICoroutineAction> content;
         private bool hasFinished;
@@ -42,6 +42,11 @@ namespace Machina.Engine
         public IEnumerator<ICoroutineAction> GetEnumerator()
         {
             return this.content;
+        }
+
+        public void Dispose()
+        {
+            this.content.Dispose();
         }
     }
 
@@ -172,6 +177,7 @@ namespace Machina.Engine
                     if (!hasNext || coroutine.Current == null)
                     {
                         this.coroutines.Remove(coroutine);
+                        coroutine.Dispose();
                     }
                 }
             }
