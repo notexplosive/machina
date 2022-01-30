@@ -14,6 +14,7 @@ namespace Machina.Engine
 
     public class MachinaRuntime : IMachinaRuntime
     {
+        public static bool SkipIntro = false;
         private readonly GameSpecification specification;
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
@@ -137,7 +138,7 @@ namespace Machina.Engine
 
             void SetRandomSeedFromString(string seed)
             {
-                gameCartridge.Random.Seed = (int) NoiseBasedRNG.SeedFromString(seed);
+                gameCartridge.Random.Seed = (int)NoiseBasedRNG.SeedFromString(seed);
             }
 
             this.specification.commandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
@@ -171,7 +172,15 @@ namespace Machina.Engine
             // PlayIntroAndLoadGame(gameCartridge);
             InsertGameCartridgeAndRun(gameCartridge);
 #else
-            PlayIntroAndLoadGame(gameCartridge);
+            if (SkipIntro)
+            {
+                InsertGameCartridgeAndRun(gameCartridge);
+            }
+            else
+            {
+                PlayIntroAndLoadGame(gameCartridge);
+
+            }
 #endif
             // Currently we go [SetupDebugScene] -> [LoadGame] -> [LateSetup], hopefully the cartridge system will mitigate the need for this.
             if (GamePlatform.IsDesktop)
