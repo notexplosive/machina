@@ -13,16 +13,12 @@ namespace TestMachina.Tests
         [Fact]
         public void text_measurer_generates_accurate_output()
         {
-            var verticalAlignment = VerticalAlignment.Center;
-            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
-            int worldPosX = 0;
-
             var textMeasurer = new TextMeasurer(
                 "Hello world",
-                fontMetrics,
-                new Rectangle(new Point(worldPosX, 0), new Point(200, 200)),
+                new MonospacedFontMetrics(new Point(2, 3)),
+                new Rectangle(new Point(0, 0), new Point(200, 200)),
                 HorizontalAlignment.Center,
-                verticalAlignment,
+                VerticalAlignment.Center,
                 Overflow.Ignore);
 
             textMeasurer.Lines.Should().HaveCount(1);
