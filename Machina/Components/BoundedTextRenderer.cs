@@ -11,7 +11,7 @@ namespace Machina.Components
 {
     public class FontMetrics
     {
-        private SpriteFont font;
+        private readonly SpriteFont font;
 
         public FontMetrics(SpriteFont font)
         {
