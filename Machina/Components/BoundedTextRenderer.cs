@@ -101,9 +101,9 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            var measurer = CreateMeasuredText();
             var renderableTexts = new List<RenderableText>();
 
+            var measurer = CreateMeasuredText();
             var localPos = GetTextLocalPos(measurer);
             foreach (var line in measurer.Lines)
             {
