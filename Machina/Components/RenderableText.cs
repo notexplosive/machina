@@ -26,8 +26,7 @@ namespace Machina.Components
 
         public void Draw(SpriteBatch spriteBatch, float angle)
         {
-            spriteBatch.DrawString(Font, Content, PivotPosition, Color, angle,
-                    OffsetFromPivot, 1f, SpriteEffects.None, Depth);
+            spriteBatch.DrawString(Font, Content, PivotPosition, Color, angle, OffsetFromPivot, 1f, SpriteEffects.None, Depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, float angle)
