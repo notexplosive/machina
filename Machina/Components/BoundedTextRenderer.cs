@@ -101,6 +101,20 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            List<RenderableText> renderableTexts = GetRenderedLines();
+
+            foreach (var renderableText in renderableTexts)
+            {
+                renderableText.Draw(spriteBatch, transform.Angle);
+                if (this.isDropShadowEnabled)
+                {
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle);
+                }
+            }
+        }
+
+        private List<RenderableText> GetRenderedLines()
+        {
             var renderableTexts = new List<RenderableText>();
 
             var measurer = CreateMeasuredText();
@@ -115,14 +129,7 @@ namespace Machina.Components
                 renderableTexts.Add(new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Depth + this.depthOffset));
             }
 
-            foreach (var renderableText in renderableTexts)
-            {
-                renderableText.Draw(spriteBatch, transform.Angle);
-                if (this.isDropShadowEnabled)
-                {
-                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle);
-                }
-            }
+            return renderableTexts;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch)
