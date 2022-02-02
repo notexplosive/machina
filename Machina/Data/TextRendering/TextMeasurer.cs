@@ -166,14 +166,14 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public Point GetTextLocalPos(VerticalAlignment verticalAlignment, IFontMetrics fontMetrics, int boundsHeight, int worldPosX)
+        public Point GetTextLocalPos(IFontMetrics fontMetrics, int boundsHeight, int worldPosX)
         {
             var yOffset = 0;
-            if (verticalAlignment == VerticalAlignment.Center)
+            if (this.verticalAlignment == VerticalAlignment.Center)
             {
                 yOffset = boundsHeight / 2 - fontMetrics.LineSpacing / 2 * Lines.Count;
             }
-            else if (verticalAlignment == VerticalAlignment.Bottom)
+            else if (this.verticalAlignment == VerticalAlignment.Bottom)
             {
                 yOffset = boundsHeight - fontMetrics.LineSpacing * Lines.Count;
             }
