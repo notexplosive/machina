@@ -62,7 +62,7 @@ namespace Machina.Components
             return measurer;
         }
 
-        public static Point GetTextLocalPos(TextMeasurer measurer, VerticalAlignment verticalAlignment, SpriteFontMetrics fontMetrics, int boundsHeight, int worldPosX)
+        public static Point GetTextLocalPos(TextMeasurer measurer, VerticalAlignment verticalAlignment, IFontMetrics fontMetrics, int boundsHeight, int worldPosX)
         {
             var yOffset = 0;
             if (verticalAlignment == VerticalAlignment.Center)
