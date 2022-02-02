@@ -9,7 +9,13 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
-    public class SpriteFontMetrics
+    public interface IFontMetrics
+    {
+        Vector2 MeasureString(string text);
+        int LineSpacing { get; }
+    }
+
+    public class SpriteFontMetrics : IFontMetrics
     {
         private readonly SpriteFont font;
 
