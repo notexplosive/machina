@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using Machina.Data;
+using Machina.Data.TextRendering;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,28 +10,6 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
-    public interface IFontMetrics
-    {
-        Vector2 MeasureString(string text);
-        int LineSpacing { get; }
-    }
-
-    public class SpriteFontMetrics : IFontMetrics
-    {
-        private readonly SpriteFont font;
-
-        public SpriteFontMetrics(SpriteFont font)
-        {
-            this.font = font;
-        }
-
-        public int LineSpacing => this.font.LineSpacing;
-        public Vector2 MeasureString(string text)
-        {
-            return this.font.MeasureString(text);
-        }
-    }
-
     public class BoundedTextRenderer : BaseComponent
     {
         private readonly BoundingRect boundingRect;
