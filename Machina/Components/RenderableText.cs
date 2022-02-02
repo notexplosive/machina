@@ -5,9 +5,8 @@ using System;
 
 namespace Machina.Components
 {
-    internal class RenderableText
+    public readonly struct RenderableText
     {
-
         public RenderableText(SpriteFont spriteFont, string textContent, Vector2 pivotPosition, Color textColor, Vector2 offsetFromPivot)
         {
             Font = spriteFont;
