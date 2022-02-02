@@ -118,8 +118,7 @@ namespace Machina.Components
 
                 var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset);
 
-                spriteBatch.DrawString(renderableText.Font, renderableText.Content, renderableText.PivotPosition, renderableText.Color, transform.Angle,
-                    renderableText.OffsetFromPivot, 1f, SpriteEffects.None, depth);
+                renderableText.Draw(spriteBatch, transform.Angle, depth);
                 if (this.isDropShadowEnabled)
                 {
                     spriteBatch.DrawString(renderableText.Font, renderableText.Content, renderableText.PivotPosition, finalDropShadowColor, transform.Angle,
