@@ -15,13 +15,12 @@ namespace TestMachina.Tests
         {
             var verticalAlignment = VerticalAlignment.Center;
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
-            var boundsHeight = 200;
             int worldPosX = 0;
 
             var textMeasurer = new TextMeasurer(
                 "Hello world",
                 fontMetrics,
-                new Rectangle(new Point(worldPosX, 0), new Point(200, boundsHeight)),
+                new Rectangle(new Point(worldPosX, 0), new Point(200, 200)),
                 HorizontalAlignment.Center,
                 verticalAlignment,
                 Overflow.Ignore);
@@ -30,8 +29,18 @@ namespace TestMachina.Tests
 
             var expectedX = 89;
             textMeasurer.Lines[0].textPosition.Should().Be(new Point(expectedX, 0));
-            var localTextPos = textMeasurer.GetTextLocalPos(worldPosX);
+            var localTextPos = textMeasurer.GetTextLocalPos();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
+
+        /*
+        [Fact]
+        public void pinning_tests_for_text_measurer()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+
+            new TextMeasurer("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics, );
+        }
+        */
     }
 }

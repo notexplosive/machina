@@ -166,7 +166,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public Point GetTextLocalPos(int worldPosX)
+        public Point GetTextLocalPos()
         {
             var boundsHeight = this.totalAvailableRect.Height;
             var yOffset = 0;
@@ -182,7 +182,7 @@ namespace Machina.Data.TextRendering
             var xOffset = 0;
             foreach (var line in Lines)
             {
-                xOffset = line.textPosition.X - worldPosX;
+                xOffset = line.textPosition.X - this.totalAvailableRect.X;
                 break;
             }
 

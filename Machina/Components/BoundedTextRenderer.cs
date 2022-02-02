@@ -51,7 +51,7 @@ namespace Machina.Components
 
         public Point DrawOffset { get; set; }
 
-        public Point TextLocalPos => CreateMeasuredText().GetTextLocalPos((int)transform.Position.X);
+        public Point TextLocalPos => CreateMeasuredText().GetTextLocalPos();
 
         public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
@@ -80,7 +80,7 @@ namespace Machina.Components
         {
             var renderableTexts = new List<RenderableText>();
 
-            var localPos = measurer.GetTextLocalPos((int)worldPos.X);
+            var localPos = measurer.GetTextLocalPos();
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = worldPos;
@@ -97,7 +97,7 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             var measurer = CreateMeasuredText();
-            var localPos = measurer.GetTextLocalPos((int)transform.Position.X);
+            var localPos = measurer.GetTextLocalPos();
             spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
