@@ -131,9 +131,9 @@ namespace Machina.Components
         }
     }
 
-    public struct TextLine
+    public readonly struct TextLine
     {
-        public string textContent;
+        public readonly string textContent;
         public readonly Point textPosition;
 
         public TextLine(string content, SpriteFont font, Rectangle bounds, int positionY,
