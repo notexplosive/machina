@@ -56,41 +56,7 @@ namespace Machina.Components
 
         private TextMeasurer CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment,
-                this.verticalAlignment);
-
-            while (!measurer.IsAtEnd())
-            {
-                if (measurer.HasRoomForNextWordOnCurrentLine())
-                {
-                    measurer.AppendNextWord();
-                }
-                else
-                {
-                    if (measurer.HasRoomForMoreLines())
-                    {
-                        measurer.AppendLinebreak();
-                    }
-                    else
-                    {
-                        if (this.overflow == Overflow.Elide)
-                        {
-                            measurer.Elide();
-                        }
-                        else
-                        {
-                            measurer.AppendNextWord();
-                        }
-
-                        break;
-                    }
-                }
-            }
-
-            if (measurer.HasNextTextLine())
-            {
-                measurer.AddNextTextLine();
-            }
+            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment, this.overflow);
 
             return measurer;
         }
@@ -110,7 +76,7 @@ namespace Machina.Components
             var xOffset = 0;
             foreach (var line in measurer.Lines)
             {
-                xOffset = line.textPosition.X - (int) transform.Position.X;
+                xOffset = line.textPosition.X - (int)transform.Position.X;
                 break;
             }
 
@@ -182,12 +148,12 @@ namespace Machina.Components
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
-                var widthOffset = bounds.Width - (int) font.MeasureString(content).X + 1;
+                var widthOffset = bounds.Width - (int)font.MeasureString(content).X + 1;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
             else
             {
-                var widthOffset = bounds.Width - (int) font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
+                var widthOffset = bounds.Width - (int)font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
         }
@@ -208,7 +174,7 @@ namespace Machina.Components
         private readonly float spaceWidth;
 
         public TextMeasurer(string text, SpriteFont font, Rectangle rect, HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment)
+            VerticalAlignment verticalAlignment, Overflow overflow)
         {
             this.widthOfCurrentLine = 0f;
 
@@ -235,6 +201,39 @@ namespace Machina.Components
             this.textLines = new List<TextLine>();
             this.horizontalAlignment = horizontalAlignment;
             this.verticalAlignment = verticalAlignment;
+
+            while (!IsAtEnd())
+            {
+                if (HasRoomForNextWordOnCurrentLine())
+                {
+                    AppendNextWord();
+                }
+                else
+                {
+                    if (HasRoomForMoreLines())
+                    {
+                        AppendLinebreak();
+                    }
+                    else
+                    {
+                        if (overflow == Overflow.Elide)
+                        {
+                            Elide();
+                        }
+                        else
+                        {
+                            AppendNextWord();
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            if (HasNextTextLine())
+            {
+                AddNextTextLine();
+            }
         }
 
         public bool HasRoomForNextWordOnCurrentLine()
