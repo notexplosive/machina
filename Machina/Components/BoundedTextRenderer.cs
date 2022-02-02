@@ -115,12 +115,15 @@ namespace Machina.Components
                 var finalDropShadowColor = new Color(this.dropShadowColor,
                     this.dropShadowColor.A / 255f * (this.TextColor.A / 255f));
 
-                spriteBatch.DrawString(Font, line.textContent, pivotPos, this.TextColor, transform.Angle,
-                    -offset, 1f, SpriteEffects.None, depth);
+
+                var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset);
+
+                spriteBatch.DrawString(renderableText.Font, renderableText.Content, renderableText.PivotPosition, renderableText.Color, transform.Angle,
+                    renderableText.OffsetFromPivot, 1f, SpriteEffects.None, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(Font, line.textContent, pivotPos, finalDropShadowColor, transform.Angle,
-                        -(offset + new Vector2(1, 1)), 1f, SpriteEffects.None, depth + 1);
+                    spriteBatch.DrawString(renderableText.Font, renderableText.Content, renderableText.PivotPosition, finalDropShadowColor, transform.Angle,
+                        renderableText.OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
                 }
             }
         }
