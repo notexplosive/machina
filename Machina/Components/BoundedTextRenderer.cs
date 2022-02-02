@@ -105,10 +105,10 @@ namespace Machina.Components
 
             foreach (var renderableText in renderableTexts)
             {
-                renderableText.Draw(spriteBatch, transform.Angle);
+                renderableText.Draw(spriteBatch);
                 if (this.isDropShadowEnabled)
                 {
-                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle);
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace Machina.Components
                           pivotPos;
                 offset.Floor();
 
-                renderableTexts.Add(new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Depth + this.depthOffset));
+                renderableTexts.Add(new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Angle, transform.Depth + this.depthOffset));
             }
 
             return renderableTexts;
