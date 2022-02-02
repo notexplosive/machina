@@ -11,7 +11,7 @@ namespace TestMachina.Tests
     public class BoundedTextTests
     {
         [Fact]
-        public void bounded_text_renderer_generates_accurate_output()
+        public void text_measurer_generates_accurate_output()
         {
             var verticalAlignment = VerticalAlignment.Center;
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
