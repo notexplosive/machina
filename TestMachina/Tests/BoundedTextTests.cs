@@ -13,17 +13,25 @@ namespace TestMachina.Tests
         [Fact]
         public void bounded_text_renderer_generates_accurate_output()
         {
+            var verticalAlignment = VerticalAlignment.Center;
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+            var boundsHeight = 200;
+            int worldPosX = 0;
+
             var textMeasurer = new TextMeasurer(
                 "Hello world",
-                new MonospacedFontMetrics(new Point(2, 3)),
-                new Rectangle(Point.Zero, new Point(200, 200)),
+                fontMetrics,
+                new Rectangle(new Point(worldPosX, 0), new Point(200, boundsHeight)),
                 HorizontalAlignment.Center,
-                VerticalAlignment.Center,
+                verticalAlignment,
                 Overflow.Ignore);
 
             textMeasurer.Lines.Should().HaveCount(1);
 
-            textMeasurer.Lines[0].textPosition.Should().Be(new Point(89, 0));
+            var expectedX = 89;
+            textMeasurer.Lines[0].textPosition.Should().Be(new Point(expectedX, 0));
+            var localTextPos = BoundedTextRenderer.GetTextLocalPos(textMeasurer, verticalAlignment, fontMetrics, boundsHeight, worldPosX);
+            localTextPos.Should().Be(new Point(expectedX, 99));
         }
     }
 }
