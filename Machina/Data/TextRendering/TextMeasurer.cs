@@ -139,7 +139,7 @@ namespace Machina.Data.TextRendering
             return this.currentWordIndex == this.words.Length;
         }
 
-        public ICollection<TextLine> Lines => this.textLines;
+        public IList<TextLine> Lines => this.textLines;
 
         private bool HasRoomForMoreLines()
         {
