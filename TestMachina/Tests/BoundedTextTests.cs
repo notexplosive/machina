@@ -30,7 +30,7 @@ namespace TestMachina.Tests
 
             var expectedX = 89;
             textMeasurer.Lines[0].textPosition.Should().Be(new Point(expectedX, 0));
-            var localTextPos = BoundedTextRenderer.GetTextLocalPos(textMeasurer, verticalAlignment, fontMetrics, boundsHeight, worldPosX);
+            var localTextPos = TextMeasurer.GetTextLocalPos(textMeasurer, verticalAlignment, fontMetrics, boundsHeight, worldPosX);
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
     }

@@ -51,7 +51,7 @@ namespace Machina.Components
 
         public Point DrawOffset { get; set; }
 
-        public Point TextLocalPos => GetTextLocalPos(CreateMeasuredText(), this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
+        public Point TextLocalPos => TextMeasurer.GetTextLocalPos(CreateMeasuredText(), this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
 
         public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
@@ -60,28 +60,6 @@ namespace Machina.Components
             var measurer = new TextMeasurer(Text, FontMetrics, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment, this.overflow);
 
             return measurer;
-        }
-
-        public static Point GetTextLocalPos(TextMeasurer measurer, VerticalAlignment verticalAlignment, IFontMetrics fontMetrics, int boundsHeight, int worldPosX)
-        {
-            var yOffset = 0;
-            if (verticalAlignment == VerticalAlignment.Center)
-            {
-                yOffset = boundsHeight / 2 - fontMetrics.LineSpacing / 2 * measurer.Lines.Count;
-            }
-            else if (verticalAlignment == VerticalAlignment.Bottom)
-            {
-                yOffset = boundsHeight - fontMetrics.LineSpacing * measurer.Lines.Count;
-            }
-
-            var xOffset = 0;
-            foreach (var line in measurer.Lines)
-            {
-                xOffset = line.textPosition.X - worldPosX;
-                break;
-            }
-
-            return new Point(xOffset, yOffset);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -103,7 +81,7 @@ namespace Machina.Components
             var renderableTexts = new List<RenderableText>();
 
             var measurer = CreateMeasuredText();
-            var localPos = GetTextLocalPos(measurer, this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
+            var localPos = TextMeasurer.GetTextLocalPos(measurer, this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = transform.Position;
@@ -120,7 +98,7 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             var measurer = CreateMeasuredText();
-            var localPos = GetTextLocalPos(measurer, this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
+            var localPos = TextMeasurer.GetTextLocalPos(measurer, this.verticalAlignment, FontMetrics, this.boundingRect.Height, (int)transform.Position.X);
             spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
