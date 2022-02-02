@@ -9,11 +9,11 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
-    public class FontMetrics
+    public class SpriteFontMetrics
     {
         private readonly SpriteFont font;
 
-        public FontMetrics(SpriteFont font)
+        public SpriteFontMetrics(SpriteFont font)
         {
             this.font = font;
         }
@@ -47,7 +47,7 @@ namespace Machina.Components
 
             Text = text;
             Font = font;
-            FontMetrics = new FontMetrics(font);
+            FontMetrics = new SpriteFontMetrics(font);
             this.boundingRect = RequireComponent<BoundingRect>();
             this.TextColor = textColor;
             this.horizontalAlignment = horizontalAlignment;
@@ -62,7 +62,7 @@ namespace Machina.Components
 
         public string Text { get; set; }
         public SpriteFont Font { get; }
-        public FontMetrics FontMetrics { get; set; }
+        public SpriteFontMetrics FontMetrics { get; set; }
 
         public Point DrawOffset { get; set; }
 
@@ -77,7 +77,7 @@ namespace Machina.Components
             return measurer;
         }
 
-        public static Point GetTextLocalPos(TextMeasurer measurer, VerticalAlignment verticalAlignment, FontMetrics fontMetrics, int boundsHeight, int worldPosX)
+        public static Point GetTextLocalPos(TextMeasurer measurer, VerticalAlignment verticalAlignment, SpriteFontMetrics fontMetrics, int boundsHeight, int worldPosX)
         {
             var yOffset = 0;
             if (verticalAlignment == VerticalAlignment.Center)
@@ -159,7 +159,7 @@ namespace Machina.Components
         public readonly string textContent;
         public readonly Point textPosition;
 
-        public TextLine(string content, FontMetrics fontMetrics, Rectangle bounds, int positionY,
+        public TextLine(string content, SpriteFontMetrics fontMetrics, Rectangle bounds, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;
@@ -192,11 +192,11 @@ namespace Machina.Components
         private readonly VerticalAlignment verticalAlignment;
         private readonly string[] words;
         private readonly StringBuilder stringBuilder;
-        private readonly FontMetrics fontMetrics;
+        private readonly SpriteFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
         private readonly float spaceWidth;
 
-        public TextMeasurer(string text, FontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
+        public TextMeasurer(string text, SpriteFontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment, Overflow overflow)
         {
             this.widthOfCurrentLine = 0f;
