@@ -9,6 +9,21 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
+    public class FontMetrics
+    {
+        private SpriteFont font;
+
+        public FontMetrics(SpriteFont font)
+        {
+            this.font = font;
+        }
+
+        public int LineSpacing => this.font.LineSpacing;
+        public Vector2 MeasureString(string text)
+        {
+            return this.font.MeasureString(text);
+        }
+    }
 
     public class BoundedTextRenderer : BaseComponent
     {
@@ -32,6 +47,7 @@ namespace Machina.Components
 
             Text = text;
             Font = font;
+            FontMetrics = new FontMetrics(font);
             this.boundingRect = RequireComponent<BoundingRect>();
             this.TextColor = textColor;
             this.horizontalAlignment = horizontalAlignment;
@@ -45,8 +61,8 @@ namespace Machina.Components
         }
 
         public string Text { get; set; }
-
-        public SpriteFont Font { get; set; }
+        public SpriteFont Font { get; }
+        public FontMetrics FontMetrics { get; set; }
 
         public Point DrawOffset { get; set; }
 
@@ -56,7 +72,7 @@ namespace Machina.Components
 
         private TextMeasurer CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(Text, Font, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment, this.overflow);
+            var measurer = new TextMeasurer(Text, FontMetrics, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment, this.overflow);
 
             return measurer;
         }
@@ -66,11 +82,11 @@ namespace Machina.Components
             var yOffset = 0;
             if (this.verticalAlignment == VerticalAlignment.Center)
             {
-                yOffset = this.boundingRect.Height / 2 - Font.LineSpacing / 2 * measurer.Lines.Count;
+                yOffset = this.boundingRect.Height / 2 - FontMetrics.LineSpacing / 2 * measurer.Lines.Count;
             }
             else if (this.verticalAlignment == VerticalAlignment.Bottom)
             {
-                yOffset = this.boundingRect.Height - Font.LineSpacing * measurer.Lines.Count;
+                yOffset = this.boundingRect.Height - FontMetrics.LineSpacing * measurer.Lines.Count;
             }
 
             var xOffset = 0;
@@ -136,7 +152,7 @@ namespace Machina.Components
         public readonly string textContent;
         public readonly Point textPosition;
 
-        public TextLine(string content, SpriteFont font, Rectangle bounds, int positionY,
+        public TextLine(string content, FontMetrics fontMetrics, Rectangle bounds, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;
@@ -148,12 +164,12 @@ namespace Machina.Components
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
-                var widthOffset = bounds.Width - (int)font.MeasureString(content).X + 1;
+                var widthOffset = bounds.Width - (int)fontMetrics.MeasureString(content).X + 1;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
             else
             {
-                var widthOffset = bounds.Width - (int)font.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
+                var widthOffset = bounds.Width - (int)fontMetrics.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
                 this.textPosition.X = bounds.Location.X + widthOffset;
             }
         }
@@ -169,11 +185,11 @@ namespace Machina.Components
         private readonly VerticalAlignment verticalAlignment;
         private readonly string[] words;
         private readonly StringBuilder stringBuilder;
-        private readonly SpriteFont font;
+        private readonly FontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
         private readonly float spaceWidth;
 
-        public TextMeasurer(string text, SpriteFont font, Rectangle rect, HorizontalAlignment horizontalAlignment,
+        public TextMeasurer(string text, FontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment, Overflow overflow)
         {
             this.widthOfCurrentLine = 0f;
@@ -194,9 +210,9 @@ namespace Machina.Components
             this.words = words.ToArray();
             this.stringBuilder = new StringBuilder();
             this.currentWordIndex = 0;
-            this.font = font;
+            this.fontMetrics = font;
             this.totalAvailableRect = rect;
-            this.spaceWidth = this.font.MeasureString(" ").X;
+            this.spaceWidth = this.fontMetrics.MeasureString(" ").X;
             this.currentY = 0;
             this.textLines = new List<TextLine>();
             this.horizontalAlignment = horizontalAlignment;
@@ -244,7 +260,7 @@ namespace Machina.Components
 
         private bool HasRoomForWordOnCurrentLine(string word)
         {
-            var widthAfterAppend = this.widthOfCurrentLine + this.font.MeasureString(word).X + this.spaceWidth;
+            var widthAfterAppend = this.widthOfCurrentLine + this.fontMetrics.MeasureString(word).X + this.spaceWidth;
             return widthAfterAppend < this.totalAvailableRect.Width;
         }
 
@@ -265,7 +281,7 @@ namespace Machina.Components
 
         private void AppendWord(string word)
         {
-            this.widthOfCurrentLine += this.font.MeasureString(word).X + this.spaceWidth;
+            this.widthOfCurrentLine += this.fontMetrics.MeasureString(word).X + this.spaceWidth;
             this.stringBuilder.Append(word);
             this.stringBuilder.Append(' ');
         }
@@ -277,7 +293,7 @@ namespace Machina.Components
 
         public void AddNextTextLine()
         {
-            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.font, this.totalAvailableRect,
+            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect,
                 this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
@@ -285,7 +301,7 @@ namespace Machina.Components
         public void AppendLinebreak()
         {
             AddNextTextLine();
-            this.currentY += this.font.LineSpacing;
+            this.currentY += this.fontMetrics.LineSpacing;
             this.widthOfCurrentLine = 0;
         }
 
@@ -299,7 +315,7 @@ namespace Machina.Components
         public bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
-            return this.currentY + this.font.LineSpacing * 2 <= this.totalAvailableRect.Height;
+            return this.currentY + this.fontMetrics.LineSpacing * 2 <= this.totalAvailableRect.Height;
         }
 
         public void Elide()
@@ -313,7 +329,7 @@ namespace Machina.Components
             {
                 if (this.stringBuilder.Length > 0)
                 {
-                    var widthOfLastCharacter = this.font.MeasureString(this.stringBuilder[^1].ToString()).X;
+                    var widthOfLastCharacter = this.fontMetrics.MeasureString(this.stringBuilder[^1].ToString()).X;
                     this.stringBuilder.Remove(this.stringBuilder.Length - 1, 1);
                     this.widthOfCurrentLine -= widthOfLastCharacter;
                     Elide();

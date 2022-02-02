@@ -59,7 +59,7 @@ namespace Machina.Components
             if (IsInFocus)
             {
                 var topLeft = this.textRenderer.TextWorldPos;
-                var lineHeight = (int) (this.textRenderer.Font.LineSpacing * 0.9f);
+                var lineHeight = (int)(this.textRenderer.FontMetrics.LineSpacing * 0.9f);
 
                 if (MathF.Cos(this.flickerTimer * 5) > 0)
                 {
@@ -67,7 +67,7 @@ namespace Machina.Components
                     {
                         var cursorLocalPos =
                             new Point(
-                                (int) this.textRenderer.Font.MeasureString(Text.Substring(0, this.cursor.position.X)).X,
+                                (int)this.textRenderer.FontMetrics.MeasureString(Text.Substring(0, this.cursor.position.X)).X,
                                 0);
 
                         // Caret
@@ -80,7 +80,7 @@ namespace Machina.Components
                         // fallback case, probably not needed
                         spriteBatch.FillRectangle(new Rectangle(topLeft +
                                                                 new Point(0, 0),
-                                new Point(1, (int) (this.textRenderer.Font.LineSpacing * 0.9f))), this.cursorColor,
+                                new Point(1, (int)(this.textRenderer.FontMetrics.LineSpacing * 0.9f))), this.cursorColor,
                             transform.Depth - 1);
                     }
                 }
@@ -88,9 +88,9 @@ namespace Machina.Components
                 if (this.cursor.HighlightLength > 0)
                 {
                     // Highlight
-                    var highlightStartLocalPos = this.textRenderer.Font
+                    var highlightStartLocalPos = this.textRenderer.FontMetrics
                         .MeasureString(Text.Substring(0, this.cursor.HighlightStart)).X;
-                    var highlightedWidth = this.textRenderer.Font.MeasureString(HighlightedSubstring).X;
+                    var highlightedWidth = this.textRenderer.FontMetrics.MeasureString(HighlightedSubstring).X;
                     spriteBatch.FillRectangle(
                         new RectangleF(topLeft.ToVector2() + new Vector2(highlightStartLocalPos, 0),
                             new Vector2(highlightedWidth, lineHeight)), this.highlightColor, transform.Depth + 2);
@@ -222,9 +222,9 @@ namespace Machina.Components
                         foreach (var c in this.textRenderer.Text)
                         {
                             substring += c;
-                            var substrWidth = this.textRenderer.Font.MeasureString(substring).X;
+                            var substrWidth = this.textRenderer.FontMetrics.MeasureString(substring).X;
                             var rect = new Rectangle(topLeft.ToPoint(),
-                                new Point((int) substrWidth, this.textRenderer.Font.LineSpacing));
+                                new Point((int)substrWidth, this.textRenderer.FontMetrics.LineSpacing));
                             if (rect.Contains(currentPosition))
                             {
                                 break;
@@ -247,9 +247,9 @@ namespace Machina.Components
             foreach (var c in this.textRenderer.Text)
             {
                 substring += c;
-                var substrWidth = this.textRenderer.Font.MeasureString(substring).X;
+                var substrWidth = this.textRenderer.FontMetrics.MeasureString(substring).X;
                 var rect = new Rectangle(topLeft.ToPoint(),
-                    new Point((int) substrWidth, this.textRenderer.Font.LineSpacing));
+                    new Point((int)substrWidth, this.textRenderer.FontMetrics.LineSpacing));
                 spriteBatch.DrawRectangle(
                     rect,
                     Color.Orange, 1f, transform.Depth);
