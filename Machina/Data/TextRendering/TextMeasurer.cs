@@ -81,7 +81,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public bool HasRoomForNextWordOnCurrentLine()
+        private bool HasRoomForNextWordOnCurrentLine()
         {
             var word = this.words[this.currentWordIndex];
             return HasRoomForWordOnCurrentLine(word);
@@ -93,7 +93,7 @@ namespace Machina.Data.TextRendering
             return widthAfterAppend < this.totalAvailableRect.Width;
         }
 
-        public void AppendNextWord()
+        private void AppendNextWord()
         {
             var word = this.words[this.currentWordIndex];
             if (word == "\n")
@@ -115,39 +115,39 @@ namespace Machina.Data.TextRendering
             this.stringBuilder.Append(' ');
         }
 
-        public bool HasNextTextLine()
+        private bool HasNextTextLine()
         {
             return this.stringBuilder.Length > 0;
         }
 
-        public void AddNextTextLine()
+        private void AddNextTextLine()
         {
             this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect,
                 this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
 
-        public void AppendLinebreak()
+        private void AppendLinebreak()
         {
             AddNextTextLine();
             this.currentY += this.fontMetrics.LineSpacing;
             this.widthOfCurrentLine = 0;
         }
 
-        public bool IsAtEnd()
+        private bool IsAtEnd()
         {
             return this.currentWordIndex == this.words.Length;
         }
 
         public ICollection<TextLine> Lines => this.textLines;
 
-        public bool HasRoomForMoreLines()
+        private bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
             return this.currentY + this.fontMetrics.LineSpacing * 2 <= this.totalAvailableRect.Height;
         }
 
-        public void Elide()
+        private void Elide()
         {
             var ellipses = "...";
             if (HasRoomForWordOnCurrentLine(ellipses))
