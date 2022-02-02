@@ -64,7 +64,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = GetRenderedLines(CreateMeasuredText(), transform.Position, DrawOffset, Font, TextColor, transform.Angle, transform.Depth + this.depthOffset);
+            List<RenderableText> renderableTexts = GetRenderedLines(CreateMeasuredText(), transform.Position, DrawOffset, FontMetrics, TextColor, transform.Angle, transform.Depth + this.depthOffset);
 
             foreach (var renderableText in renderableTexts)
             {
@@ -76,7 +76,7 @@ namespace Machina.Components
             }
         }
 
-        private static List<RenderableText> GetRenderedLines(TextMeasurer measurer, Vector2 worldPos, Point drawOffset, SpriteFont font, Color textColor, float angle, Depth depth)
+        private static List<RenderableText> GetRenderedLines(TextMeasurer measurer, Vector2 worldPos, Point drawOffset, IFontMetrics fontMetrics, Color textColor, float angle, Depth depth)
         {
             var renderableTexts = new List<RenderableText>();
 
@@ -88,7 +88,7 @@ namespace Machina.Components
                           pivotPos;
                 offset.Floor();
 
-                renderableTexts.Add(new RenderableText(font, line.textContent, pivotPos, textColor, -offset, angle, depth));
+                renderableTexts.Add(new RenderableText(fontMetrics, line.textContent, pivotPos, textColor, -offset, angle, depth));
             }
 
             return renderableTexts;
