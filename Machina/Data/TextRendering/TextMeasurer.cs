@@ -166,8 +166,9 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public Point GetTextLocalPos(int boundsHeight, int worldPosX)
+        public Point GetTextLocalPos(int worldPosX)
         {
+            var boundsHeight = this.totalAvailableRect.Height;
             var yOffset = 0;
             if (this.verticalAlignment == VerticalAlignment.Center)
             {
