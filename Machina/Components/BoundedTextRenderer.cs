@@ -111,15 +111,13 @@ namespace Machina.Components
                 var offset = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2() -
                           pivotPos;
                 offset.Floor();
-                var depth = transform.Depth + this.depthOffset;
 
+                var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Depth + this.depthOffset);
 
-                var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset);
-
-                renderableText.Draw(spriteBatch, transform.Angle, depth);
+                renderableText.Draw(spriteBatch, transform.Angle);
                 if (this.isDropShadowEnabled)
                 {
-                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle, depth);
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle);
                 }
             }
         }
