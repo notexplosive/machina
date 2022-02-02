@@ -24,7 +24,7 @@ namespace TestMachina.Tests
             textMeasurer.Lines.Should().HaveCount(1);
 
             var expectedX = 89;
-            textMeasurer.Lines[0].textPosition.Should().Be(new Point(expectedX, 0));
+            textMeasurer.Lines[0].adjustedX.Should().Be(expectedX);
             var localTextPos = textMeasurer.GetTextLocalPos();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
@@ -44,13 +44,13 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].textPosition.Y.Should().Be(0);
+            textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].textPosition.Y.Should().Be(3);
+            textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].textPosition.Y.Should().Be(6);
+            textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
     }
 }
