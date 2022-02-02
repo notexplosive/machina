@@ -105,6 +105,7 @@ namespace Machina.Components
 
             var localPos = GetTextLocalPos(measurer);
 
+            var renderableTexts = new List<RenderableText>();
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = transform.Position;
@@ -112,8 +113,11 @@ namespace Machina.Components
                           pivotPos;
                 offset.Floor();
 
-                var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Depth + this.depthOffset);
+                renderableTexts.Add(new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Depth + this.depthOffset));
+            }
 
+            foreach (var renderableText in renderableTexts)
+            {
                 renderableText.Draw(spriteBatch, transform.Angle);
                 if (this.isDropShadowEnabled)
                 {
