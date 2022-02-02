@@ -64,7 +64,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = GetRenderedLines();
+            List<RenderableText> renderableTexts = GetRenderedLines(CreateMeasuredText(), transform.Position, DrawOffset, Font, TextColor, transform.Angle, transform.Depth + this.depthOffset);
 
             foreach (var renderableText in renderableTexts)
             {
@@ -76,20 +76,19 @@ namespace Machina.Components
             }
         }
 
-        private List<RenderableText> GetRenderedLines()
+        private static List<RenderableText> GetRenderedLines(TextMeasurer measurer, Vector2 worldPos, Point drawOffset, SpriteFont font, Color textColor, float angle, Depth depth)
         {
             var renderableTexts = new List<RenderableText>();
 
-            var measurer = CreateMeasuredText();
-            var localPos = measurer.GetTextLocalPos((int)transform.Position.X);
+            var localPos = measurer.GetTextLocalPos((int)worldPos.X);
             foreach (var line in measurer.Lines)
             {
-                var pivotPos = transform.Position;
-                var offset = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + DrawOffset.ToVector2() -
+                var pivotPos = worldPos;
+                var offset = new Vector2(line.textPosition.X, line.textPosition.Y + localPos.Y) + drawOffset.ToVector2() -
                           pivotPos;
                 offset.Floor();
 
-                renderableTexts.Add(new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset, transform.Angle, transform.Depth + this.depthOffset));
+                renderableTexts.Add(new RenderableText(font, line.textContent, pivotPos, textColor, -offset, angle, depth));
             }
 
             return renderableTexts;
