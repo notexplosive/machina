@@ -27,5 +27,11 @@ namespace Machina.Components
             spriteBatch.DrawString(Font, Content, PivotPosition, Color, angle,
                     OffsetFromPivot, 1f, SpriteEffects.None, depth);
         }
+
+        public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, float angle, Depth depth)
+        {
+            var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
+            spriteBatch.DrawString(Font, Content, PivotPosition, finalDropShadowColor, angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+        }
     }
 }

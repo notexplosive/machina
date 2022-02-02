@@ -112,8 +112,6 @@ namespace Machina.Components
                           pivotPos;
                 offset.Floor();
                 var depth = transform.Depth + this.depthOffset;
-                var finalDropShadowColor = new Color(this.dropShadowColor,
-                    this.dropShadowColor.A / 255f * (this.TextColor.A / 255f));
 
 
                 var renderableText = new RenderableText(Font, line.textContent, pivotPos, TextColor, -offset);
@@ -121,8 +119,7 @@ namespace Machina.Components
                 renderableText.Draw(spriteBatch, transform.Angle, depth);
                 if (this.isDropShadowEnabled)
                 {
-                    spriteBatch.DrawString(renderableText.Font, renderableText.Content, renderableText.PivotPosition, finalDropShadowColor, transform.Angle,
-                        renderableText.OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle, depth);
                 }
             }
         }
