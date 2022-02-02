@@ -102,10 +102,9 @@ namespace Machina.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             var measurer = CreateMeasuredText();
+            var renderableTexts = new List<RenderableText>();
 
             var localPos = GetTextLocalPos(measurer);
-
-            var renderableTexts = new List<RenderableText>();
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = transform.Position;
