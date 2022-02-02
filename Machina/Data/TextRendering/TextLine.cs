@@ -7,7 +7,7 @@ namespace Machina.Data.TextRendering
         public readonly string textContent;
         public readonly Point textPosition;
 
-        public TextLine(string content, SpriteFontMetrics fontMetrics, Rectangle bounds, int positionY,
+        public TextLine(string content, IFontMetrics fontMetrics, Rectangle bounds, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;

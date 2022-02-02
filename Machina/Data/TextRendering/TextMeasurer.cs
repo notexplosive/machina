@@ -14,11 +14,11 @@ namespace Machina.Data.TextRendering
         private readonly VerticalAlignment verticalAlignment;
         private readonly string[] words;
         private readonly StringBuilder stringBuilder;
-        private readonly SpriteFontMetrics fontMetrics;
+        private readonly IFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
         private readonly float spaceWidth;
 
-        public TextMeasurer(string text, SpriteFontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
+        public TextMeasurer(string text, IFontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment, Overflow overflow)
         {
             this.widthOfCurrentLine = 0f;
