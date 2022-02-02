@@ -6,17 +6,17 @@ namespace Machina.Data.TextRendering
 {
     public class SpriteFontMetrics : IFontMetrics
     {
-        private readonly SpriteFont font;
+        public SpriteFont Font { get; }
 
         public SpriteFontMetrics(SpriteFont font)
         {
-            this.font = font;
+            Font = font;
         }
 
-        public int LineSpacing => this.font.LineSpacing;
+        public int LineSpacing => Font.LineSpacing;
         public Vector2 MeasureString(string text)
         {
-            return this.font.MeasureString(text);
+            return Font.MeasureString(text);
         }
     }
 }
