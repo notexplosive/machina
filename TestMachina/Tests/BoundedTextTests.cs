@@ -115,5 +115,34 @@ namespace TestMachina.Tests
             textMeasurer.Lines[2].AdjustedX.Should().Be(45);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
+
+        [Fact]
+        public void pinning_tests_for_text_measurer_centered_large_middle_string()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+
+            var textMeasurer = new TextMeasurer(
+                "Short top string\nlooooooooooong.... middle.... string\nshort bottom",
+                fontMetrics,
+                new Rectangle(Point.Zero, new Point(100, 200)),
+                HorizontalAlignment.Center,
+                VerticalAlignment.Center,
+                Overflow.Elide);
+
+            textMeasurer.UsedRectPosition().Should().Be(new Point(34, 97));
+
+            textMeasurer.Lines.Should().HaveCount(3);
+            textMeasurer.Lines[0].textContent.Should().Be("Short top string ");
+            textMeasurer.Lines[0].AdjustedX.Should().Be(34);
+            textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
+
+            textMeasurer.Lines[1].textContent.Should().Be("looooooooooong.... middle.... string ");
+            textMeasurer.Lines[1].AdjustedX.Should().Be(14);
+            textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
+
+            textMeasurer.Lines[2].textContent.Should().Be("short bottom ");
+            textMeasurer.Lines[2].AdjustedX.Should().Be(38);
+            textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
+        }
     }
 }
