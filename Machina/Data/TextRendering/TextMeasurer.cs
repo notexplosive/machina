@@ -181,8 +181,7 @@ namespace Machina.Data.TextRendering
 
         public Point TopLeftOfText()
         {
-            var boundsHeight = this.totalAvailableRect.Height;
-            int yOffset = TopOfText(boundsHeight);
+            int yOffset = TopOfText();
             int xOffset = LeftOfText();
 
             return new Point(xOffset, yOffset);
@@ -209,8 +208,10 @@ namespace Machina.Data.TextRendering
             return xOffset;
         }
 
-        public int TopOfText(int boundsHeight)
+        public int TopOfText()
         {
+            var boundsHeight = this.totalAvailableRect.Height;
+
             var yOffset = 0;
             if (this.verticalAlignment == VerticalAlignment.Center)
             {
