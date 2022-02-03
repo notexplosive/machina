@@ -64,7 +64,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedLines(transform.Position, DrawOffset, TextColor, transform.Angle, transform.Depth + this.depthOffset);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedLines(transform.Position, DrawOffset, TextColor, transform.Angle, transform.Depth + this.depthOffset, this.boundingRect.Rect.X);
 
             foreach (var renderableText in renderableTexts)
             {
@@ -82,7 +82,7 @@ namespace Machina.Components
             spriteBatch.DrawCircle(new CircleF(measurer.UsedRectPosition(), 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.AdjustedX, line.nonAdjustedY + measurer.UsedRectPosition().Y);
+                var pos = new Vector2(line.nonAdjustedX + this.boundingRect.Rect.X, line.nonAdjustedY + measurer.UsedRectPosition().Y);
                 spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
                 spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange);
                 spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);

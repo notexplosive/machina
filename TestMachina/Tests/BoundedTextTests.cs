@@ -149,16 +149,17 @@ namespace TestMachina.Tests
         public void pinning_test_for_renderable_text()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+            var rectX = 350;
 
             var textMeasurer = new TextMeasurer(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
-                new Rectangle(new Point(350, 250), new Point(100, 200)),
+                new Rectangle(new Point(rectX, 250), new Point(100, 200)),
                 HorizontalAlignment.Right,
                 VerticalAlignment.Bottom,
                 Overflow.Elide);
 
-            var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0);
+            var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0, rectX);
 
             renderedLines.Should().HaveCount(3);
 
