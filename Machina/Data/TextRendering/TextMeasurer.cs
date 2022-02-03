@@ -182,6 +182,13 @@ namespace Machina.Data.TextRendering
         {
             var boundsHeight = this.totalAvailableRect.Height;
             int yOffset = TopOfText(boundsHeight);
+            int xOffset = LeftOfText();
+
+            return new Point(xOffset, yOffset);
+        }
+
+        private int LeftOfText()
+        {
             var xOffset = 0;
             foreach (var line in Lines)
             {
@@ -189,7 +196,7 @@ namespace Machina.Data.TextRendering
                 break;
             }
 
-            return new Point(xOffset, yOffset);
+            return xOffset;
         }
 
         public int TopOfText(int boundsHeight)
