@@ -42,6 +42,8 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
+            textMeasurer.GetTextLocalPos().Should().Be(new Point(7, 97));
+
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
             textMeasurer.Lines[0].position.Y.Should().Be(0);
