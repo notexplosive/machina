@@ -25,7 +25,7 @@ namespace TestMachina.Tests
 
             var expectedX = 89;
             textMeasurer.Lines[0].positionRelativeToTopOfText.X.Should().Be(expectedX);
-            var localTextPos = textMeasurer.UsedRectPosition();
+            var localTextPos = textMeasurer.TopLeftOfText();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
 
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.UsedRectPosition().Should().Be(new Point(7, 97));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(7, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
@@ -71,7 +71,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Top,
                 Overflow.Elide);
 
-            textMeasurer.UsedRectPosition().Should().Be(new Point(0, 0));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(0, 0));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
@@ -100,7 +100,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Bottom,
                 Overflow.Elide);
 
-            textMeasurer.UsedRectPosition().Should().Be(new Point(13, 191));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(13, 191));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
@@ -129,7 +129,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.UsedRectPosition().Should().Be(new Point(14, 97));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(14, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("Short top string ");
