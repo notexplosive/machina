@@ -193,7 +193,7 @@ namespace Machina.Data.TextRendering
             var hasFirstOffset = false;
             foreach (var line in Lines)
             {
-                var lineRelativePositionX = line.positionRelativeToTopOfText.X;
+                var lineRelativePositionX = line.positionRelativeToTopLeftOfText.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
@@ -201,7 +201,7 @@ namespace Machina.Data.TextRendering
                 }
                 else
                 {
-                    xOffset = Math.Min(line.positionRelativeToTopOfText.X, xOffset);
+                    xOffset = Math.Min(line.positionRelativeToTopLeftOfText.X, xOffset);
                 }
             }
 
