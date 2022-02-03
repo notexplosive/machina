@@ -96,8 +96,7 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             var measurer = CreateMeasuredText();
-            var localPos = measurer.UsedRectPosition();
-            spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
+            spriteBatch.DrawCircle(new CircleF(measurer.UsedRectPosition(), 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
                 var pos = new Vector2(line.position.X, line.position.Y + measurer.UsedRectPosition().Y);
