@@ -46,12 +46,15 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].position.X.Should().Be(7);
             textMeasurer.Lines[0].position.Y.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].position.X.Should().Be(8);
             textMeasurer.Lines[1].position.Y.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].position.X.Should().Be(23);
             textMeasurer.Lines[2].position.Y.Should().Be(6);
         }
     }
