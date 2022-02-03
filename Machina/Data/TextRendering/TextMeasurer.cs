@@ -75,9 +75,9 @@ namespace Machina.Data.TextRendering
                 }
             }
 
-            if (HasNextTextLine())
+            if (HasLineInBuffer())
             {
-                AddNextTextLine();
+                AddCurrentLineInBuffer();
             }
         }
 
@@ -115,12 +115,12 @@ namespace Machina.Data.TextRendering
             this.stringBuilder.Append(' ');
         }
 
-        private bool HasNextTextLine()
+        private bool HasLineInBuffer()
         {
             return this.stringBuilder.Length > 0;
         }
 
-        private void AddNextTextLine()
+        private void AddCurrentLineInBuffer()
         {
             this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect,
                 this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
@@ -129,7 +129,7 @@ namespace Machina.Data.TextRendering
 
         private void AppendLinebreak()
         {
-            AddNextTextLine();
+            AddCurrentLineInBuffer();
             this.currentY += this.fontMetrics.LineSpacing;
             this.widthOfCurrentLine = 0;
         }
