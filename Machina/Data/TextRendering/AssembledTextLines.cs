@@ -49,7 +49,24 @@ namespace Machina.Data.TextRendering
 
             this.words = words.ToArray();
             this.pendingInfo = new TextLinesPendingInfo();
+            TopOfText = 0; // TopOfText doesn't have a valid value until Assemble() is done
 
+            Assemble(overflow);
+
+            var boundsHeight = this.totalAvailableRect.Height;
+
+            if (alignment.Vertical == VerticalAlignment.Center)
+            {
+                TopOfText = boundsHeight / 2 - this.fontMetrics.LineSpacing / 2 * Count;
+            }
+            else if (alignment.Vertical == VerticalAlignment.Bottom)
+            {
+                TopOfText = boundsHeight - this.fontMetrics.LineSpacing * Count;
+            }
+        }
+
+        private void Assemble(Overflow overflow)
+        {
             while (!IsAtEnd())
             {
                 if (HasRoomForNextWordOnCurrentLine())
@@ -141,8 +158,6 @@ namespace Machina.Data.TextRendering
             return this.pendingInfo.currentWordIndex == this.words.Length;
         }
 
-        public IList<TextLine> Lines => this.textLines;
-
         private bool HasRoomForMoreLines()
         {
             // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
@@ -182,5 +197,7 @@ namespace Machina.Data.TextRendering
         {
             get { return this.textLines[i]; }
         }
+
+        public int TopOfText { get; }
     }
 }

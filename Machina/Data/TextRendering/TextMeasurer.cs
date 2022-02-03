@@ -29,7 +29,7 @@ namespace Machina.Data.TextRendering
 
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, new Vector2(this.totalAvailableRect.X, TopOfText() + this.totalAvailableRect.Y)));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, new Vector2(this.totalAvailableRect.X, Lines.TopOfText + this.totalAvailableRect.Y)));
             }
 
             return renderableTexts;
@@ -37,7 +37,7 @@ namespace Machina.Data.TextRendering
 
         public Point TopLeftOfText()
         {
-            int yOffset = TopOfText();
+            int yOffset = Lines.TopOfText;
             int xOffset = LeftOfText();
 
             return new Point(xOffset, yOffset);
@@ -62,23 +62,6 @@ namespace Machina.Data.TextRendering
             }
 
             return xOffset;
-        }
-
-        public int TopOfText()
-        {
-            var boundsHeight = this.totalAvailableRect.Height;
-
-            var yOffset = 0;
-            if (this.verticalAlignment == VerticalAlignment.Center)
-            {
-                yOffset = boundsHeight / 2 - this.fontMetrics.LineSpacing / 2 * Lines.Count;
-            }
-            else if (this.verticalAlignment == VerticalAlignment.Bottom)
-            {
-                yOffset = boundsHeight - this.fontMetrics.LineSpacing * Lines.Count;
-            }
-
-            return yOffset;
         }
     }
 }
