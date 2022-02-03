@@ -144,5 +144,32 @@ namespace TestMachina.Tests
             textMeasurer.Lines[2].AdjustedX.Should().Be(38);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
+
+        [Fact]
+        public void pinning_test_for_renderable_text()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+
+            var textMeasurer = new TextMeasurer(
+                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
+                fontMetrics,
+                new Rectangle(new Point(350, 250), new Point(100, 200)),
+                HorizontalAlignment.Right,
+                VerticalAlignment.Bottom,
+                Overflow.Elide);
+
+            var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0);
+
+            renderedLines.Should().HaveCount(3);
+
+            renderedLines[0].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(-8, -191));
+
+            renderedLines[1].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[1].OffsetFromPivot.Should().Be(new Vector2(-10, -194));
+
+            renderedLines[2].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(-40, -197));
+        }
     }
 }
