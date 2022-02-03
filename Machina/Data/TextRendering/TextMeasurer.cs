@@ -20,7 +20,7 @@ namespace Machina.Data.TextRendering
             this.fontMetrics = font;
             this.totalAvailableRect = rect;
             this.verticalAlignment = verticalAlignment;
-            Lines = new AssembledTextLines(text, font, totalAvailableRect, new Alignment(horizontalAlignment, verticalAlignment), overflow);
+            Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, new Alignment(horizontalAlignment, verticalAlignment), overflow);
         }
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)

@@ -7,7 +7,7 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct AssembledTextLines : IEnumerable<TextLine>
     {
-        private readonly Rectangle totalAvailableRect;
+        private readonly Point totalAvailableSpace;
         private readonly Alignment alignment;
         private readonly IFontMetrics fontMetrics;
         private readonly float spaceWidth;
@@ -25,11 +25,11 @@ namespace Machina.Data.TextRendering
 
         public int Count => this.textLines.Count;
 
-        public AssembledTextLines(string text, IFontMetrics fontMetrics, Rectangle totalAvailableRect, Alignment alignment, Overflow overflow)
+        public AssembledTextLines(string text, IFontMetrics fontMetrics, Point totalAvailableSpace, Alignment alignment, Overflow overflow)
         {
             this.stringBuilder = new StringBuilder();
             this.textLines = new List<TextLine>();
-            this.totalAvailableRect = totalAvailableRect;
+            this.totalAvailableSpace = totalAvailableSpace;
             this.alignment = alignment;
             this.fontMetrics = fontMetrics;
             this.spaceWidth = this.fontMetrics.MeasureString(" ").X;
@@ -53,7 +53,7 @@ namespace Machina.Data.TextRendering
 
             Assemble(overflow);
 
-            var boundsHeight = this.totalAvailableRect.Height;
+            var boundsHeight = this.totalAvailableSpace.Y;
 
             if (alignment.Vertical == VerticalAlignment.Center)
             {
@@ -110,7 +110,7 @@ namespace Machina.Data.TextRendering
         private bool HasRoomForWordOnCurrentLine(string word)
         {
             var widthAfterAppend = this.pendingInfo.widthOfCurrentLine + this.fontMetrics.MeasureString(word).X + this.spaceWidth;
-            return widthAfterAppend < this.totalAvailableRect.Width;
+            return widthAfterAppend < this.totalAvailableSpace.X;
         }
 
         private void AppendNextWord()
@@ -142,7 +142,7 @@ namespace Machina.Data.TextRendering
 
         private void AddCurrentLineInBuffer()
         {
-            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect.Size, this.pendingInfo.currentY, this.alignment.Horizontal));
+            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableSpace, this.pendingInfo.currentY, this.alignment.Horizontal));
             this.stringBuilder.Clear();
         }
 
@@ -160,8 +160,8 @@ namespace Machina.Data.TextRendering
 
         private bool HasRoomForMoreLines()
         {
-            // LineSpaceing is multiplied by 2 because we need to estimate the bottom of the text, not the top
-            return this.pendingInfo.currentY + this.fontMetrics.LineSpacing * 2 <= this.totalAvailableRect.Height;
+            // LineSpacing is multiplied by 2 because we need to estimate the bottom of the text, not the top
+            return this.pendingInfo.currentY + this.fontMetrics.LineSpacing * 2 <= this.totalAvailableSpace.Y;
         }
 
         private void Elide()
