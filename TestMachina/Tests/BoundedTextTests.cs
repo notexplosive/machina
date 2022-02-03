@@ -30,7 +30,7 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        public void pinning_tests_for_text_measurer()
+        public void pinning_tests_for_text_measurer_centered()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
@@ -55,6 +55,64 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
             textMeasurer.Lines[2].position.X.Should().Be(23);
+            textMeasurer.Lines[2].position.Y.Should().Be(6);
+        }
+
+        [Fact]
+        public void pinning_tests_for_text_measurer_topleft()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+
+            var textMeasurer = new TextMeasurer(
+                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
+                fontMetrics,
+                new Rectangle(Point.Zero, new Point(100, 200)),
+                HorizontalAlignment.Left,
+                VerticalAlignment.Top,
+                Overflow.Elide);
+
+            textMeasurer.UsedRectPosition().Should().Be(new Point(0, 0));
+
+            textMeasurer.Lines.Should().HaveCount(3);
+            textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].position.X.Should().Be(0);
+            textMeasurer.Lines[0].position.Y.Should().Be(0);
+
+            textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].position.X.Should().Be(0);
+            textMeasurer.Lines[1].position.Y.Should().Be(3);
+
+            textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].position.X.Should().Be(0);
+            textMeasurer.Lines[2].position.Y.Should().Be(6);
+        }
+
+        [Fact]
+        public void pinning_tests_for_text_measurer_bottomright()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+
+            var textMeasurer = new TextMeasurer(
+                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
+                fontMetrics,
+                new Rectangle(Point.Zero, new Point(100, 200)),
+                HorizontalAlignment.Right,
+                VerticalAlignment.Bottom,
+                Overflow.Elide);
+
+            textMeasurer.UsedRectPosition().Should().Be(new Point(13, 191));
+
+            textMeasurer.Lines.Should().HaveCount(3);
+            textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].position.X.Should().Be(13);
+            textMeasurer.Lines[0].position.Y.Should().Be(0);
+
+            textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].position.X.Should().Be(15);
+            textMeasurer.Lines[1].position.Y.Should().Be(3);
+
+            textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].position.X.Should().Be(45);
             textMeasurer.Lines[2].position.Y.Should().Be(6);
         }
     }
