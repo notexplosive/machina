@@ -8,10 +8,15 @@ namespace Machina.Components
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string textContent, Vector2 pivotPosition, Color textColor, Vector2 offsetFromPivot, float angle, Depth depth)
+        public RenderableText(IFontMetrics fontMetrics, TextLine line, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, int yAdjustment)
         {
+            var offsetFromPivot = new Vector2(line.AdjustedX, line.nonAdjustedY + yAdjustment) + drawOffset.ToVector2() -
+                      pivotPosition;
+            offsetFromPivot.Floor();
+            offsetFromPivot = -offsetFromPivot;
+
             FontMetrics = fontMetrics;
-            Content = textContent;
+            Content = line.textContent;
             Color = textColor;
             OffsetFromPivot = offsetFromPivot;
             PivotPosition = pivotPosition;

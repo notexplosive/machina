@@ -82,12 +82,7 @@ namespace Machina.Components
 
             foreach (var line in measurer.Lines)
             {
-                var pivotPos = worldPos;
-                var offset = new Vector2(line.AdjustedX, line.nonAdjustedY + measurer.UsedRectPosition().Y) + drawOffset.ToVector2() -
-                          pivotPos;
-                offset.Floor();
-
-                renderableTexts.Add(new RenderableText(fontMetrics, line.textContent, pivotPos, textColor, -offset, angle, depth));
+                renderableTexts.Add(new RenderableText(fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, measurer.UsedRectPosition().Y));
             }
 
             return renderableTexts;
