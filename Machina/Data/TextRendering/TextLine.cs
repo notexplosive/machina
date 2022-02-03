@@ -7,12 +7,10 @@ namespace Machina.Data.TextRendering
         public readonly string textContent;
         public readonly int nonAdjustedX;
         public readonly int nonAdjustedY;
-        private readonly Rectangle bounds;
 
-        public TextLine(string content, IFontMetrics fontMetrics, Rectangle bounds, int positionY,
+        public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
-            this.bounds = bounds;
             this.textContent = content;
             this.nonAdjustedY = positionY;
 
@@ -22,12 +20,12 @@ namespace Machina.Data.TextRendering
             }
             else if (horizontalAlignment == HorizontalAlignment.Right)
             {
-                var widthOffset = bounds.Width - (int)fontMetrics.MeasureString(content).X + 1;
+                var widthOffset = availableSpace.X - (int)fontMetrics.MeasureString(content).X + 1;
                 this.nonAdjustedX = widthOffset;
             }
             else
             {
-                var widthOffset = bounds.Width - (int)fontMetrics.MeasureString(content).X / 2 + 1 - bounds.Width / 2;
+                var widthOffset = availableSpace.X - (int)fontMetrics.MeasureString(content).X / 2 + 1 - availableSpace.X / 2;
                 this.nonAdjustedX = widthOffset;
             }
 

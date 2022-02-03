@@ -24,7 +24,7 @@ namespace TestMachina.Tests
             textMeasurer.Lines.Should().HaveCount(1);
 
             var expectedX = 89;
-            textMeasurer.Lines[0].AdjustedX.Should().Be(expectedX);
+            textMeasurer.Lines[0].nonAdjustedX.Should().Be(expectedX);
             var localTextPos = textMeasurer.UsedRectPosition();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }

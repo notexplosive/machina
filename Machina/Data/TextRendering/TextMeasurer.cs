@@ -135,7 +135,7 @@ namespace Machina.Data.TextRendering
 
         private void AddCurrentLineInBuffer()
         {
-            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect,
+            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect.Size,
                 this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
