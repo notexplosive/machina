@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public struct TextLines : IEnumerable<TextLine>
+    public readonly struct TextLines : IEnumerable<TextLine>
     {
         private readonly Rectangle totalAvailableRect;
         private readonly Alignment alignment;
@@ -14,9 +14,9 @@ namespace Machina.Data.TextRendering
         private readonly string[] words;
         private readonly StringBuilder stringBuilder;
         private readonly List<TextLine> textLines;
-        private TextLinesPendingInfo pendingInfo;
+        private readonly TextLinesPendingInfo pendingInfo;
 
-        private struct TextLinesPendingInfo
+        private class TextLinesPendingInfo
         {
             public float widthOfCurrentLine;
             public int currentWordIndex;
