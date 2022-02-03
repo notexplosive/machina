@@ -123,7 +123,7 @@ namespace Machina.Data.TextRendering
         private void AddNextTextLine()
         {
             this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect,
-                this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
+                this.totalAvailableRect.Y + this.currentY + GetTextLocalPos().Y, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
 

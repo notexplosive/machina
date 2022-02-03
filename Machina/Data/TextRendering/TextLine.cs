@@ -6,14 +6,14 @@ namespace Machina.Data.TextRendering
     {
         public readonly string textContent;
         public readonly int adjustedX;
-        public readonly int nonAdjustedY;
+        public readonly int adjustedY;
 
         public TextLine(string content, IFontMetrics fontMetrics, Rectangle bounds, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
             this.textContent = content;
             this.adjustedX = 0;
-            this.nonAdjustedY = positionY;
+            this.adjustedY = positionY;
 
             if (horizontalAlignment == HorizontalAlignment.Left)
             {
