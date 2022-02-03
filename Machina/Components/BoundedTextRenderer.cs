@@ -84,7 +84,7 @@ namespace Machina.Components
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = worldPos;
-                var offset = new Vector2(line.adjustedX, line.adjustedY) + drawOffset.ToVector2() -
+                var offset = new Vector2(line.position.X, line.position.Y) + drawOffset.ToVector2() -
                           pivotPos;
                 offset.Floor();
 
@@ -101,7 +101,7 @@ namespace Machina.Components
             spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.adjustedX, line.adjustedY);
+                var pos = new Vector2(line.position.X, line.position.Y);
                 spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
                 spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange);
                 spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);
