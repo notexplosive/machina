@@ -159,7 +159,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Bottom,
                 Overflow.Elide);
 
-            var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0, rectX);
+            var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0);
 
             renderedLines.Should().HaveCount(3);
 

@@ -64,7 +64,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedLines(transform.Position, DrawOffset, TextColor, transform.Angle, transform.Depth + this.depthOffset, this.boundingRect.Rect.X);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedLines(transform.Position, DrawOffset, TextColor, transform.Angle, transform.Depth + this.depthOffset);
 
             foreach (var renderableText in renderableTexts)
             {
