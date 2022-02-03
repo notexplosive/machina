@@ -181,6 +181,19 @@ namespace Machina.Data.TextRendering
         public Point UsedRectPosition()
         {
             var boundsHeight = this.totalAvailableRect.Height;
+            int yOffset = TopOfText(boundsHeight);
+            var xOffset = 0;
+            foreach (var line in Lines)
+            {
+                xOffset = line.positionRelativeToTopOfText.X;
+                break;
+            }
+
+            return new Point(xOffset, yOffset);
+        }
+
+        public int TopOfText(int boundsHeight)
+        {
             var yOffset = 0;
             if (this.verticalAlignment == VerticalAlignment.Center)
             {
@@ -191,14 +204,7 @@ namespace Machina.Data.TextRendering
                 yOffset = boundsHeight - this.fontMetrics.LineSpacing * Lines.Count;
             }
 
-            var xOffset = 0;
-            foreach (var line in Lines)
-            {
-                xOffset = line.positionRelativeToTopOfText.X;
-                break;
-            }
-
-            return new Point(xOffset, yOffset);
+            return yOffset;
         }
     }
 }
