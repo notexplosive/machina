@@ -1,5 +1,6 @@
 ﻿using Machina.Components;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -190,10 +191,19 @@ namespace Machina.Data.TextRendering
         private int LeftOfText()
         {
             var xOffset = 0;
+            var hasFirstOffset = false;
             foreach (var line in Lines)
             {
-                xOffset = line.positionRelativeToTopOfText.X;
-                break;
+                var lineRelativePositionX = line.positionRelativeToTopOfText.X;
+                if (!hasFirstOffset)
+                {
+                    xOffset = lineRelativePositionX;
+                    hasFirstOffset = true;
+                }
+                else
+                {
+                    xOffset = Math.Min(line.positionRelativeToTopOfText.X, xOffset);
+                }
             }
 
             return xOffset;

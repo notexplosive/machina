@@ -129,7 +129,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.UsedRectPosition().Should().Be(new Point(34, 97));
+            textMeasurer.UsedRectPosition().Should().Be(new Point(14, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("Short top string ");
