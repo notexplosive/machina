@@ -80,7 +80,6 @@ namespace Machina.Components
         {
             var renderableTexts = new List<RenderableText>();
 
-            var localPos = measurer.UsedRectPosition();
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = worldPos;
