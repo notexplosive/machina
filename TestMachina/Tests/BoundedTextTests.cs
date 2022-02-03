@@ -46,15 +46,15 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].AdjustedX.Should().Be(7);
+            textMeasurer.Lines[0].nonAdjustedX.Should().Be(7);
             textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].AdjustedX.Should().Be(8);
+            textMeasurer.Lines[1].nonAdjustedX.Should().Be(8);
             textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].AdjustedX.Should().Be(23);
+            textMeasurer.Lines[2].nonAdjustedX.Should().Be(23);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
 
@@ -75,15 +75,15 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].AdjustedX.Should().Be(0);
+            textMeasurer.Lines[0].nonAdjustedX.Should().Be(0);
             textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].AdjustedX.Should().Be(0);
+            textMeasurer.Lines[1].nonAdjustedX.Should().Be(0);
             textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].AdjustedX.Should().Be(0);
+            textMeasurer.Lines[2].nonAdjustedX.Should().Be(0);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
 
@@ -104,15 +104,15 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].AdjustedX.Should().Be(13);
+            textMeasurer.Lines[0].nonAdjustedX.Should().Be(13);
             textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].AdjustedX.Should().Be(15);
+            textMeasurer.Lines[1].nonAdjustedX.Should().Be(15);
             textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].AdjustedX.Should().Be(45);
+            textMeasurer.Lines[2].nonAdjustedX.Should().Be(45);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
 
@@ -133,15 +133,15 @@ namespace TestMachina.Tests
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("Short top string ");
-            textMeasurer.Lines[0].AdjustedX.Should().Be(34);
+            textMeasurer.Lines[0].nonAdjustedX.Should().Be(34);
             textMeasurer.Lines[0].nonAdjustedY.Should().Be(0);
 
             textMeasurer.Lines[1].textContent.Should().Be("looooooooooong.... middle.... string ");
-            textMeasurer.Lines[1].AdjustedX.Should().Be(14);
+            textMeasurer.Lines[1].nonAdjustedX.Should().Be(14);
             textMeasurer.Lines[1].nonAdjustedY.Should().Be(3);
 
             textMeasurer.Lines[2].textContent.Should().Be("short bottom ");
-            textMeasurer.Lines[2].AdjustedX.Should().Be(38);
+            textMeasurer.Lines[2].nonAdjustedX.Should().Be(38);
             textMeasurer.Lines[2].nonAdjustedY.Should().Be(6);
         }
 
