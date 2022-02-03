@@ -89,7 +89,7 @@ namespace Machina.Data.TextRendering
 
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, TopLeftOfText().Y + this.totalAvailableRect.Y, this.totalAvailableRect.X));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, TopOfText() + this.totalAvailableRect.Y, this.totalAvailableRect.X));
             }
 
             return renderableTexts;
