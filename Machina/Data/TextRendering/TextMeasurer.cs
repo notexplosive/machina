@@ -88,7 +88,7 @@ namespace Machina.Data.TextRendering
 
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, UsedRectPosition().Y, xAdjustment));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, UsedRectPosition().Y + this.totalAvailableRect.Y, xAdjustment));
             }
 
             return renderableTexts;
@@ -135,8 +135,7 @@ namespace Machina.Data.TextRendering
 
         private void AddCurrentLineInBuffer()
         {
-            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect.Size,
-                this.totalAvailableRect.Y + this.currentY, this.horizontalAlignment));
+            this.textLines.Add(new TextLine(this.stringBuilder.ToString(), this.fontMetrics, this.totalAvailableRect.Size, this.currentY, this.horizontalAlignment));
             this.stringBuilder.Clear();
         }
 
