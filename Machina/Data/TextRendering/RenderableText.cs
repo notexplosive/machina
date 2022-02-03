@@ -1,10 +1,10 @@
-﻿using Machina.Data;
-using Machina.Data.TextRendering;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Machina.Components
+namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
@@ -53,4 +53,5 @@ namespace Machina.Components
             spriteBatch.DrawString(GetFont(), Content, PivotPosition, finalDropShadowColor, Angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, Depth + 1);
         }
     }
+
 }
