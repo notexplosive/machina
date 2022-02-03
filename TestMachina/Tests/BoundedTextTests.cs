@@ -146,15 +146,14 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        public void pinning_test_for_renderable_text()
+        public void pinning_test_for_renderable_text_where_position_is_top_left_of_rect()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
-            var rectX = 350;
 
             var textMeasurer = new TextMeasurer(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
-                new Rectangle(new Point(rectX, 250), new Point(100, 200)),
+                new Rectangle(new Point(350, 250), new Point(100, 200)),
                 HorizontalAlignment.Right,
                 VerticalAlignment.Bottom,
                 Overflow.Elide);
@@ -171,6 +170,34 @@ namespace TestMachina.Tests
 
             renderedLines[2].PivotPosition.Should().Be(new Vector2(350, 250));
             renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(-40, -197));
+        }
+
+        [Fact]
+        public void pinning_test_for_renderable_text_where_position_is_center_of_rect()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
+            var rect = new Rectangle(new Point(350, 250), new Point(100, 200));
+
+            var textMeasurer = new TextMeasurer(
+                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
+                fontMetrics,
+                rect,
+                HorizontalAlignment.Right,
+                VerticalAlignment.Bottom,
+                Overflow.Elide);
+
+            var renderedLines = textMeasurer.GetRenderedLines(rect.Center.ToVector2(), new Point(-5, 0), Color.Red, 0f, 0);
+
+            renderedLines.Should().HaveCount(3);
+
+            renderedLines[0].PivotPosition.Should().Be(new Vector2(400, 350));
+            renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(42, -91));
+
+            renderedLines[1].PivotPosition.Should().Be(new Vector2(400, 350));
+            renderedLines[1].OffsetFromPivot.Should().Be(new Vector2(40, -94));
+
+            renderedLines[2].PivotPosition.Should().Be(new Vector2(400, 350));
+            renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(10, -97));
         }
     }
 }
