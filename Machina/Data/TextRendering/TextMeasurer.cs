@@ -8,7 +8,6 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextMeasurer
     {
-        private readonly VerticalAlignment verticalAlignment;
         private readonly IFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
 
@@ -19,7 +18,6 @@ namespace Machina.Data.TextRendering
         {
             this.fontMetrics = font;
             this.totalAvailableRect = rect;
-            this.verticalAlignment = verticalAlignment;
             Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, new Alignment(horizontalAlignment, verticalAlignment), overflow);
         }
 
