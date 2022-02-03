@@ -12,7 +12,7 @@ namespace Machina.Data.TextRendering
         private readonly IFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
 
-        public TextLines Lines { get; }
+        public AssembledTextLines Lines { get; }
 
         public TextMeasurer(string text, IFontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment, Overflow overflow)
@@ -20,7 +20,7 @@ namespace Machina.Data.TextRendering
             this.fontMetrics = font;
             this.totalAvailableRect = rect;
             this.verticalAlignment = verticalAlignment;
-            Lines = new TextLines(text, font, totalAvailableRect, new Alignment(horizontalAlignment, verticalAlignment), overflow);
+            Lines = new AssembledTextLines(text, font, totalAvailableRect, new Alignment(horizontalAlignment, verticalAlignment), overflow);
         }
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct TextLines : IEnumerable<TextLine>
+    public readonly struct AssembledTextLines : IEnumerable<TextLine>
     {
         private readonly Rectangle totalAvailableRect;
         private readonly Alignment alignment;
@@ -25,7 +25,7 @@ namespace Machina.Data.TextRendering
 
         public int Count => this.textLines.Count;
 
-        public TextLines(string text, IFontMetrics fontMetrics, Rectangle totalAvailableRect, Alignment alignment, Overflow overflow)
+        public AssembledTextLines(string text, IFontMetrics fontMetrics, Rectangle totalAvailableRect, Alignment alignment, Overflow overflow)
         {
             this.stringBuilder = new StringBuilder();
             this.textLines = new List<TextLine>();
