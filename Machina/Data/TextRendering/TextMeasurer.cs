@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Components;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Text;
 
@@ -79,6 +80,18 @@ namespace Machina.Data.TextRendering
             {
                 AddCurrentLineInBuffer();
             }
+        }
+
+        public static List<RenderableText> GetRenderedLines(TextMeasurer measurer, Vector2 worldPos, Point drawOffset, IFontMetrics fontMetrics, Color textColor, float angle, Depth depth)
+        {
+            var renderableTexts = new List<RenderableText>();
+
+            foreach (var line in measurer.Lines)
+            {
+                renderableTexts.Add(new RenderableText(fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, measurer.UsedRectPosition().Y));
+            }
+
+            return renderableTexts;
         }
 
         private bool HasRoomForNextWordOnCurrentLine()
