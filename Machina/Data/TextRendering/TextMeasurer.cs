@@ -82,13 +82,13 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, IFontMetrics fontMetrics, Color textColor, float angle, Depth depth)
+        public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
         {
             var renderableTexts = new List<RenderableText>();
 
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, UsedRectPosition().Y));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, UsedRectPosition().Y));
             }
 
             return renderableTexts;
