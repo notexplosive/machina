@@ -32,7 +32,5 @@ namespace Machina.Data.TextRendering
             }
 
         }
-
-        public int AdjustedX => nonAdjustedX + this.bounds.Location.X;
     }
 }
