@@ -166,7 +166,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public Point GetTextLocalPos()
+        public Point UsedRectPosition()
         {
             var boundsHeight = this.totalAvailableRect.Height;
             var yOffset = 0;

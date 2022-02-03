@@ -51,7 +51,7 @@ namespace Machina.Components
 
         public Point DrawOffset { get; set; }
 
-        public Point TextLocalPos => CreateMeasuredText().GetTextLocalPos();
+        public Point TextLocalPos => CreateMeasuredText().UsedRectPosition();
 
         public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
@@ -80,11 +80,11 @@ namespace Machina.Components
         {
             var renderableTexts = new List<RenderableText>();
 
-            var localPos = measurer.GetTextLocalPos();
+            var localPos = measurer.UsedRectPosition();
             foreach (var line in measurer.Lines)
             {
                 var pivotPos = worldPos;
-                var offset = new Vector2(line.position.X, line.position.Y + measurer.GetTextLocalPos().Y) + drawOffset.ToVector2() -
+                var offset = new Vector2(line.position.X, line.position.Y + measurer.UsedRectPosition().Y) + drawOffset.ToVector2() -
                           pivotPos;
                 offset.Floor();
 
@@ -97,11 +97,11 @@ namespace Machina.Components
         public override void DebugDraw(SpriteBatch spriteBatch)
         {
             var measurer = CreateMeasuredText();
-            var localPos = measurer.GetTextLocalPos();
+            var localPos = measurer.UsedRectPosition();
             spriteBatch.DrawCircle(new CircleF(localPos, 5f), 10, Color.Teal, 5f);
             foreach (var line in measurer.Lines)
             {
-                var pos = new Vector2(line.position.X, line.position.Y + measurer.GetTextLocalPos().Y);
+                var pos = new Vector2(line.position.X, line.position.Y + measurer.UsedRectPosition().Y);
                 spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
                 spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange);
                 spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);

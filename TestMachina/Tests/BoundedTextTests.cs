@@ -25,7 +25,7 @@ namespace TestMachina.Tests
 
             var expectedX = 89;
             textMeasurer.Lines[0].position.X.Should().Be(expectedX);
-            var localTextPos = textMeasurer.GetTextLocalPos();
+            var localTextPos = textMeasurer.UsedRectPosition();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
 
@@ -42,7 +42,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.GetTextLocalPos().Should().Be(new Point(7, 97));
+            textMeasurer.UsedRectPosition().Should().Be(new Point(7, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
