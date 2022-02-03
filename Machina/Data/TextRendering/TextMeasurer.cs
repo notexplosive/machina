@@ -194,7 +194,7 @@ namespace Machina.Data.TextRendering
             var xOffset = 0;
             foreach (var line in Lines)
             {
-                xOffset = line.nonAdjusted.X;
+                xOffset = line.positionRelativeToTopOfText.X;
                 break;
             }
 
