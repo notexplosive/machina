@@ -22,9 +22,6 @@ namespace Machina.Data.TextRendering
             this.totalAvailableRect = rect;
             this.alignment = new Alignment(horizontalAlignment, verticalAlignment);
             Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, this.alignment, overflow);
-
-
-
         }
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
