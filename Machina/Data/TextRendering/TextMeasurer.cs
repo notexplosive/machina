@@ -50,11 +50,16 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, bakedLayout.GetNode($"line {lineIndex}")));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetLineLayoutNode(lineIndex)));
                 lineIndex++;
             }
 
             return renderableTexts;
+        }
+
+        private NodePositionAndSize GetLineLayoutNode(int lineIndex)
+        {
+            return bakedLayout.GetNode($"line {lineIndex}");
         }
 
         public Point TopLeftOfText()
