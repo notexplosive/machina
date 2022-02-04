@@ -8,6 +8,7 @@ namespace Machina.Data.TextRendering
         public string TextContent { get; }
         public Point PositionRelativeToTopLeftOfRect { get; }
         public Point ContentSize { get; }
+        public LayoutNode LayoutNode { get; }
 
         public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, int positionY,
             HorizontalAlignment horizontalAlignment)
@@ -18,12 +19,12 @@ namespace Machina.Data.TextRendering
 
             var effectiveWidth = (int)fontMetrics.MeasureString(content).X;
 
-            var layout = LayoutNode.HorizontalParent("textLineParent", LayoutSize.Pixels(availableSpace), new LayoutStyle(alignment: new Alignment(horizontalAlignment)),
+            LayoutNode = LayoutNode.HorizontalParent("textLineParent", LayoutSize.Pixels(availableSpace), new LayoutStyle(alignment: new Alignment(horizontalAlignment)),
                 LayoutNode.Leaf("textLineContent", LayoutSize.Pixels(effectiveWidth, fontMetrics.LineSpacing))
             );
 
 
-            var bakedLayout = layout.Bake();
+            var bakedLayout = LayoutNode.Bake();
             relativePosition.X = bakedLayout.GetNode("textLineContent").PositionRelativeToRoot.X;
 
             PositionRelativeToTopLeftOfRect = relativePosition;
