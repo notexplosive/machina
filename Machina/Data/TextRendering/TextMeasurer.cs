@@ -37,7 +37,9 @@ namespace Machina.Data.TextRendering
 
             foreach (var line in Lines)
             {
-                childNodes.Add(LayoutNode.Leaf($"line {lineIndex}", LayoutSize.Pixels(line.ContentSize)));
+                childNodes.Add(
+                    line.CreateLayoutNode($"line {lineIndex}")
+                );
                 lineIndex++;
             }
 

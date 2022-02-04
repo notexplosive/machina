@@ -8,12 +8,19 @@ namespace Machina.Data.TextRendering
         public string TextContent { get; }
         public Point PositionRelativeToTopLeftOfRect { get; }
         public Point ContentSize { get; }
+
+        private readonly Point availableSpace;
+        private readonly HorizontalAlignment horizontalAlignment;
+
         public LayoutNode LayoutNode { get; }
 
         public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
             TextContent = content;
+            this.availableSpace = availableSpace;
+            this.horizontalAlignment = horizontalAlignment;
+
             var relativePosition = Point.Zero;
             relativePosition.Y = positionY;
 
@@ -28,7 +35,14 @@ namespace Machina.Data.TextRendering
             relativePosition.X = bakedLayout.GetNode("textLineContent").PositionRelativeToRoot.X;
 
             PositionRelativeToTopLeftOfRect = relativePosition;
-            ContentSize = bakedLayout.GetNode("textLineContent").Size;
+            ContentSize = bakedLayout.GetNode("textLineContent").Size; // this could be just new Point(effectiveWidth, fontMetrics.LineSpacing);
+        }
+
+        public LayoutNode CreateLayoutNode(string name)
+        {
+            return LayoutNode.HorizontalParent($"{name} parent", LayoutSize.Pixels(availableSpace.X, ContentSize.Y), new LayoutStyle(alignment: new Alignment(horizontalAlignment)),
+                LayoutNode.Leaf(name, LayoutSize.Pixels(ContentSize))
+            );
         }
     }
 }
