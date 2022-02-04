@@ -76,19 +76,6 @@ namespace Machina.Components
             }
         }
 
-        public override void DebugDraw(SpriteBatch spriteBatch)
-        {
-            var measurer = CreateMeasuredText();
-            spriteBatch.DrawCircle(new CircleF(measurer.TopLeftOfText(), 5f), 10, Color.Teal, 5f);
-            foreach (var line in measurer.Lines)
-            {
-                var pos = new Vector2(line.positionRelativeToTopLeftOfRect.X + this.boundingRect.Rect.X, line.positionRelativeToTopLeftOfRect.Y + measurer.Lines.TopOfText + this.boundingRect.Rect.Y);
-                spriteBatch.DrawCircle(new CircleF(pos, 5), 10, Color.Red, 5f);
-                spriteBatch.DrawLine(pos, pos + DrawOffset.ToVector2(), Color.Orange);
-                spriteBatch.DrawCircle(new CircleF(pos + DrawOffset.ToVector2(), 5), 10, Color.Orange, 5f);
-            }
-        }
-
         public BoundedTextRenderer EnableDropShadow(Color color)
         {
             this.dropShadowColor = color;
