@@ -24,7 +24,7 @@ namespace TestMachina.Tests
             textMeasurer.Lines.Should().HaveCount(1);
 
             var expectedX = 88;
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.X.Should().Be(expectedX);
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.X.Should().Be(expectedX);
             var localTextPos = textMeasurer.TopLeftOfText();
             localTextPos.Should().Be(new Point(expectedX, 99));
         }
@@ -45,17 +45,17 @@ namespace TestMachina.Tests
             textMeasurer.TopLeftOfText().Should().Be(new Point(6, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
-            textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.X.Should().Be(6);
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.Y.Should().Be(0);
+            textMeasurer.Lines[0].TextContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.X.Should().Be(6);
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.Y.Should().Be(0);
 
-            textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.X.Should().Be(7);
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.Y.Should().Be(3);
+            textMeasurer.Lines[1].TextContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.X.Should().Be(7);
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.Y.Should().Be(3);
 
-            textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.X.Should().Be(22);
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.Y.Should().Be(6);
+            textMeasurer.Lines[2].TextContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.X.Should().Be(22);
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.Y.Should().Be(6);
         }
 
         [Fact]
@@ -74,17 +74,17 @@ namespace TestMachina.Tests
             textMeasurer.TopLeftOfText().Should().Be(new Point(0, 0));
 
             textMeasurer.Lines.Should().HaveCount(3);
-            textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.X.Should().Be(0);
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.Y.Should().Be(0);
+            textMeasurer.Lines[0].TextContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.X.Should().Be(0);
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.Y.Should().Be(0);
 
-            textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.X.Should().Be(0);
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.Y.Should().Be(3);
+            textMeasurer.Lines[1].TextContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.X.Should().Be(0);
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.Y.Should().Be(3);
 
-            textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.X.Should().Be(0);
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.Y.Should().Be(6);
+            textMeasurer.Lines[2].TextContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.X.Should().Be(0);
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.Y.Should().Be(6);
         }
 
         [Fact]
@@ -103,17 +103,17 @@ namespace TestMachina.Tests
             textMeasurer.TopLeftOfText().Should().Be(new Point(12, 191));
 
             textMeasurer.Lines.Should().HaveCount(3);
-            textMeasurer.Lines[0].textContent.Should().Be("This is a very long string. I thought about ");
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.X.Should().Be(12);
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.Y.Should().Be(0);
+            textMeasurer.Lines[0].TextContent.Should().Be("This is a very long string. I thought about ");
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.X.Should().Be(12);
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.Y.Should().Be(0);
 
-            textMeasurer.Lines[1].textContent.Should().Be("referencing some meme here in this string. ");
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.X.Should().Be(14);
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.Y.Should().Be(3);
+            textMeasurer.Lines[1].TextContent.Should().Be("referencing some meme here in this string. ");
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.X.Should().Be(14);
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.Y.Should().Be(3);
 
-            textMeasurer.Lines[2].textContent.Should().Be("But then I changed my mind. ");
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.X.Should().Be(44);
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.Y.Should().Be(6);
+            textMeasurer.Lines[2].TextContent.Should().Be("But then I changed my mind. ");
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.X.Should().Be(44);
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.Y.Should().Be(6);
         }
 
         [Fact]
@@ -132,17 +132,17 @@ namespace TestMachina.Tests
             textMeasurer.TopLeftOfText().Should().Be(new Point(13, 97));
 
             textMeasurer.Lines.Should().HaveCount(3);
-            textMeasurer.Lines[0].textContent.Should().Be("Short top string ");
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.X.Should().Be(33);
-            textMeasurer.Lines[0].positionRelativeToTopLeftOfRect.Y.Should().Be(0);
+            textMeasurer.Lines[0].TextContent.Should().Be("Short top string ");
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.X.Should().Be(33);
+            textMeasurer.Lines[0].PositionRelativeToTopLeftOfRect.Y.Should().Be(0);
 
-            textMeasurer.Lines[1].textContent.Should().Be("looooooooooong.... middle.... string ");
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.X.Should().Be(13);
-            textMeasurer.Lines[1].positionRelativeToTopLeftOfRect.Y.Should().Be(3);
+            textMeasurer.Lines[1].TextContent.Should().Be("looooooooooong.... middle.... string ");
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.X.Should().Be(13);
+            textMeasurer.Lines[1].PositionRelativeToTopLeftOfRect.Y.Should().Be(3);
 
-            textMeasurer.Lines[2].textContent.Should().Be("short bottom ");
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.X.Should().Be(37);
-            textMeasurer.Lines[2].positionRelativeToTopLeftOfRect.Y.Should().Be(6);
+            textMeasurer.Lines[2].TextContent.Should().Be("short bottom ");
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.X.Should().Be(37);
+            textMeasurer.Lines[2].PositionRelativeToTopLeftOfRect.Y.Should().Be(6);
         }
 
         [Fact]
