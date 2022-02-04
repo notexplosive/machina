@@ -57,9 +57,9 @@ namespace Machina.Data.TextRendering
             return renderableTexts;
         }
 
-        private NodePositionAndSize GetLineLayoutNode(int lineIndex)
+        private Rectangle GetLineLayoutNode(int lineIndex)
         {
-            return bakedLayout.GetNode($"line {lineIndex}");
+            return bakedLayout.GetNode($"line {lineIndex}").Rectangle;
         }
 
         public Point TopLeftOfText()
@@ -77,7 +77,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                var lineRelativePositionX = GetLineLayoutNode(lineIndex).PositionRelativeToRoot.X;
+                var lineRelativePositionX = GetLineLayoutNode(lineIndex).Location.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
