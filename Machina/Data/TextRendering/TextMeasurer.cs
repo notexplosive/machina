@@ -57,7 +57,7 @@ namespace Machina.Data.TextRendering
             return renderableTexts;
         }
 
-        private Rectangle GetLineLayoutNode(int lineIndex)
+        public Rectangle GetLineLayoutNode(int lineIndex)
         {
             return bakedLayout.GetNode($"line {lineIndex}").Rectangle;
         }
