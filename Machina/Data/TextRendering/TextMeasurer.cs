@@ -1,4 +1,5 @@
 ﻿using Machina.Components;
+using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Machina.Data.TextRendering
     {
         private readonly IFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
+        private readonly Alignment alignment;
 
         public AssembledTextLines Lines { get; }
 
@@ -18,16 +20,38 @@ namespace Machina.Data.TextRendering
         {
             this.fontMetrics = font;
             this.totalAvailableRect = rect;
-            Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, new Alignment(horizontalAlignment, verticalAlignment), overflow);
+            this.alignment = new Alignment(horizontalAlignment, verticalAlignment);
+            Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, this.alignment, overflow);
+
+
+
         }
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
         {
             var renderableTexts = new List<RenderableText>();
 
+            var lineIndex = 0;
+            var childNodes = new List<LayoutNode>();
+
+
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, new Vector2(this.totalAvailableRect.X, Lines.TopOfText + this.totalAvailableRect.Y)));
+                childNodes.Add(LayoutNode.Leaf($"line {lineIndex}", LayoutSize.Pixels(line.ContentSize)));
+                lineIndex++;
+            }
+
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(this.totalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
+                childNodes.ToArray()
+            );
+
+            var bakedLayout = layout.Bake();
+            lineIndex = 0;
+
+            foreach (var line in Lines)
+            {
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, new Vector2(this.totalAvailableRect.X, this.totalAvailableRect.Y), bakedLayout.GetNode($"line {lineIndex}")));
+                lineIndex++;
             }
 
             return renderableTexts;

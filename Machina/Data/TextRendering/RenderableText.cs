@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Data.Layout;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,12 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, TextLine line, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Vector2 adjustment)
+        public RenderableText(IFontMetrics fontMetrics, TextLine line, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Vector2 adjustment, NodePositionAndSize resultNode)
         {
-            var offsetFromPivot = line.PositionRelativeToTopLeftOfRect.ToVector2() + adjustment + drawOffset.ToVector2() - pivotPosition;
+            var offsetFromPivot = new Vector2(
+                line.PositionRelativeToTopLeftOfRect.X + adjustment.X + drawOffset.X - pivotPosition.X,
+                resultNode.PositionRelativeToRoot.Y + adjustment.Y + drawOffset.Y - pivotPosition.Y
+                );
             offsetFromPivot.Floor();
             offsetFromPivot = -offsetFromPivot;
 
