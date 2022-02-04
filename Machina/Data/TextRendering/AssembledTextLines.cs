@@ -23,7 +23,7 @@ namespace Machina.Data.TextRendering
             public int currentY;
         }
 
-        public int Count => this.textLines.Count;
+        public int LineCount => this.textLines.Count;
 
         public AssembledTextLines(string text, IFontMetrics fontMetrics, Point totalAvailableSpace, Alignment alignment, Overflow overflow)
         {
@@ -57,11 +57,11 @@ namespace Machina.Data.TextRendering
 
             if (alignment.Vertical == VerticalAlignment.Center)
             {
-                TopOfText = boundsHeight / 2 - this.fontMetrics.LineSpacing / 2 * Count;
+                TopOfText = boundsHeight / 2 - this.fontMetrics.LineSpacing / 2 * LineCount;
             }
             else if (alignment.Vertical == VerticalAlignment.Bottom)
             {
-                TopOfText = boundsHeight - this.fontMetrics.LineSpacing * Count;
+                TopOfText = boundsHeight - this.fontMetrics.LineSpacing * LineCount;
             }
         }
 
