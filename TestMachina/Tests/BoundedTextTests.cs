@@ -42,7 +42,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.TopLeftOfText().Should().Be(new Point(6, 97));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(6, 96));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].TextContent.Should().Be("This is a very long string. I thought about ");
@@ -129,7 +129,7 @@ namespace TestMachina.Tests
                 VerticalAlignment.Center,
                 Overflow.Elide);
 
-            textMeasurer.TopLeftOfText().Should().Be(new Point(13, 97));
+            textMeasurer.TopLeftOfText().Should().Be(new Point(13, 96));
 
             textMeasurer.Lines.Should().HaveCount(3);
             textMeasurer.Lines[0].TextContent.Should().Be("Short top string ");
