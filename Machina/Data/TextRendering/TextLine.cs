@@ -11,8 +11,7 @@ namespace Machina.Data.TextRendering
         private readonly Point availableSpace;
         private readonly HorizontalAlignment horizontalAlignment;
 
-        public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, int positionY,
-            HorizontalAlignment horizontalAlignment)
+        public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, HorizontalAlignment horizontalAlignment)
         {
             TextContent = content;
             this.availableSpace = availableSpace;
