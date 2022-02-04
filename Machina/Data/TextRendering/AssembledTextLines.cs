@@ -49,20 +49,8 @@ namespace Machina.Data.TextRendering
 
             this.words = words.ToArray();
             this.pendingInfo = new TextLinesPendingInfo();
-            TopOfText = 0; // TopOfText doesn't have a valid value until Assemble() is done
 
             Assemble(overflow);
-
-            var boundsHeight = this.totalAvailableSpace.Y;
-
-            if (alignment.Vertical == VerticalAlignment.Center)
-            {
-                TopOfText = boundsHeight / 2 - this.fontMetrics.LineSpacing / 2 * LineCount;
-            }
-            else if (alignment.Vertical == VerticalAlignment.Bottom)
-            {
-                TopOfText = boundsHeight - this.fontMetrics.LineSpacing * LineCount;
-            }
         }
 
         private void Assemble(Overflow overflow)
@@ -197,7 +185,5 @@ namespace Machina.Data.TextRendering
         {
             get { return this.textLines[i]; }
         }
-
-        public int TopOfText { get; }
     }
 }
