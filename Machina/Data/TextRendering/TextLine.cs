@@ -6,7 +6,6 @@ namespace Machina.Data.TextRendering
     public readonly struct TextLine
     {
         public string TextContent { get; }
-        public Point PositionRelativeToTopLeftOfRect { get; }
         public Point ContentSize { get; }
 
         private readonly Point availableSpace;
@@ -32,7 +31,6 @@ namespace Machina.Data.TextRendering
             var bakedLayout = layout.Bake();
             relativePosition.X = bakedLayout.GetNode("textLineContent").PositionRelativeToRoot.X;
 
-            PositionRelativeToTopLeftOfRect = relativePosition;
             ContentSize = new Point(effectiveWidth, fontMetrics.LineSpacing);
         }
 
