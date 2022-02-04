@@ -74,9 +74,10 @@ namespace Machina.Data.TextRendering
         {
             var xOffset = 0;
             var hasFirstOffset = false;
+            var lineIndex = 0;
             foreach (var line in Lines)
             {
-                var lineRelativePositionX = line.PositionRelativeToTopLeftOfRect.X;
+                var lineRelativePositionX = GetLineLayoutNode(lineIndex).PositionRelativeToRoot.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
@@ -84,8 +85,10 @@ namespace Machina.Data.TextRendering
                 }
                 else
                 {
-                    xOffset = Math.Min(line.PositionRelativeToTopLeftOfRect.X, xOffset);
+                    xOffset = Math.Min(lineRelativePositionX, xOffset);
                 }
+
+                lineIndex++;
             }
 
             return xOffset;
