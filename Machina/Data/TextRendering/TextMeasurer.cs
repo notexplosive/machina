@@ -50,7 +50,7 @@ namespace Machina.Data.TextRendering
 
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, new Vector2(this.totalAvailableRect.X, this.totalAvailableRect.Y), bakedLayout.GetNode($"line {lineIndex}")));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, bakedLayout.GetNode($"line {lineIndex}")));
                 lineIndex++;
             }
 
