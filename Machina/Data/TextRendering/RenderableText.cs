@@ -11,10 +11,7 @@ namespace Machina.Data.TextRendering
     {
         public RenderableText(IFontMetrics fontMetrics, TextLine line, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Point rectPosition, NodePositionAndSize layoutNodeOfLine)
         {
-            var offsetFromPivot = new Vector2(
-                layoutNodeOfLine.PositionRelativeToRoot.X + rectPosition.X + drawOffset.X - pivotPosition.X,
-                layoutNodeOfLine.PositionRelativeToRoot.Y + rectPosition.Y + drawOffset.Y - pivotPosition.Y
-                );
+            var offsetFromPivot = (layoutNodeOfLine.PositionRelativeToRoot + rectPosition + drawOffset).ToVector2() - pivotPosition;
             offsetFromPivot.Floor();
             offsetFromPivot = -offsetFromPivot;
 
