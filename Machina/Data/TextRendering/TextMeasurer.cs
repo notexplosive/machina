@@ -12,6 +12,7 @@ namespace Machina.Data.TextRendering
         private readonly IFontMetrics fontMetrics;
         private readonly Rectangle totalAvailableRect;
         private readonly Alignment alignment;
+        private readonly BakedLayout bakedLayout;
 
         public AssembledTextLines Lines { get; }
 
@@ -22,11 +23,6 @@ namespace Machina.Data.TextRendering
             this.totalAvailableRect = rect;
             this.alignment = new Alignment(horizontalAlignment, verticalAlignment);
             Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, this.alignment, overflow);
-        }
-
-        public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
-        {
-            var renderableTexts = new List<RenderableText>();
 
             var lineIndex = 0;
             var childNodes = new List<LayoutNode>();
@@ -44,9 +40,14 @@ namespace Machina.Data.TextRendering
                 childNodes.ToArray()
             );
 
-            var bakedLayout = layout.Bake();
-            lineIndex = 0;
+            this.bakedLayout = layout.Bake();
+        }
 
+        public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
+        {
+            var renderableTexts = new List<RenderableText>();
+
+            var lineIndex = 0;
             foreach (var line in Lines)
             {
                 renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, bakedLayout.GetNode($"line {lineIndex}")));
