@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Data.Layout;
+using Microsoft.Xna.Framework;
 
 namespace Machina.Data.TextRendering
 {
@@ -13,21 +14,13 @@ namespace Machina.Data.TextRendering
             this.textContent = content;
             this.positionRelativeToTopLeftOfRect.Y = positionY;
 
-            if (horizontalAlignment == HorizontalAlignment.Left)
-            {
-                this.positionRelativeToTopLeftOfRect.X = 0;
-            }
-            else if (horizontalAlignment == HorizontalAlignment.Right)
-            {
-                var widthOffset = availableSpace.X - (int)fontMetrics.MeasureString(content).X + 1;
-                this.positionRelativeToTopLeftOfRect.X = widthOffset;
-            }
-            else
-            {
-                var widthOffset = availableSpace.X - (int)fontMetrics.MeasureString(content).X / 2 + 1 - availableSpace.X / 2;
-                this.positionRelativeToTopLeftOfRect.X = widthOffset;
-            }
+            var effectiveWidth = (int)fontMetrics.MeasureString(content).X;
 
+            var layout = LayoutNode.HorizontalParent("textLineParent", LayoutSize.Pixels(availableSpace), new LayoutStyle(alignment: new Alignment(horizontalAlignment)),
+                LayoutNode.Leaf("textLineContent", LayoutSize.Pixels(effectiveWidth, fontMetrics.LineSpacing))
+            );
+
+            this.positionRelativeToTopLeftOfRect.X = layout.Bake().GetNode("textLineContent").PositionRelativeToRoot.X;
         }
     }
 }
