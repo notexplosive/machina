@@ -50,21 +50,21 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetLineLayoutNode(lineIndex)));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetRectOfLine(lineIndex)));
                 lineIndex++;
             }
 
             return renderableTexts;
         }
 
-        public Rectangle GetLineLayoutNode(int lineIndex)
+        public Rectangle GetRectOfLine(int lineIndex)
         {
             return bakedLayout.GetNode($"line {lineIndex}").Rectangle;
         }
 
         public Point TopLeftOfText()
         {
-            int yOffset = GetLineLayoutNode(0).Location.Y;
+            int yOffset = GetRectOfLine(0).Location.Y;
             int xOffset = LeftOfText();
 
             return new Point(xOffset, yOffset);
@@ -77,7 +77,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                var lineRelativePositionX = GetLineLayoutNode(lineIndex).Location.X;
+                var lineRelativePositionX = GetRectOfLine(lineIndex).Location.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
