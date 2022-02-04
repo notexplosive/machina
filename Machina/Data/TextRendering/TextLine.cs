@@ -5,14 +5,15 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextLine
     {
-        public readonly string textContent;
-        public readonly Point positionRelativeToTopLeftOfRect;
+        public string textContent { get; }
+        public Point positionRelativeToTopLeftOfRect { get; }
 
         public TextLine(string content, IFontMetrics fontMetrics, Point availableSpace, int positionY,
             HorizontalAlignment horizontalAlignment)
         {
-            this.textContent = content;
-            this.positionRelativeToTopLeftOfRect.Y = positionY;
+            textContent = content;
+            var relativePosition = Point.Zero;
+            relativePosition.Y = positionY;
 
             var effectiveWidth = (int)fontMetrics.MeasureString(content).X;
 
@@ -20,7 +21,9 @@ namespace Machina.Data.TextRendering
                 LayoutNode.Leaf("textLineContent", LayoutSize.Pixels(effectiveWidth, fontMetrics.LineSpacing))
             );
 
-            this.positionRelativeToTopLeftOfRect.X = layout.Bake().GetNode("textLineContent").PositionRelativeToRoot.X;
+            relativePosition.X = layout.Bake().GetNode("textLineContent").PositionRelativeToRoot.X;
+
+            positionRelativeToTopLeftOfRect = relativePosition;
         }
     }
 }
