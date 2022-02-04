@@ -23,8 +23,6 @@ namespace Machina.Data.TextRendering
             public int currentY;
         }
 
-        public int LineCount => this.textLines.Count;
-
         public AssembledTextLines(string text, IFontMetrics fontMetrics, Point totalAvailableSpace, Alignment alignment, Overflow overflow)
         {
             this.stringBuilder = new StringBuilder();
