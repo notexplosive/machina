@@ -19,7 +19,7 @@ namespace Machina.Data.Layout
 
         private static LayoutSize FlexParentSize(Orientation orientation, string name, LayoutStyle style, LayoutNode[] children)
         {
-            var totalPadding = children.Length * style.Padding;
+            var totalPadding = (children.Length - 1) * style.Padding;
             var totalAlongMargin = style.Margin.AxisValue(orientation.ToAxis()) * 2;
             var totalPerpendicularMargin = style.Margin.AxisValue(orientation.Opposite().ToAxis()) * 2;
 
