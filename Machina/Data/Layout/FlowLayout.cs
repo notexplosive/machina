@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Machina.Data.Layout
@@ -66,12 +67,14 @@ namespace Machina.Data.Layout
         }
 
         // Should eventually be called "HorizontalLeftToRightFlowParent"
-        public static LayoutNode FlowParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode FlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNode[] children)
         {
+            var workableAreaStyle = new LayoutStyle(margin: style.Margin);
+
             // "Horizontal"Parent here doesn't matter because we only have one child. It would be nice to have an API where we just say
             // "parent of single thing" where we clarify orientation agnosticism when we guarantee only having one child
             // While we're at it, it sucks that we have to give the node a name, then immediately ask for the node we just named
-            var workableArea = LayoutNode.HorizontalParent("throwAwayParent", size, style, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
+            var workableArea = LayoutNode.HorizontalParent("throwAwayParent", size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
             var rows = new Rows(workableArea.Size.X);
 
             foreach (var child in children)
@@ -87,11 +90,29 @@ namespace Machina.Data.Layout
             }
 
             // again the root node being "Horizontal" doesn't matter
-            return LayoutNode.HorizontalParent(name, size, style,
-                LayoutNode.VerticalParent("rows", LayoutSize.StretchedBoth(), LayoutStyle.Empty,
+            return LayoutNode.HorizontalParent(name, size, workableAreaStyle,
+                LayoutNode.VerticalParent("rows", LayoutSize.StretchedBoth(), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
                 )
             );
+        }
+    }
+
+    public struct FlowLayoutStyle
+    {
+        public static FlowLayoutStyle Empty => new FlowLayoutStyle();
+
+        public int PaddingBetweenRows { get; }
+        public int PaddingBetweenItemsInEachRow { get; }
+        public Alignment Alignment { get; }
+        public Point Margin { get; }
+
+        public FlowLayoutStyle(Point margin = default, int paddingBetweenRows = default, int paddingBetweenItemsInEachRow = default, Alignment alignment = default)
+        {
+            Margin = margin;
+            PaddingBetweenItemsInEachRow = paddingBetweenItemsInEachRow;
+            PaddingBetweenRows = paddingBetweenRows;
+            Alignment = alignment;
         }
     }
 }
