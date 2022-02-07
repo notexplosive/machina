@@ -9,14 +9,14 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, TextLine line, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Point rectPosition, Rectangle layoutNodeOfLine)
+        public RenderableText(IFontMetrics fontMetrics, string text, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Point rectPosition, Rectangle layoutNodeOfLine)
         {
             var offsetFromPivot = (layoutNodeOfLine.Location + rectPosition + drawOffset).ToVector2() - pivotPosition;
             offsetFromPivot.Floor();
             offsetFromPivot = -offsetFromPivot;
 
             FontMetrics = fontMetrics;
-            Content = line.TextContent;
+            Content = text;
             Color = textColor;
             OffsetFromPivot = offsetFromPivot;
             PivotPosition = pivotPosition;

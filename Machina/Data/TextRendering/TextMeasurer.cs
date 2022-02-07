@@ -50,7 +50,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetRectOfLine(lineIndex)));
+                renderableTexts.Add(new RenderableText(this.fontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetRectOfLine(lineIndex)));
                 lineIndex++;
             }
 
