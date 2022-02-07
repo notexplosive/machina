@@ -9,10 +9,10 @@ using Xunit;
 
 namespace TestMachina.Tests
 {
+    [UseReporter(typeof(DiffReporter))]
     public class LayoutNodeTests
     {
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty,
@@ -27,7 +27,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(new Point(10, 5), 0),
@@ -42,7 +41,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_padding()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(Point.Zero, 5),
@@ -57,7 +55,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void linear_layout_test_with_margin_and_padding()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), new LayoutStyle(padding: 5, margin: new Point(3, 6)),
@@ -72,7 +69,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void nested_layout_test()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 100), LayoutStyle.Empty,
@@ -95,7 +91,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void resize_and_rebake_test()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 50), LayoutStyle.Empty,
@@ -145,7 +140,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void spacer_test()
         {
             var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(50, 20), LayoutStyle.Empty,
@@ -160,7 +154,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void vertical_stretch_test()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), LayoutStyle.Empty,
@@ -181,7 +174,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void create_window_test()
         {
             var headerHeight = 8;
@@ -201,7 +193,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void fixed_aspect_no_spacers()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(36, 64), LayoutStyle.Empty,
@@ -224,7 +215,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void fixed_aspect_with_spacers()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), LayoutStyle.Empty,
@@ -243,7 +233,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void fixed_aspect_with_alignment()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(50, 80), new LayoutStyle(alignment: Alignment.Center),
@@ -258,7 +247,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void all_alignment_scenarios_single_object()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(20, 20), new LayoutStyle(margin: new Point(3, 1), padding: 2, Alignment.TopLeft),
@@ -299,7 +287,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void all_alignment_scenarios_multiple_objects_vertical()
         {
             var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(20, 20), new LayoutStyle(margin: new Point(3, 1), padding: 2, Alignment.TopLeft),
@@ -341,7 +328,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void all_alignment_scenarios_multiple_objects_horizontal()
         {
             var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(20, 20), new LayoutStyle(margin: new Point(3, 1), padding: 2, Alignment.TopLeft),
@@ -383,7 +369,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        [UseReporter(typeof(DiffReporter))]
         public void does_not_stretch_evenly()
         {
             var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(20, 5), new LayoutStyle(margin: new Point(1, 1), padding: 1, Alignment.TopLeft),
