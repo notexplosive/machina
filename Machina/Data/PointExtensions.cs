@@ -4,6 +4,18 @@ namespace Machina.Data
 {
     public static class PointExtensions
     {
+        public static Point WithJustAxisValue(this Point point, Axis axis)
+        {
+            if (axis == Axis.X)
+            {
+                return new Point(point.X, 0);
+            }
+            else
+            {
+                return new Point(0, point.Y);
+            }
+        }
+
         public static int AxisValue(this Point point, Axis axis)
         {
             if (axis == Axis.X)

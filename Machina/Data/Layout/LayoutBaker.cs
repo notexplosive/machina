@@ -57,14 +57,16 @@ namespace Machina.Data.Layout
 
         private void PlaceAndBakeMeasuredElements(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int currentNestingLevel)
         {
+            var parentSize = this.measurer.GetMeasuredSize(parentNode.Size);
             var nextPosition = parentNodeLocation
-                + parentNode.Alignment.GetRelativePositionOfElement(this.measurer.GetMeasuredSize(parentNode.Size), CalculateTotalUsedSpace(parentNode))
+                + parentNode.Alignment.GetRelativePositionOfElement(parentSize, CalculateTotalUsedSpace(parentNode))
                 + parentNode.Alignment.AddPostionDeltaFromMargin(parentNode.Margin)
                 ;
 
             foreach (var child in parentNode.Children)
             {
-                var childPosition = nextPosition;
+                var alignmentOffset = parentNode.Alignment.GetRelativePositionOfElement(CalculateTotalUsedSpace(parentNode), this.measurer.GetMeasuredSize(child.Size)).WithJustAxisValue(parentNode.Orientation.Opposite().ToAxis());
+                var childPosition = nextPosition + alignmentOffset;
                 AddNodeToLayout(inProgressLayout, childPosition, child, currentNestingLevel);
 
                 nextPosition += parentNode.Orientation.GetPointForAlongAxis(this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation) + parentNode.Padding);

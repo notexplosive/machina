@@ -399,5 +399,50 @@ namespace TestMachina.Tests
 
             threw.Should().BeTrue();
         }
+
+        [Fact]
+        public void alignment_with_varied_height_things_bottom()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(68, 20), new LayoutStyle(padding: 3, alignment: Alignment.BottomCenter),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 8))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
+        [Fact]
+        public void alignment_with_varied_height_things_centered()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(68, 20), new LayoutStyle(padding: 3, alignment: Alignment.Center),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 8))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
+        [Fact]
+        public void alignment_with_varied_height_things_top_right()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(68, 20), new LayoutStyle(padding: 3, alignment: Alignment.TopRight),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 8))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
     }
 }
