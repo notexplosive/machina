@@ -92,7 +92,22 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
-        // TODO: Horizontal alignment aligns individual rows
+        [Fact]
+        public void flow_layout_supports_horizontal_alignment_center()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 30), new FlowLayoutStyle(alignment: Alignment.Center),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Padding between individual items
         // TODO: Varied heights of elements
         // TODO: Overflow
