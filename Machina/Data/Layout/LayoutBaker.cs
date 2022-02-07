@@ -30,15 +30,15 @@ namespace Machina.Data.Layout
             }
 
             var bakedLayout = new BakedLayout(this.rootNode);
-            BakeAtLocation(bakedLayout, Point.Zero);
+            BakeAtLocation(bakedLayout);
             return bakedLayout;
         }
 
-        public void BakeAtLocation(BakedLayout inProgressLayout, Point startingLocation)
+        public void BakeAtLocation(BakedLayout inProgressLayout)
         {
             int nestingLevel = 0;
-            AddNodeToLayout(inProgressLayout, startingLocation, this.rootNode, nestingLevel);
-            BakeGroup(inProgressLayout, this.rootNode, startingLocation, nestingLevel);
+            AddNodeToLayout(inProgressLayout, Point.Zero, this.rootNode, nestingLevel);
+            BakeGroup(inProgressLayout, this.rootNode, Point.Zero, nestingLevel);
         }
 
         private void BakeGroup(BakedLayout inProgressLayout, LayoutNode parentNode, Point parentNodeLocation, int parentNestingLevel)
@@ -141,7 +141,7 @@ namespace Machina.Data.Layout
             if (stretchAlongCount > 0)
             {
                 var alongSizeOfEachStretchedChild = remainingAlongSize / stretchAlongCount;
-                var fractionalLossIncrement = (float) remainingAlongSize / stretchAlongCount % 1;
+                var fractionalLossIncrement = (float)remainingAlongSize / stretchAlongCount % 1;
                 var fractionalLoss = 0f;
 
                 foreach (var child in parentNode.Children)
@@ -196,13 +196,13 @@ namespace Machina.Data.Layout
                     if (isStretchedAlong)
                     {
                         var alongSize = this.measurer.MeasureEdgeOfNode(child, parentNode.Orientation);
-                        this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int) (alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
+                        this.measurer.Add(child.Size.GetValueFromOrientation(oppositeOrientation), (int)(alongSize * childAspectRatio.AlongOverPerpendicular(oppositeOrientation)));
                     }
 
                     if (isStretchedPerpendicular)
                     {
                         var perpendicularSize = this.measurer.MeasureEdgeOfNode(child, oppositeOrientation);
-                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int) (perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
+                        this.measurer.Add(child.Size.GetValueFromOrientation(parentNode.Orientation), (int)(perpendicularSize * childAspectRatio.AlongOverPerpendicular(parentNode.Orientation)));
                     }
                 }
             }
