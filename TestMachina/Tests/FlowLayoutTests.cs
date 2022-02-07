@@ -75,8 +75,25 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
-        // TODO: Vertical alignment aligns the whole workableArea
+
+        [Fact]
+        public void flow_layout_supports_horizontal_alignment()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 30), new FlowLayoutStyle(alignment: Alignment.CenterRight),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Horizontal alignment aligns individual rows
+        // TODO: Padding between individual items
         // TODO: Varied heights of elements
         // TODO: Overflow
     }

@@ -38,7 +38,7 @@ namespace Machina.Data.Layout
 
                 for (int i = 0; i < Content.Count; i++)
                 {
-                    nodes[i] = Content[i].GetLayoutNode($"row {i}");
+                    nodes[i] = Content[i].GetLayoutNode($"row {i}", Style);
                 }
 
                 return nodes;
@@ -65,9 +65,9 @@ namespace Machina.Data.Layout
                 Content.Add(child);
             }
 
-            public LayoutNode GetLayoutNode(string rowNodeName)
+            public LayoutNode GetLayoutNode(string rowNodeName, FlowLayoutStyle style)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth - RemainingWidth, Height), LayoutStyle.Empty, Content.ToArray());
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth, Height), new LayoutStyle(alignment: style.Alignment), Content.ToArray());
             }
         }
 
@@ -94,7 +94,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-            // again the root node being "Horizontal" doesn't matter
+            // again the root node being "Horizontal" doesn't matter, we really need that "ParentOfSingleThing" static function
             return LayoutNode.HorizontalParent(name, size, workableAreaStyle,
                 LayoutNode.VerticalParent("rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
