@@ -59,5 +59,25 @@ namespace TestMachina.Tests
 
             result.Should().ContainInOrder(subject.GetNode("root"), subject.GetNode("a"), subject.GetNode("b"), subject.GetNode("c"));
         }
+
+        [Fact]
+        public void can_obtain_child_nodes_of_particular_node()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(20, 5), new LayoutStyle(margin: new Point(1, 1), padding: 1, Alignment.TopLeft),
+                LayoutNode.HorizontalParent("a", LayoutSize.StretchedBoth(), LayoutStyle.Empty,
+                    LayoutNode.Leaf("a1", LayoutSize.StretchedBoth()),
+                    LayoutNode.Leaf("a2", LayoutSize.StretchedBoth()),
+                    LayoutNode.Leaf("a3", LayoutSize.StretchedBoth()),
+                    LayoutNode.Leaf("a4", LayoutSize.StretchedBoth()),
+                    LayoutNode.Leaf("a5", LayoutSize.StretchedBoth())
+                ),
+                LayoutNode.Leaf("b", LayoutSize.StretchedBoth()),
+                LayoutNode.Leaf("c", LayoutSize.StretchedBoth())
+            );
+
+            var subject = layout.Bake();
+
+            subject.GetDirectChildrenOfNode("a").Should().ContainInOrder(subject.GetNode("a1"), subject.GetNode("a2"), subject.GetNode("a3"), subject.GetNode("a4"), subject.GetNode("a5"));
+        }
     }
 }

@@ -59,5 +59,28 @@ namespace Machina.Data.Layout
         {
             this.content[key] = value;
         }
+
+        public List<BakedLayoutNode> GetDirectChildrenOfNode(string nodeName)
+        {
+            if (!this.content.ContainsKey(nodeName))
+            {
+                throw new Exception($"No node matches name {nodeName}");
+            }
+
+            var result = new List<BakedLayoutNode>();
+
+            var parent = OriginalRoot.FindChildNodeWithName(nodeName);
+
+            foreach (var child in parent.Children)
+            {
+                if (child.Name.Exists)
+                {
+                    result.Add(this.content[child.Name.Text]);
+                }
+            }
+
+
+            return result;
+        }
     }
 }

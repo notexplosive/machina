@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -63,7 +64,27 @@ namespace Machina.Data.Layout
             return new LayoutNode(name, size, Orientation.Horizontal, style, children);
         }
 
-        public readonly LayoutNode[] Children;
+        public LayoutNode FindChildNodeWithName(string targetName)
+        {
+            if (Name.Exists && Name.Text == targetName)
+            {
+                return this;
+            }
+
+            foreach (var child in Children)
+            {
+                var foundChild = child.FindChildNodeWithName(targetName);
+
+                if (foundChild != null)
+                {
+                    return foundChild;
+                }
+            }
+
+            return null;
+        }
+
+        public readonly LayoutNode[] Children = Array.Empty<LayoutNode>();
         private LayoutBaker Baker { get; }
         public bool HasChildren => Children != null;
         public LayoutNodeName Name { get; }
