@@ -30,7 +30,6 @@ namespace Machina.Data.Layout
         public List<BakedLayoutNode> GetAllResultNodesInHierarchyOrder()
         {
             var result = new List<BakedLayoutNode>();
-            result.Add(content[OriginalRoot.Name.Text]);
 
             void AddAndRecurse(LayoutNode node)
             {
