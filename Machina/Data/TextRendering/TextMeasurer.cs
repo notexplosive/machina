@@ -64,10 +64,7 @@ namespace Machina.Data.TextRendering
 
         public Point TopLeftOfText()
         {
-            int yOffset = GetRectOfLine(0).Location.Y;
-            int xOffset = LeftOfText();
-
-            return new Point(xOffset, yOffset);
+            return new Point(LeftOfText(), this.GetRectOfLine(0).Location.Y);
         }
 
         private int LeftOfText()
