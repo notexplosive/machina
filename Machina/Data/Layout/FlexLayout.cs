@@ -14,7 +14,7 @@ namespace Machina.Data.Layout
 
         public static LayoutNode VerticalFlexParent(string name, LayoutStyle style, params LayoutNode[] children)
         {
-            return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Vertical, name, style, children), style, children);
+            return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, name, style, children), style, children);
         }
 
         private static LayoutSize FlexParentSize(Orientation orientation, string name, LayoutStyle style, LayoutNode[] children)
