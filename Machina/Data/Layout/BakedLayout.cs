@@ -7,7 +7,7 @@ namespace Machina.Data.Layout
     public class BakedLayout
     {
 
-        private readonly Dictionary<string, NodePositionAndSize> content = new Dictionary<string, NodePositionAndSize>();
+        private readonly Dictionary<string, BakedLayoutNode> content = new Dictionary<string, BakedLayoutNode>();
         public LayoutNode OriginalRoot { get; }
 
         public BakedLayout(LayoutNode originalRoot)
@@ -15,21 +15,21 @@ namespace Machina.Data.Layout
             OriginalRoot = originalRoot;
         }
 
-        public NodePositionAndSize GetNode(string name)
+        public BakedLayoutNode GetNode(string name)
         {
             return content[name];
         }
 
-        public NodePositionAndSize[] GetAllResultNodes()
+        public BakedLayoutNode[] GetAllResultNodes()
         {
-            var result = new NodePositionAndSize[this.content.Values.Count];
+            var result = new BakedLayoutNode[this.content.Values.Count];
             this.content.Values.CopyTo(result, 0);
             return result;
         }
 
-        public List<NodePositionAndSize> GetAllResultNodesInHierarchyOrder()
+        public List<BakedLayoutNode> GetAllResultNodesInHierarchyOrder()
         {
-            var result = new List<NodePositionAndSize>();
+            var result = new List<BakedLayoutNode>();
             result.Add(content[OriginalRoot.Name.Text]);
 
             void AddAndRecurse(LayoutNode node)
@@ -56,7 +56,7 @@ namespace Machina.Data.Layout
             return this.content.Keys;
         }
 
-        public void Add(string key, NodePositionAndSize value)
+        public void Add(string key, BakedLayoutNode value)
         {
             this.content[key] = value;
         }
