@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
+using Machina.Data;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
 using TestMachina.Utility;
@@ -46,6 +47,22 @@ namespace TestMachina.Tests
         public void flow_layout_can_have_padding_between_rows()
         {
             var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(30, 30), new FlowLayoutStyle(paddingBetweenRows: 5),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(10, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
+        [Fact]
+        public void flow_layout_supports_vertical_alignment()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(30, 30), new FlowLayoutStyle(alignment: Alignment.BottomLeft),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(10, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(10, 10)),

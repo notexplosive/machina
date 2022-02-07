@@ -19,9 +19,12 @@ namespace Machina.Data.Layout
             public Row CurrentRow { get; private set; }
             public int DefaultWidth { get; }
             public List<Row> Content { get; } = new List<Row>();
+            public Point UsedSize => new Point(DefaultWidth, TotalHeight + CurrentRow.Height);
+            public int TotalHeight { get; private set; }
 
             public void CreateNextRowAndAdd(LayoutNode child)
             {
+                TotalHeight += CurrentRow.Height;
                 CurrentRow = new Row(DefaultWidth);
                 CurrentRow.AddItem(child);
                 Content.Add(CurrentRow);
@@ -69,7 +72,7 @@ namespace Machina.Data.Layout
         // Should eventually be called "HorizontalLeftToRightFlowParent"
         public static LayoutNode FlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNode[] children)
         {
-            var workableAreaStyle = new LayoutStyle(margin: style.Margin);
+            var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
             // "Horizontal"Parent here doesn't matter because we only have one child. It would be nice to have an API where we just say
             // "parent of single thing" where we clarify orientation agnosticism when we guarantee only having one child
@@ -91,7 +94,7 @@ namespace Machina.Data.Layout
 
             // again the root node being "Horizontal" doesn't matter
             return LayoutNode.HorizontalParent(name, size, workableAreaStyle,
-                LayoutNode.VerticalParent("rows", LayoutSize.StretchedBoth(), new LayoutStyle(padding: style.PaddingBetweenRows),
+                LayoutNode.VerticalParent("rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
                 )
             );
