@@ -46,7 +46,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flow_layout_can_have_padding_between_rows()
         {
-            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(30, 30), new FlowLayoutStyle(paddingBetweenRows: 5),
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(30, 30), new FlowLayoutStyle(paddingBetweenRows: 3),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(10, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(10, 10)),

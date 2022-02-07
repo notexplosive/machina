@@ -8,9 +8,10 @@ namespace Machina.Data.Layout
     {
         private class Rows
         {
-            public Rows(int defaultWidth)
+            public Rows(int defaultWidth, FlowLayoutStyle flowLayoutStyle)
             {
                 DefaultWidth = defaultWidth;
+                Style = flowLayoutStyle;
 
                 CurrentRow = new Row(DefaultWidth);
                 Content.Add(CurrentRow);
@@ -18,8 +19,9 @@ namespace Machina.Data.Layout
 
             public Row CurrentRow { get; private set; }
             public int DefaultWidth { get; }
+            public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(DefaultWidth, TotalHeight + CurrentRow.Height);
+            public Point UsedSize => new Point(DefaultWidth, TotalHeight + CurrentRow.Height + Content.Count * Style.PaddingBetweenRows);
             public int TotalHeight { get; private set; }
 
             public void CreateNextRowAndAdd(LayoutNode child)
@@ -78,7 +80,7 @@ namespace Machina.Data.Layout
             // "parent of single thing" where we clarify orientation agnosticism when we guarantee only having one child
             // While we're at it, it sucks that we have to give the node a name, then immediately ask for the node we just named
             var workableArea = LayoutNode.HorizontalParent("throwAwayParent", size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
-            var rows = new Rows(workableArea.Size.X);
+            var rows = new Rows(workableArea.Size.X, style);
 
             foreach (var child in children)
             {
