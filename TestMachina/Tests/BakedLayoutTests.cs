@@ -22,5 +22,25 @@ namespace TestMachina.Tests
             var acquiredNode = subject.GetNode("b");
             acquiredNode.Size.Should().Be(new Point(5, 3));
         }
+
+        [Fact]
+        public void can_obtain_all_result_nodes()
+        {
+            var layout = LayoutNode.HorizontalParent("root", LayoutSize.Pixels(20, 5), new LayoutStyle(margin: new Point(1, 1), padding: 1, Alignment.TopLeft),
+                LayoutNode.Leaf("a", LayoutSize.StretchedBoth()),
+                LayoutNode.Leaf("b", LayoutSize.StretchedBoth()),
+                LayoutNode.Leaf("c", LayoutSize.StretchedBoth())
+            );
+
+            var subject = layout.Bake();
+
+            var result = subject.GetAllResultNodes();
+            result.Should().HaveCount(4);
+
+            result.Should().Contain(subject.GetNode("root"));
+            result.Should().Contain(subject.GetNode("a"));
+            result.Should().Contain(subject.GetNode("b"));
+            result.Should().Contain(subject.GetNode("c"));
+        }
     }
 }
