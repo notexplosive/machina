@@ -175,8 +175,24 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
+        [Fact]
+        public void flow_layout_cancels_whole_row_on_failure()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.CancelRowOnIllegal),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(8, 12)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(9, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Overflow rules
-        // - Halt on Illegal Item: Instead of emitting an illegal item, halt immediately.
         // - Cancel row on Failure
         // - Finish Row on Illegal Item: Allow the illegal item, finish the row, and then stop adding items.
         // - Halt on Illegal Item and Elide: Instead of emitting an illegal item, emit an "elide" node instead (provided by user)

@@ -1,19 +1,23 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
     public class OverflowRule
     {
-        private OverflowRule(bool haltOnFailure)
+        private OverflowRule(bool haltOnFailure, bool deletesWholeRow)
         {
             HaltImmediatelyUponFailure = haltOnFailure;
+            DeletesWholeRowUponFailure = deletesWholeRow;
         }
 
-        public static OverflowRule PermitExtraRows = new OverflowRule(false);
-        public static OverflowRule HaltOnIllegal = new OverflowRule(true);
+        public static OverflowRule PermitExtraRows = new OverflowRule(false, false);
+        public static OverflowRule HaltOnIllegal = new OverflowRule(true, false);
+        public static OverflowRule CancelRowOnIllegal = new OverflowRule(true, true);
 
         public bool HaltImmediatelyUponFailure { get; }
+        public bool DeletesWholeRowUponFailure { get; }
     }
 
     public static class FlowLayout
@@ -77,12 +81,26 @@ namespace Machina.Data.Layout
 
                 CurrentRow.AddItem(itemToAdd);
 
-                if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize && Style.OverflowRule.HaltImmediatelyUponFailure)
+                if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize)
                 {
-                    IsFull = true;
-                    CurrentRow.PopLastItem();
+                    if (Style.OverflowRule.HaltImmediatelyUponFailure)
+                    {
+                        IsFull = true;
+                        CurrentRow.PopLastItem();
+                    }
+
+                    if (Style.OverflowRule.DeletesWholeRowUponFailure)
+                    {
+                        PopLastRow();
+                    }
                 }
 
+            }
+
+            private void PopLastRow()
+            {
+                Content.RemoveAt(Content.Count - 1);
+                CurrentRow = new Row(AvailableAlongSize, Style);
             }
         }
 
