@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Machina.Data.Layout
 {
@@ -47,12 +48,13 @@ namespace Machina.Data.Layout
                 )
             ))
         {
-            RowNodes = rows.GetLayoutNodesOfEachRow();
+            this.rowNodes = rows.GetLayoutNodesOfEachRow();
+            this.rowUsedSpace = rows.GetUsedSpaceOfEachRow();
         }
 
         public string[] GetItemNamesForRow(int rowIndex)
         {
-            var children = RowNodes[rowIndex].Children;
+            var children = this.rowNodes[rowIndex].Children;
             var result = new string[children.Length];
             for (int i = 0; i < children.Length; i++)
             {
@@ -62,11 +64,18 @@ namespace Machina.Data.Layout
             return result;
         }
 
-        public readonly LayoutNode[] RowNodes;
+        // ew parallel arrays
+        private readonly LayoutNode[] rowNodes;
+        private readonly Point[] rowUsedSpace;
 
         public string GetRowName(int rowIndex)
         {
-            return RowNodes[rowIndex].Name.Text;
+            return this.rowNodes[rowIndex].Name.Text;
+        }
+
+        public Point GetRowUsedSpace(int rowIndex)
+        {
+            return this.rowUsedSpace[rowIndex];
         }
 
         public override BakedFlowLayout Bake()
@@ -74,6 +83,6 @@ namespace Machina.Data.Layout
             return new BakedFlowLayout(DefaultBake(), this);
         }
 
-        public int RowCount => RowNodes.Length;
+        public int RowCount => this.rowNodes.Length;
     }
 }

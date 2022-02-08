@@ -267,7 +267,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flow_layout_can_address_individual_rows()
         {
-            var layout = FlowLayout.VerticalFlowParent("root", LayoutSize.Pixels(25, 40), new FlowLayoutStyle(alignment: Alignment.BottomRight),
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(25, 40), new FlowLayoutStyle(alignment: Alignment.Center),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
                 FlowLayoutInstruction.Linebreak,
@@ -283,9 +283,21 @@ namespace TestMachina.Tests
 
             result.GetRow(0).ItemCount.Should().Be(2);
             result.GetRow(1).ItemCount.Should().Be(1);
-            result.GetRow(2).ItemCount.Should().Be(4);
+            result.GetRow(2).ItemCount.Should().Be(2);
+            result.GetRow(3).ItemCount.Should().Be(2);
 
             result.GetRow(2).GetItemNode(1).Size.Should().Be(new Point(13, 10));
+
+            result.GetRow(0).Node.Rectangle.Should().Be(new Rectangle(new Point(0, 0), new Point(25, 10)));
+            result.GetRow(1).Node.Rectangle.Should().Be(new Rectangle(new Point(0, 10), new Point(25, 10)));
+            result.GetRow(2).Node.Rectangle.Should().Be(new Rectangle(new Point(0, 20), new Point(25, 10)));
+            result.GetRow(3).Node.Rectangle.Should().Be(new Rectangle(new Point(0, 30), new Point(25, 10)));
+
+            result.GetRow(0).UsedRectangle.Should().Be(new Rectangle(new Point(3, 0), new Point(19, 10)));
+            result.GetRow(1).UsedRectangle.Should().Be(new Rectangle(new Point(8, 10), new Point(9, 10)));
+            result.GetRow(2).UsedRectangle.Should().Be(new Rectangle(new Point(1, 20), new Point(23, 10)));
+            result.GetRow(3).UsedRectangle.Should().Be(new Rectangle(new Point(5, 30), new Point(14, 10)));
+
 
             int totalItems = 0;
             foreach (var row in result.Rows)

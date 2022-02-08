@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace Machina.Data.Layout
             for (int rowIndex = 0; rowIndex < this.rawFlowLayout.RowCount; rowIndex++)
             {
                 var rowItems = this.rawFlowLayout.GetItemNamesForRow(rowIndex);
-                this.rows[rowIndex] = new BakedRow(bakedLayout, this.rawFlowLayout.GetRowName(rowIndex), rowItems);
+                this.rows[rowIndex] = new BakedRow(bakedLayout, this.rawFlowLayout.GetRowName(rowIndex), this.rawFlowLayout.GetRowUsedSpace(rowIndex), rowItems);
             }
         }
 
@@ -53,10 +54,12 @@ namespace Machina.Data.Layout
         public class BakedRow : IEnumerable<BakedLayoutNode>
         {
             private readonly BakedLayoutNode rowNode;
+            private readonly Point rowUsedSpace;
             private readonly BakedLayoutNode[] itemNodes;
 
-            public BakedRow(BakedLayout bakedLayout, string rowName, string[] rowItemNames)
+            public BakedRow(BakedLayout bakedLayout, string rowName, Point rowUsedSpace, string[] rowItemNames)
             {
+                this.rowUsedSpace = rowUsedSpace;
                 this.rowNode = bakedLayout.GetNode(rowName);
                 this.itemNodes = new BakedLayoutNode[rowItemNames.Length];
 
@@ -66,10 +69,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-            public BakedLayoutNode GetRowNode()
-            {
-                return this.rowNode;
-            }
+            public BakedLayoutNode Node => this.rowNode;
 
             public BakedLayoutNode GetItemNode(int itemIndex)
             {
@@ -90,6 +90,8 @@ namespace Machina.Data.Layout
             }
 
             public int ItemCount => this.itemNodes.Length;
+
+            public Rectangle UsedRectangle => new Rectangle(GetItemNode(0).PositionRelativeToRoot, this.rowUsedSpace);
         }
     }
 

@@ -202,6 +202,18 @@ namespace Machina.Data.Layout
                 AddNewRow();
             }
         }
+
+        public Point[] GetUsedSpaceOfEachRow()
+        {
+            var sizes = new Point[Content.Count];
+
+            for (int i = 0; i < Content.Count; i++)
+            {
+                sizes[i] = Orientation.GetPointFromAlongPerpendicular(Content[i].UsedAlongSize, Content[i].UsedPerpendicularSize);
+            }
+
+            return sizes;
+        }
     }
 
     internal class FlowLayoutRow
