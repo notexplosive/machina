@@ -6,18 +6,21 @@ namespace Machina.Data.Layout
 {
     public class OverflowRule
     {
-        private OverflowRule(bool haltOnFailure, bool deletesWholeRow)
+        private OverflowRule(bool haltOnFailure, bool deletesWholeRow, bool doNotAddMoreRowsAfterFailure)
         {
             HaltImmediatelyUponFailure = haltOnFailure;
             DeletesWholeRowUponFailure = deletesWholeRow;
+            DoNotAddMoreRowsAfterFailure = doNotAddMoreRowsAfterFailure;
         }
 
-        public static OverflowRule PermitExtraRows = new OverflowRule(false, false);
-        public static OverflowRule HaltOnIllegal = new OverflowRule(true, false);
-        public static OverflowRule CancelRowOnIllegal = new OverflowRule(true, true);
+        public static OverflowRule PermitExtraRows = new OverflowRule(false, false, false);
+        public static OverflowRule HaltOnIllegal = new OverflowRule(true, false, true);
+        public static OverflowRule CancelRowOnIllegal = new OverflowRule(true, true, true);
+        public static OverflowRule FinishRowOnIllegal = new OverflowRule(false, false, true);
 
         public bool HaltImmediatelyUponFailure { get; }
         public bool DeletesWholeRowUponFailure { get; }
+        public bool DoNotAddMoreRowsAfterFailure { get; }
     }
 
     public static class FlowLayout
@@ -45,11 +48,12 @@ namespace Machina.Data.Layout
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int PerpendicularSizeOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
+            public bool StopAddingNewRows { get; private set; }
             public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
 
             public void CreateNextRowAndAdd(LayoutNode itemToAdd)
             {
-                if (IsFull)
+                if (IsFull || StopAddingNewRows)
                 {
                     return;
                 }
@@ -92,6 +96,11 @@ namespace Machina.Data.Layout
                     if (Style.OverflowRule.DeletesWholeRowUponFailure)
                     {
                         PopLastRow();
+                    }
+
+                    if (Style.OverflowRule.DoNotAddMoreRowsAfterFailure)
+                    {
+                        StopAddingNewRows = true;
                     }
                 }
 
