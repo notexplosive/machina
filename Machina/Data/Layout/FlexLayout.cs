@@ -9,12 +9,12 @@ namespace Machina.Data.Layout
     {
         public static LayoutNode HorizontalFlexParent(string name, LayoutStyle style, params LayoutNode[] children)
         {
-            return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Horizontal, name, style, children), style, children);
+            return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Horizontal, style, children), style, children);
         }
 
         public static LayoutNode VerticalFlexParent(string name, LayoutStyle style, params LayoutNode[] children)
         {
-            return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, name, style, children), style, children);
+            return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, style, children), style, children);
         }
 
         public static LayoutNode OrientedFlexParent(Orientation orientation, string name, LayoutStyle style, params LayoutNode[] children)
@@ -29,7 +29,7 @@ namespace Machina.Data.Layout
             }
         }
 
-        private static LayoutSize FlexParentSize(Orientation orientation, string name, LayoutStyle style, LayoutNode[] children)
+        private static LayoutSize FlexParentSize(Orientation orientation, LayoutStyle style, LayoutNode[] children)
         {
             var totalPadding = (children.Length - 1) * style.Padding;
             var totalAlongMargin = style.Margin.AxisValue(orientation.ToAxis()) * 2;
