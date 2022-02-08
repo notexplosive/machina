@@ -107,7 +107,7 @@ namespace TestMachina.Tests
                     )
             );
 
-            var resizedLayout = layout.GetResized(new Point(60, 60));
+            var resizedLayout = layout.RootNode.GetResized(new Point(60, 60));
 
             var firstBakeResult = layout.Bake();
             var secondBakeResult = resizedLayout.Bake();
@@ -134,7 +134,7 @@ namespace TestMachina.Tests
 
             for (int i = 0; i < 1000; i++)
             {
-                var resizedLayout = layout.GetResized(new Point(i * 10, i * 10));
+                var resizedLayout = layout.RootNode.GetResized(new Point(i * 10, i * 10));
                 resizedLayout.Bake();
             }
         }
@@ -202,8 +202,8 @@ namespace TestMachina.Tests
             );
 
             var firstBakeResult = layout.Bake(); // wide in tall
-            var secondBakeResult = layout.GetResized(new Point(64, 36)).Bake(); // wide in wide (perfect match)
-            var thirdBakeResult = layout.GetResized(new Point(100, 36)).Bake();
+            var secondBakeResult = layout.RootNode.GetResized(new Point(64, 36)).Bake(); // wide in wide (perfect match)
+            var thirdBakeResult = layout.RootNode.GetResized(new Point(100, 36)).Bake();
 
             Approvals.Verify(
                 LayoutNodeUtils.DrawResult(firstBakeResult)
@@ -255,14 +255,14 @@ namespace TestMachina.Tests
 
             var result = new[] {
                 layout.Bake(),
-                layout.GetRealigned(Alignment.TopCenter).Bake(),
-                layout.GetRealigned(Alignment.TopRight).Bake(),
-                layout.GetRealigned(Alignment.CenterLeft).Bake(),
-                layout.GetRealigned(Alignment.Center).Bake(),
-                layout.GetRealigned(Alignment.CenterRight).Bake(),
-                layout.GetRealigned(Alignment.BottomLeft).Bake(),
-                layout.GetRealigned(Alignment.BottomCenter).Bake(),
-                layout.GetRealigned(Alignment.BottomRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.Center).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomRight).Bake(),
             };
 
             Approvals.Verify(
@@ -296,14 +296,14 @@ namespace TestMachina.Tests
 
             var result = new[] {
                 layout.Bake(),
-                layout.GetRealigned(Alignment.TopCenter).Bake(),
-                layout.GetRealigned(Alignment.TopRight).Bake(),
-                layout.GetRealigned(Alignment.CenterLeft).Bake(),
-                layout.GetRealigned(Alignment.Center).Bake(),
-                layout.GetRealigned(Alignment.CenterRight).Bake(),
-                layout.GetRealigned(Alignment.BottomLeft).Bake(),
-                layout.GetRealigned(Alignment.BottomCenter).Bake(),
-                layout.GetRealigned(Alignment.BottomRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.Center).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomRight).Bake(),
             };
 
             Approvals.Verify(
@@ -337,14 +337,14 @@ namespace TestMachina.Tests
 
             var result = new[] {
                 layout.Bake(),
-                layout.GetRealigned(Alignment.TopCenter).Bake(),
-                layout.GetRealigned(Alignment.TopRight).Bake(),
-                layout.GetRealigned(Alignment.CenterLeft).Bake(),
-                layout.GetRealigned(Alignment.Center).Bake(),
-                layout.GetRealigned(Alignment.CenterRight).Bake(),
-                layout.GetRealigned(Alignment.BottomLeft).Bake(),
-                layout.GetRealigned(Alignment.BottomCenter).Bake(),
-                layout.GetRealigned(Alignment.BottomRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.TopRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.Center).Bake(),
+                layout.RootNode.GetRealigned(Alignment.CenterRight).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomLeft).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomCenter).Bake(),
+                layout.RootNode.GetRealigned(Alignment.BottomRight).Bake(),
             };
 
             Approvals.Verify(
@@ -390,7 +390,7 @@ namespace TestMachina.Tests
             var threw = false;
             try
             {
-                LayoutNode.Leaf("Stretch", LayoutSize.StretchedBoth()).Bake();
+                new UnbakedLayout(LayoutNode.Leaf("Stretch", LayoutSize.StretchedBoth())).Bake();
             }
             catch (ImpossibleLayoutException)
             {

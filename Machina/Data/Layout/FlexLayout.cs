@@ -7,17 +7,17 @@ namespace Machina.Data.Layout
     /// </summary>
     public static class FlexLayout
     {
-        public static LayoutNode HorizontalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout HorizontalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
             return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Horizontal, style, children), style.InnerStyle, children);
         }
 
-        public static LayoutNode VerticalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout VerticalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
             return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, style, children), style.InnerStyle, children);
         }
 
-        public static LayoutNode OrientedFlexParent(Orientation orientation, string name, FlexLayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout OrientedFlexParent(Orientation orientation, string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
             if (orientation == Orientation.Vertical)
             {

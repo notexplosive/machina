@@ -12,17 +12,17 @@ namespace Machina.Data.Layout
         private readonly Dictionary<string, Actor> actorTable = new Dictionary<string, Actor>();
         private readonly Actor rootActor;
 
-        public LayoutActors(Scene scene, LayoutNode rootNode, Point position = default)
+        public LayoutActors(Scene scene, UnbakedLayout unbakedLayout, Point position = default)
         {
-            var layout = rootNode.Bake();
+            var layout = unbakedLayout.Bake();
 
-            var actorName = rootNode.Name.Text;
+            var actorName = unbakedLayout.RootNode.Name.Text;
             this.rootActor = scene.AddActor(actorName);
             new BoundingRect(this.rootActor, layout.GetNode(actorName).Size);
 
             AddActorToTable(actorName, this.rootActor);
             SetupRootActor(this.rootActor, actorName, layout, position.ToVector2());
-            CreateActorsForChildren(rootNode, layout);
+            CreateActorsForChildren(unbakedLayout, layout);
         }
 
         private void CreateActorsForChildren(LayoutNode parent, BakedLayout layout)
@@ -71,7 +71,7 @@ namespace Machina.Data.Layout
         /// Using the existing pool of actors, but a new layout, change the hierarchy
         /// </summary>
         /// <param name="resizedRootNode"></param>
-        public void ReapplyLayout(LayoutNode resizedRootNode)
+        public void ReapplyLayout(UnbakedLayout resizedRootNode)
         {
             var newLayout = resizedRootNode.Bake();
             foreach (var actorName in newLayout.AllResultNodeNames())

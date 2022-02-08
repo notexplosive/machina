@@ -6,17 +6,17 @@ namespace Machina.Data.Layout
 {
     public static class FlowLayout
     {
-        public static LayoutNode HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static UnbakedLayout HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
         }
 
-        public static LayoutNode VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static UnbakedLayout VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
         }
 
-        private static LayoutNode OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        private static UnbakedLayout OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
@@ -239,7 +239,7 @@ namespace Machina.Data.Layout
                 UpdateEstimatedSize();
             }
 
-            private LayoutNode GetLayoutNodeAsFlex(string rowNodeName)
+            private UnbakedLayout GetRowAsFlex(string rowNodeName)
             {
                 return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, new FlexLayoutStyle(style: RowStyle), Content.ToArray());
             }
@@ -258,7 +258,7 @@ namespace Machina.Data.Layout
 
             public void UpdateEstimatedSize()
             {
-                EstimatedSize = GetLayoutNodeAsFlex("flex").Bake().GetNode("flex").Size;
+                EstimatedSize = GetRowAsFlex("flex").Bake().GetNode("flex").Size;
             }
         }
     }

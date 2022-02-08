@@ -5,6 +5,28 @@ using System.Text;
 
 namespace Machina.Data.Layout
 {
+    public class UnbakedLayout
+    {
+        public UnbakedLayout(LayoutNode rootNode)
+        {
+            RootNode = rootNode;
+            Baker = new LayoutBaker(RootNode);
+        }
+
+        public LayoutNode RootNode { get; }
+        private LayoutBaker Baker { get; }
+
+        public BakedLayout Bake()
+        {
+            return Baker.Bake();
+        }
+
+        public static implicit operator LayoutNode(UnbakedLayout self)
+        {
+            return self.RootNode;
+        }
+    }
+
     public class LayoutNode
     {
         /// <summary>
@@ -17,22 +39,11 @@ namespace Machina.Data.Layout
             Orientation = orientation;
             Children = children;
             Style = style;
-
-            Baker = new LayoutBaker(this);
-        }
-
-        public BakedLayout Bake()
-        {
-            return Baker.Bake();
         }
 
         public static LayoutNode StretchedSpacer()
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth(),
-                /*Ignored params:*/
-                Orientation.Horizontal,
-                LayoutStyle.Empty,
-                null);
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth(), Orientation.Horizontal, LayoutStyle.Empty, null);
         }
 
         public static LayoutNode Spacer(int size)
@@ -53,29 +64,29 @@ namespace Machina.Data.Layout
                 null);
         }
 
-        public static LayoutNode VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, Orientation.Vertical, style, children);
+            return new UnbakedLayout(new LayoutNode(name, size, Orientation.Vertical, style, children));
         }
 
-        public static LayoutNode HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new LayoutNode(name, size, Orientation.Horizontal, style, children);
+            return new UnbakedLayout(new LayoutNode(name, size, Orientation.Horizontal, style, children));
         }
 
-        public static LayoutNode NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
+        public static UnbakedLayout NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
             return HorizontalParent("root", size, style, child);
         }
 
-        public static LayoutNode OneOffParent(string name, LayoutSize size, LayoutStyle style, LayoutNode child)
+        public static UnbakedLayout OneOffParent(string name, LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
             return HorizontalParent(name, size, style, child);
         }
 
-        public static LayoutNode OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static UnbakedLayout OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
             if (orientation == Orientation.Horizontal)
             {
@@ -108,7 +119,6 @@ namespace Machina.Data.Layout
         }
 
         public readonly LayoutNode[] Children = Array.Empty<LayoutNode>();
-        private LayoutBaker Baker { get; }
         public bool HasChildren => Children != null;
         public LayoutNodeName Name { get; }
         public LayoutSize Size { get; }
@@ -123,18 +133,18 @@ namespace Machina.Data.Layout
         /// </summary>
         /// <param name="newSize"></param>
         /// <returns></returns>
-        public LayoutNode GetResized(Point newSize)
+        public UnbakedLayout GetResized(Point newSize)
         {
-            return new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children);
+            return new UnbakedLayout(new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children));
         }
 
         /// <summary>
         /// Returns a LayoutNode just like this one with the same children, only realigned
         /// </summary>
         /// <returns></returns>
-        public LayoutNode GetRealigned(Alignment newAlignment)
+        public UnbakedLayout GetRealigned(Alignment newAlignment)
         {
-            return new LayoutNode(Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children);
+            return new UnbakedLayout(new LayoutNode(Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children));
         }
 
         public override string ToString()
