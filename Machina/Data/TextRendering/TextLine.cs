@@ -6,7 +6,7 @@ namespace Machina.Data.TextRendering
     public readonly struct TextLine
     {
         public string TextContent { get; }
-        public Point ContentSize { get; }
+        private Point ContentSize { get; }
 
         private readonly Point availableSpace;
         private readonly HorizontalAlignment horizontalAlignment;
