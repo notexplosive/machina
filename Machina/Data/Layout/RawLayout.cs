@@ -24,8 +24,16 @@
 
     public class RawFlowLayout : RawLayout
     {
-        public RawFlowLayout(LayoutNode rootNode) : base(rootNode)
+        internal RawFlowLayout(string name, LayoutSize size, LayoutStyle workableAreaStyle, Orientation orientation, FlowLayoutStyle style, FlowLayoutRows rows) : base(
+            LayoutNode.OneOffParent(name, size, workableAreaStyle,
+                LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
+                    rows.GetLayoutNodesOfEachRow()
+                )
+            ))
         {
+            Rows = rows;
         }
+
+        private FlowLayoutRows Rows { get; }
     }
 }

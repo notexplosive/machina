@@ -51,11 +51,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-            return new RawFlowLayout(LayoutNode.OneOffParent(name, size, workableAreaStyle,
-                LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
-                    rows.GetLayoutNodesOfEachRow()
-                )
-            ));
+            return new RawFlowLayout(name, size, workableAreaStyle, orientation, style, rows);
         }
 
         public class LayoutNodeOrInstruction
