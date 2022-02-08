@@ -36,7 +36,7 @@ namespace Machina.Data.Layout
             public int AvailableHeight { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.UsedHeight + TotalPaddingBetweenRows);
+            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int HeightOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
@@ -49,7 +49,7 @@ namespace Machina.Data.Layout
                     return;
                 }
 
-                HeightOfAllContent += CurrentRow.UsedHeight;
+                HeightOfAllContent += CurrentRow.UsedPerpendicularSize;
                 CurrentRow = new Row(AvailableWidth, Style);
                 AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
@@ -87,19 +87,19 @@ namespace Machina.Data.Layout
 
         private class Row
         {
-            public Row(int availableWidth, FlowLayoutStyle style)
+            public Row(int availableAlongSize, FlowLayoutStyle style)
             {
-                AvailableWidth = availableWidth;
+                AvailableAlongSize = availableAlongSize;
                 FlowLayoutStyle = style;
             }
 
             private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
             public List<LayoutNode> Content { get; } = new List<LayoutNode>();
-            public int AvailableWidth { get; }
+            public int AvailableAlongSize { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
-            public int RemainingWidth => AvailableWidth - UsedWidth;
-            public int UsedWidth => EstimatedSize.X;
-            public int UsedHeight => EstimatedSize.Y;
+            public int RemainingWidth => AvailableAlongSize - UsedAlongSize;
+            public int UsedAlongSize => EstimatedSize.X;
+            public int UsedPerpendicularSize => EstimatedSize.Y;
             public Point EstimatedSize { get; private set; }
 
             public void AddItem(LayoutNode child)
@@ -115,7 +115,7 @@ namespace Machina.Data.Layout
 
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableWidth, UsedHeight), RowStyle, Content.ToArray());
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableAlongSize, UsedPerpendicularSize), RowStyle, Content.ToArray());
             }
 
             public void PopLastItem()
