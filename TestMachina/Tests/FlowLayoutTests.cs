@@ -124,7 +124,21 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
-        // TODO: Varied heights of elements
+        [Fact]
+        public void flow_layout_estimates_accurate_height()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 30), FlowLayoutStyle.Empty,
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 5)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(13, 7)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(12, 3)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 12)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(8, 15)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(10, 5))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
 
         // TODO: Overflow rules
 
