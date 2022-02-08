@@ -6,41 +6,90 @@ namespace Machina.Data.Layout
 {
     public static class FlowLayout
     {
-        public class FlowLayoutNode
+        public static LayoutNode HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        {
+            return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
+        }
+
+        public static LayoutNode VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        {
+            return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
+        }
+
+        private static LayoutNode OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        {
+            var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
+
+            // It sucks that we have to give the node a name, then immediately ask for the node we just named. But I'm not sure where that API should live.
+            var workableArea = LayoutNode.NamelessOneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
+            var rows = new Rows(workableArea.Size, style, orientation);
+
+            foreach (var item in children)
+            {
+                if (item.IsLayoutNode)
+                {
+                    if (rows.CanFitItem(item))
+                    {
+                        rows.AddItemToCurrentRow(item);
+                    }
+                    else
+                    {
+                        rows.CreateNextRowAndAdd(item);
+                    }
+                }
+                else if (item.IsInstruction)
+                {
+                    rows.ConsumeInstruction(item);
+                }
+
+                if (rows.StopAddingNewItems)
+                {
+                    break;
+                }
+            }
+
+            return LayoutNode.OneOffParent(name, size, workableAreaStyle,
+                LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
+                    rows.GetLayoutNodesOfEachRow()
+                )
+            );
+        }
+
+        public class LayoutNodeOrInstruction
         {
             private LayoutNode InternalLayoutNode { get; }
             private Instruction InternalInstruction { get; }
             public bool IsLayoutNode => InternalLayoutNode != null;
             public bool IsInstruction => InternalInstruction != null;
 
-            public FlowLayoutNode(LayoutNode layoutNode)
+            public LayoutNodeOrInstruction(LayoutNode layoutNode)
             {
                 InternalLayoutNode = layoutNode;
             }
 
-            public FlowLayoutNode(Instruction flowInstruction)
+            public LayoutNodeOrInstruction(Instruction flowInstruction)
             {
                 InternalInstruction = flowInstruction;
             }
 
-            public static implicit operator LayoutNode(FlowLayoutNode self)
+            public static implicit operator LayoutNode(LayoutNodeOrInstruction self)
             {
                 return self.InternalLayoutNode;
             }
 
-            public static implicit operator FlowLayoutNode(LayoutNode node)
+            public static implicit operator LayoutNodeOrInstruction(LayoutNode node)
             {
-                return new FlowLayoutNode(node);
+                return new LayoutNodeOrInstruction(node);
             }
 
-            public static implicit operator Instruction(FlowLayoutNode self)
+            public static implicit operator Instruction(LayoutNodeOrInstruction self)
             {
                 return self.InternalInstruction;
             }
 
-            public static implicit operator FlowLayoutNode(Instruction instruction)
+            public static implicit operator LayoutNodeOrInstruction(Instruction instruction)
             {
-                return new FlowLayoutNode(instruction);
+                return new LayoutNodeOrInstruction(instruction);
             }
         }
 
@@ -211,55 +260,6 @@ namespace Machina.Data.Layout
             {
                 EstimatedSize = GetLayoutNodeAsFlex("flex").Bake().GetNode("flex").Size;
             }
-        }
-
-        public static LayoutNode HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
-        {
-            return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
-        }
-
-        public static LayoutNode VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
-        {
-            return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
-        }
-
-        private static LayoutNode OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
-        {
-            var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
-
-            // It sucks that we have to give the node a name, then immediately ask for the node we just named. But I'm not sure where that API should live.
-            var workableArea = LayoutNode.NamelessOneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
-            var rows = new Rows(workableArea.Size, style, orientation);
-
-            foreach (var item in children)
-            {
-                if (item.IsLayoutNode)
-                {
-                    if (rows.CanFitItem(item))
-                    {
-                        rows.AddItemToCurrentRow(item);
-                    }
-                    else
-                    {
-                        rows.CreateNextRowAndAdd(item);
-                    }
-                }
-                else if (item.IsInstruction)
-                {
-                    rows.ConsumeInstruction(item);
-                }
-
-                if (rows.StopAddingNewItems)
-                {
-                    break;
-                }
-            }
-
-            return LayoutNode.OneOffParent(name, size, workableAreaStyle,
-                LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
-                    rows.GetLayoutNodesOfEachRow()
-                )
-            );
         }
     }
 }
