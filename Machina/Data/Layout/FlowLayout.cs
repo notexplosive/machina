@@ -4,19 +4,22 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
+    /// <summary>
+    /// Flow Layout is given a restricted set of bounds and then attempts to lay out the items in a way to fill those bounds. Linebreaking where necessary.
+    /// </summary>
     public static class FlowLayout
     {
-        public static RawLayout HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static RawFlowLayout HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
         }
 
-        public static RawLayout VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static RawFlowLayout VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
         }
 
-        private static RawLayout OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        private static RawFlowLayout OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
@@ -48,11 +51,11 @@ namespace Machina.Data.Layout
                 }
             }
 
-            return LayoutNode.OneOffParent(name, size, workableAreaStyle,
+            return new RawFlowLayout(LayoutNode.OneOffParent(name, size, workableAreaStyle,
                 LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
                 )
-            );
+            ));
         }
 
         public class LayoutNodeOrInstruction

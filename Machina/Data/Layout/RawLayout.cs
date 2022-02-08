@@ -21,4 +21,11 @@
             return self.RootNode;
         }
     }
+
+    public class RawFlowLayout : RawLayout
+    {
+        public RawFlowLayout(LayoutNode rootNode) : base(rootNode)
+        {
+        }
+    }
 }
