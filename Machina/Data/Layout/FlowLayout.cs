@@ -75,14 +75,14 @@ namespace Machina.Data.Layout
 
         private class Rows
         {
-            public Rows(Point availableSize, FlowLayoutStyle flowLayoutStyle)
+            public Rows(Point availableSize, FlowLayoutStyle flowLayoutStyle, Orientation orientation)
             {
-                Orientation = Orientation.Horizontal;
-                AvailableAlongSize = availableSize.X;
-                AvailablePerpendicularSize = availableSize.Y;
+                Orientation = orientation;
+                AvailableAlongSize = availableSize.AxisValue(orientation.ToAxis());
+                AvailablePerpendicularSize = availableSize.OppositeAxisValue(orientation.ToAxis());
                 Style = flowLayoutStyle;
 
-                CurrentRow = new Row(AvailableAlongSize, Style);
+                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
                 Content.Add(CurrentRow);
             }
 
@@ -118,7 +118,7 @@ namespace Machina.Data.Layout
                 }
 
                 PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
-                CurrentRow = new Row(AvailableAlongSize, Style);
+                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
                 Content.Add(CurrentRow);
             }
 
@@ -167,12 +167,12 @@ namespace Machina.Data.Layout
             private void PopLastRow()
             {
                 Content.RemoveAt(Content.Count - 1);
-                CurrentRow = new Row(AvailableAlongSize, Style);
+                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
             }
 
             public bool CanFitItem(LayoutNode item)
             {
-                return RemainingAlongSizeInCurrentRow >= item.Size.Width.ActualSize;
+                return RemainingAlongSizeInCurrentRow >= item.Size.GetValueFromOrientation(Orientation).ActualSize;
             }
 
             public void ConsumeInstruction(Instruction instruction)
@@ -186,9 +186,9 @@ namespace Machina.Data.Layout
 
         private class Row
         {
-            public Row(int availableAlongSize, FlowLayoutStyle style)
+            public Row(int availableAlongSize, FlowLayoutStyle style, Orientation orientation)
             {
-                Orientation = Orientation.Horizontal;
+                Orientation = orientation;
                 AvailableAlongSize = availableAlongSize;
                 FlowLayoutStyle = style;
             }
@@ -232,14 +232,23 @@ namespace Machina.Data.Layout
             }
         }
 
-        // Should eventually be called "HorizontalLeftToRightFlowParent"
-        public static LayoutNode FlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
+        public static LayoutNode HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
+        {
+            return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
+        }
+
+        public static LayoutNode VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
+        {
+            return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
+        }
+
+        private static LayoutNode OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
             // It sucks that we have to give the node a name, then immediately ask for the node we just named. But I'm not sure where that API should live.
             var workableArea = LayoutNode.NamelessOneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
-            var rows = new Rows(workableArea.Size, style);
+            var rows = new Rows(workableArea.Size, style, orientation);
 
             foreach (var item in children)
             {
@@ -266,7 +275,7 @@ namespace Machina.Data.Layout
             }
 
             return LayoutNode.OneOffParent(name, size, workableAreaStyle,
-                LayoutNode.OrientedParent(Orientation.Horizontal.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
+                LayoutNode.OrientedParent(orientation.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
                 )
             );
