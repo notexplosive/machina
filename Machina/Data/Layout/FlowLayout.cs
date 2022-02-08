@@ -4,46 +4,46 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
-    public class FlowLayoutNode
-    {
-        private LayoutNode InternalLayoutNode { get; }
-        private FlowLayout.Instruction InternalInstruction { get; }
-        public bool IsLayoutNode => InternalLayoutNode != null;
-        public bool IsInstruction => InternalInstruction != null;
-
-        public FlowLayoutNode(LayoutNode layoutNode)
-        {
-            InternalLayoutNode = layoutNode;
-        }
-
-        public FlowLayoutNode(FlowLayout.Instruction flowInstruction)
-        {
-            InternalInstruction = flowInstruction;
-        }
-
-        public static implicit operator LayoutNode(FlowLayoutNode self)
-        {
-            return self.InternalLayoutNode;
-        }
-
-        public static implicit operator FlowLayoutNode(LayoutNode node)
-        {
-            return new FlowLayoutNode(node);
-        }
-
-        public static implicit operator FlowLayout.Instruction(FlowLayoutNode self)
-        {
-            return self.InternalInstruction;
-        }
-
-        public static implicit operator FlowLayoutNode(FlowLayout.Instruction instruction)
-        {
-            return new FlowLayoutNode(instruction);
-        }
-    }
-
     public static class FlowLayout
     {
+        public class FlowLayoutNode
+        {
+            private LayoutNode InternalLayoutNode { get; }
+            private Instruction InternalInstruction { get; }
+            public bool IsLayoutNode => InternalLayoutNode != null;
+            public bool IsInstruction => InternalInstruction != null;
+
+            public FlowLayoutNode(LayoutNode layoutNode)
+            {
+                InternalLayoutNode = layoutNode;
+            }
+
+            public FlowLayoutNode(Instruction flowInstruction)
+            {
+                InternalInstruction = flowInstruction;
+            }
+
+            public static implicit operator LayoutNode(FlowLayoutNode self)
+            {
+                return self.InternalLayoutNode;
+            }
+
+            public static implicit operator FlowLayoutNode(LayoutNode node)
+            {
+                return new FlowLayoutNode(node);
+            }
+
+            public static implicit operator Instruction(FlowLayoutNode self)
+            {
+                return self.InternalInstruction;
+            }
+
+            public static implicit operator FlowLayoutNode(Instruction instruction)
+            {
+                return new FlowLayoutNode(instruction);
+            }
+        }
+
         public class Instruction
         {
             private Instruction()
