@@ -333,5 +333,27 @@ namespace TestMachina.Tests
                 $"Layout\n{LayoutNodeUtils.DrawResult(result)}\n\nUsed Row Rectangles:\n{LayoutNodeUtils.DrawUsedRectangles(result, result.Rows)}\n\nJust Items:\n{LayoutNodeUtils.DrawItems(result, result.Rows)}"
             );
         }
+
+        [Fact]
+        public void verify_used_rows_vertical()
+        {
+            var layout = FlowLayout.VerticalFlowParent("root", LayoutSize.Pixels(40, 30), new FlowLayoutStyle(alignment: Alignment.Center, paddingBetweenItemsInEachRow: 2, paddingBetweenRows: 2),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 5)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 5)),
+                FlowLayoutInstruction.Linebreak,
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 5)),
+                FlowLayoutInstruction.Linebreak,
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(10, 5)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(13, 5)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 5)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(7, 5))
+            );
+
+            var result = layout.Bake();
+
+            Approvals.Verify(
+                $"Layout\n{LayoutNodeUtils.DrawResult(result)}\n\nUsed Row Rectangles:\n{LayoutNodeUtils.DrawUsedRectangles(result, result.Rows)}\n\nJust Items:\n{LayoutNodeUtils.DrawItems(result, result.Rows)}"
+            );
+        }
     }
 }
