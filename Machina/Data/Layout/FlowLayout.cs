@@ -21,22 +21,22 @@ namespace Machina.Data.Layout
     {
         private class Rows
         {
-            public Rows(int defaultWidth, int availableHeight, FlowLayoutStyle flowLayoutStyle)
+            public Rows(int availableWidth, int availableHeight, FlowLayoutStyle flowLayoutStyle)
             {
-                DefaultWidth = defaultWidth;
+                AvailableWidth = availableWidth;
                 AvailableHeight = availableHeight;
                 Style = flowLayoutStyle;
 
-                CurrentRow = new Row(DefaultWidth, Style);
+                CurrentRow = new Row(AvailableWidth, Style);
                 Content.Add(CurrentRow);
             }
 
             private Row CurrentRow { get; set; }
-            public int DefaultWidth { get; }
+            public int AvailableWidth { get; }
             public int AvailableHeight { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(DefaultWidth, HeightOfAllContent + CurrentRow.Height + TotalPaddingBetweenRows);
+            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.Height + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int HeightOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
@@ -50,7 +50,7 @@ namespace Machina.Data.Layout
                 }
 
                 HeightOfAllContent += CurrentRow.Height;
-                CurrentRow = new Row(DefaultWidth, Style);
+                CurrentRow = new Row(AvailableWidth, Style);
                 AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
             }
@@ -87,18 +87,18 @@ namespace Machina.Data.Layout
 
         private class Row
         {
-            public Row(int width, FlowLayoutStyle style)
+            public Row(int availableWidth, FlowLayoutStyle style)
             {
-                TotalWidth = width;
+                AvailableWidth = availableWidth;
                 FlowLayoutStyle = style;
             }
 
             private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
             public List<LayoutNode> Content { get; } = new List<LayoutNode>();
             public int Height => EstimatedSize.Y;
-            public int TotalWidth { get; }
+            public int AvailableWidth { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
-            public int RemainingWidth => TotalWidth - UsedWidth;
+            public int RemainingWidth => AvailableWidth - UsedWidth;
             public int UsedWidth => EstimatedSize.X;
             public Point EstimatedSize { get; private set; }
 
@@ -115,7 +115,7 @@ namespace Machina.Data.Layout
 
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth, Height), RowStyle, Content.ToArray());
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableWidth, Height), RowStyle, Content.ToArray());
             }
 
             public void PopLastItem()
