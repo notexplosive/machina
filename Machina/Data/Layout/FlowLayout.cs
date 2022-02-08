@@ -37,7 +37,7 @@ namespace Machina.Data.Layout
             public int AvailablePerpendicularSize { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
+            public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int PerpendicularSizeOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
