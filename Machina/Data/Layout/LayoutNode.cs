@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Machina.Data.Layout
 {
-    public class UnbakedLayout
+    public class RawLayout
     {
-        public UnbakedLayout(LayoutNode rootNode)
+        public RawLayout(LayoutNode rootNode)
         {
             RootNode = rootNode;
             Baker = new LayoutBaker(RootNode);
@@ -21,7 +21,7 @@ namespace Machina.Data.Layout
             return Baker.Bake();
         }
 
-        public static implicit operator LayoutNode(UnbakedLayout self)
+        public static implicit operator LayoutNode(RawLayout self)
         {
             return self.RootNode;
         }
@@ -64,29 +64,29 @@ namespace Machina.Data.Layout
                 null);
         }
 
-        public static UnbakedLayout VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static RawLayout VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new UnbakedLayout(new LayoutNode(name, size, Orientation.Vertical, style, children));
+            return new RawLayout(new LayoutNode(name, size, Orientation.Vertical, style, children));
         }
 
-        public static UnbakedLayout HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static RawLayout HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new UnbakedLayout(new LayoutNode(name, size, Orientation.Horizontal, style, children));
+            return new RawLayout(new LayoutNode(name, size, Orientation.Horizontal, style, children));
         }
 
-        public static UnbakedLayout NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
+        public static RawLayout NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
             return HorizontalParent("root", size, style, child);
         }
 
-        public static UnbakedLayout OneOffParent(string name, LayoutSize size, LayoutStyle style, LayoutNode child)
+        public static RawLayout OneOffParent(string name, LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
             return HorizontalParent(name, size, style, child);
         }
 
-        public static UnbakedLayout OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        public static RawLayout OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
             if (orientation == Orientation.Horizontal)
             {
@@ -133,18 +133,18 @@ namespace Machina.Data.Layout
         /// </summary>
         /// <param name="newSize"></param>
         /// <returns></returns>
-        public UnbakedLayout GetResized(Point newSize)
+        public RawLayout GetResized(Point newSize)
         {
-            return new UnbakedLayout(new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children));
+            return new RawLayout(new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children));
         }
 
         /// <summary>
         /// Returns a LayoutNode just like this one with the same children, only realigned
         /// </summary>
         /// <returns></returns>
-        public UnbakedLayout GetRealigned(Alignment newAlignment)
+        public RawLayout GetRealigned(Alignment newAlignment)
         {
-            return new UnbakedLayout(new LayoutNode(Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children));
+            return new RawLayout(new LayoutNode(Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children));
         }
 
         public override string ToString()

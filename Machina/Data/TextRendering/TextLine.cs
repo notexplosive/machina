@@ -21,7 +21,7 @@ namespace Machina.Data.TextRendering
             ContentSize = new Point(effectiveWidth, fontMetrics.LineSpacing);
         }
 
-        public UnbakedLayout CreateLayoutNode(string name)
+        public RawLayout CreateLayoutNode(string name)
         {
             return LayoutNode.HorizontalParent($"{name} parent", LayoutSize.Pixels(availableSpace.X, ContentSize.Y), new LayoutStyle(alignment: new Alignment(horizontalAlignment)),
                 LayoutNode.Leaf(name, LayoutSize.Pixels(ContentSize))

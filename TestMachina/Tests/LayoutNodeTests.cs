@@ -390,7 +390,7 @@ namespace TestMachina.Tests
             var threw = false;
             try
             {
-                new UnbakedLayout(LayoutNode.Leaf("Stretch", LayoutSize.StretchedBoth())).Bake();
+                new RawLayout(LayoutNode.Leaf("Stretch", LayoutSize.StretchedBoth())).Bake();
             }
             catch (ImpossibleLayoutException)
             {

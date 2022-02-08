@@ -6,17 +6,17 @@ namespace Machina.Data.Layout
 {
     public static class FlowLayout
     {
-        public static UnbakedLayout HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static RawLayout HorizontalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Horizontal, name, size, style, children);
         }
 
-        public static UnbakedLayout VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        public static RawLayout VerticalFlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             return OrientedFlowParent(Orientation.Vertical, name, size, style, children);
         }
 
-        private static UnbakedLayout OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
+        private static RawLayout OrientedFlowParent(Orientation orientation, string name, LayoutSize size, FlowLayoutStyle style, params LayoutNodeOrInstruction[] children)
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
@@ -239,7 +239,7 @@ namespace Machina.Data.Layout
                 UpdateEstimatedSize();
             }
 
-            private UnbakedLayout GetRowAsFlex(string rowNodeName)
+            private RawLayout GetRowAsFlex(string rowNodeName)
             {
                 return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, new FlexLayoutStyle(style: RowStyle), Content.ToArray());
             }
