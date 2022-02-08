@@ -89,12 +89,14 @@ namespace Machina.Data.Layout
         {
             public Row(int availableAlongSize, FlowLayoutStyle style)
             {
+                Orientation = Orientation.Horizontal;
                 AvailableAlongSize = availableAlongSize;
                 FlowLayoutStyle = style;
             }
 
             private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
             public List<LayoutNode> Content { get; } = new List<LayoutNode>();
+            public Orientation Orientation { get; }
             public int AvailableAlongSize { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
             public int RemainingWidth => AvailableAlongSize - UsedAlongSize;
