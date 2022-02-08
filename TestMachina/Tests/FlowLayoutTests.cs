@@ -246,5 +246,21 @@ namespace TestMachina.Tests
             var result = layout.Bake();
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
+
+        [Fact]
+        public void flow_layout_can_be_vertical_with_alignment()
+        {
+            var layout = FlowLayout.VerticalFlowParent("root", LayoutSize.Pixels(25, 40), new FlowLayoutStyle(alignment: Alignment.BottomRight),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(10, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(13, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
     }
 }
