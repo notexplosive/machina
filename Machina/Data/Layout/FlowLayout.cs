@@ -40,7 +40,7 @@ namespace Machina.Data.Layout
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int HeightOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
-            public int RemainingWidthInCurrentRow => CurrentRow.RemainingWidth;
+            public int RemainingWidthInCurrentRow => CurrentRow.RemainingAlongSize;
 
             public void CreateNextRowAndAdd(LayoutNode itemToAdd)
             {
@@ -99,7 +99,7 @@ namespace Machina.Data.Layout
             public Orientation Orientation { get; }
             public int AvailableAlongSize { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
-            public int RemainingWidth => AvailableAlongSize - UsedAlongSize;
+            public int RemainingAlongSize => AvailableAlongSize - UsedAlongSize;
             public int UsedAlongSize => EstimatedSize.X;
             public int UsedPerpendicularSize => EstimatedSize.Y;
             public Point EstimatedSize { get; private set; }
