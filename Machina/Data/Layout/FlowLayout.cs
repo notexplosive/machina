@@ -158,8 +158,7 @@ namespace Machina.Data.Layout
                 }
             }
 
-            // again the root node being "Horizontal" doesn't matter, we really need that "ParentOfSingleThing" static function
-            return LayoutNode.HorizontalParent(name, size, workableAreaStyle,
+            return LayoutNode.OneOffParent(size, workableAreaStyle,
                 // this "vertical" does matter because we stack the rows vertically, LTR and RTL would be vertical but TTB and BTT would be horizontal
                 LayoutNode.OrientedParent(Orientation.Horizontal.Opposite(), "rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()

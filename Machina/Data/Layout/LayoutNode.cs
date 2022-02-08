@@ -66,7 +66,7 @@ namespace Machina.Data.Layout
         public static LayoutNode OneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
-            return HorizontalParent("throwAwayParent", size, style, child);
+            return HorizontalParent("root", size, style, child);
         }
 
         public static LayoutNode OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
