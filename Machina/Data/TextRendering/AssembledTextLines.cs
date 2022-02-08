@@ -10,7 +10,6 @@ namespace Machina.Data.TextRendering
         private readonly Point totalAvailableSpace;
         private readonly Alignment alignment;
         private readonly IFontMetrics fontMetrics;
-        private readonly float spaceWidth;
         private readonly string[] words;
         private readonly StringBuilder stringBuilder;
         private readonly List<TextLine> textLines;
@@ -30,17 +29,31 @@ namespace Machina.Data.TextRendering
             this.totalAvailableSpace = totalAvailableSpace;
             this.alignment = alignment;
             this.fontMetrics = fontMetrics;
-            this.spaceWidth = this.fontMetrics.MeasureString(" ").X;
 
             var splitLines = text.Trim().Split('\n');
             var words = new List<string>();
             foreach (var textLine in splitLines)
             {
-                var splitWords = textLine.Split(' ');
-                foreach (var word in splitWords)
+                var pendingWord = new StringBuilder();
+                foreach (var character in textLine)
                 {
-                    words.Add(word);
+                    if (character == ' ')
+                    {
+                        words.Add(pendingWord.ToString());
+                        pendingWord.Clear();
+                        words.Add(character.ToString());
+                    }
+                    else
+                    {
+                        pendingWord.Append(character);
+                    }
                 }
+
+                if (pendingWord.Length > 0)
+                {
+                    words.Add(pendingWord.ToString());
+                }
+
 
                 words.Add("\n"); // Re-add the newline as a sentinal value
             }
@@ -95,7 +108,7 @@ namespace Machina.Data.TextRendering
 
         private bool HasRoomForWordOnCurrentLine(string word)
         {
-            var widthAfterAppend = this.pendingInfo.widthOfCurrentLine + this.fontMetrics.MeasureString(word).X + this.spaceWidth;
+            var widthAfterAppend = this.pendingInfo.widthOfCurrentLine + this.fontMetrics.MeasureString(word).X;
             return widthAfterAppend < this.totalAvailableSpace.X;
         }
 
@@ -116,9 +129,8 @@ namespace Machina.Data.TextRendering
 
         private void AppendWord(string word)
         {
-            this.pendingInfo.widthOfCurrentLine += this.fontMetrics.MeasureString(word).X + this.spaceWidth;
+            this.pendingInfo.widthOfCurrentLine += this.fontMetrics.MeasureString(word).X;
             this.stringBuilder.Append(word);
-            this.stringBuilder.Append(' ');
         }
 
         private bool HasLineInBuffer()

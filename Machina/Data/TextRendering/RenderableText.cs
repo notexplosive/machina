@@ -52,6 +52,11 @@ namespace Machina.Data.TextRendering
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
             spriteBatch.DrawString(GetFont(), Content, PivotPosition, finalDropShadowColor, Angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, Depth + 1);
         }
+
+        public override string ToString()
+        {
+            return $"`{Content}` at {PivotPosition} offset by {OffsetFromPivot}";
+        }
     }
 
 }
