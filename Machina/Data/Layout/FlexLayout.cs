@@ -17,6 +17,18 @@ namespace Machina.Data.Layout
             return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, name, style, children), style, children);
         }
 
+        public static LayoutNode OrientedFlexParent(Orientation orientation, string name, LayoutStyle style, params LayoutNode[] children)
+        {
+            if (orientation == Orientation.Vertical)
+            {
+                return VerticalFlexParent(name, style, children);
+            }
+            else
+            {
+                return HorizontalFlexParent(name, style, children);
+            }
+        }
+
         private static LayoutSize FlexParentSize(Orientation orientation, string name, LayoutStyle style, LayoutNode[] children)
         {
             var totalPadding = (children.Length - 1) * style.Padding;

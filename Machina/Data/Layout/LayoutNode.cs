@@ -63,6 +63,18 @@ namespace Machina.Data.Layout
             return new LayoutNode(name, size, Orientation.Horizontal, style, children);
         }
 
+        public static LayoutNode OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        {
+            if (orientation == Orientation.Horizontal)
+            {
+                return HorizontalParent(name, size, style, children);
+            }
+            else
+            {
+                return VerticalParent(name, size, style, children);
+            }
+        }
+
         public LayoutNode FindChildNodeWithName(string targetName)
         {
             if (Name.Exists && Name.Text == targetName)

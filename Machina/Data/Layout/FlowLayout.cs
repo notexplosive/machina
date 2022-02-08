@@ -112,13 +112,13 @@ namespace Machina.Data.Layout
 
             private LayoutNode GetLayoutNodeAsFlex(string rowNodeName)
             {
-                return FlexLayout.HorizontalFlexParent(rowNodeName, RowStyle, Content.ToArray());
+                return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, RowStyle, Content.ToArray());
             }
 
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
                 var size = Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, UsedPerpendicularSize);
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(size), RowStyle, Content.ToArray());
+                return LayoutNode.OrientedParent(Orientation, rowNodeName, LayoutSize.Pixels(size), RowStyle, Content.ToArray());
             }
 
             public void PopLastItem()
