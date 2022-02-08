@@ -311,5 +311,27 @@ namespace TestMachina.Tests
 
             totalItems.Should().Be(7);
         }
+
+        [Fact]
+        public void verify_used_rows_horizontal()
+        {
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(25, 20), new FlowLayoutStyle(alignment: Alignment.Center),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 5)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 5)),
+                FlowLayoutInstruction.Linebreak,
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 5)),
+                FlowLayoutInstruction.Linebreak,
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(10, 5)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(13, 5)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 5)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(7, 5))
+            );
+
+            var result = layout.Bake();
+
+            Approvals.Verify(
+                $"Layout\n{LayoutNodeUtils.DrawResult(result)}\n\nUsed Row Rectangles:\n{LayoutNodeUtils.DrawUsedRectangles(result, result.Rows)}\n\nJust Items:\n{LayoutNodeUtils.DrawItems(result, result.Rows)}"
+            );
+        }
     }
 }

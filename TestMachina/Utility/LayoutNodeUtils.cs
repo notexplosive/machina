@@ -61,5 +61,32 @@ namespace TestMachina.Utility
             }
             return drawPanel.GetImage();
         }
+
+        public static string DrawUsedRectangles(IBakedLayout layoutResult, IEnumerable<BakedFlowLayout.BakedRow> rows)
+        {
+            var drawPanel = new AsciiDrawPanel(layoutResult.GetNode(layoutResult.OriginalRoot.Name.Text).Size);
+
+            foreach (var row in rows)
+            {
+                drawPanel.DrawRectangle(row.UsedRectangle, '#');
+            }
+
+            return drawPanel.GetImage();
+        }
+
+        public static string DrawItems(BakedFlowLayout layoutResult, IEnumerable<BakedFlowLayout.BakedRow> rows)
+        {
+            var drawPanel = new AsciiDrawPanel(layoutResult.GetNode(layoutResult.OriginalRoot.Name.Text).Size);
+
+            foreach (var row in rows)
+            {
+                foreach (var item in row)
+                {
+                    drawPanel.DrawRectangle(item.Rectangle, '.');
+                }
+            }
+
+            return drawPanel.GetImage();
+        }
     }
 }
