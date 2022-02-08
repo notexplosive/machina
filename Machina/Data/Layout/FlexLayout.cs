@@ -2,22 +2,36 @@
 
 namespace Machina.Data.Layout
 {
+    public struct FlexLayoutStyle
+    {
+        public static FlexLayoutStyle Empty => new FlexLayoutStyle();
+
+        public LayoutStyle InnerStyle { get; }
+        public int? MinAlongSize { get; }
+
+        public FlexLayoutStyle(LayoutStyle style = default, int? minAlongSize = null)
+        {
+            InnerStyle = style;
+            MinAlongSize = minAlongSize;
+        }
+    }
+
     /// <summary>
     /// Flex layout has exactly enough room to fit. You feed it LayoutNode parameters and it creates a LayoutNode that is exactly fit for the children and style.
     /// </summary>
     public static class FlexLayout
     {
-        public static LayoutNode HorizontalFlexParent(string name, LayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode HorizontalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
-            return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Horizontal, style, children), style, children);
+            return LayoutNode.HorizontalParent(name, FlexParentSize(Orientation.Horizontal, style, children), style.InnerStyle, children);
         }
 
-        public static LayoutNode VerticalFlexParent(string name, LayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode VerticalFlexParent(string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
-            return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, style, children), style, children);
+            return LayoutNode.VerticalParent(name, FlexParentSize(Orientation.Vertical, style, children), style.InnerStyle, children);
         }
 
-        public static LayoutNode OrientedFlexParent(Orientation orientation, string name, LayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode OrientedFlexParent(Orientation orientation, string name, FlexLayoutStyle style, params LayoutNode[] children)
         {
             if (orientation == Orientation.Vertical)
             {
@@ -29,11 +43,11 @@ namespace Machina.Data.Layout
             }
         }
 
-        private static LayoutSize FlexParentSize(Orientation orientation, LayoutStyle style, LayoutNode[] children)
+        private static LayoutSize FlexParentSize(Orientation orientation, FlexLayoutStyle style, LayoutNode[] children)
         {
-            var totalPadding = (children.Length - 1) * style.Padding;
-            var totalAlongMargin = style.Margin.AxisValue(orientation.ToAxis()) * 2;
-            var totalPerpendicularMargin = style.Margin.AxisValue(orientation.Opposite().ToAxis()) * 2;
+            var totalPadding = (children.Length - 1) * style.InnerStyle.Padding;
+            var totalAlongMargin = style.InnerStyle.Margin.AxisValue(orientation.ToAxis()) * 2;
+            var totalPerpendicularMargin = style.InnerStyle.Margin.AxisValue(orientation.Opposite().ToAxis()) * 2;
 
             var measuredAlongSize = 0;
             var largestPerpendicularSize = 0;
@@ -44,8 +58,12 @@ namespace Machina.Data.Layout
                 largestPerpendicularSize = Math.Max(largestPerpendicularSize, child.Size.GetValueFromOrientation(orientation.Opposite()).ActualSize);
             }
 
-
             var alongSize = measuredAlongSize + totalAlongMargin + totalPadding;
+            if (style.MinAlongSize.HasValue)
+            {
+                alongSize = Math.Max(alongSize, style.MinAlongSize.Value);
+            }
+
             var perpendicularSize = largestPerpendicularSize + totalPerpendicularMargin;
 
             if (orientation == Orientation.Horizontal)

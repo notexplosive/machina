@@ -14,7 +14,7 @@ namespace TestMachina.Tests
         [Fact]
         public void can_create_flex_layout()
         {
-            var layout = FlexLayout.HorizontalFlexParent("root", LayoutStyle.Empty,
+            var layout = FlexLayout.HorizontalFlexParent("root", FlexLayoutStyle.Empty,
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
@@ -29,7 +29,7 @@ namespace TestMachina.Tests
         [Fact]
         public void can_create_vertical_flex_layout()
         {
-            var layout = FlexLayout.VerticalFlexParent("root", LayoutStyle.Empty,
+            var layout = FlexLayout.VerticalFlexParent("root", FlexLayoutStyle.Empty,
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
@@ -44,7 +44,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flex_layout_supports_margin()
         {
-            var layout = FlexLayout.HorizontalFlexParent("root", new LayoutStyle(margin: new Point(5, 5)),
+            var layout = FlexLayout.HorizontalFlexParent("root", new FlexLayoutStyle(style: new LayoutStyle(margin: new Point(5, 5))),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
@@ -59,7 +59,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flex_layout_supports_padding()
         {
-            var layout = FlexLayout.HorizontalFlexParent("root", new LayoutStyle(margin: new Point(5, 5), padding: 3),
+            var layout = FlexLayout.HorizontalFlexParent("root", new FlexLayoutStyle(style: new LayoutStyle(margin: new Point(5, 5), padding: 3)),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
@@ -74,7 +74,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flex_considers_alignment_when_things_have_varied_perpendicular_size()
         {
-            var layout = FlexLayout.HorizontalFlexParent("root", new LayoutStyle(margin: new Point(5, 5), padding: 3, alignment: Alignment.BottomCenter),
+            var layout = FlexLayout.HorizontalFlexParent("root", new FlexLayoutStyle(style: new LayoutStyle(margin: new Point(5, 5), padding: 3, alignment: Alignment.BottomCenter)),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
@@ -86,9 +86,24 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
-        // TODO: Max Width
-        // TODO: Max Height
+        [Fact]
+        public void flex_can_specify_a_min_width()
+        {
+            var layout = FlexLayout.HorizontalFlexParent("root", new FlexLayoutStyle(minAlongSize: 100, style: new LayoutStyle(margin: new Point(5, 5), padding: 3, alignment: Alignment.BottomCenter)),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 8))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Min Width
         // TODO: Min Height
+        // TODO: Max Width
+        // TODO: Max Height
     }
 }

@@ -241,7 +241,7 @@ namespace Machina.Data.Layout
 
             private LayoutNode GetLayoutNodeAsFlex(string rowNodeName)
             {
-                return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, RowStyle, Content.ToArray());
+                return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, new FlexLayoutStyle(style: RowStyle), Content.ToArray());
             }
 
             public LayoutNode GetLayoutNode(string rowNodeName)
