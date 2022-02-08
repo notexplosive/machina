@@ -8,11 +8,13 @@ namespace Machina.Data.Layout
 
         public LayoutStyle InnerStyle { get; }
         public int? MinAlongSize { get; }
+        public int? MinPerpendicularSize { get; }
 
-        public FlexLayoutStyle(LayoutStyle style = default, int? minAlongSize = null)
+        public FlexLayoutStyle(LayoutStyle style = default, int? minAlongSize = null, int? minPerpendicularSize = null)
         {
             InnerStyle = style;
             MinAlongSize = minAlongSize;
+            MinPerpendicularSize = minPerpendicularSize;
         }
     }
 
@@ -59,12 +61,18 @@ namespace Machina.Data.Layout
             }
 
             var alongSize = measuredAlongSize + totalAlongMargin + totalPadding;
+            var perpendicularSize = largestPerpendicularSize + totalPerpendicularMargin;
+
+
             if (style.MinAlongSize.HasValue)
             {
                 alongSize = Math.Max(alongSize, style.MinAlongSize.Value);
             }
 
-            var perpendicularSize = largestPerpendicularSize + totalPerpendicularMargin;
+            if (style.MinPerpendicularSize.HasValue)
+            {
+                perpendicularSize = Math.Max(perpendicularSize, style.MinPerpendicularSize.Value);
+            }
 
             if (orientation == Orientation.Horizontal)
             {

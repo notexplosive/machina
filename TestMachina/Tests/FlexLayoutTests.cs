@@ -101,8 +101,21 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
-        // TODO: Min Width
-        // TODO: Min Height
+        [Fact]
+        public void flex_can_specify_a_min_height()
+        {
+            var layout = FlexLayout.HorizontalFlexParent("root", new FlexLayoutStyle(minPerpendicularSize: 25, style: new LayoutStyle(margin: new Point(5, 5), padding: 3, alignment: Alignment.BottomCenter)),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(10, 3)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(8, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 8))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Max Width
         // TODO: Max Height
     }
