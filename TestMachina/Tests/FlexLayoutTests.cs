@@ -85,5 +85,10 @@ namespace TestMachina.Tests
             var result = layout.Bake();
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
+
+        // TODO: Max Width
+        // TODO: Max Height
+        // TODO: Min Width
+        // TODO: Min Height
     }
 }

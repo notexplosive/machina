@@ -140,8 +140,32 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResult(result));
         }
 
+        [Fact]
+        public void flow_layout_can_permit_overflow_extra_rows()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.PermitExtraRows),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(8, 10)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemH", LayoutSize.Pixels(4, 4))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify("There are supposed to be a bunch of skipped pixels here: \n\n" + LayoutNodeUtils.DrawResult(result));
+        }
+
         // TODO: Overflow rules
+        // - Permit Extra Rows: Keep adding new rows, ignoring the height limitation all together.
+        // - Halt on Illegal Item: Instead of emitting an illegal item, halt immediately.
+        // - Finish Row on Illegal Item: Allow the illegal item, finish the row, and then stop adding items.
+        // - Halt on Illegal Item and Elide: Instead of emitting an illegal item, emit an "elide" node instead (provided by user)
 
         // TODO: Forced linebreaks
+
+        // TODO: Now do it in Vertical
     }
 }

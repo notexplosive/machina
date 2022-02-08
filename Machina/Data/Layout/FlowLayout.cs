@@ -4,6 +4,15 @@ using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
+    public class OverflowRule
+    {
+        private OverflowRule()
+        {
+        }
+
+        public static OverflowRule PermitExtraRows = new OverflowRule();
+    }
+
     public static class FlowLayout
     {
         private class Rows
@@ -120,14 +129,26 @@ namespace Machina.Data.Layout
         public int PaddingBetweenRows { get; }
         public int PaddingBetweenItemsInEachRow { get; }
         public Alignment Alignment { get; }
+        public OverflowRule OverflowRule { get; }
         public Point Margin { get; }
 
-        public FlowLayoutStyle(Point margin = default, int paddingBetweenRows = default, int paddingBetweenItemsInEachRow = default, Alignment alignment = default)
+        public FlowLayoutStyle(
+            Point margin = default,
+            int paddingBetweenRows = default,
+            int paddingBetweenItemsInEachRow = default,
+            Alignment alignment = default,
+            OverflowRule overflowRule = default)
         {
+            if (overflowRule == default)
+            {
+                overflowRule = OverflowRule.PermitExtraRows;
+            }
+
             Margin = margin;
             PaddingBetweenItemsInEachRow = paddingBetweenItemsInEachRow;
             PaddingBetweenRows = paddingBetweenRows;
             Alignment = alignment;
+            OverflowRule = overflowRule;
         }
     }
 }
