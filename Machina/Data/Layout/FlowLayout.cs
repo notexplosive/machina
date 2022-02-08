@@ -137,7 +137,7 @@ namespace Machina.Data.Layout
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
-            // It sucks that we have to give the node a name, then immediately ask for the node we just named
+            // It sucks that we have to give the node a name, then immediately ask for the node we just named. But I'm not sure where that API should live.
             var workableArea = LayoutNode.OneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
             var rows = new Rows(workableArea.Size, style);
 
