@@ -100,8 +100,8 @@ namespace Machina.Data.Layout
             public int AvailableAlongSize { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
             public int RemainingAlongSize => AvailableAlongSize - UsedAlongSize;
-            public int UsedAlongSize => EstimatedSize.X;
-            public int UsedPerpendicularSize => EstimatedSize.Y;
+            public int UsedAlongSize => EstimatedSize.AxisValue(Orientation.ToAxis());
+            public int UsedPerpendicularSize => EstimatedSize.OppositeAxisValue(Orientation.ToAxis());
             public Point EstimatedSize { get; private set; }
 
             public void AddItem(LayoutNode child)
@@ -117,7 +117,8 @@ namespace Machina.Data.Layout
 
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableAlongSize, UsedPerpendicularSize), RowStyle, Content.ToArray());
+                var size = Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, UsedPerpendicularSize);
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(size), RowStyle, Content.ToArray());
             }
 
             public void PopLastItem()
