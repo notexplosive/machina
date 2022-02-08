@@ -18,8 +18,8 @@ namespace Machina.Data.TextRendering
 
         public BoundedText(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
         {
-            this.FontMetrics = font;
-            this.TotalAvailableRect = rect;
+            FontMetrics = font;
+            TotalAvailableRect = rect;
             this.alignment = alignment;
             Lines = new AssembledTextLines(text, font, TotalAvailableRect.Size, this.alignment, overflow);
 
@@ -35,7 +35,7 @@ namespace Machina.Data.TextRendering
                 lineIndex++;
             }
 
-            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(this.TotalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
                 childNodes.ToArray()
             );
 
@@ -49,7 +49,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.FontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, this.TotalAvailableRect.Location, GetRectOfLine(lineIndex)));
+                renderableTexts.Add(new RenderableText(FontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, GetRectOfLine(lineIndex)));
                 lineIndex++;
             }
 
@@ -63,7 +63,7 @@ namespace Machina.Data.TextRendering
 
         public Point TopLeftOfText()
         {
-            return new Point(LeftOfText(), this.GetRectOfLine(0).Location.Y);
+            return new Point(LeftOfText(), GetRectOfLine(0).Location.Y);
         }
 
         private int LeftOfText()
