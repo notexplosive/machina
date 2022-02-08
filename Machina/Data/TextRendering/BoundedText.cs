@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct TextMeasurer
+    public readonly struct BoundedText
     {
         private readonly Alignment alignment;
         private readonly BakedLayout bakedLayout;
@@ -16,7 +16,7 @@ namespace Machina.Data.TextRendering
 
         public AssembledTextLines Lines { get; }
 
-        public TextMeasurer(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
+        public BoundedText(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
         {
             this.FontMetrics = font;
             this.TotalAvailableRect = rect;

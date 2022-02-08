@@ -55,9 +55,9 @@ namespace Machina.Components
 
         public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
 
-        private TextMeasurer CreateMeasuredText()
+        private BoundedText CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(Text, FontMetrics, this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow);
+            var measurer = new BoundedText(Text, FontMetrics, this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow);
 
             return measurer;
         }

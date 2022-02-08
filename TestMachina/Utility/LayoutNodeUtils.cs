@@ -9,7 +9,7 @@ namespace TestMachina.Utility
 {
     public class TextMeasureUtils
     {
-        public static string DrawResult(TextMeasurer textMeasurer)
+        public static string DrawResult(BoundedText textMeasurer)
         {
             var drawPanel = new AsciiDrawPanel(textMeasurer.TotalAvailableRect.Location + textMeasurer.TotalAvailableRect.Size);
 

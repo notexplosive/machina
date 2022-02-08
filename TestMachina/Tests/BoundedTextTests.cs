@@ -17,7 +17,7 @@ namespace TestMachina.Tests
         [Fact]
         public void text_measurer_generates_accurate_output()
         {
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "Hello world",
                 new MonospacedFontMetrics(new Point(2, 3)),
                 new Rectangle(new Point(0, 0), new Point(200, 200)),
@@ -37,7 +37,7 @@ namespace TestMachina.Tests
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
@@ -65,7 +65,7 @@ namespace TestMachina.Tests
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
@@ -93,7 +93,7 @@ namespace TestMachina.Tests
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
@@ -121,7 +121,7 @@ namespace TestMachina.Tests
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "Short top string\nlooooooooooong.... middle.... string\nshort bottom",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
@@ -149,7 +149,7 @@ namespace TestMachina.Tests
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(new Point(350, 250), new Point(100, 200)),
@@ -176,7 +176,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
             var rect = new Rectangle(new Point(350, 250), new Point(100, 200));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 rect,
@@ -203,7 +203,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new TextMeasurer(
+            var textMeasurer = new BoundedText(
                 "I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!",
                 fontMetrics,
                 rect,
