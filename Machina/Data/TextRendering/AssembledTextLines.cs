@@ -14,6 +14,7 @@ namespace Machina.Data.TextRendering
         private readonly StringBuilder stringBuilder;
         private readonly List<TextLine> textLines;
         private readonly TextLinesPendingInfo pendingInfo;
+        public int Count => this.textLines.Count;
 
         private class TextLinesPendingInfo
         {

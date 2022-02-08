@@ -9,19 +9,19 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextMeasurer
     {
-        private readonly IFontMetrics fontMetrics;
-        private readonly Rectangle totalAvailableRect;
         private readonly Alignment alignment;
         private readonly BakedLayout bakedLayout;
+        public IFontMetrics FontMetrics { get; }
+        public Rectangle TotalAvailableRect { get; }
 
         public AssembledTextLines Lines { get; }
 
         public TextMeasurer(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
         {
-            this.fontMetrics = font;
-            this.totalAvailableRect = rect;
+            this.FontMetrics = font;
+            this.TotalAvailableRect = rect;
             this.alignment = alignment;
-            Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, this.alignment, overflow);
+            Lines = new AssembledTextLines(text, font, TotalAvailableRect.Size, this.alignment, overflow);
 
             var lineIndex = 0;
             var childNodes = new List<LayoutNode>();
@@ -35,7 +35,7 @@ namespace Machina.Data.TextRendering
                 lineIndex++;
             }
 
-            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(this.totalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
+            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(this.TotalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
                 childNodes.ToArray()
             );
 
@@ -49,7 +49,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var line in Lines)
             {
-                renderableTexts.Add(new RenderableText(this.fontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, this.totalAvailableRect.Location, GetRectOfLine(lineIndex)));
+                renderableTexts.Add(new RenderableText(this.FontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, this.TotalAvailableRect.Location, GetRectOfLine(lineIndex)));
                 lineIndex++;
             }
 

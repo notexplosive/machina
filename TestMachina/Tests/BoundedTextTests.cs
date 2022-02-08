@@ -1,13 +1,17 @@
-﻿using FluentAssertions;
+﻿using ApprovalTests;
+using ApprovalTests.Reporters;
+using FluentAssertions;
 using Machina.Components;
 using Machina.Data;
 using Machina.Data.TextRendering;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
+using TestMachina.Utility;
 using Xunit;
 
 namespace TestMachina.Tests
 {
+    [UseReporter(typeof(DiffReporter))]
     public class BoundedTextTests
     {
         [Fact]
@@ -191,6 +195,22 @@ namespace TestMachina.Tests
 
             renderedLines[2].PivotPosition.Should().Be(new Vector2(400, 350));
             renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(9, -97));
+        }
+
+        [Fact]
+        public void text_rendering_pinning_approval()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new TextMeasurer(
+                "I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!",
+                fontMetrics,
+                rect,
+                Alignment.Center,
+                Overflow.Elide);
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
     }
 }
