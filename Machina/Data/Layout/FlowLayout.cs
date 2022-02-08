@@ -138,10 +138,8 @@ namespace Machina.Data.Layout
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
-            // "Horizontal"Parent here doesn't matter because we only have one child. It would be nice to have an API where we just say
-            // "parent of single thing" where we clarify orientation agnosticism when we guarantee only having one child
-            // While we're at it, it sucks that we have to give the node a name, then immediately ask for the node we just named
-            var workableArea = LayoutNode.HorizontalParent("throwAwayParent", size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
+            // It sucks that we have to give the node a name, then immediately ask for the node we just named
+            var workableArea = LayoutNode.OneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
             var rows = new Rows(workableArea.Size, style);
 
             foreach (var child in children)
