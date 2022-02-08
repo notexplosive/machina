@@ -63,10 +63,16 @@ namespace Machina.Data.Layout
             return new LayoutNode(name, size, Orientation.Horizontal, style, children);
         }
 
-        public static LayoutNode OneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
+        public static LayoutNode NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here
             return HorizontalParent("root", size, style, child);
+        }
+
+        public static LayoutNode OneOffParent(string name, LayoutSize size, LayoutStyle style, LayoutNode child)
+        {
+            // Horizontal/Vertical does not matter here
+            return HorizontalParent(name, size, style, child);
         }
 
         public static LayoutNode OrientedParent(Orientation orientation, string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
