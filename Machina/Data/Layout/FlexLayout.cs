@@ -2,22 +2,6 @@
 
 namespace Machina.Data.Layout
 {
-    public struct FlexLayoutStyle
-    {
-        public static FlexLayoutStyle Empty => new FlexLayoutStyle();
-
-        public LayoutStyle InnerStyle { get; }
-        public int? MinAlongSize { get; }
-        public int? MinPerpendicularSize { get; }
-
-        public FlexLayoutStyle(LayoutStyle style = default, int? minAlongSize = null, int? minPerpendicularSize = null)
-        {
-            InnerStyle = style;
-            MinAlongSize = minAlongSize;
-            MinPerpendicularSize = minPerpendicularSize;
-        }
-    }
-
     /// <summary>
     /// Flex layout has exactly enough room to fit. You feed it LayoutNode parameters and it creates a LayoutNode that is exactly fit for the children and style.
     /// </summary>
