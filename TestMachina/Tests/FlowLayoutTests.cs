@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
+using FluentAssertions;
 using Machina.Data;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
@@ -269,15 +270,34 @@ namespace TestMachina.Tests
             var layout = FlowLayout.VerticalFlowParent("root", LayoutSize.Pixels(25, 40), new FlowLayoutStyle(alignment: Alignment.BottomRight),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                FlowLayoutInstruction.Linebreak,
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                FlowLayoutInstruction.Linebreak,
                 LayoutNode.Leaf("itemD", LayoutSize.Pixels(10, 10)),
                 LayoutNode.Leaf("itemE", LayoutSize.Pixels(13, 10)),
-                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 10))
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(7, 10))
             );
 
             var result = layout.Bake();
 
-            // result.GetRow(0);
+            result.GetRow(0).ItemCount.Should().Be(2);
+            result.GetRow(1).ItemCount.Should().Be(1);
+            result.GetRow(2).ItemCount.Should().Be(4);
+
+            result.GetRow(2).GetItemNode(1).Size.Should().Be(new Point(13, 10));
+
+            int totalItems = 0;
+            foreach (var row in result.Rows)
+            {
+                foreach (var item in row)
+                {
+                    item.NestingLevel.Should().Be(3);
+                    totalItems++;
+                }
+            }
+
+            totalItems.Should().Be(7);
         }
     }
 }

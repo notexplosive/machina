@@ -45,12 +45,12 @@ namespace TestMachina.Utility
 
     public class LayoutNodeUtils
     {
-        public static string DrawResult(BakedLayout layoutResult)
+        public static string DrawResult(IBakedLayout layoutResult)
         {
             return DrawResultWithSpecificSize(layoutResult, layoutResult.GetNode(layoutResult.OriginalRoot.Name.Text).Size);
         }
 
-        public static string DrawResultWithSpecificSize(BakedLayout layoutResult, Point size)
+        public static string DrawResultWithSpecificSize(IBakedLayout layoutResult, Point size)
         {
             var drawPanel = new AsciiDrawPanel(size);
             foreach (var key in layoutResult.AllResultNodeNames())
