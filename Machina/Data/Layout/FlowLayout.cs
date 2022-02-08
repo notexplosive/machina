@@ -6,38 +6,52 @@ namespace Machina.Data.Layout
 {
     public class OverflowRule
     {
-        private OverflowRule()
+        private OverflowRule(bool haltOnFailure)
         {
+            HaltImmediatelyUponFailure = haltOnFailure;
         }
 
-        public static OverflowRule PermitExtraRows = new OverflowRule();
+        public static OverflowRule PermitExtraRows = new OverflowRule(false);
+        public static OverflowRule HaltOnIllegal = new OverflowRule(true);
+
+        public bool HaltImmediatelyUponFailure { get; }
     }
 
     public static class FlowLayout
     {
         private class Rows
         {
-            public Rows(int defaultWidth, FlowLayoutStyle flowLayoutStyle)
+            public Rows(int defaultWidth, int availableHeight, FlowLayoutStyle flowLayoutStyle)
             {
                 DefaultWidth = defaultWidth;
+                AvailableHeight = availableHeight;
                 Style = flowLayoutStyle;
 
                 CurrentRow = new Row(DefaultWidth, Style);
                 Content.Add(CurrentRow);
             }
 
-            public Row CurrentRow { get; private set; }
+            private Row CurrentRow { get; set; }
             public int DefaultWidth { get; }
+            public int AvailableHeight { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(DefaultWidth, TotalHeight + CurrentRow.Height + Content.Count * Style.PaddingBetweenRows);
-            public int TotalHeight { get; private set; }
+            public Point UsedSize => new Point(DefaultWidth, HeightOfAllContent + CurrentRow.Height + TotalPaddingBetweenRows);
+            public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
+            public int HeightOfAllContent { get; private set; }
+            public bool IsFull { get; private set; }
+            public int RemainingWidthInCurrentRow => CurrentRow.RemainingWidth;
 
-            public void CreateNextRowAndAdd(LayoutNode child)
+            public void CreateNextRowAndAdd(LayoutNode itemToAdd)
             {
-                TotalHeight += CurrentRow.Height;
+                if (IsFull)
+                {
+                    return;
+                }
+
+                HeightOfAllContent += CurrentRow.Height;
                 CurrentRow = new Row(DefaultWidth, Style);
-                CurrentRow.AddItem(child);
+                AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
             }
 
@@ -51,6 +65,23 @@ namespace Machina.Data.Layout
                 }
 
                 return nodes;
+            }
+
+            public void AddItemToCurrentRow(LayoutNode itemToAdd)
+            {
+                if (IsFull)
+                {
+                    return;
+                }
+
+                CurrentRow.AddItem(itemToAdd);
+
+                if (UsedSize.Y > AvailableHeight && Style.OverflowRule.HaltImmediatelyUponFailure)
+                {
+                    IsFull = true;
+                    CurrentRow.PopLastItem();
+                }
+
             }
         }
 
@@ -74,8 +105,7 @@ namespace Machina.Data.Layout
             public void AddItem(LayoutNode child)
             {
                 Content.Add(child);
-                // Cache EstimatedSize, could use as a get-only property at the cost of some perf.
-                EstimatedSize = GetLayoutNodeAsFlex("flex").Bake().GetNode("flex").Size;
+                UpdateEstimatedSize();
             }
 
             private LayoutNode GetLayoutNodeAsFlex(string rowNodeName)
@@ -86,6 +116,17 @@ namespace Machina.Data.Layout
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
                 return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth, Height), RowStyle, Content.ToArray());
+            }
+
+            public void PopLastItem()
+            {
+                Content.RemoveAt(Content.Count - 1);
+                UpdateEstimatedSize();
+            }
+
+            public void UpdateEstimatedSize()
+            {
+                EstimatedSize = GetLayoutNodeAsFlex("flex").Bake().GetNode("flex").Size;
             }
         }
 
@@ -98,17 +139,22 @@ namespace Machina.Data.Layout
             // "parent of single thing" where we clarify orientation agnosticism when we guarantee only having one child
             // While we're at it, it sucks that we have to give the node a name, then immediately ask for the node we just named
             var workableArea = LayoutNode.HorizontalParent("throwAwayParent", size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
-            var rows = new Rows(workableArea.Size.X, style);
+            var rows = new Rows(workableArea.Size.X, workableArea.Size.Y, style);
 
             foreach (var child in children)
             {
-                if (rows.CurrentRow.RemainingWidth >= child.Size.Width.ActualSize)
+                if (rows.RemainingWidthInCurrentRow >= child.Size.Width.ActualSize)
                 {
-                    rows.CurrentRow.AddItem(child);
+                    rows.AddItemToCurrentRow(child);
                 }
                 else
                 {
                     rows.CreateNextRowAndAdd(child);
+                }
+
+                if (rows.IsFull)
+                {
+                    break;
                 }
             }
 
