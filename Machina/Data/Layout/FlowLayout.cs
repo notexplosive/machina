@@ -25,7 +25,7 @@ namespace Machina.Data.Layout
 
             // It sucks that we have to give the node a name, then immediately ask for the node we just named. But I'm not sure where that API should live.
             var workableArea = LayoutNode.NamelessOneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
-            var rows = new Rows(workableArea.Size, style, orientation);
+            var rows = new FlowLayoutRows(workableArea.Size, style, orientation);
 
             foreach (var item in children)
             {
@@ -61,7 +61,7 @@ namespace Machina.Data.Layout
         public class LayoutNodeOrInstruction
         {
             private LayoutNode InternalLayoutNode { get; }
-            private Instruction InternalInstruction { get; }
+            private FlowLayoutInstruction InternalInstruction { get; }
             public bool IsLayoutNode => InternalLayoutNode != null;
             public bool IsInstruction => InternalInstruction != null;
 
@@ -70,7 +70,7 @@ namespace Machina.Data.Layout
                 InternalLayoutNode = layoutNode;
             }
 
-            public LayoutNodeOrInstruction(Instruction flowInstruction)
+            public LayoutNodeOrInstruction(FlowLayoutInstruction flowInstruction)
             {
                 InternalInstruction = flowInstruction;
             }
@@ -85,184 +85,184 @@ namespace Machina.Data.Layout
                 return new LayoutNodeOrInstruction(node);
             }
 
-            public static implicit operator Instruction(LayoutNodeOrInstruction self)
+            public static implicit operator FlowLayoutInstruction(LayoutNodeOrInstruction self)
             {
                 return self.InternalInstruction;
             }
 
-            public static implicit operator LayoutNodeOrInstruction(Instruction instruction)
+            public static implicit operator LayoutNodeOrInstruction(FlowLayoutInstruction instruction)
             {
                 return new LayoutNodeOrInstruction(instruction);
             }
         }
+    }
 
-        public class Instruction
+    internal class FlowLayoutRows
+    {
+        public FlowLayoutRows(Point availableSize, FlowLayoutStyle flowLayoutStyle, Orientation orientation)
         {
-            private Instruction()
-            {
+            Orientation = orientation;
+            AvailableAlongSize = availableSize.AxisValue(orientation.ToAxis());
+            AvailablePerpendicularSize = availableSize.OppositeAxisValue(orientation.ToAxis());
+            Style = flowLayoutStyle;
 
-            }
-
-            public static Instruction Linebreak = new Instruction();
+            CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
+            Content.Add(CurrentRow);
         }
 
-        private class Rows
-        {
-            public Rows(Point availableSize, FlowLayoutStyle flowLayoutStyle, Orientation orientation)
-            {
-                Orientation = orientation;
-                AvailableAlongSize = availableSize.AxisValue(orientation.ToAxis());
-                AvailablePerpendicularSize = availableSize.OppositeAxisValue(orientation.ToAxis());
-                Style = flowLayoutStyle;
+        private FlowLayoutRow CurrentRow { get; set; }
+        public Orientation Orientation { get; }
+        public int AvailableAlongSize { get; }
+        public int AvailablePerpendicularSize { get; }
+        public FlowLayoutStyle Style { get; }
+        public List<FlowLayoutRow> Content { get; } = new List<FlowLayoutRow>();
+        public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
+        public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
+        public int PerpendicularSizeOfAllContent { get; private set; }
+        public bool StopAddingNewItems { get; private set; }
+        public bool StopAddingNewRows { get; private set; }
+        public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
 
-                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
-                Content.Add(CurrentRow);
+        public void CreateNextRowAndAdd(LayoutNode itemToAdd)
+        {
+            if (StopAddingNewItems || StopAddingNewRows)
+            {
+                return;
             }
 
-            private Row CurrentRow { get; set; }
-            public Orientation Orientation { get; }
-            public int AvailableAlongSize { get; }
-            public int AvailablePerpendicularSize { get; }
-            public FlowLayoutStyle Style { get; }
-            public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
-            public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
-            public int PerpendicularSizeOfAllContent { get; private set; }
-            public bool StopAddingNewItems { get; private set; }
-            public bool StopAddingNewRows { get; private set; }
-            public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
+            AddNewRow();
+            AddItemToCurrentRow(itemToAdd);
+        }
 
-            public void CreateNextRowAndAdd(LayoutNode itemToAdd)
+        private void AddNewRow()
+        {
+            if (StopAddingNewItems || StopAddingNewRows)
             {
-                if (StopAddingNewItems || StopAddingNewRows)
+                return;
+            }
+
+            PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
+            CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
+            Content.Add(CurrentRow);
+        }
+
+        public LayoutNode[] GetLayoutNodesOfEachRow()
+        {
+            var nodes = new LayoutNode[Content.Count];
+
+            for (int i = 0; i < Content.Count; i++)
+            {
+                nodes[i] = Content[i].GetLayoutNode($"row {i}");
+            }
+
+            return nodes;
+        }
+
+        public void AddItemToCurrentRow(LayoutNode itemToAdd)
+        {
+            if (StopAddingNewItems)
+            {
+                return;
+            }
+
+            CurrentRow.AddItem(itemToAdd);
+
+            if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize)
+            {
+                if (Style.OverflowRule.HaltImmediatelyUponFailure)
                 {
-                    return;
+                    StopAddingNewItems = true;
+                    CurrentRow.PopLastItem();
                 }
 
+                if (Style.OverflowRule.DeletesWholeRowUponFailure)
+                {
+                    PopLastRow();
+                }
+
+                if (Style.OverflowRule.DoNotAddMoreRowsAfterFailure)
+                {
+                    StopAddingNewRows = true;
+                }
+            }
+
+        }
+
+        private void PopLastRow()
+        {
+            Content.RemoveAt(Content.Count - 1);
+            CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
+        }
+
+        public bool CanFitItem(LayoutNode item)
+        {
+            return RemainingAlongSizeInCurrentRow >= item.Size.GetValueFromOrientation(Orientation).ActualSize;
+        }
+
+        public void ConsumeInstruction(FlowLayoutInstruction instruction)
+        {
+            if (instruction == FlowLayoutInstruction.Linebreak)
+            {
                 AddNewRow();
-                AddItemToCurrentRow(itemToAdd);
-            }
-
-            private void AddNewRow()
-            {
-                if (StopAddingNewItems || StopAddingNewRows)
-                {
-                    return;
-                }
-
-                PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
-                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
-                Content.Add(CurrentRow);
-            }
-
-            public LayoutNode[] GetLayoutNodesOfEachRow()
-            {
-                var nodes = new LayoutNode[Content.Count];
-
-                for (int i = 0; i < Content.Count; i++)
-                {
-                    nodes[i] = Content[i].GetLayoutNode($"row {i}");
-                }
-
-                return nodes;
-            }
-
-            public void AddItemToCurrentRow(LayoutNode itemToAdd)
-            {
-                if (StopAddingNewItems)
-                {
-                    return;
-                }
-
-                CurrentRow.AddItem(itemToAdd);
-
-                if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize)
-                {
-                    if (Style.OverflowRule.HaltImmediatelyUponFailure)
-                    {
-                        StopAddingNewItems = true;
-                        CurrentRow.PopLastItem();
-                    }
-
-                    if (Style.OverflowRule.DeletesWholeRowUponFailure)
-                    {
-                        PopLastRow();
-                    }
-
-                    if (Style.OverflowRule.DoNotAddMoreRowsAfterFailure)
-                    {
-                        StopAddingNewRows = true;
-                    }
-                }
-
-            }
-
-            private void PopLastRow()
-            {
-                Content.RemoveAt(Content.Count - 1);
-                CurrentRow = new Row(AvailableAlongSize, Style, Orientation);
-            }
-
-            public bool CanFitItem(LayoutNode item)
-            {
-                return RemainingAlongSizeInCurrentRow >= item.Size.GetValueFromOrientation(Orientation).ActualSize;
-            }
-
-            public void ConsumeInstruction(Instruction instruction)
-            {
-                if (instruction == Instruction.Linebreak)
-                {
-                    AddNewRow();
-                }
             }
         }
+    }
 
-        private class Row
+    internal class FlowLayoutRow
+    {
+        public FlowLayoutRow(int availableAlongSize, FlowLayoutStyle style, Orientation orientation)
         {
-            public Row(int availableAlongSize, FlowLayoutStyle style, Orientation orientation)
-            {
-                Orientation = orientation;
-                AvailableAlongSize = availableAlongSize;
-                FlowLayoutStyle = style;
-            }
-
-            private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
-            public List<LayoutNode> Content { get; } = new List<LayoutNode>();
-            public Orientation Orientation { get; }
-            public int AvailableAlongSize { get; }
-            public FlowLayoutStyle FlowLayoutStyle { get; }
-            public int RemainingAlongSize => AvailableAlongSize - UsedAlongSize;
-            public int UsedAlongSize => EstimatedSize.AxisValue(Orientation.ToAxis());
-            public int UsedPerpendicularSize => EstimatedSize.OppositeAxisValue(Orientation.ToAxis());
-            public Point EstimatedSize { get; private set; }
-
-            public void AddItem(LayoutNode child)
-            {
-                Content.Add(child);
-                UpdateEstimatedSize();
-            }
-
-            private RawLayout GetRowAsFlex(string rowNodeName)
-            {
-                return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, new FlexLayoutStyle(style: RowStyle), Content.ToArray());
-            }
-
-            public LayoutNode GetLayoutNode(string rowNodeName)
-            {
-                var size = Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, UsedPerpendicularSize);
-                return LayoutNode.OrientedParent(Orientation, rowNodeName, LayoutSize.Pixels(size), RowStyle, Content.ToArray());
-            }
-
-            public void PopLastItem()
-            {
-                Content.RemoveAt(Content.Count - 1);
-                UpdateEstimatedSize();
-            }
-
-            public void UpdateEstimatedSize()
-            {
-                EstimatedSize = GetRowAsFlex("flex").Bake().GetNode("flex").Size;
-            }
+            Orientation = orientation;
+            AvailableAlongSize = availableAlongSize;
+            FlowLayoutStyle = style;
         }
+
+        private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
+        public List<LayoutNode> Content { get; } = new List<LayoutNode>();
+        public Orientation Orientation { get; }
+        public int AvailableAlongSize { get; }
+        public FlowLayoutStyle FlowLayoutStyle { get; }
+        public int RemainingAlongSize => AvailableAlongSize - UsedAlongSize;
+        public int UsedAlongSize => EstimatedSize.AxisValue(Orientation.ToAxis());
+        public int UsedPerpendicularSize => EstimatedSize.OppositeAxisValue(Orientation.ToAxis());
+        public Point EstimatedSize { get; private set; }
+
+        public void AddItem(LayoutNode child)
+        {
+            Content.Add(child);
+            UpdateEstimatedSize();
+        }
+
+        private RawLayout GetRowAsFlex(string rowNodeName)
+        {
+            return FlexLayout.OrientedFlexParent(Orientation, rowNodeName, new FlexLayoutStyle(style: RowStyle), Content.ToArray());
+        }
+
+        public LayoutNode GetLayoutNode(string rowNodeName)
+        {
+            var size = Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, UsedPerpendicularSize);
+            return LayoutNode.OrientedParent(Orientation, rowNodeName, LayoutSize.Pixels(size), RowStyle, Content.ToArray());
+        }
+
+        public void PopLastItem()
+        {
+            Content.RemoveAt(Content.Count - 1);
+            UpdateEstimatedSize();
+        }
+
+        public void UpdateEstimatedSize()
+        {
+            EstimatedSize = GetRowAsFlex("flex").Bake().GetNode("flex").Size;
+        }
+    }
+
+    public class FlowLayoutInstruction
+    {
+        private FlowLayoutInstruction()
+        {
+
+        }
+
+        public static FlowLayoutInstruction Linebreak = new FlowLayoutInstruction();
     }
 }

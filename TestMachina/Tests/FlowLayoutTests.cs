@@ -218,11 +218,11 @@ namespace TestMachina.Tests
             var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(40, 40), FlowLayoutStyle.Empty,
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
-                FlowLayout.Instruction.Linebreak,
+                FlowLayoutInstruction.Linebreak,
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 5)),
                 LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 7)),
                 LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 5)),
-                FlowLayout.Instruction.Linebreak,
+                FlowLayoutInstruction.Linebreak,
                 LayoutNode.Leaf("itemF", LayoutSize.Pixels(8, 10)),
                 LayoutNode.Leaf("itemG", LayoutSize.Pixels(9, 10))
             );
