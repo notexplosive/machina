@@ -31,25 +31,5 @@ namespace Machina.Data.Layout
             Alignment = alignment;
             OverflowRule = overflowRule;
         }
-
-        public override bool Equals(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static bool operator ==(FlowLayoutStyle left, FlowLayoutStyle right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(FlowLayoutStyle left, FlowLayoutStyle right)
-        {
-            return !(left == right);
-        }
     }
 }
