@@ -13,7 +13,7 @@ namespace Machina.Data.Layout
                 DefaultWidth = defaultWidth;
                 Style = flowLayoutStyle;
 
-                CurrentRow = new Row(DefaultWidth);
+                CurrentRow = new Row(DefaultWidth, Style);
                 Content.Add(CurrentRow);
             }
 
@@ -27,7 +27,7 @@ namespace Machina.Data.Layout
             public void CreateNextRowAndAdd(LayoutNode child)
             {
                 TotalHeight += CurrentRow.Height;
-                CurrentRow = new Row(DefaultWidth);
+                CurrentRow = new Row(DefaultWidth, Style);
                 CurrentRow.AddItem(child);
                 Content.Add(CurrentRow);
             }
@@ -38,7 +38,7 @@ namespace Machina.Data.Layout
 
                 for (int i = 0; i < Content.Count; i++)
                 {
-                    nodes[i] = Content[i].GetLayoutNode($"row {i}", Style);
+                    nodes[i] = Content[i].GetLayoutNode($"row {i}");
                 }
 
                 return nodes;
@@ -47,27 +47,36 @@ namespace Machina.Data.Layout
 
         private class Row
         {
-            public Row(int width)
+            public Row(int width, FlowLayoutStyle style)
             {
                 TotalWidth = width;
-                RemainingWidth = width;
+                FlowLayoutStyle = style;
             }
 
+            private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
             public List<LayoutNode> Content { get; } = new List<LayoutNode>();
-            public int Height { get; private set; }
+            public int Height => EstimatedSize.Y;
             public int TotalWidth { get; }
-            public int RemainingWidth { get; private set; }
+            public FlowLayoutStyle FlowLayoutStyle { get; }
+            public int RemainingWidth => TotalWidth - UsedWidth;
+            public int UsedWidth => EstimatedSize.X;
+            public Point EstimatedSize { get; private set; }
 
             public void AddItem(LayoutNode child)
             {
-                RemainingWidth -= child.Size.Width.ActualSize;
-                Height = Math.Max(Height, child.Size.Height.ActualSize);
                 Content.Add(child);
+                // Cache EstimatedSize, could use as a get-only property at the cost of some perf.
+                EstimatedSize = GetLayoutNodeAsFlex("flex").Bake().GetNode("flex").Size;
             }
 
-            public LayoutNode GetLayoutNode(string rowNodeName, FlowLayoutStyle style)
+            private LayoutNode GetLayoutNodeAsFlex(string rowNodeName)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth, Height), new LayoutStyle(alignment: style.Alignment), Content.ToArray());
+                return FlexLayout.HorizontalFlexParent(rowNodeName, RowStyle, Content.ToArray());
+            }
+
+            public LayoutNode GetLayoutNode(string rowNodeName)
+            {
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(TotalWidth, Height), RowStyle, Content.ToArray());
             }
         }
 
@@ -96,6 +105,7 @@ namespace Machina.Data.Layout
 
             // again the root node being "Horizontal" doesn't matter, we really need that "ParentOfSingleThing" static function
             return LayoutNode.HorizontalParent(name, size, workableAreaStyle,
+                // this "vertical" does matter because we stack the rows vertically, LTR and RTL would be vertical but TTB and BTT would be horizontal
                 LayoutNode.VerticalParent("rows", LayoutSize.Pixels(rows.UsedSize), new LayoutStyle(padding: style.PaddingBetweenRows),
                     rows.GetLayoutNodesOfEachRow()
                 )
