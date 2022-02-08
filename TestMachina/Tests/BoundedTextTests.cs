@@ -17,8 +17,7 @@ namespace TestMachina.Tests
                 "Hello world",
                 new MonospacedFontMetrics(new Point(2, 3)),
                 new Rectangle(new Point(0, 0), new Point(200, 200)),
-                HorizontalAlignment.Center,
-                VerticalAlignment.Center,
+                Alignment.Center,
                 Overflow.Ignore);
 
             textMeasurer.Lines.Should().HaveCount(1);
@@ -38,8 +37,7 @@ namespace TestMachina.Tests
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
-                HorizontalAlignment.Center,
-                VerticalAlignment.Center,
+                Alignment.Center,
                 Overflow.Elide);
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(6, 96));
@@ -67,8 +65,7 @@ namespace TestMachina.Tests
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
-                HorizontalAlignment.Left,
-                VerticalAlignment.Top,
+                Alignment.TopLeft,
                 Overflow.Elide);
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(0, 0));
@@ -96,8 +93,7 @@ namespace TestMachina.Tests
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
-                HorizontalAlignment.Right,
-                VerticalAlignment.Bottom,
+                Alignment.BottomRight,
                 Overflow.Elide);
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(12, 191));
@@ -125,8 +121,7 @@ namespace TestMachina.Tests
                 "Short top string\nlooooooooooong.... middle.... string\nshort bottom",
                 fontMetrics,
                 new Rectangle(Point.Zero, new Point(100, 200)),
-                HorizontalAlignment.Center,
-                VerticalAlignment.Center,
+                Alignment.Center,
                 Overflow.Elide);
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(13, 96));
@@ -154,8 +149,7 @@ namespace TestMachina.Tests
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 new Rectangle(new Point(350, 250), new Point(100, 200)),
-                HorizontalAlignment.Right,
-                VerticalAlignment.Bottom,
+                Alignment.BottomRight,
                 Overflow.Elide);
 
             var renderedLines = textMeasurer.GetRenderedLines(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0);
@@ -182,8 +176,7 @@ namespace TestMachina.Tests
                 "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
                 fontMetrics,
                 rect,
-                HorizontalAlignment.Right,
-                VerticalAlignment.Bottom,
+                Alignment.BottomRight,
                 Overflow.Elide);
 
             var renderedLines = textMeasurer.GetRenderedLines(rect.Center.ToVector2(), new Point(-5, 0), Color.Red, 0f, 0);

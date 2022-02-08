@@ -16,12 +16,11 @@ namespace Machina.Data.TextRendering
 
         public AssembledTextLines Lines { get; }
 
-        public TextMeasurer(string text, IFontMetrics font, Rectangle rect, HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment, Overflow overflow)
+        public TextMeasurer(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
         {
             this.fontMetrics = font;
             this.totalAvailableRect = rect;
-            this.alignment = new Alignment(horizontalAlignment, verticalAlignment);
+            this.alignment = alignment;
             Lines = new AssembledTextLines(text, font, totalAvailableRect.Size, this.alignment, overflow);
 
             var lineIndex = 0;

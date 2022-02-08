@@ -57,7 +57,7 @@ namespace Machina.Components
 
         private TextMeasurer CreateMeasuredText()
         {
-            var measurer = new TextMeasurer(Text, FontMetrics, this.boundingRect.Rect, this.horizontalAlignment, this.verticalAlignment, this.overflow);
+            var measurer = new TextMeasurer(Text, FontMetrics, this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow);
 
             return measurer;
         }
