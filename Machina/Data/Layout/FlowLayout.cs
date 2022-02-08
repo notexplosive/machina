@@ -36,7 +36,7 @@ namespace Machina.Data.Layout
             public int AvailableHeight { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.Height + TotalPaddingBetweenRows);
+            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.UsedHeight + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int HeightOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
@@ -49,7 +49,7 @@ namespace Machina.Data.Layout
                     return;
                 }
 
-                HeightOfAllContent += CurrentRow.Height;
+                HeightOfAllContent += CurrentRow.UsedHeight;
                 CurrentRow = new Row(AvailableWidth, Style);
                 AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
@@ -95,11 +95,11 @@ namespace Machina.Data.Layout
 
             private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
             public List<LayoutNode> Content { get; } = new List<LayoutNode>();
-            public int Height => EstimatedSize.Y;
             public int AvailableWidth { get; }
             public FlowLayoutStyle FlowLayoutStyle { get; }
             public int RemainingWidth => AvailableWidth - UsedWidth;
             public int UsedWidth => EstimatedSize.X;
+            public int UsedHeight => EstimatedSize.Y;
             public Point EstimatedSize { get; private set; }
 
             public void AddItem(LayoutNode child)
@@ -115,7 +115,7 @@ namespace Machina.Data.Layout
 
             public LayoutNode GetLayoutNode(string rowNodeName)
             {
-                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableWidth, Height), RowStyle, Content.ToArray());
+                return LayoutNode.HorizontalParent(rowNodeName, LayoutSize.Pixels(AvailableWidth, UsedHeight), RowStyle, Content.ToArray());
             }
 
             public void PopLastItem()
