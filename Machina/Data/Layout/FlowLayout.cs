@@ -22,24 +22,26 @@ namespace Machina.Data.Layout
         {
             public Rows(Point availableSize, FlowLayoutStyle flowLayoutStyle)
             {
-                AvailableWidth = availableSize.X;
-                AvailableHeight = availableSize.Y;
+                Orientation = Orientation.Horizontal;
+                AvailableAlongSize = availableSize.X;
+                AvailablePerpendicularSize = availableSize.Y;
                 Style = flowLayoutStyle;
 
-                CurrentRow = new Row(AvailableWidth, Style);
+                CurrentRow = new Row(AvailableAlongSize, Style);
                 Content.Add(CurrentRow);
             }
 
             private Row CurrentRow { get; set; }
-            public int AvailableWidth { get; }
-            public int AvailableHeight { get; }
+            public Orientation Orientation { get; }
+            public int AvailableAlongSize { get; }
+            public int AvailablePerpendicularSize { get; }
             public FlowLayoutStyle Style { get; }
             public List<Row> Content { get; } = new List<Row>();
-            public Point UsedSize => new Point(AvailableWidth, HeightOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
+            public Point UsedSize => new Point(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
-            public int HeightOfAllContent { get; private set; }
+            public int PerpendicularSizeOfAllContent { get; private set; }
             public bool IsFull { get; private set; }
-            public int RemainingWidthInCurrentRow => CurrentRow.RemainingAlongSize;
+            public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
 
             public void CreateNextRowAndAdd(LayoutNode itemToAdd)
             {
@@ -48,8 +50,8 @@ namespace Machina.Data.Layout
                     return;
                 }
 
-                HeightOfAllContent += CurrentRow.UsedPerpendicularSize;
-                CurrentRow = new Row(AvailableWidth, Style);
+                PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
+                CurrentRow = new Row(AvailableAlongSize, Style);
                 AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
             }
@@ -75,7 +77,7 @@ namespace Machina.Data.Layout
 
                 CurrentRow.AddItem(itemToAdd);
 
-                if (UsedSize.Y > AvailableHeight && Style.OverflowRule.HaltImmediatelyUponFailure)
+                if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize && Style.OverflowRule.HaltImmediatelyUponFailure)
                 {
                     IsFull = true;
                     CurrentRow.PopLastItem();
@@ -143,7 +145,7 @@ namespace Machina.Data.Layout
 
             foreach (var child in children)
             {
-                if (rows.RemainingWidthInCurrentRow >= child.Size.Width.ActualSize)
+                if (rows.RemainingAlongSizeInCurrentRow >= child.Size.Width.ActualSize)
                 {
                     rows.AddItemToCurrentRow(child);
                 }
