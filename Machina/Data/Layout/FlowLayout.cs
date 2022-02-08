@@ -95,13 +95,13 @@ namespace Machina.Data.Layout
             public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
             public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
             public int PerpendicularSizeOfAllContent { get; private set; }
-            public bool IsFull { get; private set; }
+            public bool StopAddingNewItems { get; private set; }
             public bool StopAddingNewRows { get; private set; }
             public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
 
             public void CreateNextRowAndAdd(LayoutNode itemToAdd)
             {
-                if (IsFull || StopAddingNewRows)
+                if (StopAddingNewItems || StopAddingNewRows)
                 {
                     return;
                 }
@@ -112,7 +112,7 @@ namespace Machina.Data.Layout
 
             private void AddNewRow()
             {
-                if (IsFull || StopAddingNewRows)
+                if (StopAddingNewItems || StopAddingNewRows)
                 {
                     return;
                 }
@@ -136,7 +136,7 @@ namespace Machina.Data.Layout
 
             public void AddItemToCurrentRow(LayoutNode itemToAdd)
             {
-                if (IsFull)
+                if (StopAddingNewItems)
                 {
                     return;
                 }
@@ -147,7 +147,7 @@ namespace Machina.Data.Layout
                 {
                     if (Style.OverflowRule.HaltImmediatelyUponFailure)
                     {
-                        IsFull = true;
+                        StopAddingNewItems = true;
                         CurrentRow.PopLastItem();
                     }
 
@@ -268,7 +268,7 @@ namespace Machina.Data.Layout
                     rows.ConsumeInstruction(item);
                 }
 
-                if (rows.IsFull)
+                if (rows.StopAddingNewItems)
                 {
                     break;
                 }
