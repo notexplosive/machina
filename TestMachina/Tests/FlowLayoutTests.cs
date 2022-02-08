@@ -212,11 +212,24 @@ namespace TestMachina.Tests
             Approvals.Verify(LayoutNodeUtils.DrawResultWithSpecificSize(result, new Point(41, 23)));
         }
 
-        // TODO: Overflow rules
-        // - Finish Row on Illegal Item: Allow the illegal item, finish the row, and then stop adding items.
-        // - Halt on Illegal Item and Elide: Instead of emitting an illegal item, emit an "elide" node instead (provided by user)
+        [Fact]
+        public void flow_layout_allows_forced_linebreaks()
+        {
+            var layout = FlowLayout.FlowParent("root", LayoutSize.Pixels(40, 40), FlowLayoutStyle.Empty,
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                FlowLayout.Instruction.Linebreak,
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 5)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 7)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 5)),
+                FlowLayout.Instruction.Linebreak,
+                LayoutNode.Leaf("itemF", LayoutSize.Pixels(8, 10)),
+                LayoutNode.Leaf("itemG", LayoutSize.Pixels(9, 10))
+            );
 
-        // TODO: Forced linebreaks
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
 
         // TODO: Now do it in Vertical
     }

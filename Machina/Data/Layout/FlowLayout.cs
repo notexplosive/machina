@@ -23,8 +23,56 @@ namespace Machina.Data.Layout
         public bool DoNotAddMoreRowsAfterFailure { get; }
     }
 
+    public class FlowLayoutNode
+    {
+        private LayoutNode InternalLayoutNode { get; }
+        private FlowLayout.Instruction InternalInstruction { get; }
+        public bool IsLayoutNode => InternalLayoutNode != null;
+        public bool IsInstruction => InternalInstruction != null;
+
+        public FlowLayoutNode(LayoutNode layoutNode)
+        {
+            InternalLayoutNode = layoutNode;
+        }
+
+        public FlowLayoutNode(FlowLayout.Instruction flowInstruction)
+        {
+            InternalInstruction = flowInstruction;
+        }
+
+        public static implicit operator LayoutNode(FlowLayoutNode self)
+        {
+            return self.InternalLayoutNode;
+        }
+
+        public static implicit operator FlowLayoutNode(LayoutNode node)
+        {
+            return new FlowLayoutNode(node);
+        }
+
+        public static implicit operator FlowLayout.Instruction(FlowLayoutNode self)
+        {
+            return self.InternalInstruction;
+        }
+
+        public static implicit operator FlowLayoutNode(FlowLayout.Instruction instruction)
+        {
+            return new FlowLayoutNode(instruction);
+        }
+    }
+
     public static class FlowLayout
     {
+        public class Instruction
+        {
+            private Instruction()
+            {
+
+            }
+
+            public static Instruction Linebreak = new Instruction();
+        }
+
         private class Rows
         {
             public Rows(Point availableSize, FlowLayoutStyle flowLayoutStyle)
@@ -58,9 +106,19 @@ namespace Machina.Data.Layout
                     return;
                 }
 
+                AddNewRow();
+                AddItemToCurrentRow(itemToAdd);
+            }
+
+            private void AddNewRow()
+            {
+                if (IsFull || StopAddingNewRows)
+                {
+                    return;
+                }
+
                 PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
                 CurrentRow = new Row(AvailableAlongSize, Style);
-                AddItemToCurrentRow(itemToAdd);
                 Content.Add(CurrentRow);
             }
 
@@ -110,6 +168,19 @@ namespace Machina.Data.Layout
             {
                 Content.RemoveAt(Content.Count - 1);
                 CurrentRow = new Row(AvailableAlongSize, Style);
+            }
+
+            public bool CanFitItem(LayoutNode item)
+            {
+                return RemainingAlongSizeInCurrentRow >= item.Size.Width.ActualSize;
+            }
+
+            public void ConsumeInstruction(Instruction instruction)
+            {
+                if (instruction == Instruction.Linebreak)
+                {
+                    AddNewRow();
+                }
             }
         }
 
@@ -162,7 +233,7 @@ namespace Machina.Data.Layout
         }
 
         // Should eventually be called "HorizontalLeftToRightFlowParent"
-        public static LayoutNode FlowParent(string name, LayoutSize size, FlowLayoutStyle style, params LayoutNode[] children)
+        public static LayoutNode FlowParent(string name, LayoutSize size, FlowLayoutStyle style, params FlowLayoutNode[] children)
         {
             var workableAreaStyle = new LayoutStyle(margin: style.Margin, alignment: style.Alignment);
 
@@ -170,15 +241,22 @@ namespace Machina.Data.Layout
             var workableArea = LayoutNode.NamelessOneOffParent(size, workableAreaStyle, LayoutNode.Leaf("workableArea", LayoutSize.StretchedBoth())).Bake().GetNode("workableArea");
             var rows = new Rows(workableArea.Size, style);
 
-            foreach (var child in children)
+            foreach (var item in children)
             {
-                if (rows.RemainingAlongSizeInCurrentRow >= child.Size.Width.ActualSize)
+                if (item.IsLayoutNode)
                 {
-                    rows.AddItemToCurrentRow(child);
+                    if (rows.CanFitItem(item))
+                    {
+                        rows.AddItemToCurrentRow(item);
+                    }
+                    else
+                    {
+                        rows.CreateNextRowAndAdd(item);
+                    }
                 }
-                else
+                else if (item.IsInstruction)
                 {
-                    rows.CreateNextRowAndAdd(child);
+                    rows.ConsumeInstruction(item);
                 }
 
                 if (rows.IsFull)
