@@ -92,7 +92,6 @@ namespace Machina.Data.TextRendering
         {
             var renderableTexts = new List<RenderableText>();
 
-            var lineIndex = 0;
             var tokenIndex = 0;
             foreach (var row in this.bakedLayout.Rows)
             {
@@ -104,7 +103,6 @@ namespace Machina.Data.TextRendering
                 }
 
                 renderableTexts.Add(new RenderableText(FontMetrics, textContent.ToString(), worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, row.UsedRectangle));
-                lineIndex++;
             }
 
             return renderableTexts;
