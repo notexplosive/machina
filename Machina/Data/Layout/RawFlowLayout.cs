@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace Machina.Data.Layout
 {
@@ -18,13 +19,16 @@ namespace Machina.Data.Layout
         public string[] GetItemNamesForRow(int rowIndex)
         {
             var children = this.rowNodes[rowIndex].Children;
-            var result = new string[children.Length];
+            var result = new List<string>();
             for (int i = 0; i < children.Length; i++)
             {
-                result[i] = children[i].Name.Text;
+                if (children[i].Name.Exists)
+                {
+                    result.Add(children[i].Name.Text);
+                }
             }
 
-            return result;
+            return result.ToArray();
         }
 
         // ew parallel arrays

@@ -39,33 +39,27 @@ namespace Machina.Data.TextRendering
 
         public static string[] CreateTokens(string text)
         {
-            var splitLines = text.Trim().Split('\n');
             var words = new List<string>();
-            foreach (var textLine in splitLines)
+            var pendingWord = new StringBuilder();
+            foreach (var character in text)
             {
-                var pendingWord = new StringBuilder();
-                foreach (var character in textLine)
-                {
-                    if (character == ' ')
-                    {
-                        words.Add(pendingWord.ToString());
-                        pendingWord.Clear();
-                        words.Add(character.ToString());
-                    }
-                    else
-                    {
-                        pendingWord.Append(character);
-                    }
-                }
-
-                if (pendingWord.Length > 0)
+                if (character == ' ' || character == '\n')
                 {
                     words.Add(pendingWord.ToString());
+                    pendingWord.Clear();
+                    words.Add(character.ToString());
                 }
-
-
-                words.Add("\n"); // Re-add the newline as a sentinal value
+                else
+                {
+                    pendingWord.Append(character);
+                }
             }
+
+            if (pendingWord.Length > 0)
+            {
+                words.Add(pendingWord.ToString());
+            }
+
 
             return words.ToArray();
         }

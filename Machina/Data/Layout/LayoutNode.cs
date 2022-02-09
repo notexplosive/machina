@@ -42,6 +42,15 @@ namespace Machina.Data.Layout
                 null);
         }
 
+        internal static FlowLayout.LayoutNodeOrInstruction NamelessLeaf(LayoutSize size)
+        {
+            return new LayoutNode(LayoutNodeName.Nameless, size,
+                /*Ignored params:*/
+                Orientation.Horizontal,
+                LayoutStyle.Empty,
+                null);
+        }
+
         public static RawLayout VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
             return new RawLayout(new LayoutNode(name, size, Orientation.Vertical, style, children));

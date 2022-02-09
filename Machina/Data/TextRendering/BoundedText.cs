@@ -10,32 +10,43 @@ namespace Machina.Data.TextRendering
     public readonly struct BoundedText
     {
         private readonly Alignment alignment;
-        private readonly BakedLayout bakedLayout;
+        private readonly BakedFlowLayout bakedLayout;
+        private readonly Dictionary<int, string> tokenLookup;
+
         public IFontMetrics FontMetrics { get; }
         public Rectangle TotalAvailableRect { get; }
-
-        public AssembledTextLines Lines { get; }
 
         public BoundedText(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
         {
             FontMetrics = font;
             TotalAvailableRect = rect;
             this.alignment = alignment;
-            Lines = new AssembledTextLines(text, font, TotalAvailableRect.Size, this.alignment, overflow);
+            this.tokenLookup = new Dictionary<int, string>();
 
-            var lineIndex = 0;
-            var childNodes = new List<LayoutNode>();
+            var tokens = AssembledTextLines.CreateTokens(text);
 
+            var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
+            var tokenIndex = 0;
 
-            foreach (var line in Lines)
+            foreach (var token in tokens)
             {
-                childNodes.Add(
-                    line.CreateLayoutNode($"line {lineIndex}")
-                );
-                lineIndex++;
+                if (token == "\n")
+                {
+                    childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(0, FontMetrics.LineSpacing)));
+                    childNodes.Add(FlowLayoutInstruction.Linebreak);
+                }
+                else
+                {
+                    // Reducing the MeasuredString result to a Point (truncating floats to ints) is that a problem?
+                    var size = FontMetrics.MeasureString(token).ToPoint();
+                    var id = $"token-{tokenIndex}";
+                    this.tokenLookup[tokenIndex] = token;
+                    childNodes.Add(LayoutNode.Leaf(id, LayoutSize.Pixels(size)));
+                    tokenIndex++;
+                }
             }
 
-            var layout = LayoutNode.VerticalParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new LayoutStyle(alignment: this.alignment),
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new FlowLayoutStyle(alignment: this.alignment),
                 childNodes.ToArray()
             );
 
@@ -47,9 +58,17 @@ namespace Machina.Data.TextRendering
             var renderableTexts = new List<RenderableText>();
 
             var lineIndex = 0;
-            foreach (var line in Lines)
+            var tokenIndex = 0;
+            foreach (var row in this.bakedLayout.Rows)
             {
-                renderableTexts.Add(new RenderableText(FontMetrics, line.TextContent, worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, GetRectOfLine(lineIndex)));
+                var textContent = new StringBuilder();
+                foreach (var item in row)
+                {
+                    textContent.Append(this.tokenLookup[tokenIndex]);
+                    tokenIndex++;
+                }
+
+                renderableTexts.Add(new RenderableText(FontMetrics, textContent.ToString(), worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, row.UsedRectangle));
                 lineIndex++;
             }
 
@@ -58,7 +77,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle GetRectOfLine(int lineIndex)
         {
-            return bakedLayout.GetNode($"line {lineIndex}").Rectangle;
+            return bakedLayout.GetRow(lineIndex).UsedRectangle;
         }
 
         public Point TopLeftOfText()
@@ -71,9 +90,9 @@ namespace Machina.Data.TextRendering
             var xOffset = 0;
             var hasFirstOffset = false;
             var lineIndex = 0;
-            foreach (var line in Lines)
+            foreach (var row in this.bakedLayout.Rows)
             {
-                var lineRelativePositionX = GetRectOfLine(lineIndex).Location.X;
+                var lineRelativePositionX = row.UsedRectangle.Location.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
