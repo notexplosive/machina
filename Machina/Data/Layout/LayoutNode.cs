@@ -15,7 +15,10 @@ namespace Machina.Data.Layout
             Name = name;
             Size = size;
             Orientation = orientation;
-            Children = children;
+            if (children != null)
+            {
+                Children = children;
+            }
             Style = style;
         }
 
