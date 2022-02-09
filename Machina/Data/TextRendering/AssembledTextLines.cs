@@ -31,6 +31,14 @@ namespace Machina.Data.TextRendering
             this.alignment = alignment;
             this.fontMetrics = fontMetrics;
 
+            this.words = CreateTokens(text);
+            this.pendingInfo = new TextLinesPendingInfo();
+
+            Assemble(overflow);
+        }
+
+        public static string[] CreateTokens(string text)
+        {
             var splitLines = text.Trim().Split('\n');
             var words = new List<string>();
             foreach (var textLine in splitLines)
@@ -59,10 +67,7 @@ namespace Machina.Data.TextRendering
                 words.Add("\n"); // Re-add the newline as a sentinal value
             }
 
-            this.words = words.ToArray();
-            this.pendingInfo = new TextLinesPendingInfo();
-
-            Assemble(overflow);
+            return words.ToArray();
         }
 
         private void Assemble(Overflow overflow)
