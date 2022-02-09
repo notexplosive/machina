@@ -95,14 +95,12 @@ namespace Machina.Data.TextRendering
             var tokenIndex = 0;
             foreach (var row in this.bakedLayout.Rows)
             {
-                var textContent = new StringBuilder();
-                foreach (var token in row)
+                foreach (var tokenNode in row)
                 {
-                    textContent.Append(this.tokenLookup[tokenIndex]);
+                    var tokenText = this.tokenLookup[tokenIndex];
+                    renderableTexts.Add(new RenderableText(FontMetrics, tokenText, worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, tokenNode.Rectangle));
                     tokenIndex++;
                 }
-
-                renderableTexts.Add(new RenderableText(FontMetrics, textContent.ToString(), worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, row.UsedRectangle));
             }
 
             return renderableTexts;
