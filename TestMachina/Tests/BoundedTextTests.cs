@@ -162,12 +162,15 @@ namespace TestMachina.Tests
 
             renderedLines[0].PivotPosition.Should().Be(new Vector2(350, 250));
             renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(-7, -191));
+            renderedLines[0].Content.Should().Be("This is a very long string. I thought about ");
 
             renderedLines[1].PivotPosition.Should().Be(new Vector2(350, 250));
             renderedLines[1].OffsetFromPivot.Should().Be(new Vector2(-11, -194));
+            renderedLines[1].Content.Should().Be("referencing some meme here in this string.");
 
             renderedLines[2].PivotPosition.Should().Be(new Vector2(350, 250));
             renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(-41, -197));
+            renderedLines[2].Content.Should().Be("But then I changed my mind.");
         }
 
         [Fact]
@@ -189,12 +192,15 @@ namespace TestMachina.Tests
 
             renderedLines[0].PivotPosition.Should().Be(new Vector2(400, 350));
             renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(43, -91));
+            renderedLines[0].Content.Should().Be("This is a very long string. I thought about ");
 
             renderedLines[1].PivotPosition.Should().Be(new Vector2(400, 350));
             renderedLines[1].OffsetFromPivot.Should().Be(new Vector2(39, -94));
+            renderedLines[1].Content.Should().Be("referencing some meme here in this string.");
 
             renderedLines[2].PivotPosition.Should().Be(new Vector2(400, 350));
             renderedLines[2].OffsetFromPivot.Should().Be(new Vector2(9, -97));
+            renderedLines[2].Content.Should().Be("But then I changed my mind.");
         }
 
         [Fact]
