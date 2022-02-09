@@ -83,7 +83,12 @@ namespace Machina.Data.Layout
 
             private Point GetTopLeftUsedPosition()
             {
-                var topLeft = GetItemNode(0).PositionRelativeToRoot;
+                if (this.itemNodes.Length == 0)
+                {
+                    return TotalRectangle.Location;
+                }
+
+                var topLeft = this.itemNodes[0].PositionRelativeToRoot;
                 foreach (var itemNode in itemNodes)
                 {
                     var currentItem = itemNode.PositionRelativeToRoot;
