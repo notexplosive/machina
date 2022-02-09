@@ -32,7 +32,7 @@ namespace Machina.Data.TextRendering
             {
                 if (token == "\n")
                 {
-                    childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(0, FontMetrics.LineSpacing)));
+                    childNodes.Add(LayoutNode.Spacer(new Point(0, FontMetrics.LineSpacing)));
                     childNodes.Add(FlowLayoutInstruction.Linebreak);
                 }
                 else
@@ -41,7 +41,7 @@ namespace Machina.Data.TextRendering
                     var size = FontMetrics.MeasureString(token).ToPoint();
                     var id = $"token-{tokenIndex}";
                     this.tokenLookup[tokenIndex] = token;
-                    childNodes.Add(LayoutNode.Leaf(id, LayoutSize.Pixels(size)));
+                    childNodes.Add(LayoutNode.NamelessBakableLeaf(LayoutSize.Pixels(size)));
                     tokenIndex++;
                 }
             }
