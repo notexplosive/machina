@@ -10,8 +10,9 @@ namespace Machina.Data.Layout
         /// <summary>
         /// This is only called by the static constructor methods. Most constructors ignore everything past "size"
         /// </summary>
-        private LayoutNode(LayoutNodeName name, LayoutSize size, Orientation orientation, LayoutStyle style, LayoutNode[] children)
+        private LayoutNode(bool isBakable, LayoutNodeName name, LayoutSize size, Orientation orientation, LayoutStyle style, LayoutNode[] children)
         {
+            IsBakable = isBakable;
             Name = name;
             Size = size;
             Orientation = orientation;
@@ -24,12 +25,12 @@ namespace Machina.Data.Layout
 
         public static LayoutNode StretchedSpacer()
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.StretchedBoth(), Orientation.Horizontal, LayoutStyle.Empty, null);
+            return new LayoutNode(false, LayoutNodeName.Nameless, LayoutSize.StretchedBoth(), Orientation.Horizontal, LayoutStyle.Empty, null);
         }
 
         public static LayoutNode Spacer(int size)
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Square(size),
+            return new LayoutNode(false, LayoutNodeName.Nameless, LayoutSize.Square(size),
                 /*Ignored params:*/
                 Orientation.Horizontal,
                 LayoutStyle.Empty,
@@ -38,7 +39,7 @@ namespace Machina.Data.Layout
 
         public static LayoutNode Leaf(string name, LayoutSize size)
         {
-            return new LayoutNode(name, size,
+            return new LayoutNode(true, name, size,
                 /*Ignored params:*/
                 Orientation.Horizontal,
                 LayoutStyle.Empty,
@@ -47,7 +48,7 @@ namespace Machina.Data.Layout
 
         public static LayoutNode Spacer(Point size)
         {
-            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Pixels(size),
+            return new LayoutNode(false, LayoutNodeName.Nameless, LayoutSize.Pixels(size),
                 /*Ignored params:*/
                 Orientation.Horizontal,
                 LayoutStyle.Empty,
@@ -56,7 +57,7 @@ namespace Machina.Data.Layout
 
         public static LayoutNode NamelessBakableLeaf(LayoutSize size)
         {
-            return new LayoutNode(LayoutNodeName.NamelessButBakable, size,
+            return new LayoutNode(true, LayoutNodeName.Nameless, size,
                 /*Ignored params:*/
                 Orientation.Horizontal,
                 LayoutStyle.Empty,
@@ -65,12 +66,12 @@ namespace Machina.Data.Layout
 
         public static RawLayout VerticalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new RawLayout(new LayoutNode(name, size, Orientation.Vertical, style, children));
+            return new RawLayout(new LayoutNode(true, name, size, Orientation.Vertical, style, children));
         }
 
         public static RawLayout HorizontalParent(string name, LayoutSize size, LayoutStyle style, params LayoutNode[] children)
         {
-            return new RawLayout(new LayoutNode(name, size, Orientation.Horizontal, style, children));
+            return new RawLayout(new LayoutNode(true, name, size, Orientation.Horizontal, style, children));
         }
 
         public static RawLayout NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
@@ -126,6 +127,7 @@ namespace Machina.Data.Layout
         public int Padding => Style.Padding;
         public Alignment Alignment => Style.Alignment;
         public LayoutStyle Style { get; }
+        public bool IsBakable { get; }
 
         /// <summary>
         /// Returns a LayoutNode just like this one with the same children, only resized
@@ -134,7 +136,7 @@ namespace Machina.Data.Layout
         /// <returns></returns>
         public RawLayout GetResized(Point newSize)
         {
-            return new RawLayout(new LayoutNode(Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children));
+            return new RawLayout(new LayoutNode(IsBakable, Name, LayoutSize.Pixels(newSize.X, newSize.Y), Orientation, Style, Children));
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace Machina.Data.Layout
         /// <returns></returns>
         public RawLayout GetRealigned(Alignment newAlignment)
         {
-            return new RawLayout(new LayoutNode(Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children));
+            return new RawLayout(new LayoutNode(IsBakable, Name, Size, Orientation, new LayoutStyle(margin: Margin, padding: Padding, alignment: newAlignment), Children));
         }
 
         public override string ToString()

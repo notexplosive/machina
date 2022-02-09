@@ -38,7 +38,7 @@ namespace Machina.Data.Layout
 
             void AddAndRecurse(LayoutNode node)
             {
-                if (node.Name.IsBakable)
+                if (node.IsBakable)
                 {
                     result.Add(rawToBakedLookup[node]);
                     if (node.HasChildren)
@@ -93,7 +93,7 @@ namespace Machina.Data.Layout
 
             foreach (var child in node.Children)
             {
-                if (child.Name.IsBakable)
+                if (child.IsBakable)
                 {
                     result.Add(this.rawToBakedLookup[child]);
                 }

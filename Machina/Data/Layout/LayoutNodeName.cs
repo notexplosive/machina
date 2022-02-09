@@ -10,13 +10,6 @@ namespace Machina.Data.Layout
         public LayoutNodeName(string text)
         {
             this.internalString = text;
-            IsBakable = true;
-        }
-
-        public LayoutNodeName(bool shouldBake)
-        {
-            this.internalString = null;
-            IsBakable = shouldBake;
         }
 
         public static implicit operator LayoutNodeName(string text)
@@ -43,10 +36,8 @@ namespace Machina.Data.Layout
         }
 
         public bool Exists => this.internalString != null;
-        public bool IsBakable { get; }
 
-        public static LayoutNodeName Nameless => new LayoutNodeName(false);
-        public static LayoutNodeName NamelessButBakable => new LayoutNodeName(true);
+        public static LayoutNodeName Nameless => new LayoutNodeName();
 
         public override string ToString()
         {
