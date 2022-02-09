@@ -18,7 +18,7 @@ namespace Machina.Data.Layout
         {
             if (node.Name.Exists)
             {
-                inProgressLayout.Add(node.Name.Text, new BakedLayoutNode(position, this.measurer.GetMeasuredSize(node.Size), nestingLevel));
+                inProgressLayout.Add(node, new BakedLayoutNode(position, this.measurer.GetMeasuredSize(node.Size), nestingLevel));
             }
         }
 

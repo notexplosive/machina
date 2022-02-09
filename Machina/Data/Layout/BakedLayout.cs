@@ -5,7 +5,7 @@ namespace Machina.Data.Layout
 {
     public class BakedLayout : IBakedLayout
     {
-        private readonly Dictionary<string, BakedLayoutNode> content = new Dictionary<string, BakedLayoutNode>();
+        private readonly Dictionary<LayoutNode, BakedLayoutNode> rawToBakedLookup = new Dictionary<LayoutNode, BakedLayoutNode>();
         public LayoutNode OriginalRoot { get; }
 
         public BakedLayout(LayoutNode originalRoot)
@@ -15,13 +15,20 @@ namespace Machina.Data.Layout
 
         public BakedLayoutNode GetNode(string name)
         {
-            return content[name];
+            var node = OriginalRoot.FindChildNodeWithName(name);
+
+            return this.rawToBakedLookup[node];
+        }
+
+        public BakedLayoutNode GetNode(LayoutNode unbakedNode)
+        {
+            return this.rawToBakedLookup[unbakedNode];
         }
 
         public BakedLayoutNode[] GetAllResultNodes()
         {
-            var result = new BakedLayoutNode[this.content.Values.Count];
-            this.content.Values.CopyTo(result, 0);
+            var result = new BakedLayoutNode[this.rawToBakedLookup.Values.Count];
+            this.rawToBakedLookup.Values.CopyTo(result, 0);
             return result;
         }
 
@@ -33,7 +40,7 @@ namespace Machina.Data.Layout
             {
                 if (node.Name.Exists)
                 {
-                    result.Add(content[node.Name.Text]);
+                    result.Add(rawToBakedLookup[node]);
                     if (node.HasChildren)
                     {
                         foreach (var child in node.Children)
@@ -50,30 +57,47 @@ namespace Machina.Data.Layout
 
         public IEnumerable<string> AllResultNodeNames()
         {
-            return this.content.Keys;
+            foreach (var node in this.rawToBakedLookup.Keys)
+            {
+                if (node.Name.Exists)
+                {
+                    yield return node.Name.Text;
+                }
+            }
         }
 
-        public void Add(string key, BakedLayoutNode value)
+        public void Add(LayoutNode key, BakedLayoutNode value)
         {
-            this.content[key] = value;
+            this.rawToBakedLookup[key] = value;
         }
 
         public BakedLayoutNode[] GetDirectChildrenOfNode(string nodeName)
         {
-            if (!this.content.ContainsKey(nodeName))
+            var node = OriginalRoot.FindChildNodeWithName(nodeName);
+            return GetDirectChildrenOfNode(node);
+        }
+
+        public BakedLayoutNode[] GetDirectChildrenOfNode(LayoutNode node)
+        {
+            if (!this.rawToBakedLookup.ContainsKey(node))
             {
-                throw new Exception($"No node matches name {nodeName}");
+                throw new Exception($"No node matches {node}");
+            }
+
+            if (node.Name.IsNameless)
+            {
+                throw new Exception($"Found node {node} but its nameless so it can't have children");
             }
 
             var result = new List<BakedLayoutNode>();
 
-            var parent = OriginalRoot.FindChildNodeWithName(nodeName);
+            var parent = OriginalRoot.FindChildNodeWithName(node.Name.Text);
 
             foreach (var child in parent.Children)
             {
                 if (child.Name.Exists)
                 {
-                    result.Add(this.content[child.Name.Text]);
+                    result.Add(this.rawToBakedLookup[child]);
                 }
             }
 
