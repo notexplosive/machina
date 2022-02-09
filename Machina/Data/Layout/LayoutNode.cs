@@ -45,7 +45,7 @@ namespace Machina.Data.Layout
                 null);
         }
 
-        internal static FlowLayout.LayoutNodeOrInstruction NamelessLeaf(LayoutSize size)
+        public static FlowLayout.LayoutNodeOrInstruction NamelessLeaf(LayoutSize size)
         {
             return new LayoutNode(LayoutNodeName.Nameless, size,
                 /*Ignored params:*/
