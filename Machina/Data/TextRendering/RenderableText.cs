@@ -44,6 +44,11 @@ namespace Machina.Data.TextRendering
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (string.IsNullOrWhiteSpace(Content))
+            {
+                return;
+            }
+
             spriteBatch.DrawString(GetFont(), Content, PivotPosition, Color, Angle, OffsetFromPivot, 1f, SpriteEffects.None, Depth);
         }
 
