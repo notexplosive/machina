@@ -31,37 +31,10 @@ namespace Machina.Data.TextRendering
             this.alignment = alignment;
             this.fontMetrics = fontMetrics;
 
-            this.words = CreateTokens(text);
+            this.words = BoundedText.CreateTokens(text);
             this.pendingInfo = new TextLinesPendingInfo();
 
             Assemble(overflow);
-        }
-
-        public static string[] CreateTokens(string text)
-        {
-            var words = new List<string>();
-            var pendingWord = new StringBuilder();
-            foreach (var character in text)
-            {
-                if (character == ' ' || character == '\n')
-                {
-                    words.Add(pendingWord.ToString());
-                    pendingWord.Clear();
-                    words.Add(character.ToString());
-                }
-                else
-                {
-                    pendingWord.Append(character);
-                }
-            }
-
-            if (pendingWord.Length > 0)
-            {
-                words.Add(pendingWord.ToString());
-            }
-
-
-            return words.ToArray();
         }
 
         private void Assemble(Overflow overflow)

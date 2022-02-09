@@ -23,7 +23,7 @@ namespace Machina.Data.TextRendering
             this.alignment = alignment;
             this.tokenLookup = new Dictionary<int, string>();
 
-            var tokens = AssembledTextLines.CreateTokens(text);
+            var tokens = CreateTokens(text);
 
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
@@ -51,6 +51,33 @@ namespace Machina.Data.TextRendering
             );
 
             this.bakedLayout = layout.Bake();
+        }
+
+        public static string[] CreateTokens(string text)
+        {
+            var words = new List<string>();
+            var pendingWord = new StringBuilder();
+            foreach (var character in text)
+            {
+                if (character == ' ' || character == '\n')
+                {
+                    words.Add(pendingWord.ToString());
+                    pendingWord.Clear();
+                    words.Add(character.ToString());
+                }
+                else
+                {
+                    pendingWord.Append(character);
+                }
+            }
+
+            if (pendingWord.Length > 0)
+            {
+                words.Add(pendingWord.ToString());
+            }
+
+
+            return words.ToArray();
         }
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
