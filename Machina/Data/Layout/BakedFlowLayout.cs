@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -80,9 +81,24 @@ namespace Machina.Data.Layout
                 return this.itemNodes.GetEnumerator();
             }
 
+            private Point GetTopLeftUsedPosition()
+            {
+                var topLeft = GetItemNode(0).PositionRelativeToRoot;
+                foreach (var itemNode in itemNodes)
+                {
+                    var currentItem = itemNode.PositionRelativeToRoot;
+                    topLeft.X = Math.Min(topLeft.X, currentItem.X);
+                    topLeft.Y = Math.Min(topLeft.Y, currentItem.Y);
+                }
+
+                return topLeft;
+            }
+
             public int ItemCount => this.itemNodes.Length;
 
-            public Rectangle UsedRectangle => new Rectangle(GetItemNode(0).PositionRelativeToRoot, this.rowUsedSpace);
+            public Rectangle UsedRectangle => new Rectangle(GetTopLeftUsedPosition(), this.rowUsedSpace);
+
+            public Rectangle TotalRectangle => rowNode.Rectangle;
         }
     }
 }
