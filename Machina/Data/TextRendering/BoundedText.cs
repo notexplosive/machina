@@ -37,10 +37,21 @@ namespace Machina.Data.TextRendering
                 }
                 else
                 {
-                    // Reducing the MeasuredString result to a Point (truncating floats to ints) is that a problem?
-                    var size = FontMetrics.MeasureString(token).ToPoint();
                     this.tokenLookup[tokenIndex] = token;
-                    childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(size)));
+
+                    var tokenSize = FontMetrics.MeasureStringRounded(token);
+                    var glyphNodes = new List<LayoutNode>();
+
+                    foreach (var character in token)
+                    {
+                        var characterSize = FontMetrics.MeasureStringRounded(character.ToString());
+
+                        glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
+                    }
+
+                    childNodes.Add((LayoutNode)LayoutNode.HorizontalParent($"this-name-doesnt-matter-{tokenIndex}", LayoutSize.Pixels(tokenSize), LayoutStyle.Empty,
+                        glyphNodes.ToArray()
+                    ));
                     tokenIndex++;
                 }
             }
@@ -88,7 +99,7 @@ namespace Machina.Data.TextRendering
             foreach (var row in this.bakedLayout.Rows)
             {
                 var textContent = new StringBuilder();
-                foreach (var item in row)
+                foreach (var token in row)
                 {
                     textContent.Append(this.tokenLookup[tokenIndex]);
                     tokenIndex++;
