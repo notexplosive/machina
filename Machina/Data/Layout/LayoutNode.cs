@@ -109,7 +109,7 @@ namespace Machina.Data.Layout
         }
 
         public readonly LayoutNode[] Children = Array.Empty<LayoutNode>();
-        public bool HasChildren => Children != null;
+        public bool HasChildren => Children != null && Children.Length > 0;
         public LayoutNodeName Name { get; }
         public LayoutSize Size { get; }
         public Orientation Orientation { get; }
