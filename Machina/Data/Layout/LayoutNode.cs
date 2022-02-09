@@ -45,9 +45,18 @@ namespace Machina.Data.Layout
                 null);
         }
 
-        public static FlowLayout.LayoutNodeOrInstruction NamelessLeaf(LayoutSize size)
+        public static LayoutNode Spacer(Point size)
         {
-            return new LayoutNode(LayoutNodeName.Nameless, size,
+            return new LayoutNode(LayoutNodeName.Nameless, LayoutSize.Pixels(size),
+                /*Ignored params:*/
+                Orientation.Horizontal,
+                LayoutStyle.Empty,
+                null);
+        }
+
+        public static LayoutNode NamelessBakableLeaf(LayoutSize size)
+        {
+            return new LayoutNode(LayoutNodeName.NamelessButBakable, size,
                 /*Ignored params:*/
                 Orientation.Horizontal,
                 LayoutStyle.Empty,
