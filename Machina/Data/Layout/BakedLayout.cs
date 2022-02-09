@@ -38,7 +38,7 @@ namespace Machina.Data.Layout
 
             void AddAndRecurse(LayoutNode node)
             {
-                if (node.Name.Exists)
+                if (node.Name.IsBakable)
                 {
                     result.Add(rawToBakedLookup[node]);
                     if (node.HasChildren)
@@ -91,11 +91,9 @@ namespace Machina.Data.Layout
 
             var result = new List<BakedLayoutNode>();
 
-            var parent = OriginalRoot.FindChildNodeWithName(node.Name.Text);
-
-            foreach (var child in parent.Children)
+            foreach (var child in node.Children)
             {
-                if (child.Name.Exists)
+                if (child.Name.IsBakable)
                 {
                     result.Add(this.rawToBakedLookup[child]);
                 }

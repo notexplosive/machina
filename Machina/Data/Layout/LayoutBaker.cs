@@ -16,7 +16,10 @@ namespace Machina.Data.Layout
 
         public void AddNodeToLayout(BakedLayout inProgressLayout, Point position, LayoutNode node, int nestingLevel)
         {
-            inProgressLayout.Add(node, new BakedLayoutNode(position, this.measurer.GetMeasuredSize(node.Size), nestingLevel));
+            if (node.Name.IsBakable)
+            {
+                inProgressLayout.Add(node, new BakedLayoutNode(position, this.measurer.GetMeasuredSize(node.Size), nestingLevel));
+            }
         }
 
         public BakedLayout Bake()
