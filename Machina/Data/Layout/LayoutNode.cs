@@ -55,7 +55,7 @@ namespace Machina.Data.Layout
                 null);
         }
 
-        public static LayoutNode NamelessBakableLeaf(LayoutSize size)
+        public static LayoutNode NamelessLeaf(LayoutSize size)
         {
             return new LayoutNode(true, LayoutNodeName.Nameless, size,
                 /*Ignored params:*/

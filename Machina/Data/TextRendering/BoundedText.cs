@@ -40,7 +40,7 @@ namespace Machina.Data.TextRendering
                     // Reducing the MeasuredString result to a Point (truncating floats to ints) is that a problem?
                     var size = FontMetrics.MeasureString(token).ToPoint();
                     this.tokenLookup[tokenIndex] = token;
-                    childNodes.Add(LayoutNode.NamelessBakableLeaf(LayoutSize.Pixels(size)));
+                    childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(size)));
                     tokenIndex++;
                 }
             }
