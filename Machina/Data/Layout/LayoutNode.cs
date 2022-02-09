@@ -74,6 +74,16 @@ namespace Machina.Data.Layout
             return new RawLayout(new LayoutNode(true, name, size, Orientation.Horizontal, style, children));
         }
 
+        public static LayoutNode NamelessVerticalParent(LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        {
+            return new RawLayout(new LayoutNode(true, LayoutNodeName.Nameless, size, Orientation.Vertical, style, children));
+        }
+
+        public static LayoutNode NamelessHorizontalParent(LayoutSize size, LayoutStyle style, params LayoutNode[] children)
+        {
+            return new RawLayout(new LayoutNode(true, LayoutNodeName.Nameless, size, Orientation.Horizontal, style, children));
+        }
+
         public static RawLayout NamelessOneOffParent(LayoutSize size, LayoutStyle style, LayoutNode child)
         {
             // Horizontal/Vertical does not matter here

@@ -49,9 +49,7 @@ namespace Machina.Data.TextRendering
                         glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
                     }
 
-                    childNodes.Add((LayoutNode)LayoutNode.HorizontalParent($"this-name-doesnt-matter-{tokenIndex}", LayoutSize.Pixels(tokenSize), LayoutStyle.Empty,
-                        glyphNodes.ToArray()
-                    ));
+                    childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
                     tokenIndex++;
                 }
             }
