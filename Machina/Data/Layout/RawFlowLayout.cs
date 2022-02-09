@@ -16,19 +16,9 @@ namespace Machina.Data.Layout
             this.rowUsedSpace = rows.GetUsedSpaceOfEachRow();
         }
 
-        public string[] GetItemNamesForRow(int rowIndex)
+        public LayoutNode[] GetItemNodes(int rowIndex)
         {
-            var children = this.rowNodes[rowIndex].Children;
-            var result = new List<string>();
-            for (int i = 0; i < children.Length; i++)
-            {
-                if (children[i].Name.Exists)
-                {
-                    result.Add(children[i].Name.Text);
-                }
-            }
-
-            return result.ToArray();
+            return this.rowNodes[rowIndex].Children;
         }
 
         // ew parallel arrays

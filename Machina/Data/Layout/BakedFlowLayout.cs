@@ -21,7 +21,7 @@ namespace Machina.Data.Layout
 
             for (int rowIndex = 0; rowIndex < this.rawFlowLayout.RowCount; rowIndex++)
             {
-                var rowItems = this.rawFlowLayout.GetItemNamesForRow(rowIndex);
+                var rowItems = this.rawFlowLayout.GetItemNodes(rowIndex);
                 this.rows[rowIndex] = new BakedRow(bakedLayout, this.rawFlowLayout.GetRowName(rowIndex), this.rawFlowLayout.GetRowUsedSpace(rowIndex), rowItems);
             }
         }
@@ -49,16 +49,11 @@ namespace Machina.Data.Layout
             private readonly Point rowUsedSpace;
             private readonly BakedLayoutNode[] itemNodes;
 
-            public BakedRow(BakedLayout bakedLayout, string rowName, Point rowUsedSpace, string[] rowItemNames)
+            public BakedRow(BakedLayout bakedLayout, string rowName, Point rowUsedSpace, LayoutNode[] itemNodes)
             {
                 this.rowUsedSpace = rowUsedSpace;
                 this.rowNode = bakedLayout.GetNode(rowName);
-                this.itemNodes = new BakedLayoutNode[rowItemNames.Length];
-
-                for (int i = 0; i < this.itemNodes.Length; i++)
-                {
-                    this.itemNodes[i] = bakedLayout.GetNode(rowItemNames[i]);
-                }
+                this.itemNodes = bakedLayout.GetDirectChildrenOfNode(rowName);
             }
 
             public BakedLayoutNode Node => this.rowNode;

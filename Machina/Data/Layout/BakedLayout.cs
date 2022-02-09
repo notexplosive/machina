@@ -58,7 +58,7 @@ namespace Machina.Data.Layout
             this.content[key] = value;
         }
 
-        public List<BakedLayoutNode> GetDirectChildrenOfNode(string nodeName)
+        public BakedLayoutNode[] GetDirectChildrenOfNode(string nodeName)
         {
             if (!this.content.ContainsKey(nodeName))
             {
@@ -78,7 +78,7 @@ namespace Machina.Data.Layout
             }
 
 
-            return result;
+            return result.ToArray();
         }
     }
 }
