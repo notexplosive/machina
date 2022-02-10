@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Machina.Data;
@@ -55,6 +56,8 @@ namespace Machina.Components
 
         public Point TextWorldPos => this.boundingRect.TopLeft.ToPoint() + TextLocalPos;
 
+        public int OccludedIndex { get; set; }
+
         private BoundedText CreateMeasuredText()
         {
             var measurer = new BoundedText(new TextInputFragment(Text, FontMetrics), this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow);
@@ -64,7 +67,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(TextColor);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(TextColor, OccludedIndex);
 
             foreach (var renderableText in renderableTexts)
             {
@@ -81,6 +84,11 @@ namespace Machina.Components
             this.dropShadowColor = color;
             this.isDropShadowEnabled = true;
             return this;
+        }
+
+        public void OccludeAll()
+        {
+            OccludedIndex = Text.Length;
         }
     }
 }
