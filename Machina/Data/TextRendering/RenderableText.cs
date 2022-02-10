@@ -9,9 +9,9 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Vector2 pivotPosition, Color textColor, Point drawOffset, Point rectPosition, Rectangle layoutNodeOfLine)
+        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Point drawOffset, Rectangle layoutNodeOfLine)
         {
-            var offsetFromPivot = (layoutNodeOfLine.Location + rectPosition + drawOffset).ToVector2() - pivotPosition;
+            var offsetFromPivot = (layoutNodeOfLine.Location + drawOffset).ToVector2();
             offsetFromPivot.Floor();
             offsetFromPivot = -offsetFromPivot;
 
@@ -24,7 +24,7 @@ namespace Machina.Data.TextRendering
         }
 
         public string Content { get; }
-        public Vector2 PivotPosition { get; }
+        public Point PivotPosition { get; }
         public Vector2 OffsetFromPivot { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
@@ -48,13 +48,13 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition, Color, angle, OffsetFromPivot, 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, OffsetFromPivot, 1f, SpriteEffects.None, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, float angle, Depth depth)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition, finalDropShadowColor, angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         public override string ToString()

@@ -15,12 +15,12 @@ namespace TestMachina.Utility
 
             drawPanel.DrawRectangle(textMeasurer.TotalAvailableRect, '#');
 
-            foreach (var line in textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White))
+            foreach (var line in textMeasurer.GetRenderedText(Point.Zero, Color.White))
             {
                 var totalWidth = 0;
                 foreach (var character in line.Content)
                 {
-                    var charPosition = line.PivotPosition.ToPoint() - line.OffsetFromPivot.ToPoint() + new Point(totalWidth, 0);
+                    var charPosition = line.PivotPosition - line.OffsetFromPivot.ToPoint() + new Point(totalWidth, 0);
                     var charSize = line.FontMetrics.MeasureString(character.ToString()).ToPoint();
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');

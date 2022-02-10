@@ -150,50 +150,21 @@ namespace TestMachina.Tests
                 Alignment.BottomRight,
                 Overflow.Elide);
 
-            var renderedLines = textMeasurer.GetRenderedText(new Vector2(350, 250), new Point(-5, 0), Color.Red);
+            var renderedLines = textMeasurer.GetRenderedText(new Point(-5, 0), Color.Red);
 
             renderedLines.Should().HaveCount(42);
 
-            renderedLines[0].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[0].PivotPosition.Should().Be(new Point(350, 250));
             renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(-7, -191));
             renderedLines[0].Content.Should().Be("This");
 
             renderedLines[18].Content.Should().Be("referencing");
-            renderedLines[18].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[18].PivotPosition.Should().Be(new Point(350, 250));
             renderedLines[18].OffsetFromPivot.Should().Be(new Vector2(-11, -194));
 
             renderedLines[31].Content.Should().Be("But");
-            renderedLines[31].PivotPosition.Should().Be(new Vector2(350, 250));
+            renderedLines[31].PivotPosition.Should().Be(new Point(350, 250));
             renderedLines[31].OffsetFromPivot.Should().Be(new Vector2(-41, -197));
-        }
-
-        [Fact]
-        public void pinning_test_for_renderable_text_where_position_is_center_of_rect()
-        {
-            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
-            var rect = new Rectangle(new Point(350, 250), new Point(100, 200));
-
-            var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
-                rect,
-                Alignment.BottomRight,
-                Overflow.Elide);
-
-            var renderedLines = textMeasurer.GetRenderedText(rect.Center.ToVector2(), new Point(-5, 0), Color.Red);
-
-            renderedLines.Should().HaveCount(42);
-
-            renderedLines[0].Content.Should().Be("This");
-            renderedLines[0].PivotPosition.Should().Be(new Vector2(400, 350));
-            renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(43, -91));
-
-            renderedLines[18].Content.Should().Be("referencing");
-            renderedLines[18].PivotPosition.Should().Be(new Vector2(400, 350));
-            renderedLines[18].OffsetFromPivot.Should().Be(new Vector2(39, -94));
-
-            renderedLines[31].Content.Should().Be("But");
-            renderedLines[31].PivotPosition.Should().Be(new Vector2(400, 350));
-            renderedLines[31].OffsetFromPivot.Should().Be(new Vector2(9, -97));
         }
 
         [Fact]
@@ -223,7 +194,7 @@ namespace TestMachina.Tests
                 Alignment.Center,
                 Overflow.Elide);
 
-            var renderedText = textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White);
+            var renderedText = textMeasurer.GetRenderedText(Point.Zero, Color.White);
 
             renderedText.Should().HaveCount(13);
             renderedText[0].CharacterPosition.Should().Be(0);

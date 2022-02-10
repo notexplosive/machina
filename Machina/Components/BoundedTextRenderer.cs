@@ -53,7 +53,7 @@ namespace Machina.Components
 
         public Point TextLocalPos => CreateMeasuredText().TopLeftOfText();
 
-        public Point TextWorldPos => transform.Position.ToPoint() + TextLocalPos;
+        public Point TextWorldPos => this.boundingRect.TopLeft.ToPoint() + TextLocalPos;
 
         private BoundedText CreateMeasuredText()
         {
@@ -64,7 +64,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(transform.Position, DrawOffset, TextColor);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(DrawOffset, TextColor);
 
             foreach (var renderableText in renderableTexts)
             {
