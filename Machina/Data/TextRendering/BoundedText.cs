@@ -9,13 +9,13 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextInputFragment
     {
-        public string[] tokens { get; }
-        public IFontMetrics font { get; }
+        public readonly string[] Tokens;
+        public IFontMetrics FontMetrics { get; }
 
         public TextInputFragment(string text, IFontMetrics fontMetrics)
         {
-            tokens = CreateTokens(text);
-            font = fontMetrics;
+            Tokens = CreateTokens(text);
+            FontMetrics = fontMetrics;
         }
 
         public static string[] CreateTokens(string text)
@@ -79,23 +79,23 @@ namespace Machina.Data.TextRendering
 
             foreach (var textFragment in textFragments)
             {
-                foreach (var token in textFragment.tokens)
+                foreach (var token in textFragment.Tokens)
                 {
                     if (token == "\n")
                     {
-                        childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.font.LineSpacing)));
+                        childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.FontMetrics.LineSpacing)));
                         childNodes.Add(FlowLayoutInstruction.Linebreak);
                     }
                     else
                     {
-                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.font);
+                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.FontMetrics);
 
-                        var tokenSize = textFragment.font.MeasureStringRounded(token);
+                        var tokenSize = textFragment.FontMetrics.MeasureStringRounded(token);
                         var glyphNodes = new List<LayoutNode>();
 
                         foreach (var character in token)
                         {
-                            var characterSize = textFragment.font.MeasureStringRounded(character.ToString());
+                            var characterSize = textFragment.FontMetrics.MeasureStringRounded(character.ToString());
 
                             glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
                         }
