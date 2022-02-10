@@ -57,6 +57,11 @@ namespace Machina.Data.TextRendering
         {
             return $"`{Text}` at {Origin} offset by {Offset}";
         }
+
+        public RenderableText WithText(string text)
+        {
+            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, new Rectangle(Offset.Negated(), Point.Zero));
+        }
     }
 
 }

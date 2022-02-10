@@ -144,7 +144,7 @@ namespace Machina.Data.TextRendering
                             return result;
                         }
 
-                        result.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle));
+                        result.Add(pendingRenderableText.WithText(outputFragment.Text.Substring(0, substringLength)));
                         return result;
                     }
 
