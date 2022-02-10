@@ -64,14 +64,14 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(transform.Position, DrawOffset, TextColor, transform.Angle, transform.Depth + this.depthOffset);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(transform.Position, DrawOffset, TextColor);
 
             foreach (var renderableText in renderableTexts)
             {
-                renderableText.Draw(spriteBatch);
+                renderableText.Draw(spriteBatch, transform.Angle, transform.Depth + this.depthOffset);
                 if (this.isDropShadowEnabled)
                 {
-                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor);
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, transform.Angle, transform.Depth + this.depthOffset);
                 }
             }
         }

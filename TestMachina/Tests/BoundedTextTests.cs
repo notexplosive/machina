@@ -150,7 +150,7 @@ namespace TestMachina.Tests
                 Alignment.BottomRight,
                 Overflow.Elide);
 
-            var renderedLines = textMeasurer.GetRenderedText(new Vector2(350, 250), new Point(-5, 0), Color.Red, 0f, 0);
+            var renderedLines = textMeasurer.GetRenderedText(new Vector2(350, 250), new Point(-5, 0), Color.Red);
 
             renderedLines.Should().HaveCount(42);
 
@@ -179,7 +179,7 @@ namespace TestMachina.Tests
                 Alignment.BottomRight,
                 Overflow.Elide);
 
-            var renderedLines = textMeasurer.GetRenderedText(rect.Center.ToVector2(), new Point(-5, 0), Color.Red, 0f, 0);
+            var renderedLines = textMeasurer.GetRenderedText(rect.Center.ToVector2(), new Point(-5, 0), Color.Red);
 
             renderedLines.Should().HaveCount(42);
 
@@ -223,7 +223,7 @@ namespace TestMachina.Tests
                 Alignment.Center,
                 Overflow.Elide);
 
-            var renderedText = textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White, 0f, 0);
+            var renderedText = textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White);
 
             renderedText.Should().HaveCount(13);
             renderedText[0].CharacterPosition.Should().Be(0);
