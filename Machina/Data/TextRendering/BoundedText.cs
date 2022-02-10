@@ -134,7 +134,6 @@ namespace Machina.Data.TextRendering
                     var outputFragment = this.tokenLookup[tokenIndex];
                     var pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
 
-
                     var lastCharacterInThisText = pendingRenderableText.CharacterPosition + pendingRenderableText.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
                     {
@@ -145,8 +144,7 @@ namespace Machina.Data.TextRendering
                             return result;
                         }
 
-                        pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
-                        result.Add(pendingRenderableText);
+                        result.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle));
                         return result;
                     }
 
