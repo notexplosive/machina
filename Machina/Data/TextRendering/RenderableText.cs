@@ -44,13 +44,13 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), Color, angle, drawOffset.ToVector2() + Offset.ToVector2(), 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), Color, angle, drawOffset.ToVector2() - Offset.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() + Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() - Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         public override string ToString()

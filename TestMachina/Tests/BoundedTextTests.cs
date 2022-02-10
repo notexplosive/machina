@@ -155,16 +155,16 @@ namespace TestMachina.Tests
             renderedLines.Should().HaveCount(42);
 
             renderedLines[0].Origin.Should().Be(new Point(350, 250));
-            renderedLines[0].Offset.Should().Be(new Point(-12, -191));
+            renderedLines[0].Offset.Should().Be(new Point(12, 191));
             renderedLines[0].Text.Should().Be("This");
 
             renderedLines[18].Text.Should().Be("referencing");
             renderedLines[18].Origin.Should().Be(new Point(350, 250));
-            renderedLines[18].Offset.Should().Be(new Point(-16, -194));
+            renderedLines[18].Offset.Should().Be(new Point(16, 194));
 
             renderedLines[31].Text.Should().Be("But");
             renderedLines[31].Origin.Should().Be(new Point(350, 250));
-            renderedLines[31].Offset.Should().Be(new Point(-46, -197));
+            renderedLines[31].Offset.Should().Be(new Point(46, 197));
         }
 
         [Fact]

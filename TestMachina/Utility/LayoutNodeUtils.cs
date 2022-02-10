@@ -20,7 +20,7 @@ namespace TestMachina.Utility
                 var totalWidth = 0;
                 foreach (var character in line.Text)
                 {
-                    var charPosition = line.Origin - line.Offset + new Point(totalWidth, 0);
+                    var charPosition = line.Origin + line.Offset + new Point(totalWidth, 0);
                     var charSize = line.FontMetrics.MeasureString(character.ToString()).ToPoint();
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');
