@@ -7,14 +7,63 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct TextInputFragment
+    public struct TextInputToken
     {
-        public readonly string[] Tokens;
+        public TextInputToken(string tokenText, TextInputFragment parentFragment)
+        {
+            ShouldBeCounted = false;
+            ParentFragment = parentFragment;
+            Text = tokenText;
+
+            if (tokenText == "\n")
+            {
+                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
+                    LayoutNode.Spacer(new Point(0, parentFragment.FontMetrics.LineSpacing)),
+                    FlowLayoutInstruction.Linebreak
+                };
+            }
+            else
+            {
+                ShouldBeCounted = true;
+
+                var tokenSize = parentFragment.FontMetrics.MeasureStringRounded(tokenText);
+                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
+                    LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
+                };
+            }
+        }
+
+        public bool ShouldBeCounted { get; }
+        public TextInputFragment ParentFragment { get; }
+        public string Text { get; }
+        public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
+    }
+
+    public interface ITextInputFragment
+    {
+        public TextInputToken[] Tokens();
+    }
+
+    public readonly struct TextInputFragment : ITextInputFragment
+    {
+        public TextInputToken[] Tokens()
+        {
+            var result = new List<TextInputToken>();
+
+            foreach (var tokenText in CreateTokens(Text))
+            {
+                result.Add(new TextInputToken(tokenText, this));
+            }
+
+            return result.ToArray();
+        }
+
         public IFontMetrics FontMetrics { get; }
+        public string Text { get; }
 
         public TextInputFragment(string text, IFontMetrics fontMetrics)
         {
-            Tokens = CreateTokens(text);
+            Text = text;
             FontMetrics = fontMetrics;
         }
 
@@ -67,7 +116,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle TotalAvailableRect { get; }
 
-        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, params TextInputFragment[] textFragments)
+        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, params ITextInputFragment[] textFragments)
         {
             TotalAvailableRect = rect;
             this.alignment = alignment;
@@ -79,19 +128,13 @@ namespace Machina.Data.TextRendering
 
             foreach (var textFragment in textFragments)
             {
-                foreach (var token in textFragment.Tokens)
+                foreach (var token in textFragment.Tokens())
                 {
-                    if (token == "\n")
-                    {
-                        childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.FontMetrics.LineSpacing)));
-                        childNodes.Add(FlowLayoutInstruction.Linebreak);
-                    }
-                    else
-                    {
-                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.FontMetrics);
+                    childNodes.AddRange(token.Nodes);
 
-                        var tokenSize = textFragment.FontMetrics.MeasureStringRounded(token);
-                        childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize)));
+                    if (token.ShouldBeCounted)
+                    {
+                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token.Text, token.ParentFragment.FontMetrics);
                         tokenIndex++;
                     }
                 }
