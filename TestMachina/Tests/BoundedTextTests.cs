@@ -343,5 +343,46 @@ namespace TestMachina.Tests
             textList[2].Text.Should().Be(" ");
             textList[3].Text.Should().Be("World!");
         }
+
+        [Fact]
+        public void bounded_text_can_support_different_font_sizes()
+        {
+            var small = new MonospacedFontMetrics(new Point(4, 4));
+            var tall = new MonospacedFontMetrics(new Point(4, 8));
+            var medium = new MonospacedFontMetrics(new Point(6, 6));
+            var big = new MonospacedFontMetrics(new Point(12, 12));
+            var rect = new Rectangle(Point.Zero, new Point(82, 20));
+
+            var textMeasurer = new BoundedText(
+                rect,
+                Alignment.Center,
+                Overflow.Elide,
+                new TextInputFragment("Go", small),
+                new TextInputFragment("big", big),
+                new TextInputFragment("or", tall),
+                new TextInputFragment("go", medium),
+                new TextInputFragment("home", small)
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
+
+        [Fact]
+        public void changing_fonts_can_cause_natural_linebreaks()
+        {
+            var small = new MonospacedFontMetrics(new Point(4, 4));
+            var medium = new MonospacedFontMetrics(new Point(6, 6));
+            var rect = new Rectangle(Point.Zero, new Point(50, 30));
+
+            var textMeasurer = new BoundedText(
+                rect,
+                Alignment.Center,
+                Overflow.Elide,
+                new TextInputFragment("Changing fonts can cause a natural line", small),
+                new TextInputFragment("break", medium)
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
     }
 }
