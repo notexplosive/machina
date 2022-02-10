@@ -210,5 +210,33 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void rendered_text_know_what_parts_of_the_string_they_own()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(
+                new TextInputFragment("This is a string used for testing.", fontMetrics),
+                rect,
+                Alignment.Center,
+                Overflow.Elide);
+
+            var renderedText = textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White, 0f, 0);
+
+            renderedText.Should().HaveCount(13);
+            renderedText[0].CharacterPosition.Should().Be(0);
+            renderedText[0].CharacterLength.Should().Be(4);
+
+            renderedText[1].CharacterPosition.Should().Be(4);
+            renderedText[1].CharacterLength.Should().Be(1);
+
+            renderedText[2].CharacterPosition.Should().Be(5);
+            renderedText[2].CharacterLength.Should().Be(2);
+
+            renderedText[3].CharacterPosition.Should().Be(7);
+            renderedText[3].CharacterLength.Should().Be(1);
+        }
     }
 }

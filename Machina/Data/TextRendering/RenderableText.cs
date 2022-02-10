@@ -9,12 +9,13 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Point rectPosition, Rectangle layoutNodeOfLine)
+        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Vector2 pivotPosition, Color textColor, Point drawOffset, float angle, Depth depth, Point rectPosition, Rectangle layoutNodeOfLine)
         {
             var offsetFromPivot = (layoutNodeOfLine.Location + rectPosition + drawOffset).ToVector2() - pivotPosition;
             offsetFromPivot.Floor();
             offsetFromPivot = -offsetFromPivot;
 
+            CharacterPosition = characterPosition;
             FontMetrics = fontMetrics;
             Content = text;
             Color = textColor;
@@ -31,6 +32,8 @@ namespace Machina.Data.TextRendering
         public Vector2 OffsetFromPivot { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
+        public int CharacterPosition { get; }
+        public object CharacterLength => Content.Length;
 
         private SpriteFont GetFont()
         {
