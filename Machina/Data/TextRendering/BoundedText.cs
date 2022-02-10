@@ -7,58 +7,15 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct BoundedText
+    public readonly struct TextInputFragment
     {
-        private readonly Alignment alignment;
-        private readonly BakedFlowLayout bakedLayout;
-        private readonly Dictionary<int, string> tokenLookup;
+        public string[] tokens { get; }
+        public IFontMetrics font { get; }
 
-        public IFontMetrics FontMetrics { get; }
-        public Rectangle TotalAvailableRect { get; }
-
-        public BoundedText(string text, IFontMetrics font, Rectangle rect, Alignment alignment, Overflow overflow)
+        public TextInputFragment(string text, IFontMetrics fontMetrics)
         {
-            FontMetrics = font;
-            TotalAvailableRect = rect;
-            this.alignment = alignment;
-            this.tokenLookup = new Dictionary<int, string>();
-
-            var tokens = CreateTokens(text);
-
-            var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
-            var tokenIndex = 0;
-
-            foreach (var token in tokens)
-            {
-                if (token == "\n")
-                {
-                    childNodes.Add(LayoutNode.Spacer(new Point(0, FontMetrics.LineSpacing)));
-                    childNodes.Add(FlowLayoutInstruction.Linebreak);
-                }
-                else
-                {
-                    this.tokenLookup[tokenIndex] = token;
-
-                    var tokenSize = FontMetrics.MeasureStringRounded(token);
-                    var glyphNodes = new List<LayoutNode>();
-
-                    foreach (var character in token)
-                    {
-                        var characterSize = FontMetrics.MeasureStringRounded(character.ToString());
-
-                        glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
-                    }
-
-                    childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
-                    tokenIndex++;
-                }
-            }
-
-            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new FlowLayoutStyle(alignment: this.alignment),
-                childNodes.ToArray()
-            );
-
-            this.bakedLayout = layout.Bake();
+            tokens = CreateTokens(text);
+            font = fontMetrics;
         }
 
         public static string[] CreateTokens(string text)
@@ -87,6 +44,69 @@ namespace Machina.Data.TextRendering
 
             return words.ToArray();
         }
+    }
+
+    public readonly struct TextOutputFragment
+    {
+        public TextOutputFragment(string token, IFontMetrics fontMetrics)
+        {
+            Text = token;
+            FontMetrics = fontMetrics;
+        }
+
+        public string Text { get; }
+        public IFontMetrics FontMetrics { get; }
+    }
+
+    public readonly struct BoundedText
+    {
+        private readonly Alignment alignment;
+        private readonly BakedFlowLayout bakedLayout;
+        private readonly Dictionary<int, TextOutputFragment> tokenLookup;
+        public Rectangle TotalAvailableRect { get; }
+
+        public BoundedText(TextInputFragment textFragment, Rectangle rect, Alignment alignment, Overflow overflow)
+        {
+            TotalAvailableRect = rect;
+            this.alignment = alignment;
+            this.tokenLookup = new Dictionary<int, TextOutputFragment>();
+
+            var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
+            var tokenIndex = 0;
+
+            foreach (var token in textFragment.tokens)
+            {
+                if (token == "\n")
+                {
+                    childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.font.LineSpacing)));
+                    childNodes.Add(FlowLayoutInstruction.Linebreak);
+                }
+                else
+                {
+                    this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.font);
+
+                    var tokenSize = textFragment.font.MeasureStringRounded(token);
+                    var glyphNodes = new List<LayoutNode>();
+
+                    foreach (var character in token)
+                    {
+                        var characterSize = textFragment.font.MeasureStringRounded(character.ToString());
+
+                        glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
+                    }
+
+                    childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
+                    tokenIndex++;
+                }
+            }
+
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new FlowLayoutStyle(alignment: this.alignment),
+                childNodes.ToArray()
+            );
+
+            this.bakedLayout = layout.Bake();
+        }
+
 
         public List<RenderableText> GetRenderedLines(Vector2 worldPos, Point drawOffset, Color textColor, float angle, Depth depth)
         {
@@ -97,8 +117,8 @@ namespace Machina.Data.TextRendering
             {
                 foreach (var tokenNode in row)
                 {
-                    var tokenText = this.tokenLookup[tokenIndex];
-                    renderableTexts.Add(new RenderableText(FontMetrics, tokenText, worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, tokenNode.Rectangle));
+                    var outputFragment = this.tokenLookup[tokenIndex];
+                    renderableTexts.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text, worldPos, textColor, drawOffset, angle, depth, TotalAvailableRect.Location, tokenNode.Rectangle));
                     tokenIndex++;
                 }
             }

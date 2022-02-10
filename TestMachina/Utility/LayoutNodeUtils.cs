@@ -21,7 +21,7 @@ namespace TestMachina.Utility
                 foreach (var character in line.Content)
                 {
                     var charPosition = line.PivotPosition.ToPoint() - line.OffsetFromPivot.ToPoint() + new Point(totalWidth, 0);
-                    var charSize = textMeasurer.FontMetrics.MeasureString(character.ToString()).ToPoint();
+                    var charSize = line.FontMetrics.MeasureString(character.ToString()).ToPoint();
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');
 

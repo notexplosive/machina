@@ -18,8 +18,7 @@ namespace TestMachina.Tests
         public void text_measurer_generates_accurate_output()
         {
             var textMeasurer = new BoundedText(
-                "Hello world",
-                new MonospacedFontMetrics(new Point(2, 3)),
+                new TextInputFragment("Hello world", new MonospacedFontMetrics(new Point(2, 3))),
                 new Rectangle(new Point(0, 0), new Point(200, 200)),
                 Alignment.Center,
                 Overflow.Ignore);
@@ -38,8 +37,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
-                fontMetrics,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.Center,
                 Overflow.Elide);
@@ -66,8 +64,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
-                fontMetrics,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.TopLeft,
                 Overflow.Elide);
@@ -94,8 +91,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
-                fontMetrics,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.BottomRight,
                 Overflow.Elide);
@@ -122,8 +118,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                "Short top string\nlooooooooooong.... middle.... string\nshort bottom",
-                fontMetrics,
+                new TextInputFragment("Short top string\nlooooooooooong.... middle.... string\nshort bottom", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.Center,
                 Overflow.Elide);
@@ -150,8 +145,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
-                fontMetrics,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(new Point(350, 250), new Point(100, 200)),
                 Alignment.BottomRight,
                 Overflow.Elide);
@@ -180,8 +174,7 @@ namespace TestMachina.Tests
             var rect = new Rectangle(new Point(350, 250), new Point(100, 200));
 
             var textMeasurer = new BoundedText(
-                "This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.",
-                fontMetrics,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 rect,
                 Alignment.BottomRight,
                 Overflow.Elide);
@@ -210,8 +203,7 @@ namespace TestMachina.Tests
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
             var textMeasurer = new BoundedText(
-                "I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!",
-                fontMetrics,
+                new TextInputFragment("I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!", fontMetrics),
                 rect,
                 Alignment.Center,
                 Overflow.Elide);
