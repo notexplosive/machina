@@ -67,7 +67,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle TotalAvailableRect { get; }
 
-        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, TextInputFragment textFragment)
+        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, params TextInputFragment[] textFragments)
         {
             TotalAvailableRect = rect;
             this.alignment = alignment;
@@ -77,29 +77,32 @@ namespace Machina.Data.TextRendering
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
 
-            foreach (var token in textFragment.tokens)
+            foreach (var textFragment in textFragments)
             {
-                if (token == "\n")
+                foreach (var token in textFragment.tokens)
                 {
-                    childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.font.LineSpacing)));
-                    childNodes.Add(FlowLayoutInstruction.Linebreak);
-                }
-                else
-                {
-                    this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.font);
-
-                    var tokenSize = textFragment.font.MeasureStringRounded(token);
-                    var glyphNodes = new List<LayoutNode>();
-
-                    foreach (var character in token)
+                    if (token == "\n")
                     {
-                        var characterSize = textFragment.font.MeasureStringRounded(character.ToString());
-
-                        glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
+                        childNodes.Add(LayoutNode.Spacer(new Point(0, textFragment.font.LineSpacing)));
+                        childNodes.Add(FlowLayoutInstruction.Linebreak);
                     }
+                    else
+                    {
+                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.font);
 
-                    childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
-                    tokenIndex++;
+                        var tokenSize = textFragment.font.MeasureStringRounded(token);
+                        var glyphNodes = new List<LayoutNode>();
+
+                        foreach (var character in token)
+                        {
+                            var characterSize = textFragment.font.MeasureStringRounded(character.ToString());
+
+                            glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
+                        }
+
+                        childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
+                        tokenIndex++;
+                    }
                 }
             }
 

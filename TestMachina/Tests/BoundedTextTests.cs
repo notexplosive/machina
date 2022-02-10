@@ -316,5 +316,32 @@ namespace TestMachina.Tests
 
             textList.Should().HaveCount(0);
         }
+
+        [Fact]
+        public void bounded_text_can_have_zero_fragments()
+        {
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White);
+
+            textList.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void bounded_text_can_have_multiple_fragments()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("He", fontMetrics), new TextInputFragment("llo ", fontMetrics), new TextInputFragment("World!", fontMetrics));
+            var textList = textMeasurer.GetRenderedText(Color.White);
+
+            textList.Should().HaveCount(4);
+            textList[0].Text.Should().Be("He");
+            textList[1].Text.Should().Be("llo");
+            textList[2].Text.Should().Be(" ");
+            textList[3].Text.Should().Be("World!");
+        }
     }
 }
