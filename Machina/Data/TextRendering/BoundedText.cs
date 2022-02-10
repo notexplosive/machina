@@ -63,6 +63,8 @@ namespace Machina.Data.TextRendering
         private readonly Alignment alignment;
         private readonly BakedFlowLayout bakedLayout;
         private readonly Dictionary<int, TextOutputFragment> tokenLookup;
+        private readonly int totalCharacterCount;
+
         public Rectangle TotalAvailableRect { get; }
 
         public BoundedText(TextInputFragment textFragment, Rectangle rect, Alignment alignment, Overflow overflow)
@@ -70,6 +72,7 @@ namespace Machina.Data.TextRendering
             TotalAvailableRect = rect;
             this.alignment = alignment;
             this.tokenLookup = new Dictionary<int, TextOutputFragment>();
+            this.totalCharacterCount = 0;
 
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
@@ -105,12 +108,24 @@ namespace Machina.Data.TextRendering
             );
 
             this.bakedLayout = layout.Bake();
+
+
+            // We count "total characters" as all characters that we actually end up using.
+            // newlines are not counted as characters.
+            foreach (var outputFragment in this.tokenLookup.Values)
+            {
+                this.totalCharacterCount += outputFragment.Text.Length;
+            }
         }
 
 
-        public List<RenderableText> GetRenderedText(Color textColor)
+        public List<RenderableText> GetRenderedText(Color textColor, int occludedCharactersCount = 0)
         {
             var renderableTexts = new List<RenderableText>();
+
+            var renderCutoffIndex = this.totalCharacterCount - occludedCharactersCount;
+
+            var shouldStop = false;
 
             var tokenIndex = 0;
             var characterIndex = 0;
@@ -119,9 +134,37 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    renderableTexts.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle));
+                    var renderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
+
+
+                    var lastCharacterInThisText = renderableText.CharacterPosition + renderableText.CharacterLength;
+                    if (renderCutoffIndex <= lastCharacterInThisText)
+                    {
+                        var substringLength = renderCutoffIndex - lastCharacterInThisText + renderableText.CharacterLength;
+
+                        if (substringLength <= 0)
+                        {
+                            shouldStop = true;
+                            break;
+                        }
+
+                        renderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
+                        shouldStop = true;
+                    }
+
+                    renderableTexts.Add(renderableText);
                     characterIndex += outputFragment.Text.Length;
                     tokenIndex++;
+
+                    if (shouldStop)
+                    {
+                        break;
+                    }
+                }
+
+                if (shouldStop)
+                {
+                    break;
                 }
             }
 

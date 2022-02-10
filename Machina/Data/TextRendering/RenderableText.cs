@@ -25,7 +25,7 @@ namespace Machina.Data.TextRendering
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
         public int CharacterPosition { get; }
-        public object CharacterLength => Text.Length;
+        public int CharacterLength => Text.Length;
 
         private SpriteFont GetFont()
         {

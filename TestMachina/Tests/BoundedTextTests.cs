@@ -209,5 +209,112 @@ namespace TestMachina.Tests
             renderedText[3].CharacterPosition.Should().Be(7);
             renderedText[3].CharacterLength.Should().Be(1);
         }
+
+        [Fact]
+        public void newlines_are_not_counted_as_rendered_text()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("New\nLine", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+
+            var renderedText = textMeasurer.GetRenderedText(Color.White);
+
+            renderedText.Should().HaveCount(2);
+            renderedText[0].CharacterPosition.Should().Be(0);
+            renderedText[0].CharacterLength.Should().Be(3);
+
+            renderedText[1].CharacterPosition.Should().Be(3);
+            renderedText[1].CharacterLength.Should().Be(4);
+        }
+
+        [Fact]
+        public void occlude_zero_characters_by_default()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White);
+
+            textList.Should().HaveCount(7);
+            textList[6].Text.Should().Be("test");
+        }
+
+        [Fact]
+        public void occlude_characters_in_last_token()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 1);
+
+            textList.Should().HaveCount(7);
+            textList[6].Text.Should().Be("tes");
+        }
+
+        [Fact]
+        public void occlude_entire_last_token()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 4);
+
+            textList.Should().HaveCount(6);
+            textList[5].Text.Should().Be(" ");
+        }
+
+        [Fact]
+        public void occlude_last_two_token()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 5);
+
+            textList.Should().HaveCount(5);
+            textList[4].Text.Should().Be("a");
+        }
+
+        [Fact]
+        public void occlude_half_of_string()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("Ragglest the Fragglest", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 12);
+
+            textList.Should().HaveCount(3);
+            textList[2].Text.Should().Be("t");
+        }
+
+        [Fact]
+        public void occlude_whole_string()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("Hi", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 2);
+
+            textList.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void occlude_way_too_much()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var rect = new Rectangle(Point.Zero, new Point(60, 40));
+
+            var textMeasurer = new BoundedText(new TextInputFragment("Hi", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textList = textMeasurer.GetRenderedText(Color.White, 999999);
+
+            textList.Should().HaveCount(0);
+        }
     }
 }
