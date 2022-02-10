@@ -91,16 +91,7 @@ namespace Machina.Data.TextRendering
                         this.tokenLookup[tokenIndex] = new TextOutputFragment(token, textFragment.FontMetrics);
 
                         var tokenSize = textFragment.FontMetrics.MeasureStringRounded(token);
-                        var glyphNodes = new List<LayoutNode>();
-
-                        foreach (var character in token)
-                        {
-                            var characterSize = textFragment.FontMetrics.MeasureStringRounded(character.ToString());
-
-                            glyphNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(characterSize)));
-                        }
-
-                        childNodes.Add(LayoutNode.NamelessHorizontalParent(LayoutSize.Pixels(tokenSize), LayoutStyle.Empty, glyphNodes.ToArray()));
+                        childNodes.Add(LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize)));
                         tokenIndex++;
                     }
                 }
