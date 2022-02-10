@@ -132,25 +132,25 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var renderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
+                    var pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
 
 
-                    var lastCharacterInThisText = renderableText.CharacterPosition + renderableText.CharacterLength;
+                    var lastCharacterInThisText = pendingRenderableText.CharacterPosition + pendingRenderableText.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
                     {
-                        var substringLength = renderCutoffIndex - lastCharacterInThisText + renderableText.CharacterLength;
+                        var substringLength = renderCutoffIndex - lastCharacterInThisText + pendingRenderableText.CharacterLength;
 
                         if (substringLength <= 0)
                         {
                             return result;
                         }
 
-                        renderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
-                        result.Add(renderableText);
+                        pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
+                        result.Add(pendingRenderableText);
                         return result;
                     }
 
-                    result.Add(renderableText);
+                    result.Add(pendingRenderableText);
                     characterIndex += outputFragment.Text.Length;
                     tokenIndex++;
                 }
