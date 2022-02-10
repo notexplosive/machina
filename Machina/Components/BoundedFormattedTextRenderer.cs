@@ -1,0 +1,61 @@
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using Machina.Data;
+using Machina.Data.TextRendering;
+using Machina.Engine;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace Machina.Components
+{
+    public class BoundedFormattedTextRenderer : BaseComponent
+    {
+        private readonly BoundingRect boundingRect;
+        private readonly Alignment alignment;
+        private readonly Depth depthOffset;
+        private readonly Overflow overflow;
+        private Color dropShadowColor;
+        private bool isDropShadowEnabled;
+        public Point DrawOffset { get; set; }
+        public int OccludedIndex { get; set; }
+
+        public BoundedFormattedTextRenderer(Actor actor, Alignment alignment = default, Overflow overflow = Overflow.Elide, Depth depthOffset = default, params ITextInputFragment[] text) : base(actor)
+        {
+            Debug.Assert(text != null);
+
+            this.boundingRect = RequireComponent<BoundingRect>();
+            this.alignment = alignment;
+            this.depthOffset = depthOffset;
+            this.overflow = overflow;
+            SetText(text);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            List<RenderableText> renderableTexts = BoundedText.GetRenderedText(OccludedIndex);
+
+            foreach (var renderableText in renderableTexts)
+            {
+                renderableText.Draw(spriteBatch, DrawOffset, transform.Angle, transform.Depth + this.depthOffset);
+                if (this.isDropShadowEnabled)
+                {
+                    renderableText.DrawDropShadow(spriteBatch, this.dropShadowColor, DrawOffset, transform.Angle, transform.Depth + this.depthOffset);
+                }
+            }
+        }
+
+        public BoundedText BoundedText { get; private set; }
+
+        private void SetText(ITextInputFragment[] fragments)
+        {
+            BoundedText = new BoundedText(this.boundingRect.Rect, this.alignment, this.overflow, fragments);
+        }
+
+        public BoundedFormattedTextRenderer EnableDropShadow(Color color)
+        {
+            this.dropShadowColor = color;
+            this.isDropShadowEnabled = true;
+            return this;
+        }
+    }
+}

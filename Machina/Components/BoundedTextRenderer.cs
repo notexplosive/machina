@@ -51,11 +51,8 @@ namespace Machina.Components
         public SpriteFontMetrics FontMetrics { get; set; }
 
         public Point DrawOffset { get; set; }
-
         public Point TextLocalPos => CreateMeasuredText().TopLeftOfText();
-
         public Point TextWorldPos => this.boundingRect.TopLeft.ToPoint() + TextLocalPos;
-
         public int OccludedIndex { get; set; }
 
         private BoundedText CreateMeasuredText()
