@@ -15,7 +15,7 @@ namespace TestMachina.Utility
 
             drawPanel.DrawRectangle(textMeasurer.TotalAvailableRect, '#');
 
-            foreach (var line in textMeasurer.GetRenderedLines(Vector2.Zero, Point.Zero, Color.White, 0f, 0))
+            foreach (var line in textMeasurer.GetRenderedText(Vector2.Zero, Point.Zero, Color.White, 0f, 0))
             {
                 var totalWidth = 0;
                 foreach (var character in line.Content)
