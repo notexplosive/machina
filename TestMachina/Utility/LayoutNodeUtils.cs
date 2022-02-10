@@ -18,7 +18,7 @@ namespace TestMachina.Utility
             foreach (var line in textMeasurer.GetRenderedText(Color.White))
             {
                 var totalWidth = 0;
-                foreach (var character in line.Content)
+                foreach (var character in line.Text)
                 {
                     var charPosition = line.Origin - line.Offset + new Point(totalWidth, 0);
                     var charSize = line.FontMetrics.MeasureString(character.ToString()).ToPoint();
