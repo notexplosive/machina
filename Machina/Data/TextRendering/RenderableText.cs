@@ -9,17 +9,15 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Point drawOffset, Rectangle layoutNodeOfLine)
+        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Rectangle layoutNodeOfLine)
         {
-            var offsetFromPivot = (layoutNodeOfLine.Location + drawOffset).ToVector2();
-            offsetFromPivot.Floor();
-            offsetFromPivot = -offsetFromPivot;
+            var offsetFromPivot = layoutNodeOfLine.Location.ToVector2();
 
             CharacterPosition = characterPosition;
             FontMetrics = fontMetrics;
             Content = text;
             Color = textColor;
-            OffsetFromPivot = offsetFromPivot;
+            OffsetFromPivot = -offsetFromPivot;
             PivotPosition = pivotPosition;
         }
 
@@ -41,20 +39,20 @@ namespace Machina.Data.TextRendering
             throw new Exception("FontMetrics does not provide an actual font");
         }
 
-        public void Draw(SpriteBatch spriteBatch, float angle, Depth depth)
+        public void Draw(SpriteBatch spriteBatch, Point drawOffset, float angle, Depth depth)
         {
             if (string.IsNullOrWhiteSpace(Content))
             {
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, OffsetFromPivot, 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, OffsetFromPivot + drawOffset.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
-        public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, float angle, Depth depth)
+        public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, OffsetFromPivot - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, OffsetFromPivot + drawOffset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         public override string ToString()

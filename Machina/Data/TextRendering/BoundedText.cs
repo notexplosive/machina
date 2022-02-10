@@ -108,7 +108,7 @@ namespace Machina.Data.TextRendering
         }
 
 
-        public List<RenderableText> GetRenderedText(Point drawOffset, Color textColor)
+        public List<RenderableText> GetRenderedText(Color textColor)
         {
             var renderableTexts = new List<RenderableText>();
 
@@ -119,7 +119,7 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    renderableTexts.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, drawOffset, tokenNode.Rectangle));
+                    renderableTexts.Add(new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle));
                     characterIndex += outputFragment.Text.Length;
                     tokenIndex++;
                 }
