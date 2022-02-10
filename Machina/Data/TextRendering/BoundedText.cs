@@ -33,7 +33,7 @@ namespace Machina.Data.TextRendering
 
                     if (token.ShouldBeCounted)
                     {
-                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token.Text, token.ParentFragment.FontMetrics);
+                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token.Text, token.ParentFragment.FontMetrics, token.ParentFragment.Color);
                         tokenIndex++;
                     }
                 }
@@ -55,7 +55,7 @@ namespace Machina.Data.TextRendering
         }
 
 
-        public List<RenderableText> GetRenderedText(Color textColor, int occludedCharactersCount = 0)
+        public List<RenderableText> GetRenderedText(int occludedCharactersCount = 0)
         {
             var result = new List<RenderableText>();
 
@@ -68,7 +68,7 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle.Location);
+                    var pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, outputFragment.Color, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = pendingRenderableText.CharacterPosition + pendingRenderableText.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)

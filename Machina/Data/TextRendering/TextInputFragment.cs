@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Machina.Data.TextRendering
@@ -18,12 +19,14 @@ namespace Machina.Data.TextRendering
         }
 
         public IFontMetrics FontMetrics { get; }
+        public Color Color { get; }
         public string Text { get; }
 
-        public TextInputFragment(string text, IFontMetrics fontMetrics)
+        public TextInputFragment(string text, IFontMetrics fontMetrics, Color color)
         {
             Text = text;
             FontMetrics = fontMetrics;
+            Color = color;
         }
 
         public static string[] CreateTokens(string text)

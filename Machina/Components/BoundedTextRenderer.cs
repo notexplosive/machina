@@ -60,14 +60,14 @@ namespace Machina.Components
 
         private BoundedText CreateMeasuredText()
         {
-            var measurer = new BoundedText(this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow, new TextInputFragment(Text, FontMetrics));
+            var measurer = new BoundedText(this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow, new TextInputFragment(Text, FontMetrics, TextColor));
 
             return measurer;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(TextColor, OccludedIndex);
+            List<RenderableText> renderableTexts = CreateMeasuredText().GetRenderedText(OccludedIndex);
 
             foreach (var renderableText in renderableTexts)
             {
