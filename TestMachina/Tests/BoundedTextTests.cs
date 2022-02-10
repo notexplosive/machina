@@ -18,10 +18,10 @@ namespace TestMachina.Tests
         public void text_measurer_generates_accurate_output()
         {
             var textMeasurer = new BoundedText(
-                new TextInputFragment("Hello world", new MonospacedFontMetrics(new Point(2, 3))),
                 new Rectangle(new Point(0, 0), new Point(200, 200)),
                 Alignment.Center,
-                Overflow.Ignore);
+                Overflow.Ignore,
+                new TextInputFragment("Hello world", new MonospacedFontMetrics(new Point(2, 3))));
 
             // textMeasurer.Lines.Should().HaveCount(1);
 
@@ -37,10 +37,10 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.Center,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics));
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(6, 96));
 
@@ -64,10 +64,10 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.TopLeft,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics));
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(0, 0));
 
@@ -91,10 +91,10 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.BottomRight,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics));
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(12, 191));
 
@@ -118,10 +118,10 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("Short top string\nlooooooooooong.... middle.... string\nshort bottom", fontMetrics),
                 new Rectangle(Point.Zero, new Point(100, 200)),
                 Alignment.Center,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("Short top string\nlooooooooooong.... middle.... string\nshort bottom", fontMetrics));
 
             textMeasurer.TopLeftOfText().Should().Be(new Point(14, 96));
 
@@ -145,10 +145,10 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics),
                 new Rectangle(new Point(350, 250), new Point(100, 200)),
                 Alignment.BottomRight,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics));
 
             var renderedLines = textMeasurer.GetRenderedText(Color.Red);
 
@@ -174,10 +174,10 @@ namespace TestMachina.Tests
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!", fontMetrics),
                 rect,
                 Alignment.Center,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!", fontMetrics));
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
@@ -189,10 +189,10 @@ namespace TestMachina.Tests
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
             var textMeasurer = new BoundedText(
-                new TextInputFragment("This is a string used for testing.", fontMetrics),
                 rect,
                 Alignment.Center,
-                Overflow.Elide);
+                Overflow.Elide,
+                new TextInputFragment("This is a string used for testing.", fontMetrics));
 
             var renderedText = textMeasurer.GetRenderedText(Color.White);
 
@@ -216,7 +216,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("New\nLine", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("New\nLine", fontMetrics));
 
             var renderedText = textMeasurer.GetRenderedText(Color.White);
 
@@ -234,7 +234,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("This is a test", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White);
 
             textList.Should().HaveCount(7);
@@ -247,7 +247,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("This is a test", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 1);
 
             textList.Should().HaveCount(7);
@@ -260,7 +260,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("This is a test", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 4);
 
             textList.Should().HaveCount(6);
@@ -273,7 +273,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("This is a test", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("This is a test", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 5);
 
             textList.Should().HaveCount(5);
@@ -286,7 +286,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("Ragglest the Fragglest", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("Ragglest the Fragglest", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 12);
 
             textList.Should().HaveCount(3);
@@ -299,7 +299,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("Hi", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("Hi", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 2);
 
             textList.Should().HaveCount(0);
@@ -311,7 +311,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(new TextInputFragment("Hi", fontMetrics), rect, Alignment.Center, Overflow.Elide);
+            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new TextInputFragment("Hi", fontMetrics));
             var textList = textMeasurer.GetRenderedText(Color.White, 999999);
 
             textList.Should().HaveCount(0);

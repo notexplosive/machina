@@ -67,7 +67,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle TotalAvailableRect { get; }
 
-        public BoundedText(TextInputFragment textFragment, Rectangle rect, Alignment alignment, Overflow overflow)
+        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, TextInputFragment textFragment)
         {
             TotalAvailableRect = rect;
             this.alignment = alignment;
