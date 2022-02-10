@@ -15,7 +15,7 @@ namespace Machina.Data.TextRendering
             FontMetrics = fontMetrics;
             Text = text;
             Color = textColor;
-            Offset = offset.Negated();
+            Offset = offset;
             Origin = pivotPosition;
         }
 
@@ -60,7 +60,7 @@ namespace Machina.Data.TextRendering
 
         public RenderableText WithText(string text)
         {
-            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, Offset.Negated());
+            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, Offset);
         }
     }
 
