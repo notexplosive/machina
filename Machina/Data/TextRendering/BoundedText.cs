@@ -11,8 +11,7 @@ namespace Machina.Data.TextRendering
         private readonly Alignment alignment;
         private readonly BakedFlowLayout bakedLayout;
         private readonly Dictionary<int, TextOutputFragment> tokenLookup;
-        private readonly int totalCharacterCount;
-
+        public int TotalCharacterCount { get; }
         public Rectangle TotalAvailableRect { get; }
 
         public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, params ITextInputFragment[] textFragments)
@@ -20,7 +19,7 @@ namespace Machina.Data.TextRendering
             TotalAvailableRect = rect;
             this.alignment = alignment;
             this.tokenLookup = new Dictionary<int, TextOutputFragment>();
-            this.totalCharacterCount = 0;
+            TotalCharacterCount = 0;
 
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
@@ -50,7 +49,7 @@ namespace Machina.Data.TextRendering
             // newlines are not counted as characters.
             foreach (var outputFragment in this.tokenLookup.Values)
             {
-                this.totalCharacterCount += outputFragment.Text.Length;
+                TotalCharacterCount += outputFragment.Text.Length;
             }
         }
 
@@ -59,7 +58,7 @@ namespace Machina.Data.TextRendering
         {
             var result = new List<RenderableText>();
 
-            var renderCutoffIndex = this.totalCharacterCount - occludedCharactersCount;
+            var renderCutoffIndex = TotalCharacterCount - occludedCharactersCount;
 
             var tokenIndex = 0;
             var characterIndex = 0;
