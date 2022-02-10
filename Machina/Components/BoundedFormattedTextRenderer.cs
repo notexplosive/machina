@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Machina.Data;
 using Machina.Data.TextRendering;
@@ -18,10 +19,14 @@ namespace Machina.Components
         private bool isDropShadowEnabled;
         public Point DrawOffset { get; set; }
         public int OccludedIndex { get; set; }
+        public int TextLength => BoundedText.TotalCharacterCount;
 
-        public BoundedFormattedTextRenderer(Actor actor, Alignment alignment = default, Overflow overflow = Overflow.Elide, Depth depthOffset = default, params ITextInputFragment[] text) : base(actor)
+        public BoundedFormattedTextRenderer(Actor actor, Alignment alignment = default, Overflow overflow = Overflow.Elide, Depth depthOffset = default, ITextInputFragment[] text = default) : base(actor)
         {
-            Debug.Assert(text != null);
+            if (text == null)
+            {
+                text = Array.Empty<ITextInputFragment>();
+            }
 
             this.boundingRect = RequireComponent<BoundingRect>();
             this.alignment = alignment;
@@ -46,7 +51,7 @@ namespace Machina.Components
 
         public BoundedText BoundedText { get; private set; }
 
-        private void SetText(ITextInputFragment[] fragments)
+        public void SetText(params ITextInputFragment[] fragments)
         {
             BoundedText = new BoundedText(this.boundingRect.Rect, this.alignment, this.overflow, fragments);
         }
@@ -56,6 +61,11 @@ namespace Machina.Components
             this.dropShadowColor = color;
             this.isDropShadowEnabled = true;
             return this;
+        }
+
+        public void OccludeAll()
+        {
+            OccludedIndex = TextLength;
         }
     }
 }
