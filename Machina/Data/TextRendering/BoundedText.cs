@@ -121,11 +121,9 @@ namespace Machina.Data.TextRendering
 
         public List<RenderableText> GetRenderedText(Color textColor, int occludedCharactersCount = 0)
         {
-            var renderableTexts = new List<RenderableText>();
+            var result = new List<RenderableText>();
 
             var renderCutoffIndex = this.totalCharacterCount - occludedCharactersCount;
-
-            var shouldStop = false;
 
             var tokenIndex = 0;
             var characterIndex = 0;
@@ -144,31 +142,21 @@ namespace Machina.Data.TextRendering
 
                         if (substringLength <= 0)
                         {
-                            shouldStop = true;
-                            break;
+                            return result;
                         }
 
                         renderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text.Substring(0, substringLength), characterIndex, TotalAvailableRect.Location, textColor, tokenNode.Rectangle);
-                        shouldStop = true;
+                        result.Add(renderableText);
+                        return result;
                     }
 
-                    renderableTexts.Add(renderableText);
+                    result.Add(renderableText);
                     characterIndex += outputFragment.Text.Length;
                     tokenIndex++;
-
-                    if (shouldStop)
-                    {
-                        break;
-                    }
-                }
-
-                if (shouldStop)
-                {
-                    break;
                 }
             }
 
-            return renderableTexts;
+            return result;
         }
 
         public Rectangle GetRectOfLine(int lineIndex)
