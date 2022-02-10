@@ -16,11 +16,11 @@ namespace Machina.Data.TextRendering
             Content = text;
             Color = textColor;
             Offset = layoutNodeOfLine.Location.Negated();
-            PivotPosition = pivotPosition;
+            Origin = pivotPosition;
         }
 
         public string Content { get; }
-        public Point PivotPosition { get; }
+        public Point Origin { get; }
         public Point Offset { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
@@ -44,18 +44,18 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, drawOffset.ToVector2() + Offset.ToVector2(), 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), Content, Origin.ToVector2(), Color, angle, drawOffset.ToVector2() + Offset.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() + Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), Content, Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() + Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         public override string ToString()
         {
-            return $"`{Content}` at {PivotPosition} offset by {Offset}";
+            return $"`{Content}` at {Origin} offset by {Offset}";
         }
     }
 
