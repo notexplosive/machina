@@ -155,16 +155,16 @@ namespace TestMachina.Tests
             renderedLines.Should().HaveCount(42);
 
             renderedLines[0].PivotPosition.Should().Be(new Point(350, 250));
-            renderedLines[0].OffsetFromPivot.Should().Be(new Vector2(-12, -191));
+            renderedLines[0].OffsetFromPivot.Should().Be(new Point(-12, -191));
             renderedLines[0].Content.Should().Be("This");
 
             renderedLines[18].Content.Should().Be("referencing");
             renderedLines[18].PivotPosition.Should().Be(new Point(350, 250));
-            renderedLines[18].OffsetFromPivot.Should().Be(new Vector2(-16, -194));
+            renderedLines[18].OffsetFromPivot.Should().Be(new Point(-16, -194));
 
             renderedLines[31].Content.Should().Be("But");
             renderedLines[31].PivotPosition.Should().Be(new Point(350, 250));
-            renderedLines[31].OffsetFromPivot.Should().Be(new Vector2(-46, -197));
+            renderedLines[31].OffsetFromPivot.Should().Be(new Point(-46, -197));
         }
 
         [Fact]

@@ -11,19 +11,17 @@ namespace Machina.Data.TextRendering
     {
         public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Rectangle layoutNodeOfLine)
         {
-            var offsetFromPivot = layoutNodeOfLine.Location.ToVector2();
-
             CharacterPosition = characterPosition;
             FontMetrics = fontMetrics;
             Content = text;
             Color = textColor;
-            OffsetFromPivot = -offsetFromPivot;
+            OffsetFromPivot = layoutNodeOfLine.Location.Negated();
             PivotPosition = pivotPosition;
         }
 
         public string Content { get; }
         public Point PivotPosition { get; }
-        public Vector2 OffsetFromPivot { get; }
+        public Point OffsetFromPivot { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
         public int CharacterPosition { get; }
@@ -46,13 +44,13 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, OffsetFromPivot + drawOffset.ToVector2(), 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), Color, angle, drawOffset.ToVector2() + OffsetFromPivot.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, OffsetFromPivot + drawOffset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), Content, PivotPosition.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() + OffsetFromPivot.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         public override string ToString()

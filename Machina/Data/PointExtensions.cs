@@ -63,5 +63,10 @@ namespace Machina.Data
                 return point.Y = value;
             }
         }
+
+        public static Point Negated(this Point point)
+        {
+            return new Point(-point.X, -point.Y);
+        }
     }
 }
