@@ -9,13 +9,13 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Rectangle layoutNodeOfLine)
+        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Point offset)
         {
             CharacterPosition = characterPosition;
             FontMetrics = fontMetrics;
             Text = text;
             Color = textColor;
-            Offset = layoutNodeOfLine.Location.Negated();
+            Offset = offset.Negated();
             Origin = pivotPosition;
         }
 
@@ -60,7 +60,7 @@ namespace Machina.Data.TextRendering
 
         public RenderableText WithText(string text)
         {
-            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, new Rectangle(Offset.Negated(), Point.Zero));
+            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, Offset.Negated());
         }
     }
 
