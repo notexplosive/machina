@@ -18,5 +18,10 @@ namespace Machina.Data.TextRendering
         {
             return Font.MeasureString(text);
         }
+
+        public static implicit operator SpriteFontMetrics(SpriteFont font)
+        {
+            return new SpriteFontMetrics(font);
+        }
     }
 }
