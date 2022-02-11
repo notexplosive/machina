@@ -30,9 +30,9 @@ namespace Machina.Data.TextRendering
             TotalCharacterCount = OutputString.Length;
         }
 
-        public static FormattedText FromString(string rawText, IFontMetrics fontMetrics, Color startingColor)
+        public static FormattedText FromString(string rawText, IFontMetrics fontMetrics, Color color)
         {
-            return new FormattedText(new FormattedTextFragment(rawText, fontMetrics, startingColor));
+            return new FormattedText(new FormattedTextFragment(rawText, fontMetrics, color));
         }
 
         public IEnumerable<FormattedTextToken> FormattedTokens()
@@ -61,6 +61,14 @@ namespace Machina.Data.TextRendering
                 characterIndex += token.Text.Length;
             }
             return result;
+        }
+
+        public static FormattedText FromParseString(string parsableString, IFontMetrics startingFont, Color startingColor)
+        {
+            var commands = FormattedTextParser.GetCommands(parsableString);
+            var result = FormattedTextParser.GetFragmentsFromCommands(commands, startingFont, startingColor);
+
+            return new FormattedText(result);
         }
 
         public char GetCharacterAt(int index)

@@ -45,11 +45,23 @@ namespace TestMachina.Tests
         [Fact]
         public void formatted_text_from_string()
         {
-            var font1 = new MonospacedFontMetrics(new Point(4, 4));
-            var subject = FormattedText.FromString("Hello in blue.", font1, Color.Blue);
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = FormattedText.FromString("Hello in blue.", font, Color.Blue);
 
             subject.OutputString.Should().Be("Hello in blue.");
             subject.FormattedTokens().Should().HaveCount(5);
+        }
+
+        [Fact]
+        public void parse_instructions_to_make_formatted_text()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = FormattedText.FromParseString("Hello in [#color:0000ff]blue[#color:ffffff].", font, Color.White);
+
+            subject.OutputString.Should().Be("Hello in blue.");
+            var renderedText = subject.GetRenderedText(Point.Zero);
+
+            renderedText.Count.Should().Be(6);
         }
     }
 }
