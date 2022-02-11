@@ -11,30 +11,29 @@ namespace Machina.Data.TextRendering
         private readonly Alignment alignment;
         private readonly BakedFlowLayout bakedLayout;
         private readonly Dictionary<int, TextOutputFragment> tokenLookup;
-        public int TotalCharacterCount { get; }
+        private readonly FormattedText formattedText;
+
+        public int TotalCharacterCount => this.formattedText.TotalCharacterCount;
         public Rectangle TotalAvailableRect { get; }
 
-        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, params ITextInputFragment[] textFragments)
+        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, FormattedText formattedText = default)
         {
             TotalAvailableRect = rect;
             this.alignment = alignment;
             this.tokenLookup = new Dictionary<int, TextOutputFragment>();
-            TotalCharacterCount = 0;
+            this.formattedText = formattedText;
 
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
 
-            foreach (var textFragment in textFragments)
+            foreach (var token in formattedText.GetAllTokens())
             {
-                foreach (var token in textFragment.Tokens())
-                {
-                    childNodes.AddRange(token.Nodes);
+                childNodes.AddRange(token.Nodes);
 
-                    if (token.ShouldBeCounted)
-                    {
-                        this.tokenLookup[tokenIndex] = new TextOutputFragment(token.Text, token.ParentFragment.FontMetrics, token.ParentFragment.Color);
-                        tokenIndex++;
-                    }
+                if (token.ShouldBeCounted)
+                {
+                    this.tokenLookup[tokenIndex] = token.OutputFragment();
+                    tokenIndex++;
                 }
             }
 
@@ -43,14 +42,6 @@ namespace Machina.Data.TextRendering
             );
 
             this.bakedLayout = layout.Bake();
-
-
-            // We count "total characters" as all characters that we actually end up using.
-            // newlines are not counted as characters.
-            foreach (var outputFragment in this.tokenLookup.Values)
-            {
-                TotalCharacterCount += outputFragment.Text.Length;
-            }
         }
 
 

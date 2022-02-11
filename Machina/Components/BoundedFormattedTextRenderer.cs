@@ -21,18 +21,13 @@ namespace Machina.Components
         public int OccludedIndex { get; set; }
         public int TextLength => BoundedText.TotalCharacterCount;
 
-        public BoundedFormattedTextRenderer(Actor actor, Alignment alignment = default, Overflow overflow = Overflow.Elide, Depth depthOffset = default, ITextInputFragment[] text = default) : base(actor)
+        public BoundedFormattedTextRenderer(Actor actor, Alignment alignment = default, Overflow overflow = Overflow.Elide, Depth depthOffset = default, FormattedText formattedText = default) : base(actor)
         {
-            if (text == null)
-            {
-                text = Array.Empty<ITextInputFragment>();
-            }
-
             this.boundingRect = RequireComponent<BoundingRect>();
             this.alignment = alignment;
             this.depthOffset = depthOffset;
             this.overflow = overflow;
-            SetText(text);
+            SetText(formattedText);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -51,9 +46,9 @@ namespace Machina.Components
 
         public BoundedText BoundedText { get; private set; }
 
-        public void SetText(params ITextInputFragment[] fragments)
+        public void SetText(FormattedText formattedText)
         {
-            BoundedText = new BoundedText(this.boundingRect.Rect, this.alignment, this.overflow, fragments);
+            BoundedText = new BoundedText(this.boundingRect.Rect, this.alignment, this.overflow, formattedText);
         }
 
         public BoundedFormattedTextRenderer EnableDropShadow(Color color)

@@ -1,5 +1,6 @@
 ﻿using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Machina.Data.TextRendering
 {
@@ -33,5 +34,10 @@ namespace Machina.Data.TextRendering
         public TextInputFragment ParentFragment { get; }
         public string Text { get; }
         public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
+
+        public TextOutputFragment OutputFragment()
+        {
+            return new TextOutputFragment(Text, ParentFragment.FontMetrics, ParentFragment.Color);
+        }
     }
 }

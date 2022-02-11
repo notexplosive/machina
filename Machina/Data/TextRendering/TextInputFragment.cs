@@ -10,7 +10,7 @@ namespace Machina.Data.TextRendering
         {
             var result = new List<TextInputToken>();
 
-            foreach (var tokenText in CreateTokens(Text))
+            foreach (var tokenText in CreateTokens(RawText))
             {
                 result.Add(new TextInputToken(tokenText, this));
             }
@@ -20,11 +20,11 @@ namespace Machina.Data.TextRendering
 
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
-        public string Text { get; }
+        public string RawText { get; }
 
         public TextInputFragment(string text, IFontMetrics fontMetrics, Color color)
         {
-            Text = text;
+            RawText = text;
             FontMetrics = fontMetrics;
             Color = color;
         }
