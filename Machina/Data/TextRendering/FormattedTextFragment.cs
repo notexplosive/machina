@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct TextInputFragment : ITextInputFragment
+    public readonly struct FormattedTextFragment : ITextInputFragment
     {
         public TextInputToken[] Tokens()
         {
@@ -22,7 +22,7 @@ namespace Machina.Data.TextRendering
         public Color Color { get; }
         public string RawText { get; }
 
-        public TextInputFragment(string text, IFontMetrics fontMetrics, Color color)
+        public FormattedTextFragment(string text, IFontMetrics fontMetrics, Color color)
         {
             RawText = text;
             FontMetrics = fontMetrics;

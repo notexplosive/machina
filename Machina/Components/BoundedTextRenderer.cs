@@ -57,7 +57,7 @@ namespace Machina.Components
 
         private BoundedText CreateMeasuredText()
         {
-            var measurer = new BoundedText(this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow, new FormattedText(new TextInputFragment(Text, FontMetrics, TextColor)));
+            var measurer = new BoundedText(this.boundingRect.Rect, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow, new FormattedText(new FormattedTextFragment(Text, FontMetrics, TextColor)));
 
             return measurer;
         }

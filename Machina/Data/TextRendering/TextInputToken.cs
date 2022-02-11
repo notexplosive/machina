@@ -6,7 +6,7 @@ namespace Machina.Data.TextRendering
 {
     public struct TextInputToken
     {
-        public TextInputToken(string tokenText, TextInputFragment parentFragment)
+        public TextInputToken(string tokenText, FormattedTextFragment parentFragment)
         {
             ShouldBeCounted = false;
             ParentFragment = parentFragment;
@@ -31,7 +31,7 @@ namespace Machina.Data.TextRendering
         }
 
         public bool ShouldBeCounted { get; }
-        public TextInputFragment ParentFragment { get; }
+        public FormattedTextFragment ParentFragment { get; }
         public string Text { get; }
         public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
 
