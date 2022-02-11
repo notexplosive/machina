@@ -29,7 +29,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
+        public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
         public string Text { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
