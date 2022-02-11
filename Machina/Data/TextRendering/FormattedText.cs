@@ -20,7 +20,7 @@ namespace Machina.Data.TextRendering
             OutputString = "";
             TotalCharacterCount = 0;
 
-            foreach (var token in GetAllTokens())
+            foreach (var token in FormattedTokens())
             {
                 OutputString += token.OutputFragment().Text;
             }
@@ -28,7 +28,7 @@ namespace Machina.Data.TextRendering
             TotalCharacterCount = OutputString.Length;
         }
 
-        public IEnumerable<FormattedTextToken> GetAllTokens()
+        public IEnumerable<FormattedTextToken> FormattedTokens()
         {
             if (this.textFragments != null)
             {

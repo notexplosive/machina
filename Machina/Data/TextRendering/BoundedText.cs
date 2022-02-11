@@ -26,7 +26,7 @@ namespace Machina.Data.TextRendering
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
 
-            foreach (var token in formattedText.GetAllTokens())
+            foreach (var token in formattedText.FormattedTokens())
             {
                 childNodes.AddRange(token.Nodes);
 

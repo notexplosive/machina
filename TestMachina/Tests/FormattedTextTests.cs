@@ -15,7 +15,7 @@ namespace TestMachina.Tests
 
             var subject = new FormattedText(new FormattedTextFragment("Hello in blue. ", font1, Color.Blue), new FormattedTextFragment("Hello in red!", font2, Color.Red));
 
-            subject.GetAllTokens().Should().HaveCount(11);
+            subject.FormattedTokens().Should().HaveCount(11);
         }
     }
 }
