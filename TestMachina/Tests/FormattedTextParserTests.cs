@@ -55,6 +55,18 @@ namespace TestMachina.Tests
         }
 
         [Fact]
+        public void set_font_command()
+        {
+            var commands = FormattedTextParser.GetCommands("get [#font:GiantFont]huge");
+
+            commands.Should().ContainInOrder(
+                FormattedTextCommand.PlainText.WithArguments("get "),
+                FormattedTextCommand.Font.WithArguments("GiantFont"),
+                FormattedTextCommand.PlainText.WithArguments("huge")
+                );
+        }
+
+        [Fact]
         public void get_color_from_string()
         {
             var color = FormattedTextParser.ParseStringAsColor("a1b2c3");

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Machina.Engine;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -89,12 +90,13 @@ namespace Machina.Data.TextRendering
                 {
                     result.Add(new FormattedTextFragment(command.Arguments, currentFont, currentColor));
                 }
-                else
+                else if (command.IsSameAsCommand(FormattedTextCommand.Color))
                 {
-                    if (command.IsSameAsCommand(FormattedTextCommand.Color))
-                    {
-                        currentColor = ParseStringAsColor(command.Arguments);
-                    }
+                    currentColor = ParseStringAsColor(command.Arguments);
+                }
+                else if (command.IsSameAsCommand(FormattedTextCommand.Font))
+                {
+                    currentFont = (SpriteFontMetrics)MachinaClient.Assets.GetSpriteFont(command.Arguments);
                 }
             }
 
