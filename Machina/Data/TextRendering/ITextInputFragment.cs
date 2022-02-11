@@ -2,6 +2,6 @@
 {
     public interface ITextInputFragment
     {
-        public TextInputToken[] Tokens();
+        public FormattedTextToken[] Tokens();
     }
 }

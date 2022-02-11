@@ -28,7 +28,7 @@ namespace Machina.Data.TextRendering
             TotalCharacterCount = OutputString.Length;
         }
 
-        public IEnumerable<TextInputToken> GetAllTokens()
+        public IEnumerable<FormattedTextToken> GetAllTokens()
         {
             if (this.textFragments != null)
             {

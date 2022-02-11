@@ -4,9 +4,9 @@ using System;
 
 namespace Machina.Data.TextRendering
 {
-    public struct TextInputToken
+    public struct FormattedTextToken
     {
-        public TextInputToken(string tokenText, FormattedTextFragment parentFragment)
+        public FormattedTextToken(string tokenText, FormattedTextFragment parentFragment)
         {
             ShouldBeCounted = false;
             ParentFragment = parentFragment;

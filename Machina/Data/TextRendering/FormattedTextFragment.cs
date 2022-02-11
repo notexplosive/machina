@@ -6,13 +6,13 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct FormattedTextFragment : ITextInputFragment
     {
-        public TextInputToken[] Tokens()
+        public FormattedTextToken[] Tokens()
         {
-            var result = new List<TextInputToken>();
+            var result = new List<FormattedTextToken>();
 
             foreach (var tokenText in CreateTokens(RawText))
             {
-                result.Add(new TextInputToken(tokenText, this));
+                result.Add(new FormattedTextToken(tokenText, this));
             }
 
             return result.ToArray();
