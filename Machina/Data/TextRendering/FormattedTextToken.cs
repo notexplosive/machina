@@ -14,26 +14,17 @@ namespace Machina.Data.TextRendering
 
             if (tokenText == "\n")
             {
-                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.Spacer(new Point(0, parentFragment.FontMetrics.LineSpacing)),
-                    FlowLayoutInstruction.Linebreak
-                };
             }
             else
             {
+                // move this to TextOuputFragment?
                 ShouldBeCounted = true;
-
-                var tokenSize = parentFragment.FontMetrics.MeasureStringRounded(tokenText);
-                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
-                };
             }
         }
 
         public bool ShouldBeCounted { get; }
         public FormattedTextFragment ParentFragment { get; }
         public string Text { get; }
-        public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
         public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(Text);
 
         public TextOutputFragment OutputFragment()

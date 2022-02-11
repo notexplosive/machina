@@ -28,11 +28,12 @@ namespace Machina.Data.TextRendering
 
             foreach (var token in formattedText.FormattedTokens())
             {
-                childNodes.AddRange(token.Nodes);
+                var output = token.OutputFragment();
+                childNodes.AddRange(output.Nodes);
 
-                if (token.ShouldBeCounted)
+                if (output.ShouldBeCounted)
                 {
-                    this.tokenLookup[tokenIndex] = token.OutputFragment();
+                    this.tokenLookup[tokenIndex] = output;
                     tokenIndex++;
                 }
             }
