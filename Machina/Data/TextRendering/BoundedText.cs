@@ -31,7 +31,7 @@ namespace Machina.Data.TextRendering
                 var output = token.OutputFragment();
                 childNodes.AddRange(output.Nodes);
 
-                if (output.ShouldBeCounted)
+                if (output.WillBeRendered)
                 {
                     this.tokenLookup[tokenIndex] = output;
                     tokenIndex++;

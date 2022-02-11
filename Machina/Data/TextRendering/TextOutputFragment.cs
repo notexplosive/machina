@@ -13,7 +13,7 @@ namespace Machina.Data.TextRendering
 
             if (tokenText == "\n")
             {
-                ShouldBeCounted = false;
+                WillBeRendered = false;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
                     LayoutNode.Spacer(new Point(0, fontMetrics.LineSpacing)),
                     FlowLayoutInstruction.Linebreak
@@ -21,7 +21,7 @@ namespace Machina.Data.TextRendering
             }
             else
             {
-                ShouldBeCounted = true;
+                WillBeRendered = true;
                 var tokenSize = fontMetrics.MeasureStringRounded(tokenText);
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
                     LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
@@ -33,6 +33,6 @@ namespace Machina.Data.TextRendering
         public string Text { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
-        public bool ShouldBeCounted { get; }
+        public bool WillBeRendered { get; }
     }
 }
