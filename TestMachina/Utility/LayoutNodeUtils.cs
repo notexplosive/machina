@@ -1,4 +1,5 @@
-﻿using Machina.Data.Layout;
+﻿using ApprovalTests.Core;
+using Machina.Data.Layout;
 using Machina.Data.TextRendering;
 using Microsoft.Xna.Framework;
 using System;
@@ -15,13 +16,18 @@ namespace TestMachina.Utility
 
             drawPanel.DrawRectangle(textMeasurer.TotalAvailableRect, '#');
 
-            foreach (var line in textMeasurer.GetRenderedText())
+            return DrawRenderedText(drawPanel, textMeasurer.GetRenderedText());
+        }
+
+        public static string DrawRenderedText(AsciiDrawPanel drawPanel, List<RenderableText> renderedText)
+        {
+            foreach (var token in renderedText)
             {
                 var totalWidth = 0;
-                foreach (var character in line.Text)
+                foreach (var character in token.Text)
                 {
-                    var charPosition = line.Origin + line.Offset + new Point(totalWidth, 0);
-                    var charSize = line.FontMetrics.MeasureString(character.ToString()).ToPoint();
+                    var charPosition = token.Origin + token.Offset + new Point(totalWidth, 0);
+                    var charSize = token.FontMetrics.MeasureString(character.ToString()).ToPoint();
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');
 

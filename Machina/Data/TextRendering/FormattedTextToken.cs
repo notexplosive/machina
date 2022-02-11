@@ -34,6 +34,7 @@ namespace Machina.Data.TextRendering
         public FormattedTextFragment ParentFragment { get; }
         public string Text { get; }
         public FlowLayout.LayoutNodeOrInstruction[] Nodes { get; }
+        public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(Text);
 
         public TextOutputFragment OutputFragment()
         {
