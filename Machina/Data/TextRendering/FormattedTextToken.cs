@@ -8,21 +8,10 @@ namespace Machina.Data.TextRendering
     {
         public FormattedTextToken(string tokenText, FormattedTextFragment parentFragment)
         {
-            ShouldBeCounted = false;
             ParentFragment = parentFragment;
             Text = tokenText;
-
-            if (tokenText == "\n")
-            {
-            }
-            else
-            {
-                // move this to TextOuputFragment?
-                ShouldBeCounted = true;
-            }
         }
 
-        public bool ShouldBeCounted { get; }
         public FormattedTextFragment ParentFragment { get; }
         public string Text { get; }
         public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(Text);

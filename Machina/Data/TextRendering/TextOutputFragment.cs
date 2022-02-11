@@ -16,8 +16,10 @@ namespace Machina.Data.TextRendering
             if (tokenText == "\n")
             {
                 WillBeRendered = false;
+                var linebreakSize = new Point(0, fontMetrics.LineSpacing);
+                Size = linebreakSize;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.Spacer(new Point(0, fontMetrics.LineSpacing)),
+                    LayoutNode.Spacer(linebreakSize),
                     FlowLayoutInstruction.Linebreak
                 };
             }
@@ -25,11 +27,14 @@ namespace Machina.Data.TextRendering
             {
                 WillBeRendered = true;
                 var tokenSize = fontMetrics.MeasureStringRounded(tokenText);
+                Size = tokenSize;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
                     LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
                 };
             }
         }
+
+        public Point Size { get; }
 
         public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
         public string Text { get; }
