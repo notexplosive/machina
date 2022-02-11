@@ -22,6 +22,7 @@ namespace TestMachina.Tests
                 new FormattedTextFragment("Hello in red!", font2, Color.Red)
                 );
 
+            subject.OutputString.Should().Be("Hello in blue. Hello in red!");
             subject.FormattedTokens().Should().HaveCount(11);
         }
 
@@ -39,6 +40,16 @@ namespace TestMachina.Tests
             var renderedText = subject.GetRenderedText(Point.Zero);
 
             Approvals.Verify(TextMeasureUtils.DrawRenderedText(new AsciiDrawPanel(new Point(113, 5)), renderedText));
+        }
+
+        [Fact]
+        public void formatted_text_from_string()
+        {
+            var font1 = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = FormattedText.FromString("Hello in blue.", font1, Color.Blue);
+
+            subject.OutputString.Should().Be("Hello in blue.");
+            subject.FormattedTokens().Should().HaveCount(5);
         }
     }
 }

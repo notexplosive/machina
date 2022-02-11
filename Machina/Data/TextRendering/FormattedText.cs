@@ -7,6 +7,7 @@ namespace Machina.Data.TextRendering
     public readonly struct FormattedText
     {
         private readonly ITextInputFragment[] textFragments;
+
         public int TotalCharacterCount { get; }
         public string OutputString { get; }
 
@@ -27,6 +28,11 @@ namespace Machina.Data.TextRendering
             }
 
             TotalCharacterCount = OutputString.Length;
+        }
+
+        public static FormattedText FromString(string rawText, IFontMetrics fontMetrics, Color startingColor)
+        {
+            return new FormattedText(new FormattedTextFragment(rawText, fontMetrics, startingColor));
         }
 
         public IEnumerable<FormattedTextToken> FormattedTokens()
