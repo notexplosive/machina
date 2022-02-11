@@ -51,16 +51,7 @@ namespace Machina.Data.TextRendering
 
         public List<RenderableText> GetRenderedText(Point position)
         {
-            var result = new List<RenderableText>();
-            var characterIndex = 0;
-            var offset = Point.Zero;
-            foreach (var token in FormattedTokens())
-            {
-                result.Add(new RenderableText(token.ParentFragment.FontMetrics, token.Text, characterIndex, position, token.ParentFragment.Color, offset));
-                offset += token.Size.WithJustAxisValue(Axis.X);
-                characterIndex += token.Text.Length;
-            }
-            return result;
+            return new BoundedText(new Rectangle(position, new Point(int.MaxValue, int.MaxValue)), Alignment.TopLeft, Overflow.Ignore, this).GetRenderedText();
         }
 
         public static FormattedText FromParseString(string parsableString, IFontMetrics startingFont, Color startingColor)
