@@ -6,6 +6,7 @@ using Machina.Data;
 using Machina.Data.TextRendering;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using TestMachina.Utility;
 using Xunit;
 
@@ -183,34 +184,6 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        public void rendered_text_know_what_parts_of_the_string_they_own()
-        {
-            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
-
-            var textMeasurer = new BoundedText(
-                rect,
-                Alignment.Center,
-                Overflow.Elide,
-                new FormattedText(new FormattedTextFragment("This is a string used for testing.", fontMetrics, Color.White)));
-
-            var renderedText = textMeasurer.GetRenderedText();
-
-            renderedText.Should().HaveCount(13);
-            renderedText[0].CharacterPosition.Should().Be(0);
-            renderedText[0].CharacterLength.Should().Be(4);
-
-            renderedText[1].CharacterPosition.Should().Be(4);
-            renderedText[1].CharacterLength.Should().Be(1);
-
-            renderedText[2].CharacterPosition.Should().Be(5);
-            renderedText[2].CharacterLength.Should().Be(2);
-
-            renderedText[3].CharacterPosition.Should().Be(7);
-            renderedText[3].CharacterLength.Should().Be(1);
-        }
-
-        [Fact]
         public void newlines_are_not_counted_as_rendered_text()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
@@ -221,11 +194,8 @@ namespace TestMachina.Tests
             var renderedText = textMeasurer.GetRenderedText();
 
             renderedText.Should().HaveCount(2);
-            renderedText[0].CharacterPosition.Should().Be(0);
-            renderedText[0].CharacterLength.Should().Be(3);
-
-            renderedText[1].CharacterPosition.Should().Be(3);
-            renderedText[1].CharacterLength.Should().Be(4);
+            renderedText[0].Text.Should().Be("New");
+            renderedText[1].Text.Should().Be("Line");
         }
 
         [Fact]

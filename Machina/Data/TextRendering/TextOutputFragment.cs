@@ -6,8 +6,9 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextOutputFragment
     {
-        public TextOutputFragment(string tokenText, IFontMetrics fontMetrics, Color color)
+        public TextOutputFragment(string tokenText, IFontMetrics fontMetrics, Color color, int characterPosition)
         {
+            CharacterPosition = characterPosition;
             Text = tokenText;
             FontMetrics = fontMetrics;
             Color = color;
@@ -35,10 +36,17 @@ namespace Machina.Data.TextRendering
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
         public bool WillBeRendered { get; }
+        public int CharacterPosition { get; }
+        public int CharacterLength => Text.Length;
 
-        public RenderableText CreateRenderableText(int characterIndex, Point totalAvailableRectLocation, Point nodeLocation)
+        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
         {
-            return new RenderableText(FontMetrics, Text, characterIndex, totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(FontMetrics, Text, totalAvailableRectLocation, Color, nodeLocation);
+        }
+
+        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, string newText)
+        {
+            return new RenderableText(FontMetrics, newText, totalAvailableRectLocation, Color, nodeLocation);
         }
     }
 }

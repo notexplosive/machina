@@ -22,9 +22,9 @@ namespace Machina.Data.TextRendering
             OutputString = "";
             TotalCharacterCount = 0;
 
-            foreach (var token in FormattedTokens())
+            foreach (var outputFragment in OutputFragments())
             {
-                OutputString += token.OutputFragment().Text;
+                OutputString += outputFragment.Text;
             }
 
             TotalCharacterCount = OutputString.Length;
@@ -46,6 +46,17 @@ namespace Machina.Data.TextRendering
                         yield return token;
                     }
                 }
+            }
+        }
+
+        public IEnumerable<TextOutputFragment> OutputFragments()
+        {
+            var characterIndex = 0;
+            foreach (var token in FormattedTokens())
+            {
+                var output = token.OutputFragment(characterIndex);
+                yield return output;
+                characterIndex += output.CharacterLength;
             }
         }
 

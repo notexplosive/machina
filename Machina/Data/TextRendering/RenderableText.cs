@@ -9,9 +9,8 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, int characterPosition, Point pivotPosition, Color textColor, Point offset)
+        public RenderableText(IFontMetrics fontMetrics, string text, Point pivotPosition, Color textColor, Point offset)
         {
-            CharacterPosition = characterPosition;
             FontMetrics = fontMetrics;
             Text = text;
             Color = textColor;
@@ -24,8 +23,6 @@ namespace Machina.Data.TextRendering
         public Point Offset { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
-        public int CharacterPosition { get; }
-        public int CharacterLength => Text.Length;
 
         private SpriteFont GetFont()
         {
@@ -56,11 +53,6 @@ namespace Machina.Data.TextRendering
         public override string ToString()
         {
             return $"`{Text}` at {Origin} offset by {Offset}";
-        }
-
-        public RenderableText WithText(string text)
-        {
-            return new RenderableText(FontMetrics, text, CharacterPosition, Origin, Color, Offset);
         }
     }
 

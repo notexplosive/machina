@@ -26,9 +26,8 @@ namespace Machina.Data.TextRendering
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
             var tokenIndex = 0;
 
-            foreach (var token in formattedText.FormattedTokens())
+            foreach (var output in formattedText.OutputFragments())
             {
-                var output = token.OutputFragment();
                 childNodes.AddRange(output.Nodes);
 
                 if (output.WillBeRendered)
@@ -53,30 +52,28 @@ namespace Machina.Data.TextRendering
             var renderCutoffIndex = TotalCharacterCount - occludedCharactersCount;
 
             var tokenIndex = 0;
-            var characterIndex = 0;
             foreach (var row in this.bakedLayout.Rows)
             {
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var pendingRenderableText = outputFragment.CreateRenderableText(characterIndex, TotalAvailableRect.Location, tokenNode.Rectangle.Location);
+                    var pendingRenderableText = outputFragment.CreateRenderableText(TotalAvailableRect.Location, tokenNode.Rectangle.Location);
 
-                    var lastCharacterInThisText = pendingRenderableText.CharacterPosition + pendingRenderableText.CharacterLength;
+                    var lastCharacterInThisText = outputFragment.CharacterPosition + outputFragment.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
                     {
-                        var substringLength = renderCutoffIndex - lastCharacterInThisText + pendingRenderableText.CharacterLength;
+                        var substringLength = renderCutoffIndex - lastCharacterInThisText + outputFragment.CharacterLength;
 
                         if (substringLength <= 0)
                         {
                             return result;
                         }
 
-                        result.Add(pendingRenderableText.WithText(outputFragment.Text.Substring(0, substringLength)));
+                        result.Add(outputFragment.CreateRenderableTextWithDifferentString(TotalAvailableRect.Location, tokenNode.Rectangle.Location, outputFragment.Text.Substring(0, substringLength)));
                         return result;
                     }
 
                     result.Add(pendingRenderableText);
-                    characterIndex += outputFragment.Text.Length;
                     tokenIndex++;
                 }
             }

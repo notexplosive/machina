@@ -3,6 +3,7 @@ using ApprovalTests.Reporters;
 using FluentAssertions;
 using Machina.Data.TextRendering;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using TestMachina.Utility;
 using Xunit;
 
@@ -62,6 +63,28 @@ namespace TestMachina.Tests
             var renderedText = subject.GetRenderedText(Point.Zero);
 
             renderedText.Count.Should().Be(6);
+        }
+
+        [Fact]
+        public void output_fragments_know_what_parts_of_the_string_they_own()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = new FormattedText(new FormattedTextFragment("This is a string used for testing.", fontMetrics, Color.White));
+
+            var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
+
+            outputFragment.Should().HaveCount(13);
+            outputFragment[0].CharacterPosition.Should().Be(0);
+            outputFragment[0].CharacterLength.Should().Be(4);
+
+            outputFragment[1].CharacterPosition.Should().Be(4);
+            outputFragment[1].CharacterLength.Should().Be(1);
+
+            outputFragment[2].CharacterPosition.Should().Be(5);
+            outputFragment[2].CharacterLength.Should().Be(2);
+
+            outputFragment[3].CharacterPosition.Should().Be(7);
+            outputFragment[3].CharacterLength.Should().Be(1);
         }
     }
 }

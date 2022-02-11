@@ -27,9 +27,9 @@ namespace Machina.Data.TextRendering
         public string Text { get; }
         public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(Text);
 
-        public TextOutputFragment OutputFragment()
+        public TextOutputFragment OutputFragment(int characterPosition)
         {
-            return new TextOutputFragment(Text, ParentFragment.FontMetrics, ParentFragment.Color);
+            return new TextOutputFragment(Text, ParentFragment.FontMetrics, ParentFragment.Color, characterPosition);
         }
     }
 }
