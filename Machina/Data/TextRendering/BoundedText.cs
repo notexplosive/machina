@@ -59,7 +59,7 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var pendingRenderableText = new RenderableText(outputFragment.FontMetrics, outputFragment.Text, characterIndex, TotalAvailableRect.Location, outputFragment.Color, tokenNode.Rectangle.Location);
+                    var pendingRenderableText = outputFragment.CreateRenderableText(characterIndex, TotalAvailableRect.Location, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = pendingRenderableText.CharacterPosition + pendingRenderableText.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)

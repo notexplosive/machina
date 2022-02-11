@@ -1,5 +1,6 @@
 ﻿using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace Machina.Data.TextRendering
 {
@@ -34,5 +35,10 @@ namespace Machina.Data.TextRendering
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
         public bool WillBeRendered { get; }
+
+        public RenderableText CreateRenderableText(int characterIndex, Point totalAvailableRectLocation, Point nodeLocation)
+        {
+            return new RenderableText(FontMetrics, Text, characterIndex, totalAvailableRectLocation, Color, nodeLocation);
+        }
     }
 }
