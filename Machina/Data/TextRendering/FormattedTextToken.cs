@@ -18,5 +18,10 @@ namespace Machina.Data.TextRendering
         public Point Size { get; }
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
+
+        public TextOutputFragment CreateOutputFragment(int characterIndex)
+        {
+            return new TextOutputFragment(TokenText, FontMetrics, Color, Size, characterIndex);
+        }
     }
 }
