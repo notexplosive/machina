@@ -34,6 +34,6 @@ namespace Machina.Data.TextRendering
         public int CharacterPosition { get; }
         public IDrawableTextElement Drawable { get; }
 
-        public int CharacterLength => Drawable.TokenText.Length;
+        public int CharacterLength => Drawable.CharacterLength;
     }
 }

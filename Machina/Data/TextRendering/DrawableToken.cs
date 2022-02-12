@@ -8,6 +8,7 @@ namespace Machina.Data.TextRendering
         public IFontMetrics FontMetrics { get; }
         public Color Color { get; }
         public string TokenText { get; }
+        public int CharacterLength => TokenText.Length;
 
         public DrawableToken(string tokenText, IFontMetrics fontMetrics, Color color)
         {
