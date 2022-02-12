@@ -9,15 +9,15 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IDrawableTextElement element, string text, Point pivotPosition, Point offset)
+        public RenderableText(IDrawableTextElement drawable, string text, Point pivotPosition, Point offset)
         {
-            Element = element;
+            Drawable = drawable;
             Text = text;
             Offset = offset;
             Origin = pivotPosition;
         }
 
-        public IDrawableTextElement Element { get; }
+        public IDrawableTextElement Drawable { get; }
         public string Text { get; }
         public Point Origin { get; }
         public Point Offset { get; }
@@ -29,12 +29,12 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            Element.Draw(spriteBatch, this, angle, drawOffset, depth);
+            Drawable.Draw(spriteBatch, this, angle, drawOffset, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
-            Element.DrawDropShadow(spriteBatch, this, angle, drawOffset, depth, dropShadowColor);
+            Drawable.DrawDropShadow(spriteBatch, this, angle, drawOffset, depth, dropShadowColor);
         }
 
         public override string ToString()
