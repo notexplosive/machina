@@ -14,7 +14,17 @@ namespace Machina.Data.TextRendering
             FontMetrics = fontMetrics;
             Color = color;
             TokenText = tokenText;
-            Size = FontMetrics.MeasureStringRounded(TokenText);
+
+            var tokenSize = FontMetrics.MeasureStringRounded(TokenText);
+
+            if (TokenText == "\n")
+            {
+                Size = new Point(0, tokenSize.Y);
+            }
+            else
+            {
+                Size = tokenSize;
+            }
         }
 
         public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
