@@ -86,5 +86,62 @@ namespace TestMachina.Tests
             outputFragment[3].CharacterPosition.Should().Be(7);
             outputFragment[3].CharacterLength.Should().Be(1);
         }
+
+        [Fact]
+        public void formatted_text_can_include_things_that_are_not_text()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = new FormattedText(
+                new FormattedTextFragment("Text", fontMetrics, Color.White),
+                new GenericImageTextFragment(new Point(20, 20)),
+                new FormattedTextFragment("and more text", fontMetrics, Color.White)
+            );
+            var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
+
+            subject.OutputString.Should().Be("Text{symbol}and more text");
+
+            outputFragment.Should().HaveCount(7);
+
+
+            outputFragment[0].CharacterPosition.Should().Be(0);
+            outputFragment[0].CharacterLength.Should().Be(4);
+
+            outputFragment[1].CharacterPosition.Should().Be(4);
+            outputFragment[1].CharacterLength.Should().Be(1);
+
+            outputFragment[2].CharacterPosition.Should().Be(5);
+            outputFragment[2].CharacterLength.Should().Be(3);
+
+
+            outputFragment[3].CharacterPosition.Should().Be(8);
+            outputFragment[3].CharacterLength.Should().Be(1);
+
+            outputFragment[4].CharacterPosition.Should().Be(9);
+            outputFragment[4].CharacterLength.Should().Be(4);
+
+            outputFragment[5].CharacterPosition.Should().Be(13);
+            outputFragment[5].CharacterLength.Should().Be(1);
+
+            outputFragment[6].CharacterPosition.Should().Be(14);
+            outputFragment[6].CharacterLength.Should().Be(4);
+        }
+
+        [Fact]
+        public void formatted_text_draws_things_that_are_not_text()
+        {
+            var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
+            var subject = new FormattedText(
+                new FormattedTextFragment("Text", fontMetrics, Color.White),
+                new GenericImageTextFragment(new Point(20, 20)),
+                new FormattedTextFragment("and more text", fontMetrics, Color.White)
+            );
+            var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
+
+            subject.OutputString.Should().Be("Text{symbol}and more text");
+
+            outputFragment.Should().HaveCount(7);
+
+            Approvals.Verify(TextMeasureUtils.DrawRenderedText(new AsciiDrawPanel(new Point(88, 20)), subject.GetRenderedText(Point.Zero)));
+        }
     }
 }

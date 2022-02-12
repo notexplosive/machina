@@ -4,6 +4,21 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
+    public readonly struct GenericImageTextFragment : ITextInputFragment
+    {
+        public GenericImageTextFragment(Point size)
+        {
+            Size = size;
+        }
+
+        public Point Size { get; }
+
+        public FormattedTextToken[] Tokens()
+        {
+            return new FormattedTextToken[] { new FormattedTextToken(new GenericDrawable(Size)) };
+        }
+    }
+
     public readonly struct FormattedTextFragment : ITextInputFragment
     {
         public FormattedTextToken[] Tokens()

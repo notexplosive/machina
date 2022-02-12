@@ -69,5 +69,10 @@ namespace Machina.Data.TextRendering
         {
             return FontMetrics.MeasureStringRounded(TokenText[index].ToString());
         }
+
+        public char GetCharacterAt(int characterIndex)
+        {
+            return TokenText[characterIndex];
+        }
     }
 }
