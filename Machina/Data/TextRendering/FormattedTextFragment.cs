@@ -10,7 +10,7 @@ namespace Machina.Data.TextRendering
         {
             var result = new List<FormattedTextToken>();
 
-            foreach (var tokenText in CreateTokens(RawText))
+            foreach (var tokenText in SplitString())
             {
                 result.Add(new FormattedTextToken(tokenText, this));
             }
@@ -29,11 +29,11 @@ namespace Machina.Data.TextRendering
             Color = color;
         }
 
-        public static string[] CreateTokens(string text)
+        public string[] SplitString()
         {
             var words = new List<string>();
             var pendingWord = new StringBuilder();
-            foreach (var character in text)
+            foreach (var character in RawText)
             {
                 if (character == ' ' || character == '\n')
                 {
