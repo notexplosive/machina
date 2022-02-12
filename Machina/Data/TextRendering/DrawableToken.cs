@@ -65,9 +65,9 @@ namespace Machina.Data.TextRendering
             throw new Exception("FontMetrics does not provide an actual font");
         }
 
-        public Point MeasureString(string stringToMeasure)
+        public Point SizeOfCharacter(int index)
         {
-            return FontMetrics.MeasureStringRounded(stringToMeasure);
+            return FontMetrics.MeasureStringRounded(TokenText[index].ToString());
         }
     }
 }

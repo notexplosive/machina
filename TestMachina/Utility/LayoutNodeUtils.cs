@@ -24,10 +24,11 @@ namespace TestMachina.Utility
             foreach (var token in renderedText)
             {
                 var totalWidth = 0;
+                var characterIndex = 0;
                 foreach (var character in token.Text)
                 {
                     var charPosition = token.Origin + token.Offset + new Point(totalWidth, 0);
-                    var charSize = token.Drawable.MeasureString(character.ToString());
+                    var charSize = token.Drawable.SizeOfCharacter(characterIndex);
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');
 
@@ -42,6 +43,7 @@ namespace TestMachina.Utility
                         }
                     }
                     totalWidth += (int)charSize.X;
+                    characterIndex++;
                 }
             }
 

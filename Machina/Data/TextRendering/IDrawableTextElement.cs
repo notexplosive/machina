@@ -13,11 +13,6 @@ namespace Machina.Data.TextRendering
         public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength);
         void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth);
         void DrawDropShadow(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth, Color dropShadowColor);
-
-        /// <summary>
-        /// BOOOO!!!! TEST ONLY! :(
-        /// </summary>
-        /// <returns></returns>
-        Point MeasureString(string stringToMeasure);
+        Point SizeOfCharacter(int characterIndex);
     }
 }
