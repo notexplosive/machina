@@ -9,11 +9,11 @@ namespace Machina.Data.TextRendering
         public FormattedTextToken(string tokenText, FormattedTextFragment parentFragment)
         {
             ParentFragment = parentFragment;
-            Text = tokenText;
+            TokenText = tokenText;
         }
 
         public FormattedTextFragment ParentFragment { get; }
-        public string Text { get; }
-        public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(Text);
+        public string TokenText { get; }
+        public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(TokenText);
     }
 }
