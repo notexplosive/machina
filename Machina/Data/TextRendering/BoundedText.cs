@@ -69,7 +69,7 @@ namespace Machina.Data.TextRendering
                             return result;
                         }
 
-                        result.Add(outputFragment.Drawable.CreateRenderableTextWithDifferentString(TotalAvailableRect.Location, tokenNode.Rectangle.Location, outputFragment.Text.Substring(0, substringLength)));
+                        result.Add(outputFragment.Drawable.CreateRenderableTextWithDifferentString(TotalAvailableRect.Location, tokenNode.Rectangle.Location, substringLength));
                         return result;
                     }
 

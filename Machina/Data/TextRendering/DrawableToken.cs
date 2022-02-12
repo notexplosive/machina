@@ -22,9 +22,9 @@ namespace Machina.Data.TextRendering
             return new RenderableText(FontMetrics, TokenText, totalAvailableRectLocation, Color, nodeLocation);
         }
 
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, string newText)
+        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength)
         {
-            return new RenderableText(FontMetrics, newText, totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(FontMetrics, TokenText.Substring(0, substringLength), totalAvailableRectLocation, Color, nodeLocation);
         }
     }
 }

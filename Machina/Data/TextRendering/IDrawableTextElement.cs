@@ -7,6 +7,6 @@ namespace Machina.Data.TextRendering
         public string TokenText { get; }
         public Point Size { get; }
         public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation);
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, string newText);
+        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength);
     }
 }
