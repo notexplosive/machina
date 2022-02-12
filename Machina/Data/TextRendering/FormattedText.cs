@@ -22,9 +22,9 @@ namespace Machina.Data.TextRendering
             OutputString = "";
             TotalCharacterCount = 0;
 
-            foreach (var outputFragment in GetTokens())
+            foreach (var token in GetTokens())
             {
-                OutputString += outputFragment.Drawable.TokenText;
+                OutputString += token.Drawable.TokenText;
             }
 
             TotalCharacterCount = OutputString.Length;
