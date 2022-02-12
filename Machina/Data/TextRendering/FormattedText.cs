@@ -54,7 +54,7 @@ namespace Machina.Data.TextRendering
             var characterIndex = 0;
             foreach (var token in FormattedTokens())
             {
-                var output = new TextOutputFragment(token.TokenText, token.FontMetrics, token.Color, characterIndex);
+                var output = new TextOutputFragment(token.TokenText, token.FontMetrics, token.Color, token.Size, characterIndex);
                 yield return output;
                 characterIndex += output.CharacterLength;
             }

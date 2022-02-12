@@ -6,7 +6,7 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextOutputFragment
     {
-        public TextOutputFragment(string tokenText, IFontMetrics fontMetrics, Color color, int characterPosition)
+        public TextOutputFragment(string tokenText, IFontMetrics fontMetrics, Color color, Point tokenSize, int characterPosition)
         {
             CharacterPosition = characterPosition;
             Text = tokenText;
@@ -26,7 +26,6 @@ namespace Machina.Data.TextRendering
             else
             {
                 WillBeRendered = true;
-                var tokenSize = fontMetrics.MeasureStringRounded(tokenText);
                 Size = tokenSize;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
                     LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
