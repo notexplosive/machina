@@ -39,15 +39,5 @@ namespace Machina.Data.TextRendering
         public IDrawableTextElement Drawable { get; }
 
         public int CharacterLength => Drawable.TokenText.Length;
-
-        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
-        {
-            return new RenderableText(Drawable.FontMetrics, Drawable.TokenText, totalAvailableRectLocation, Drawable.Color, nodeLocation);
-        }
-
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, string newText)
-        {
-            return new RenderableText(Drawable.FontMetrics, newText, totalAvailableRectLocation, Drawable.Color, nodeLocation);
-        }
     }
 }

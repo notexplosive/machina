@@ -57,7 +57,7 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var pendingRenderableText = outputFragment.CreateRenderableText(TotalAvailableRect.Location, tokenNode.Rectangle.Location);
+                    var pendingRenderableText = outputFragment.Drawable.CreateRenderableText(TotalAvailableRect.Location, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = outputFragment.CharacterPosition + outputFragment.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
@@ -69,7 +69,7 @@ namespace Machina.Data.TextRendering
                             return result;
                         }
 
-                        result.Add(outputFragment.CreateRenderableTextWithDifferentString(TotalAvailableRect.Location, tokenNode.Rectangle.Location, outputFragment.Text.Substring(0, substringLength)));
+                        result.Add(outputFragment.Drawable.CreateRenderableTextWithDifferentString(TotalAvailableRect.Location, tokenNode.Rectangle.Location, outputFragment.Text.Substring(0, substringLength)));
                         return result;
                     }
 
