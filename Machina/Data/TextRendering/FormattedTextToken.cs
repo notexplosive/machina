@@ -4,9 +4,14 @@ using System;
 
 namespace Machina.Data.TextRendering
 {
-    public struct FormattedTextToken
+    public readonly struct DrawableToken
     {
-        public FormattedTextToken(string tokenText, IFontMetrics fontMetrics, Color color)
+        public Point Size { get; }
+        public IFontMetrics FontMetrics { get; }
+        public Color Color { get; }
+        public string TokenText { get; }
+
+        public DrawableToken(string tokenText, IFontMetrics fontMetrics, Color color)
         {
             FontMetrics = fontMetrics;
             Color = color;
@@ -14,14 +19,20 @@ namespace Machina.Data.TextRendering
             Size = FontMetrics.MeasureStringRounded(TokenText);
         }
 
-        public string TokenText { get; }
-        public Point Size { get; }
-        public IFontMetrics FontMetrics { get; }
-        public Color Color { get; }
+    }
+
+    public readonly struct FormattedTextToken
+    {
+        public FormattedTextToken(DrawableToken drawable)
+        {
+            Drawable = drawable;
+        }
+
+        public DrawableToken Drawable { get; }
 
         public TextOutputFragment CreateOutputFragment(int characterIndex)
         {
-            return new TextOutputFragment(TokenText, FontMetrics, Color, Size, characterIndex);
+            return new TextOutputFragment(Drawable.TokenText, Drawable.FontMetrics, Drawable.Color, Drawable.Size, characterIndex);
         }
     }
 }

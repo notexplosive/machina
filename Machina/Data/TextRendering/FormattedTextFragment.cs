@@ -12,7 +12,7 @@ namespace Machina.Data.TextRendering
 
             foreach (var tokenText in SplitString())
             {
-                result.Add(new FormattedTextToken(tokenText, FontMetrics, Color));
+                result.Add(new FormattedTextToken(new DrawableToken(tokenText, FontMetrics, Color)));
             }
 
             return result.ToArray();
