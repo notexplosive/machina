@@ -6,14 +6,17 @@ namespace Machina.Data.TextRendering
 {
     public struct FormattedTextToken
     {
-        public FormattedTextToken(string tokenText, FormattedTextFragment parentFragment)
+        public FormattedTextToken(string tokenText, IFontMetrics fontMetrics, Color color)
         {
-            ParentFragment = parentFragment;
+            FontMetrics = fontMetrics;
+            Color = color;
             TokenText = tokenText;
+            Size = FontMetrics.MeasureStringRounded(TokenText);
         }
 
-        public FormattedTextFragment ParentFragment { get; }
         public string TokenText { get; }
-        public Point Size => ParentFragment.FontMetrics.MeasureStringRounded(TokenText);
+        public Point Size { get; }
+        public IFontMetrics FontMetrics { get; }
+        public Color Color { get; }
     }
 }
