@@ -32,7 +32,6 @@ namespace Machina.Data.TextRendering
         }
 
         public Point Size { get; }
-        public string Text => Drawable.TokenText;
         public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
         public bool WillBeRendered { get; }
         public int CharacterPosition { get; }
