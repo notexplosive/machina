@@ -22,14 +22,14 @@ namespace Machina.Data.TextRendering
         public Point Origin { get; }
         public Point Offset { get; }
 
-        public void Draw(SpriteBatch spriteBatch, Point drawOffset, float angle, Depth depth)
+        public void Draw(SpriteBatch spriteBatch, Point additionalOffset, float angle, Depth depth)
         {
-            Drawable.Draw(spriteBatch, this, angle, drawOffset, depth);
+            Drawable.Draw(spriteBatch, Text, Origin, Offset, angle, additionalOffset, depth);
         }
 
-        public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
+        public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point additionalOffset, float angle, Depth depth)
         {
-            Drawable.DrawDropShadow(spriteBatch, this, angle, drawOffset, depth, dropShadowColor);
+            Drawable.DrawDropShadow(spriteBatch, Text, Origin, Offset, angle, additionalOffset, depth, dropShadowColor);
         }
 
         public override string ToString()

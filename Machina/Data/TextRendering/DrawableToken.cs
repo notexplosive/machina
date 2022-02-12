@@ -40,19 +40,19 @@ namespace Machina.Data.TextRendering
             return new RenderableText(this, TokenText.Substring(0, substringLength), totalAvailableRectLocation, nodeLocation);
         }
 
-        public void Draw(SpriteBatch spriteBatch, RenderableText renderableText, float angle, Point drawOffset, Depth depth)
+        public void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth)
         {
-            if (string.IsNullOrWhiteSpace(renderableText.Text))
+            if (string.IsNullOrWhiteSpace(text))
             {
                 return;
             }
-            spriteBatch.DrawString(GetFont(), renderableText.Text, renderableText.Origin.ToVector2(), Color, angle, drawOffset.ToVector2() - renderableText.Offset.ToVector2(), 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), text, origin.ToVector2(), Color, angle, additionalOffset.ToVector2() - offset.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
-        public void DrawDropShadow(SpriteBatch spriteBatch, RenderableText renderableText, float angle, Point drawOffset, Depth depth, Color dropShadowColor)
+        public void DrawDropShadow(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth, Color dropShadowColor)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), renderableText.Text, renderableText.Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() - renderableText.Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), text, origin.ToVector2(), finalDropShadowColor, angle, additionalOffset.ToVector2() - offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
         }
 
         private SpriteFont GetFont()
