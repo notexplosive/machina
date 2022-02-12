@@ -24,11 +24,6 @@ namespace Machina.Data.TextRendering
 
         public void Draw(SpriteBatch spriteBatch, Point drawOffset, float angle, Depth depth)
         {
-            if (string.IsNullOrWhiteSpace(Text))
-            {
-                return;
-            }
-
             Drawable.Draw(spriteBatch, this, angle, drawOffset, depth);
         }
 

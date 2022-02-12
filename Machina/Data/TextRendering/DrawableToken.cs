@@ -42,6 +42,10 @@ namespace Machina.Data.TextRendering
 
         public void Draw(SpriteBatch spriteBatch, RenderableText renderableText, float angle, Point drawOffset, Depth depth)
         {
+            if (string.IsNullOrWhiteSpace(renderableText.Text))
+            {
+                return;
+            }
             spriteBatch.DrawString(GetFont(), renderableText.Text, renderableText.Origin.ToVector2(), Color, angle, drawOffset.ToVector2() - renderableText.Offset.ToVector2(), 1f, SpriteEffects.None, depth);
         }
 
