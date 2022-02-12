@@ -6,17 +6,15 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct TextOutputFragment
     {
-        public TextOutputFragment(string tokenText, IFontMetrics fontMetrics, Color color, Point tokenSize, int characterPosition)
+        public TextOutputFragment(IDrawableTextElement drawable, int characterPosition)
         {
             CharacterPosition = characterPosition;
-            Text = tokenText;
-            FontMetrics = fontMetrics;
-            Color = color;
+            Drawable = drawable;
 
-            if (tokenText == "\n")
+            if (drawable.TokenText == "\n")
             {
                 WillBeRendered = false;
-                var linebreakSize = new Point(0, fontMetrics.LineSpacing);
+                var linebreakSize = new Point(0, drawable.Size.Y);
                 Size = linebreakSize;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
                     LayoutNode.Spacer(linebreakSize),
@@ -26,31 +24,30 @@ namespace Machina.Data.TextRendering
             else
             {
                 WillBeRendered = true;
-                Size = tokenSize;
+                Size = drawable.Size;
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.NamelessLeaf(LayoutSize.Pixels(tokenSize))
+                    LayoutNode.NamelessLeaf(LayoutSize.Pixels(Size))
                 };
             }
         }
 
         public Point Size { get; }
-
+        public string Text => Drawable.TokenText;
         public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
-        public string Text { get; }
-        public IFontMetrics FontMetrics { get; }
-        public Color Color { get; }
         public bool WillBeRendered { get; }
         public int CharacterPosition { get; }
-        public int CharacterLength => Text.Length;
+        public IDrawableTextElement Drawable { get; }
+
+        public int CharacterLength => Drawable.TokenText.Length;
 
         public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
         {
-            return new RenderableText(FontMetrics, Text, totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(Drawable.FontMetrics, Drawable.TokenText, totalAvailableRectLocation, Drawable.Color, nodeLocation);
         }
 
         public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, string newText)
         {
-            return new RenderableText(FontMetrics, newText, totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(Drawable.FontMetrics, newText, totalAvailableRectLocation, Drawable.Color, nodeLocation);
         }
     }
 }

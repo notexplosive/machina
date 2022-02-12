@@ -4,7 +4,15 @@ using System;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct DrawableToken
+    public interface IDrawableTextElement
+    {
+        public string TokenText { get; }
+        public Point Size { get; }
+        public IFontMetrics FontMetrics { get; }
+        public Color Color { get; }
+    }
+
+    public readonly struct DrawableToken : IDrawableTextElement
     {
         public Point Size { get; }
         public IFontMetrics FontMetrics { get; }
@@ -18,21 +26,20 @@ namespace Machina.Data.TextRendering
             TokenText = tokenText;
             Size = FontMetrics.MeasureStringRounded(TokenText);
         }
-
     }
 
     public readonly struct FormattedTextToken
     {
-        public FormattedTextToken(DrawableToken drawable)
+        public FormattedTextToken(IDrawableTextElement drawable)
         {
             Drawable = drawable;
         }
 
-        public DrawableToken Drawable { get; }
+        public IDrawableTextElement Drawable { get; }
 
         public TextOutputFragment CreateOutputFragment(int characterIndex)
         {
-            return new TextOutputFragment(Drawable.TokenText, Drawable.FontMetrics, Drawable.Color, Drawable.Size, characterIndex);
+            return new TextOutputFragment(Drawable, characterIndex);
         }
     }
 }
