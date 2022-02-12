@@ -35,28 +35,20 @@ namespace Machina.Data.TextRendering
             return new FormattedText(new FormattedTextFragment(rawText, fontMetrics, color));
         }
 
-        public IEnumerable<FormattedTextToken> FormattedTokens()
+        public IEnumerable<TextOutputFragment> OutputFragments()
         {
+            var characterIndex = 0;
             if (this.textFragments != null)
             {
                 foreach (var textFragment in this.textFragments)
                 {
                     foreach (var token in textFragment.Tokens())
                     {
-                        yield return token;
+                        var output = token.CreateOutputFragment(characterIndex);
+                        yield return output;
+                        characterIndex += output.CharacterLength;
                     }
                 }
-            }
-        }
-
-        public IEnumerable<TextOutputFragment> OutputFragments()
-        {
-            var characterIndex = 0;
-            foreach (var token in FormattedTokens())
-            {
-                var output = token.CreateOutputFragment(characterIndex);
-                yield return output;
-                characterIndex += output.CharacterLength;
             }
         }
 

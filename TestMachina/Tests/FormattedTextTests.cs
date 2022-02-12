@@ -24,7 +24,7 @@ namespace TestMachina.Tests
                 );
 
             subject.OutputString.Should().Be("Hello in blue. Hello in red!");
-            subject.FormattedTokens().Should().HaveCount(11);
+            subject.OutputFragments().Should().HaveCount(11);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace TestMachina.Tests
             var subject = FormattedText.FromString("Hello in blue.", font, Color.Blue);
 
             subject.OutputString.Should().Be("Hello in blue.");
-            subject.FormattedTokens().Should().HaveCount(5);
+            subject.OutputFragments().Should().HaveCount(5);
         }
 
         [Fact]
