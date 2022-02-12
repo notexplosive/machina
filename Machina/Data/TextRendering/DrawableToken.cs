@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Machina.Data.TextRendering
 {
@@ -30,12 +32,38 @@ namespace Machina.Data.TextRendering
 
         public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
         {
-            return new RenderableText(FontMetrics, TokenText, totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(this, TokenText, totalAvailableRectLocation, nodeLocation);
         }
 
         public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength)
         {
-            return new RenderableText(FontMetrics, TokenText.Substring(0, substringLength), totalAvailableRectLocation, Color, nodeLocation);
+            return new RenderableText(this, TokenText.Substring(0, substringLength), totalAvailableRectLocation, nodeLocation);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, RenderableText renderableText, float angle, Point drawOffset, Depth depth)
+        {
+            spriteBatch.DrawString(GetFont(), renderableText.Text, renderableText.Origin.ToVector2(), Color, angle, drawOffset.ToVector2() - renderableText.Offset.ToVector2(), 1f, SpriteEffects.None, depth);
+        }
+
+        public void DrawDropShadow(SpriteBatch spriteBatch, RenderableText renderableText, float angle, Point drawOffset, Depth depth, Color dropShadowColor)
+        {
+            var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
+            spriteBatch.DrawString(GetFont(), renderableText.Text, renderableText.Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() - renderableText.Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+        }
+
+        private SpriteFont GetFont()
+        {
+            if (FontMetrics is SpriteFontMetrics spriteFontMetrics)
+            {
+                return spriteFontMetrics.Font;
+            }
+
+            throw new Exception("FontMetrics does not provide an actual font");
+        }
+
+        public Point MeasureString(string stringToMeasure)
+        {
+            return FontMetrics.MeasureStringRounded(stringToMeasure);
         }
     }
 }

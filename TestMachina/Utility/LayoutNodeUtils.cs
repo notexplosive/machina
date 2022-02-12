@@ -27,7 +27,7 @@ namespace TestMachina.Utility
                 foreach (var character in token.Text)
                 {
                     var charPosition = token.Origin + token.Offset + new Point(totalWidth, 0);
-                    var charSize = token.FontMetrics.MeasureString(character.ToString()).ToPoint();
+                    var charSize = token.Element.MeasureString(character.ToString());
 
                     drawPanel.DrawRectangle(new Rectangle(charPosition, charSize), '.');
 

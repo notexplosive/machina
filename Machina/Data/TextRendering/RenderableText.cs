@@ -9,30 +9,18 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IFontMetrics fontMetrics, string text, Point pivotPosition, Color textColor, Point offset)
+        public RenderableText(IDrawableTextElement element, string text, Point pivotPosition, Point offset)
         {
-            FontMetrics = fontMetrics;
+            Element = element;
             Text = text;
-            Color = textColor;
             Offset = offset;
             Origin = pivotPosition;
         }
 
+        public IDrawableTextElement Element { get; }
         public string Text { get; }
         public Point Origin { get; }
         public Point Offset { get; }
-        public IFontMetrics FontMetrics { get; }
-        public Color Color { get; }
-
-        private SpriteFont GetFont()
-        {
-            if (FontMetrics is SpriteFontMetrics spriteFontMetrics)
-            {
-                return spriteFontMetrics.Font;
-            }
-
-            throw new Exception("FontMetrics does not provide an actual font");
-        }
 
         public void Draw(SpriteBatch spriteBatch, Point drawOffset, float angle, Depth depth)
         {
@@ -41,13 +29,12 @@ namespace Machina.Data.TextRendering
                 return;
             }
 
-            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), Color, angle, drawOffset.ToVector2() - Offset.ToVector2(), 1f, SpriteEffects.None, depth);
+            Element.Draw(spriteBatch, this, angle, drawOffset, depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, Color dropShadowColor, Point drawOffset, float angle, Depth depth)
         {
-            var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), Text, Origin.ToVector2(), finalDropShadowColor, angle, drawOffset.ToVector2() - Offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            Element.DrawDropShadow(spriteBatch, this, angle, drawOffset, depth, dropShadowColor);
         }
 
         public override string ToString()
