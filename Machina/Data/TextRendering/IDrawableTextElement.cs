@@ -16,5 +16,6 @@ namespace Machina.Data.TextRendering
         char GetCharacterAt(int characterIndex);
         IDrawableTextElement ShrinkBy(int amountThatMustBeRemoved);
         IDrawableTextElement AppendEllipse();
+        int EllipseWidth();
     }
 }

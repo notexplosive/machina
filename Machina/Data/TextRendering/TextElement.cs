@@ -95,8 +95,14 @@ namespace Machina.Data.TextRendering
 
         public IDrawableTextElement AppendEllipse()
         {
-            // Do nothing... yet
-            return new TextElement(TokenText, FontMetrics, Color);
+            return new TextElement(TokenText + EllipseString, FontMetrics, Color);
         }
+
+        public int EllipseWidth()
+        {
+            return FontMetrics.MeasureStringRounded(EllipseString).X;
+        }
+
+        public static readonly string EllipseString = "...";
     }
 }

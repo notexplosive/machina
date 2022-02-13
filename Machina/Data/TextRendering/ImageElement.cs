@@ -64,5 +64,10 @@ namespace Machina.Data.TextRendering
         {
             // this function is intentionally left blank
         }
+
+        public int EllipseWidth()
+        {
+            return 0;
+        }
     }
 }

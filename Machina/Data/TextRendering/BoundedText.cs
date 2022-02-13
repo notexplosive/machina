@@ -37,7 +37,7 @@ namespace Machina.Data.TextRendering
             {
                 var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
                 var lastDrawable = lastToken.Drawable;
-                int ellipseSize = 0;
+                int ellipseSize = lastDrawable.EllipseWidth();
 
                 if (lastDrawable.Size.X > OverflowAmount() + ellipseSize)
                 {
