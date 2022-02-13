@@ -22,6 +22,11 @@ namespace Machina.Data.TextRendering
             return Origin.ToVector2();
         }
 
+        public Vector2 ResultTopLeft()
+        {
+            return TopLeft.ToVector2();
+        }
+
         public Vector2 ResultOffset()
         {
             return AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();

@@ -32,7 +32,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = BoundedText.GetRenderedText(this.boundingRect.TopLeft.ToPoint(), OccludedIndex);
+            List<RenderableText> renderableTexts = BoundedText.GetRenderedText(transform.Position.ToPoint(), this.boundingRect.TopLeft.ToPoint(), OccludedIndex);
 
             foreach (var renderableText in renderableTexts)
             {

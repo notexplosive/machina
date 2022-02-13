@@ -186,7 +186,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 1);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 1);
 
             textList.Should().HaveCount(7);
             textList[6].Text.Should().Be("tes");
@@ -198,7 +198,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 4);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 4);
 
             textList.Should().HaveCount(6);
             textList[5].Text.Should().Be(" ");
@@ -211,7 +211,7 @@ namespace TestMachina.Tests
 
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 5);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 5);
 
             textList.Should().HaveCount(5);
             textList[4].Text.Should().Be("a");
@@ -224,7 +224,7 @@ namespace TestMachina.Tests
 
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Ragglest the Fragglest", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 12);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 12);
 
             textList.Should().HaveCount(3);
             textList[2].Text.Should().Be("t");
@@ -237,7 +237,7 @@ namespace TestMachina.Tests
 
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 2);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 2);
 
             textList.Should().HaveCount(0);
         }
@@ -249,7 +249,7 @@ namespace TestMachina.Tests
 
 
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(Point.Zero, 999999);
+            var textList = textMeasurer.GetRenderedText(occludedCharactersCount: 999999);
 
             textList.Should().HaveCount(0);
         }
