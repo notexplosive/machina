@@ -19,7 +19,7 @@ namespace TestMachina.Tests
         public void text_measurer_generates_accurate_output()
         {
             var textMeasurer = new BoundedText(
-                new Rectangle(new Point(0, 0), new Point(200, 200)),
+                new Point(200, 200),
                 Alignment.Center,
                 Overflow.Ignore,
                 new FormattedText(new FormattedTextFragment("Hello world", new MonospacedFontMetrics(new Point(2, 3)), Color.White)));
@@ -38,7 +38,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new Rectangle(Point.Zero, new Point(100, 200)),
+                new Point(100, 200),
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(new FormattedTextFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics, Color.White)));
@@ -65,7 +65,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new Rectangle(Point.Zero, new Point(100, 200)),
+                new Point(100, 200),
                 Alignment.TopLeft,
                 Overflow.Elide,
                 new FormattedText(new FormattedTextFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics, Color.White)));
@@ -92,7 +92,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new Rectangle(Point.Zero, new Point(100, 200)),
+                new Point(100, 200),
                 Alignment.BottomRight,
                 Overflow.Elide,
                 new FormattedText(new FormattedTextFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics, Color.White)));
@@ -119,7 +119,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
 
             var textMeasurer = new BoundedText(
-                new Rectangle(Point.Zero, new Point(100, 200)),
+                new Point(100, 200),
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(new FormattedTextFragment("Short top string\nlooooooooooong.... middle.... string\nshort bottom", fontMetrics, Color.White)));
@@ -141,41 +141,12 @@ namespace TestMachina.Tests
         }
 
         [Fact]
-        public void pinning_test_for_renderable_text_where_position_is_top_left_of_rect()
-        {
-            var fontMetrics = new MonospacedFontMetrics(new Point(2, 3));
-
-            var textMeasurer = new BoundedText(
-                new Rectangle(new Point(350, 250), new Point(100, 200)),
-                Alignment.BottomRight,
-                Overflow.Elide,
-                new FormattedText(new FormattedTextFragment("This is a very long string. I thought about referencing some meme here in this string.\nBut then I changed my mind.", fontMetrics, Color.White)));
-
-            var renderedLines = textMeasurer.GetRenderedText();
-
-            renderedLines.Should().HaveCount(42);
-
-            renderedLines[0].Origin.Should().Be(new Point(350, 250));
-            renderedLines[0].Offset.Should().Be(new Point(12, 191));
-            renderedLines[0].Text.Should().Be("This");
-
-            renderedLines[18].Text.Should().Be("referencing");
-            renderedLines[18].Origin.Should().Be(new Point(350, 250));
-            renderedLines[18].Offset.Should().Be(new Point(16, 194));
-
-            renderedLines[31].Text.Should().Be("But");
-            renderedLines[31].Origin.Should().Be(new Point(350, 250));
-            renderedLines[31].Offset.Should().Be(new Point(46, 197));
-        }
-
-        [Fact]
         public void text_rendering_pinning_approval()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
             var textMeasurer = new BoundedText(
-                rect,
+                new Point(60, 40),
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(new FormattedTextFragment("I'm the rootinest tootinest gunslinger on this here side of the mississouri.\n\nSo watch out!", fontMetrics, Color.White)));
@@ -187,9 +158,8 @@ namespace TestMachina.Tests
         public void newlines_are_not_counted_as_rendered_text()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("New\nLine", fontMetrics, Color.White)));
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("New\nLine", fontMetrics, Color.White)));
 
             var renderedText = textMeasurer.GetRenderedText();
 
@@ -202,9 +172,8 @@ namespace TestMachina.Tests
         public void occlude_zero_characters_by_default()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
             var textList = textMeasurer.GetRenderedText();
 
             textList.Should().HaveCount(7);
@@ -215,10 +184,9 @@ namespace TestMachina.Tests
         public void occlude_characters_in_last_token()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(1);
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 1);
 
             textList.Should().HaveCount(7);
             textList[6].Text.Should().Be("tes");
@@ -228,10 +196,9 @@ namespace TestMachina.Tests
         public void occlude_entire_last_token()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(4);
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 4);
 
             textList.Should().HaveCount(6);
             textList[5].Text.Should().Be(" ");
@@ -241,10 +208,10 @@ namespace TestMachina.Tests
         public void occlude_last_two_token()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(5);
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("This is a test", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 5);
 
             textList.Should().HaveCount(5);
             textList[4].Text.Should().Be("a");
@@ -254,10 +221,10 @@ namespace TestMachina.Tests
         public void occlude_half_of_string()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Ragglest the Fragglest", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(12);
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Ragglest the Fragglest", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 12);
 
             textList.Should().HaveCount(3);
             textList[2].Text.Should().Be("t");
@@ -267,10 +234,10 @@ namespace TestMachina.Tests
         public void occlude_whole_string()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(2);
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 2);
 
             textList.Should().HaveCount(0);
         }
@@ -279,10 +246,10 @@ namespace TestMachina.Tests
         public void occlude_way_too_much()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
-            var textList = textMeasurer.GetRenderedText(999999);
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide, new FormattedText(new FormattedTextFragment("Hi", fontMetrics, Color.White)));
+            var textList = textMeasurer.GetRenderedText(Point.Zero, 999999);
 
             textList.Should().HaveCount(0);
         }
@@ -290,9 +257,9 @@ namespace TestMachina.Tests
         [Fact]
         public void bounded_text_can_have_zero_fragments()
         {
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide);
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide);
             var textList = textMeasurer.GetRenderedText();
 
             textList.Should().HaveCount(0);
@@ -302,9 +269,9 @@ namespace TestMachina.Tests
         public void bounded_text_can_have_multiple_fragments()
         {
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
-            var rect = new Rectangle(Point.Zero, new Point(60, 40));
 
-            var textMeasurer = new BoundedText(rect, Alignment.Center, Overflow.Elide,
+
+            var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide,
                 new FormattedText(
                     new FormattedTextFragment("He", fontMetrics, Color.White),
                     new FormattedTextFragment("llo ", fontMetrics, Color.White),
@@ -326,10 +293,9 @@ namespace TestMachina.Tests
             var tall = new MonospacedFontMetrics(new Point(4, 8));
             var medium = new MonospacedFontMetrics(new Point(6, 6));
             var big = new MonospacedFontMetrics(new Point(12, 12));
-            var rect = new Rectangle(Point.Zero, new Point(82, 20));
 
             var textMeasurer = new BoundedText(
-                rect,
+                new Point(82, 20),
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(
@@ -348,10 +314,9 @@ namespace TestMachina.Tests
         {
             var small = new MonospacedFontMetrics(new Point(4, 4));
             var medium = new MonospacedFontMetrics(new Point(6, 6));
-            var rect = new Rectangle(Point.Zero, new Point(50, 30));
 
             var textMeasurer = new BoundedText(
-                rect,
+                new Point(50, 30),
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(

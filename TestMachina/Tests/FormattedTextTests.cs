@@ -38,7 +38,7 @@ namespace TestMachina.Tests
                 new FormattedTextFragment("Hello in red!", font2, Color.Red)
                 );
 
-            var renderedText = subject.GetRenderedText(Point.Zero);
+            var renderedText = subject.GetRenderedText();
 
             Approvals.Verify(TextMeasureUtils.DrawRenderedText(new AsciiDrawPanel(new Point(113, 5)), renderedText));
         }
@@ -60,7 +60,7 @@ namespace TestMachina.Tests
             var subject = FormattedText.FromParseString("Hello in [#color:0000ff]blue[#color:ffffff].", font, Color.White);
 
             subject.OutputString.Should().Be("Hello in blue.");
-            var renderedText = subject.GetRenderedText(Point.Zero);
+            var renderedText = subject.GetRenderedText();
 
             renderedText.Count.Should().Be(6);
         }
@@ -93,7 +93,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var subject = new FormattedText(
                 new FormattedTextFragment("Text", fontMetrics, Color.White),
-                new ImageTextFragment(new Point(20, 20)),
+                new ImageTextFragment(new Point(20, 20), (spriteBatch, bounds, depth) => { }),
                 new FormattedTextFragment("and more text", fontMetrics, Color.White)
             );
             var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
@@ -132,7 +132,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var subject = new FormattedText(
                 new FormattedTextFragment("Text", fontMetrics, Color.White),
-                new ImageTextFragment(new Point(20, 20)),
+                new ImageTextFragment(new Point(20, 20), (spriteBatch, bounds, depth) => { }),
                 new FormattedTextFragment("and more text", fontMetrics, Color.White)
             );
             var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
@@ -141,7 +141,7 @@ namespace TestMachina.Tests
 
             outputFragment.Should().HaveCount(7);
 
-            Approvals.Verify(TextMeasureUtils.DrawRenderedText(new AsciiDrawPanel(new Point(88, 20)), subject.GetRenderedText(Point.Zero)));
+            Approvals.Verify(TextMeasureUtils.DrawRenderedText(new AsciiDrawPanel(new Point(88, 20)), subject.GetRenderedText()));
         }
     }
 }

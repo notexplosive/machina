@@ -12,9 +12,9 @@ namespace TestMachina.Utility
     {
         public static string DrawResult(BoundedText textMeasurer)
         {
-            var drawPanel = new AsciiDrawPanel(textMeasurer.TotalAvailableRect.Location + textMeasurer.TotalAvailableRect.Size);
+            var drawPanel = new AsciiDrawPanel(textMeasurer.TotalAvailableSize);
 
-            drawPanel.DrawRectangle(textMeasurer.TotalAvailableRect, '#');
+            drawPanel.DrawRectangle(new Rectangle(Point.Zero, textMeasurer.TotalAvailableSize), '#');
 
             return DrawRenderedText(drawPanel, textMeasurer.GetRenderedText());
         }

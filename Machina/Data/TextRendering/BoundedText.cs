@@ -14,11 +14,11 @@ namespace Machina.Data.TextRendering
         private readonly FormattedText formattedText;
 
         public int TotalCharacterCount => this.formattedText.TotalCharacterCount;
-        public Rectangle TotalAvailableRect { get; }
+        public Point TotalAvailableSize { get; }
 
-        public BoundedText(Rectangle rect, Alignment alignment, Overflow overflow, FormattedText formattedText = default)
+        public BoundedText(Point size, Alignment alignment, Overflow overflow, FormattedText formattedText = default)
         {
-            TotalAvailableRect = rect;
+            TotalAvailableSize = size;
             this.alignment = alignment;
             this.tokenLookup = new Dictionary<int, TextOutputFragment>();
             this.formattedText = formattedText;
@@ -37,7 +37,7 @@ namespace Machina.Data.TextRendering
                 }
             }
 
-            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableRect.Size), new FlowLayoutStyle(alignment: this.alignment),
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableSize), new FlowLayoutStyle(alignment: this.alignment),
                 childNodes.ToArray()
             );
 
@@ -45,7 +45,7 @@ namespace Machina.Data.TextRendering
         }
 
 
-        public List<RenderableText> GetRenderedText(int occludedCharactersCount = 0)
+        public List<RenderableText> GetRenderedText(Point drawPosition = default, int occludedCharactersCount = 0)
         {
             var result = new List<RenderableText>();
 
@@ -57,7 +57,7 @@ namespace Machina.Data.TextRendering
                 foreach (var tokenNode in row)
                 {
                     var outputFragment = this.tokenLookup[tokenIndex];
-                    var pendingRenderableText = outputFragment.Drawable.CreateRenderableText(TotalAvailableRect.Location, tokenNode.Rectangle.Location);
+                    var pendingRenderableText = outputFragment.Drawable.CreateRenderableText(drawPosition, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = outputFragment.CharacterPosition + outputFragment.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
@@ -69,7 +69,7 @@ namespace Machina.Data.TextRendering
                             return result;
                         }
 
-                        result.Add(outputFragment.Drawable.CreateRenderableText(TotalAvailableRect.Location, tokenNode.Rectangle.Location, substringLength));
+                        result.Add(outputFragment.Drawable.CreateRenderableText(drawPosition, tokenNode.Rectangle.Location, substringLength));
                         return result;
                     }
 

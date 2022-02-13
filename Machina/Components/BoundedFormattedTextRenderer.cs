@@ -32,7 +32,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            List<RenderableText> renderableTexts = BoundedText.GetRenderedText(OccludedIndex);
+            List<RenderableText> renderableTexts = BoundedText.GetRenderedText(this.boundingRect.TopLeft.ToPoint(), OccludedIndex);
 
             foreach (var renderableText in renderableTexts)
             {
@@ -48,7 +48,7 @@ namespace Machina.Components
 
         public void SetText(FormattedText formattedText)
         {
-            BoundedText = new BoundedText(this.boundingRect.Rect, this.alignment, this.overflow, formattedText);
+            BoundedText = new BoundedText(this.boundingRect.Size, this.alignment, this.overflow, formattedText);
         }
 
         public BoundedFormattedTextRenderer EnableDropShadow(Color color)

@@ -60,9 +60,9 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public List<RenderableText> GetRenderedText(Point position)
+        public List<RenderableText> GetRenderedText()
         {
-            return new BoundedText(new Rectangle(position, new Point(int.MaxValue, int.MaxValue)), Alignment.TopLeft, Overflow.Ignore, this).GetRenderedText();
+            return new BoundedText(new Point(int.MaxValue, int.MaxValue), Alignment.TopLeft, Overflow.Ignore, this).GetRenderedText();
         }
 
         public static FormattedText FromParseString(string parsableString, IFontMetrics startingFont, Color startingColor)
