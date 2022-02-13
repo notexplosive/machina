@@ -225,7 +225,7 @@ namespace Machina.Data.Layout
             FlowLayoutStyle = style;
         }
 
-        private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.Alignment, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
+        private LayoutStyle RowStyle => new LayoutStyle(alignment: FlowLayoutStyle.AlignmentWithinRow, padding: FlowLayoutStyle.PaddingBetweenItemsInEachRow);
         public List<LayoutNode> Content { get; } = new List<LayoutNode>();
         public Orientation Orientation { get; }
         public int AvailableAlongSize { get; }

@@ -37,7 +37,7 @@ namespace Machina.Data.TextRendering
                 }
             }
 
-            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableSize), new FlowLayoutStyle(alignment: this.alignment),
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableSize), new FlowLayoutStyle(alignment: this.alignment, alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom)),
                 childNodes.ToArray()
             );
 

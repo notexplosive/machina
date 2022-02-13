@@ -12,12 +12,14 @@ namespace Machina.Data.Layout
         public Alignment Alignment { get; }
         public OverflowRule OverflowRule { get; }
         public Point Margin { get; }
+        public Alignment AlignmentWithinRow { get; }
 
         public FlowLayoutStyle(
             Point margin = default,
             int paddingBetweenRows = default,
             int paddingBetweenItemsInEachRow = default,
             Alignment alignment = default,
+            Alignment? alignmentWithinRow = default,
             OverflowRule overflowRule = default)
         {
             if (overflowRule == default)
@@ -29,6 +31,14 @@ namespace Machina.Data.Layout
             PaddingBetweenItemsInEachRow = paddingBetweenItemsInEachRow;
             PaddingBetweenRows = paddingBetweenRows;
             Alignment = alignment;
+            if (alignmentWithinRow.HasValue)
+            {
+                AlignmentWithinRow = alignmentWithinRow.Value;
+            }
+            else
+            {
+                AlignmentWithinRow = alignment;
+            }
             OverflowRule = overflowRule;
         }
     }
