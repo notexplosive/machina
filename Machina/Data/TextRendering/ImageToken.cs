@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data.TextRendering
 {
-    public delegate void BoundedDrawFunction(SpriteBatch spriteBatch, Rectangle bounds, Depth depth);
+    public delegate void BoundedDrawFunction(SpriteBatch spriteBatch, TextDrawingArgs args);
 
     public readonly struct ImageToken : IDrawableTextElement
     {
@@ -29,14 +29,12 @@ namespace Machina.Data.TextRendering
 
         public void Draw(SpriteBatch spriteBatch, string text, TextDrawingArgs args)
         {
-            var finalPosition = args.ResultOrigin() - args.ResultOffset(); // duplicate below, probably wrong calculation anyway
-            this.drawFunction(spriteBatch, new Rectangle(finalPosition.ToPoint(), Size), args.Depth);
+            this.drawFunction(spriteBatch, args);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor)
         {
-            var finalPosition = args.ResultOrigin() - args.ResultOffset(); // duplicated above
-            this.drawFunction(spriteBatch, new Rectangle(finalPosition.ToPoint(), Size), args.Depth);
+            this.drawFunction(spriteBatch, args);
         }
 
         public char GetCharacterAt(int characterIndex)

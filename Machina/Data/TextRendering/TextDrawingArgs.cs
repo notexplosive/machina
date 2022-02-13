@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Machina.Data.TextRendering
 {
@@ -18,6 +19,16 @@ namespace Machina.Data.TextRendering
         public Vector2 ResultOffset()
         {
             return AdditionalOffset.ToVector2() - Position.ToVector2();
+        }
+
+        public Vector2 FinalPosition()
+        {
+            var offset = ResultOffset();
+
+            var offsetAngle = MathF.Atan2(offset.Y, offset.X);
+            var angle = offsetAngle + Angle;
+            var finalOffset = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * offset.Length();
+            return ResultOrigin() - finalOffset;
         }
     }
 }

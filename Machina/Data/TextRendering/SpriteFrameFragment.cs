@@ -17,9 +17,9 @@ namespace Machina.Data.TextRendering
             return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(this.spriteFrame.Size, DrawFunction)) };
         }
 
-        private void DrawFunction(SpriteBatch spriteBatch, Rectangle bounds, Depth depth)
+        private void DrawFunction(SpriteBatch spriteBatch, TextDrawingArgs args)
         {
-            this.spriteFrame.Draw(spriteBatch, new Vector2(bounds.Left, bounds.Top), 1f, /*angle*/0, XYBool.False, depth, Color.White, false);
+            this.spriteFrame.Draw(spriteBatch, args.FinalPosition(), 1f, args.Angle, XYBool.False, args.Depth, Color.White, false);
         }
     }
 }
