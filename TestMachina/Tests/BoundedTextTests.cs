@@ -345,5 +345,21 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void several_linebreaks_back_to_back()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 30),
+                Alignment.TopLeft,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("One line\nTwo lines\n\nThree lines\n\n\nDone!", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
     }
 }

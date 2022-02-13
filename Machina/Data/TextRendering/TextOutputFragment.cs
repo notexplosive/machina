@@ -16,8 +16,7 @@ namespace Machina.Data.TextRendering
                 WillBeRendered = false;
 
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.Spacer(drawable.Size),
-                    FlowLayoutInstruction.Linebreak
+                    FlowLayoutInstruction.Linebreak,
                 };
             }
             else
