@@ -33,21 +33,31 @@ namespace Machina.Data.TextRendering
 
             this.bakedLayout = BakeFromTokens();
 
-            if (OverflowAmount() > 0)
+            if (OverflowAmount() > 0 || this.bakedLayout.HadOverflow)
             {
                 var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
                 var lastDrawable = lastToken.Drawable;
                 int ellipseSize = lastDrawable.EllipseWidth();
+                var shrinkAmount = OverflowAmount() + ellipseSize;
 
-                if (lastDrawable.Size.X > OverflowAmount() + ellipseSize)
+                if (this.bakedLayout.HadOverflow)
                 {
-                    // eliding this element is enough to make room
-                    lastDrawable = lastDrawable.ShrinkBy(OverflowAmount() + ellipseSize);
+                    // one or more tokens is totally removed, we need to find the true last token
+                }
+
+                if (OverflowAmount() <= 0)
+                {
+                    if (shrinkAmount > 0)
+                    {
+                        lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                    }
                     lastDrawable = lastDrawable.AppendEllipse();
                 }
-                else
+                else if (lastDrawable.Size.X > shrinkAmount)
                 {
-                    // we need to elide this element and then some
+                    // eliding this element is enough to make room
+                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                    lastDrawable = lastDrawable.AppendEllipse();
                 }
 
                 this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
@@ -79,7 +89,7 @@ namespace Machina.Data.TextRendering
                 new FlowLayoutStyle(
                     alignment: this.alignment,
                     alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom),
-                    overflowRule: OverflowRule.FinishRowOnIllegal),
+                    overflowRule: OverflowRule.HaltOnIllegal),
                 childNodes.ToArray()
             );
 

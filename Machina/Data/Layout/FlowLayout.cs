@@ -118,10 +118,11 @@ namespace Machina.Data.Layout
         public bool StopAddingNewItems { get; private set; }
         public bool StopAddingNewRows { get; private set; }
         public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
+        public bool HadOverflow => StopAddingNewRows || StopAddingNewItems;
 
         public void CreateNextRowAndAdd(LayoutNode itemToAdd)
         {
-            if (StopAddingNewItems || StopAddingNewRows)
+            if (HadOverflow)
             {
                 return;
             }
@@ -132,7 +133,7 @@ namespace Machina.Data.Layout
 
         private void AddNewRow()
         {
-            if (StopAddingNewItems || StopAddingNewRows)
+            if (HadOverflow)
             {
                 return;
             }
