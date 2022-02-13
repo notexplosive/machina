@@ -387,6 +387,7 @@ namespace TestMachina.Tests
                 Alignment.Center,
                 Overflow.Elide,
                 new FormattedText(
+                    // the typo in "aand" is intentional here
                     new FormattedTextFragment("I'm about to walk\noff the edge of the string\nhere I go! and more words words words", font, Color.Orange)
                 )
             );

@@ -31,19 +31,21 @@ namespace Machina.Data.TextRendering
                 this.allOutputFragments.Add(outputFragment);
             }
 
-            this.bakedLayout = BakeFromTokens();
+            var bakeResult = BakeFromTokens();
+            this.bakedLayout = bakeResult.Item1;
+            var numberOfRemovedTokens = bakeResult.Item2;
 
-            if (OverflowAmount() > 0 || this.bakedLayout.HadOverflow)
+            for (int i = 0; i < numberOfRemovedTokens; i++)
+            {
+                this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
+            }
+
+            if (OverflowAmount() > 0 || numberOfRemovedTokens > 0)
             {
                 var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
                 var lastDrawable = lastToken.Drawable;
                 int ellipseSize = lastDrawable.EllipseWidth();
                 var shrinkAmount = OverflowAmount() + ellipseSize;
-
-                if (this.bakedLayout.HadOverflow)
-                {
-                    // one or more tokens is totally removed, we need to find the true last token
-                }
 
                 if (OverflowAmount() <= 0)
                 {
@@ -63,7 +65,7 @@ namespace Machina.Data.TextRendering
                 this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
             }
 
-            this.bakedLayout = BakeFromTokens();
+            this.bakedLayout = BakeFromTokens().Item1;
 
             foreach (var outputFragment in this.allOutputFragments)
             {
@@ -74,16 +76,31 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        private BakedFlowLayout BakeFromTokens()
+        private Tuple<BakedFlowLayout, int> BakeFromTokens()
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
             foreach (var token in this.allOutputFragments)
             {
-                childNodes.AddRange(token.Nodes);
+                childNodes.Add(token.Node);
             }
 
-            var layout = FlowLayout.HorizontalFlowParent(
+            var layout = MakeLayout(childNodes);
+            var numberOfRemovedTokens = 0;
+
+            while (layout.HadOverflow)
+            {
+                childNodes.RemoveAt(childNodes.Count - 1);
+                layout = MakeLayout(childNodes);
+                numberOfRemovedTokens++;
+            }
+
+            return new Tuple<BakedFlowLayout, int>(layout.Bake(), numberOfRemovedTokens);
+        }
+
+        RawFlowLayout MakeLayout(List<FlowLayout.LayoutNodeOrInstruction> childNodes)
+        {
+            return FlowLayout.HorizontalFlowParent(
                 "root",
                 LayoutSize.Pixels(TotalAvailableSize),
                 new FlowLayoutStyle(
@@ -92,8 +109,6 @@ namespace Machina.Data.TextRendering
                     overflowRule: OverflowRule.HaltOnIllegal),
                 childNodes.ToArray()
             );
-
-            return layout.Bake();
         }
 
         private int OverflowAmount()

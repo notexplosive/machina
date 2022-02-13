@@ -15,20 +15,16 @@ namespace Machina.Data.TextRendering
             {
                 WillBeRendered = false;
 
-                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    FlowLayoutInstruction.Linebreak,
-                };
+                Node = FlowLayoutInstruction.Linebreak;
             }
             else
             {
                 WillBeRendered = true;
-                Nodes = new FlowLayout.LayoutNodeOrInstruction[] {
-                    LayoutNode.NamelessLeaf(LayoutSize.Pixels(drawable.Size))
-                };
+                Node = LayoutNode.NamelessLeaf(LayoutSize.Pixels(drawable.Size));
             }
         }
 
-        public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
+        public readonly FlowLayout.LayoutNodeOrInstruction Node;
         public bool WillBeRendered { get; }
         public int CharacterPosition { get; }
         public IDrawableTextElement Drawable { get; }
