@@ -47,25 +47,8 @@ namespace Machina.Data.TextRendering
                 int ellipseSize = lastDrawable.EllipseWidth();
                 var shrinkAmount = OverflowAmount() + ellipseSize;
 
-                if (OverflowAmount() <= 0)
-                {
-                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                    lastDrawable = lastDrawable.AppendEllipse();
-                }
-                else if (numberOfRemovedTokens > 0)
-                {
-                    if (shrinkAmount > 0)
-                    {
-                        lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                    }
-                    lastDrawable = lastDrawable.AppendEllipse();
-                }
-                else if (lastDrawable.Size.X > shrinkAmount)
-                {
-                    // eliding this element is enough to make room
-                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                    lastDrawable = lastDrawable.AppendEllipse();
-                }
+                lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                lastDrawable = lastDrawable.AppendEllipse();
 
                 this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
             }
