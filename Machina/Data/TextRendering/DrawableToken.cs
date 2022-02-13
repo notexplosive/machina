@@ -52,7 +52,7 @@ namespace Machina.Data.TextRendering
         public void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), finalDropShadowColor, args.Angle, args.ResultOffset() - new Vector2(1, 1), 1f, SpriteEffects.None, args.Depth + 1);
+            spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), finalDropShadowColor, args.Angle, args.ResultOffset(), 1f, SpriteEffects.None, args.Depth);
         }
 
         private SpriteFont GetFont()

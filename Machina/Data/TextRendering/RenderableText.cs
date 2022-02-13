@@ -41,10 +41,10 @@ namespace Machina.Data.TextRendering
             var args = new TextDrawingArgs
             {
                 Origin = Origin,
-                Position = Offset,
+                Position = Offset + new Point(1),
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
-                Depth = depth
+                Depth = depth + 1
             };
 
             Drawable.DrawDropShadow(spriteBatch, Text, args, dropShadowColor);
