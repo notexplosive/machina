@@ -9,7 +9,7 @@ namespace Machina.Data.TextRendering
         public string TokenText { get; }
         public Point Size { get; }
         int CharacterLength { get; }
-        public RenderableText CreateRenderableText(Point origin, Point offset, int? substringLength = null);
+        public RenderableText CreateRenderableText(Point origin, Point topLeft, Point offset, int? substringLength = null);
         void Draw(SpriteBatch spriteBatch, string text, TextDrawingArgs args);
         void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor);
         Point SizeOfCharacter(int characterIndex);

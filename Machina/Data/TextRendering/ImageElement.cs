@@ -21,10 +21,10 @@ namespace Machina.Data.TextRendering
 
         public int CharacterLength => 1;
 
-        public RenderableText CreateRenderableText(Point origin, Point offset, int? substringLength = null)
+        public RenderableText CreateRenderableText(Point origin, Point topLeft, Point offset, int? substringLength = null)
         {
             // Ignores the substringLength argument
-            return new RenderableText(this, TokenText, origin, offset);
+            return new RenderableText(this, TokenText, origin, topLeft, offset);
         }
 
         public void Draw(SpriteBatch spriteBatch, string text, TextDrawingArgs args)

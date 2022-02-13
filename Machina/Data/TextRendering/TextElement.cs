@@ -30,14 +30,14 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public RenderableText CreateRenderableText(Point origin, Point offset, int? substringLength = null)
+        public RenderableText CreateRenderableText(Point origin, Point topLeft, Point offset, int? substringLength = null)
         {
             if (!substringLength.HasValue)
             {
                 substringLength = TokenText.Length;
             }
 
-            return new RenderableText(this, TokenText.Substring(0, substringLength.Value), origin, offset);
+            return new RenderableText(this, TokenText.Substring(0, substringLength.Value), origin, topLeft, offset);
         }
 
         public void Draw(SpriteBatch spriteBatch, string text, TextDrawingArgs args)

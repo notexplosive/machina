@@ -6,10 +6,16 @@ namespace Machina.Data.TextRendering
     public struct TextDrawingArgs
     {
         public Point Origin { get; set; }
+        public Point TopLeft { get; set; }
         public Point Position { get; set; }
         public float Angle { get; set; }
         public Point AdditionalOffset { get; set; }
         public Depth Depth { get; set; }
+
+        public Vector2 OriginToTopLeftTranslation()
+        {
+            return (TopLeft - Origin).ToVector2();
+        }
 
         public Vector2 ResultOrigin()
         {

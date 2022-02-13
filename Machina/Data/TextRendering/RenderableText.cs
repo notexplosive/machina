@@ -9,17 +9,19 @@ namespace Machina.Data.TextRendering
 {
     public readonly struct RenderableText
     {
-        public RenderableText(IDrawableTextElement drawable, string text, Point pivotPosition, Point offset)
+        public RenderableText(IDrawableTextElement drawable, string text, Point pivotPosition, Point topLeft, Point offset)
         {
             Drawable = drawable;
             Text = text;
             Offset = offset;
             Origin = pivotPosition;
+            TopLeft = topLeft;
         }
 
         public IDrawableTextElement Drawable { get; }
         public string Text { get; }
         public Point Origin { get; }
+        public Point TopLeft { get; }
         public Point Offset { get; }
 
         public void Draw(SpriteBatch spriteBatch, Point additionalOffset, float angle, Depth depth)
@@ -27,6 +29,7 @@ namespace Machina.Data.TextRendering
             var args = new TextDrawingArgs
             {
                 Origin = Origin,
+                TopLeft = TopLeft,
                 Position = Offset,
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
@@ -41,6 +44,7 @@ namespace Machina.Data.TextRendering
             var args = new TextDrawingArgs
             {
                 Origin = Origin,
+                TopLeft = TopLeft,
                 Position = Offset + new Point(1),
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
