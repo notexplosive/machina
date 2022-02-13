@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data.TextRendering
 {
-    public struct ImageTextFragment : IDrawableTextElement
+    public struct ImageToken : IDrawableTextElement
     {
-        public ImageTextFragment(Point size)
+        public ImageToken(Point size)
         {
             Size = size;
         }

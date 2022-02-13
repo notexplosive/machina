@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct GenericImageTextFragment : ITextInputFragment
+    public readonly struct ImageTextFragment : ITextInputFragment
     {
-        public GenericImageTextFragment(Point size)
+        public ImageTextFragment(Point size)
         {
             Size = size;
         }
@@ -15,7 +15,7 @@ namespace Machina.Data.TextRendering
 
         public FormattedTextToken[] Tokens()
         {
-            return new FormattedTextToken[] { new FormattedTextToken(new ImageTextFragment(Size)) };
+            return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(Size)) };
         }
     }
 

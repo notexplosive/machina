@@ -93,7 +93,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var subject = new FormattedText(
                 new FormattedTextFragment("Text", fontMetrics, Color.White),
-                new GenericImageTextFragment(new Point(20, 20)),
+                new ImageTextFragment(new Point(20, 20)),
                 new FormattedTextFragment("and more text", fontMetrics, Color.White)
             );
             var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
@@ -132,7 +132,7 @@ namespace TestMachina.Tests
             var fontMetrics = new MonospacedFontMetrics(new Point(4, 4));
             var subject = new FormattedText(
                 new FormattedTextFragment("Text", fontMetrics, Color.White),
-                new GenericImageTextFragment(new Point(20, 20)),
+                new ImageTextFragment(new Point(20, 20)),
                 new FormattedTextFragment("and more text", fontMetrics, Color.White)
             );
             var outputFragment = new List<TextOutputFragment>(subject.OutputFragments());
