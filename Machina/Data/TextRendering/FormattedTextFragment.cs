@@ -1,21 +1,27 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Machina.Data.TextRendering
 {
+    public delegate void BoundedDrawFunction(SpriteBatch spriteBatch, Rectangle bounds, Depth depth);
+
     public readonly struct ImageTextFragment : ITextInputFragment
     {
-        public ImageTextFragment(Point size)
+        public ImageTextFragment(Point size, BoundedDrawFunction drawFunction)
         {
             Size = size;
+            this.drawFunction = drawFunction;
         }
 
         public Point Size { get; }
 
+        private readonly BoundedDrawFunction drawFunction;
+
         public FormattedTextToken[] Tokens()
         {
-            return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(Size)) };
+            return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(Size, this.drawFunction)) };
         }
     }
 
