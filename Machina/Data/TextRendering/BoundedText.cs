@@ -40,26 +40,38 @@ namespace Machina.Data.TextRendering
                 this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
             }
 
-            if (OverflowAmount() > 0 || numberOfRemovedTokens > 0)
+            if (this.allOutputFragments.Count > 0)
             {
                 var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
-                var lastDrawable = lastToken.Drawable;
-                int ellipseSize = lastDrawable.EllipseWidth();
+                int ellipseSize = lastToken.Drawable.EllipseWidth();
                 var shrinkAmount = OverflowAmount() + ellipseSize;
 
-                lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                lastDrawable = lastDrawable.AppendEllipse();
-
-                this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
-            }
-
-            this.bakedLayout = BakeFromTokens().Item1;
-
-            foreach (var outputFragment in this.allOutputFragments)
-            {
-                if (outputFragment.WillBeRendered)
+                while (shrinkAmount > lastToken.Drawable.Size.X)
                 {
-                    this.renderedFragments.Add(outputFragment);
+                    shrinkAmount -= lastToken.Drawable.Size.X;
+
+                    this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
+                    lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
+                }
+
+                if (OverflowAmount() > 0 || numberOfRemovedTokens > 0)
+                {
+                    var lastDrawable = lastToken.Drawable;
+
+                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                    lastDrawable = lastDrawable.AppendEllipse();
+
+                    this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
+                }
+
+                this.bakedLayout = BakeFromTokens().Item1;
+
+                foreach (var outputFragment in this.allOutputFragments)
+                {
+                    if (outputFragment.WillBeRendered)
+                    {
+                        this.renderedFragments.Add(outputFragment);
+                    }
                 }
             }
         }
@@ -104,7 +116,7 @@ namespace Machina.Data.TextRendering
             var lastItemRect = this.bakedLayout.GetLastRow().GetLastItemNode().Rectangle;
             var bottomRightOfLastItem = lastItemRect.Location + lastItemRect.Size;
             var rightOverflow = bottomRightOfLastItem.X - TotalAvailableSize.X;
-            var leftOverflow = -lastItemRect.Location.X;
+            var leftOverflow = Math.Max(0, -lastItemRect.Location.X);
             return leftOverflow + rightOverflow;
         }
 

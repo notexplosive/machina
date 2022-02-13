@@ -257,8 +257,6 @@ namespace TestMachina.Tests
         [Fact]
         public void bounded_text_can_have_zero_fragments()
         {
-
-
             var textMeasurer = new BoundedText(new Point(60, 40), Alignment.Center, Overflow.Elide);
             var textList = textMeasurer.GetRenderedText();
 
@@ -405,6 +403,22 @@ namespace TestMachina.Tests
                 new FormattedText(
                     // the typo in "aand" is intentional here
                     new FormattedTextFragment("I'm about to walk\noff the edge of the string\nhere I go! aand more words words words", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
+
+        [Fact]
+        public void elide_words_many_short_words()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 30),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("I'm about to walk\noff the edge of the string\nhere I go!\na b c d e f g", font, Color.Orange)
                 )
             );
 
