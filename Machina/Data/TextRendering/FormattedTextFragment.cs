@@ -15,7 +15,7 @@ namespace Machina.Data.TextRendering
 
         public FormattedTextToken[] Tokens()
         {
-            return new FormattedTextToken[] { new FormattedTextToken(new GenericDrawable(Size)) };
+            return new FormattedTextToken[] { new FormattedTextToken(new ImageTextFragment(Size)) };
         }
     }
 
