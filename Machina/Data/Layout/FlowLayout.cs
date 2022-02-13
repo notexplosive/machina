@@ -112,9 +112,9 @@ namespace Machina.Data.Layout
         public int AvailablePerpendicularSize { get; }
         public FlowLayoutStyle Style { get; }
         public List<FlowLayoutRow> Content { get; } = new List<FlowLayoutRow>();
-        public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllContent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
+        public Point UsedSize => Orientation.GetPointFromAlongPerpendicular(AvailableAlongSize, PerpendicularSizeOfAllRowsExceptCurrent + CurrentRow.UsedPerpendicularSize + TotalPaddingBetweenRows);
         public int TotalPaddingBetweenRows => Content.Count * Style.PaddingBetweenRows;
-        public int PerpendicularSizeOfAllContent { get; private set; }
+        public int PerpendicularSizeOfAllRowsExceptCurrent { get; private set; }
         public bool StopAddingNewItems { get; private set; }
         public bool StopAddingNewRows { get; private set; }
         public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
@@ -137,7 +137,7 @@ namespace Machina.Data.Layout
                 return;
             }
 
-            PerpendicularSizeOfAllContent += CurrentRow.UsedPerpendicularSize;
+            PerpendicularSizeOfAllRowsExceptCurrent += CurrentRow.UsedPerpendicularSize;
             CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
             Content.Add(CurrentRow);
         }
@@ -186,6 +186,7 @@ namespace Machina.Data.Layout
 
         private void PopLastRow()
         {
+            PerpendicularSizeOfAllRowsExceptCurrent -= CurrentRow.UsedPerpendicularSize;
             Content.RemoveAt(Content.Count - 1);
             CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
         }
