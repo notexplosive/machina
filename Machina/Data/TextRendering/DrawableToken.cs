@@ -40,19 +40,19 @@ namespace Machina.Data.TextRendering
             return new RenderableText(this, TokenText.Substring(0, substringLength.Value), totalAvailableRectLocation, nodeLocation);
         }
 
-        public void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth)
+        public void Draw(SpriteBatch spriteBatch, string text, TextDrawingArgs args)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
                 return;
             }
-            spriteBatch.DrawString(GetFont(), text, origin.ToVector2(), Color, angle, additionalOffset.ToVector2() - offset.ToVector2(), 1f, SpriteEffects.None, depth);
+            spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), Color, args.Angle, args.ResultOffset(), 1f, SpriteEffects.None, args.Depth);
         }
 
-        public void DrawDropShadow(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth, Color dropShadowColor)
+        public void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor)
         {
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
-            spriteBatch.DrawString(GetFont(), text, origin.ToVector2(), finalDropShadowColor, angle, additionalOffset.ToVector2() - offset.ToVector2() - new Vector2(1, 1), 1f, SpriteEffects.None, depth + 1);
+            spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), finalDropShadowColor, args.Angle, args.ResultOffset() - new Vector2(1, 1), 1f, SpriteEffects.None, args.Depth + 1);
         }
 
         private SpriteFont GetFont()
