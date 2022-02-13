@@ -28,6 +28,13 @@ namespace Machina.Components
             this.depthOffset = depthOffset;
             this.overflow = overflow;
             SetText(formattedText);
+
+            this.boundingRect.onSizeChange += OnSizeChange;
+        }
+
+        private void OnSizeChange(Point size)
+        {
+            UpdatedBoundedText();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -44,11 +51,19 @@ namespace Machina.Components
             }
         }
 
+        private FormattedText formattedText;
+
         public BoundedText BoundedText { get; private set; }
 
         public void SetText(FormattedText formattedText)
         {
-            BoundedText = new BoundedText(this.boundingRect.Size, this.alignment, this.overflow, formattedText);
+            this.formattedText = formattedText;
+            UpdatedBoundedText();
+        }
+
+        private void UpdatedBoundedText()
+        {
+            BoundedText = new BoundedText(this.boundingRect.Size, this.alignment, this.overflow, this.formattedText);
         }
 
         public BoundedFormattedTextRenderer EnableDropShadow(Color color)
