@@ -15,7 +15,7 @@ namespace Machina.Data.TextRendering
             ConsumingArguments
         }
 
-        public static FormattedTextCommand[] GetCommands(string parsableString)
+        public static FormattedTextCommand[] ParseCommands(string parsableString)
         {
             var result = new List<FormattedTextCommand>();
             var charIndex = 0;

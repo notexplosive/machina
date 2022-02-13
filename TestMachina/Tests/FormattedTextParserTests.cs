@@ -17,7 +17,7 @@ namespace TestMachina.Tests
         [Fact]
         public void plain_text_is_plain_text()
         {
-            var commands = FormattedTextParser.GetCommands("words [#color:aeaeae]words words [#color:a3ef37]words [#color:aaaaaa]words [#color:bbbbbb]words");
+            var commands = FormattedTextParser.ParseCommands("words [#color:aeaeae]words words [#color:a3ef37]words [#color:aaaaaa]words [#color:bbbbbb]words");
 
             commands.Should().ContainInOrder(
                 FormattedTextCommand.PlainText.WithArguments("words "),
@@ -57,7 +57,7 @@ namespace TestMachina.Tests
         [Fact]
         public void set_font_command()
         {
-            var commands = FormattedTextParser.GetCommands("get [#font:GiantFont]huge");
+            var commands = FormattedTextParser.ParseCommands("get [#font:GiantFont]huge");
 
             commands.Should().ContainInOrder(
                 FormattedTextCommand.PlainText.WithArguments("get "),

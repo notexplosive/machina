@@ -67,7 +67,7 @@ namespace Machina.Data.TextRendering
 
         public static FormattedText FromParseString(string parsableString, IFontMetrics startingFont, Color startingColor)
         {
-            var commands = FormattedTextParser.GetCommands(parsableString);
+            var commands = FormattedTextParser.ParseCommands(parsableString);
             var result = FormattedTextParser.GetFragmentsFromCommands(commands, startingFont, startingColor);
 
             return new FormattedText(result);
