@@ -7,7 +7,7 @@ namespace Machina.Data.TextRendering
     {
         public Point Origin { get; set; }
         public Point TopLeft { get; set; }
-        public Point Position { get; set; }
+        public Point OffsetFromTopLeft { get; set; }
         public float Angle { get; set; }
         public Point AdditionalOffset { get; set; }
         public Depth Depth { get; set; }
@@ -24,7 +24,7 @@ namespace Machina.Data.TextRendering
 
         public Vector2 ResultOffset()
         {
-            return AdditionalOffset.ToVector2() - Position.ToVector2();
+            return AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();
         }
 
         public Vector2 FinalPosition()

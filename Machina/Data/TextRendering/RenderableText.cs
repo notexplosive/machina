@@ -30,7 +30,7 @@ namespace Machina.Data.TextRendering
             {
                 Origin = Origin,
                 TopLeft = TopLeft,
-                Position = Offset,
+                OffsetFromTopLeft = Offset,
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
                 Depth = depth
@@ -45,7 +45,7 @@ namespace Machina.Data.TextRendering
             {
                 Origin = Origin,
                 TopLeft = TopLeft,
-                Position = Offset + new Point(1),
+                OffsetFromTopLeft = Offset + new Point(1),
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
                 Depth = depth + 1
