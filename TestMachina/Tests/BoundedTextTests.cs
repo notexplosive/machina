@@ -327,5 +327,23 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void multi_line_with_image()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 30),
+                Alignment.TopLeft,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("Wordswords\n", font, Color.Orange),
+                    new ImageTextFragment(new Point(8, 8), null),
+                    new FormattedTextFragment("words words", font, Color.LightBlue)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
     }
 }
