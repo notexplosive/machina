@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data.TextRendering
 {
+    public delegate void BoundedDrawFunction(SpriteBatch spriteBatch, Rectangle bounds, Depth depth);
+
     public struct ImageToken : IDrawableTextElement
     {
         public ImageToken(Point size, BoundedDrawFunction drawFunction)
