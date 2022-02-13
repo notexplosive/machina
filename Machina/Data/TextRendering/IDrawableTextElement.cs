@@ -7,7 +7,7 @@ namespace Machina.Data.TextRendering
     public struct TextDrawingArgs
     {
         public Point Origin { get; set; }
-        public Point Offset { get; set; }
+        public Point Position { get; set; }
         public float Angle { get; set; }
         public Point AdditionalOffset { get; set; }
         public Depth Depth { get; set; }
@@ -19,7 +19,7 @@ namespace Machina.Data.TextRendering
 
         public Vector2 ResultOffset()
         {
-            return AdditionalOffset.ToVector2() - Offset.ToVector2();
+            return AdditionalOffset.ToVector2() - Position.ToVector2();
         }
     }
 

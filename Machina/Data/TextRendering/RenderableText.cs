@@ -27,7 +27,7 @@ namespace Machina.Data.TextRendering
             var args = new TextDrawingArgs
             {
                 Origin = Origin,
-                Offset = Offset,
+                Position = Offset,
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
                 Depth = depth
@@ -41,7 +41,7 @@ namespace Machina.Data.TextRendering
             var args = new TextDrawingArgs
             {
                 Origin = Origin,
-                Offset = Offset,
+                Position = Offset,
                 Angle = angle,
                 AdditionalOffset = additionalOffset,
                 Depth = depth
