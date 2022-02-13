@@ -49,6 +49,11 @@ namespace Machina.Data.TextRendering
 
                 if (OverflowAmount() <= 0)
                 {
+                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                    lastDrawable = lastDrawable.AppendEllipse();
+                }
+                else if (numberOfRemovedTokens > 0)
+                {
                     if (shrinkAmount > 0)
                     {
                         lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
