@@ -29,12 +29,12 @@ namespace Machina.Data.TextRendering
 
         public Vector2 FinalPosition()
         {
-            var offset = ResultOffset();
+            var origin = Matrix.CreateTranslation(new Vector3(Origin.ToVector2(), 0));
+            var rotation = Matrix.CreateRotationZ(Angle);
+            var originToTopLeft = Matrix.CreateTranslation(new Vector3(OriginToTopLeftTranslation(), 0));
+            var offset = Matrix.CreateTranslation(new Vector3(-ResultOffset(), 0));
 
-            var offsetAngle = MathF.Atan2(offset.Y, offset.X);
-            var angle = offsetAngle + Angle;
-            var finalOffset = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * offset.Length();
-            return ResultOrigin() - finalOffset;
+            return Vector2.Transform(Vector2.Zero, originToTopLeft * offset * rotation * origin);
         }
     }
 }
