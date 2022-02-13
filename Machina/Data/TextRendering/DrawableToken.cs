@@ -30,14 +30,14 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
+        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation, int? substringLength = null)
         {
-            return new RenderableText(this, TokenText, totalAvailableRectLocation, nodeLocation);
-        }
+            if (!substringLength.HasValue)
+            {
+                substringLength = TokenText.Length;
+            }
 
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength)
-        {
-            return new RenderableText(this, TokenText.Substring(0, substringLength), totalAvailableRectLocation, nodeLocation);
+            return new RenderableText(this, TokenText.Substring(0, substringLength.Value), totalAvailableRectLocation, nodeLocation);
         }
 
         public void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth)

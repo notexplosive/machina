@@ -8,9 +8,7 @@ namespace Machina.Data.TextRendering
         public string TokenText { get; }
         public Point Size { get; }
         int CharacterLength { get; }
-
-        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation);
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength);
+        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation, int? substringLength = null);
         void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth);
         void DrawDropShadow(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth, Color dropShadowColor);
         Point SizeOfCharacter(int characterIndex);
@@ -30,14 +28,9 @@ namespace Machina.Data.TextRendering
 
         public int CharacterLength => 1;
 
-        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation)
+        public RenderableText CreateRenderableText(Point totalAvailableRectLocation, Point nodeLocation, int? substringLength = null)
         {
             return new RenderableText(this, TokenText, totalAvailableRectLocation, nodeLocation);
-        }
-
-        public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength)
-        {
-            return CreateRenderableText(totalAvailableRectLocation, nodeLocation);
         }
 
         public void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth)
