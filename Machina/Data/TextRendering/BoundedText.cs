@@ -10,7 +10,8 @@ namespace Machina.Data.TextRendering
     {
         private readonly Alignment alignment;
         private readonly BakedFlowLayout bakedLayout;
-        private readonly Dictionary<int, TextOutputFragment> tokenLookup;
+        private readonly List<TextOutputFragment> renderedFragments;
+        private readonly List<TextOutputFragment> allOutputFragments;
         private readonly FormattedText formattedText;
 
         public int TotalCharacterCount => this.formattedText.TotalCharacterCount;
@@ -20,30 +21,79 @@ namespace Machina.Data.TextRendering
         {
             TotalAvailableSize = size;
             this.alignment = alignment;
-            this.tokenLookup = new Dictionary<int, TextOutputFragment>();
+            this.renderedFragments = new List<TextOutputFragment>();
+            this.allOutputFragments = new List<TextOutputFragment>();
             this.formattedText = formattedText;
+            this.bakedLayout = null;
 
-            var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
-            var tokenIndex = 0;
-
-            foreach (var output in formattedText.OutputFragments())
+            foreach (var outputFragment in formattedText.OutputFragments())
             {
-                childNodes.AddRange(output.Nodes);
-
-                if (output.WillBeRendered)
-                {
-                    this.tokenLookup[tokenIndex] = output;
-                    tokenIndex++;
-                }
+                this.allOutputFragments.Add(outputFragment);
             }
 
-            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(TotalAvailableSize), new FlowLayoutStyle(alignment: this.alignment, alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom)),
+            this.bakedLayout = BakeFromTokens();
+
+            if (OverflowAmount() > 0)
+            {
+                var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
+                var lastDrawable = lastToken.Drawable;
+                int ellipseSize = 0;
+
+                if (lastDrawable.Size.X > OverflowAmount() + ellipseSize)
+                {
+                    // eliding this element is enough to make room
+                    lastDrawable = lastDrawable.ShrinkBy(OverflowAmount() + ellipseSize);
+                    lastDrawable = lastDrawable.AppendEllipse();
+                }
+                else
+                {
+                    // we need to elide this element and then some
+                }
+
+                this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
+            }
+
+            this.bakedLayout = BakeFromTokens();
+
+            foreach (var outputFragment in this.allOutputFragments)
+            {
+                if (outputFragment.WillBeRendered)
+                {
+                    this.renderedFragments.Add(outputFragment);
+                }
+            }
+        }
+
+        private BakedFlowLayout BakeFromTokens()
+        {
+            var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
+
+            foreach (var token in this.allOutputFragments)
+            {
+                childNodes.AddRange(token.Nodes);
+            }
+
+            var layout = FlowLayout.HorizontalFlowParent(
+                "root",
+                LayoutSize.Pixels(TotalAvailableSize),
+                new FlowLayoutStyle(
+                    alignment: this.alignment,
+                    alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom),
+                    overflowRule: OverflowRule.FinishRowOnIllegal),
                 childNodes.ToArray()
             );
 
-            this.bakedLayout = layout.Bake();
+            return layout.Bake();
         }
 
+        private int OverflowAmount()
+        {
+            var lastItemRect = this.bakedLayout.GetLastRow().GetLastItemNode().Rectangle;
+            var bottomRightOfLastItem = lastItemRect.Location + lastItemRect.Size;
+            var rightOverflow = bottomRightOfLastItem.X - TotalAvailableSize.X;
+            var leftOverflow = -lastItemRect.Location.X;
+            return leftOverflow + rightOverflow;
+        }
 
         public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default, int occludedCharactersCount = 0)
         {
@@ -56,7 +106,7 @@ namespace Machina.Data.TextRendering
             {
                 foreach (var tokenNode in row)
                 {
-                    var outputFragment = this.tokenLookup[tokenIndex];
+                    var outputFragment = this.renderedFragments[tokenIndex];
                     var pendingRenderableText = outputFragment.Drawable.CreateRenderableText(origin, topLeft, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = outputFragment.CharacterPosition + outputFragment.CharacterLength;

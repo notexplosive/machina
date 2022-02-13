@@ -41,6 +41,13 @@ namespace Machina.Data.Layout
             return this.rows[rowIndex];
         }
 
+        public BakedRow GetLastRow()
+        {
+            return this.rows[RowCount - 1];
+        }
+
+        public int RowCount => this.rows.Length;
+
         public IEnumerable<BakedRow> Rows => this.rows;
 
         public class BakedRow : IEnumerable<BakedLayoutNode>
@@ -61,6 +68,15 @@ namespace Machina.Data.Layout
             public BakedLayoutNode GetItemNode(int itemIndex)
             {
                 return this.itemNodes[itemIndex];
+            }
+
+            public BakedLayoutNode GetLastItemNode()
+            {
+                if (ItemCount == 0)
+                {
+                    return new BakedLayoutNode(Point.Zero, Point.Zero, 0);
+                }
+                return this.itemNodes[ItemCount - 1];
             }
 
             public IEnumerator<BakedLayoutNode> GetEnumerator()

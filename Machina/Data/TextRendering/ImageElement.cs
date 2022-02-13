@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Machina.Data.TextRendering
 {
@@ -45,6 +46,23 @@ namespace Machina.Data.TextRendering
         public Point SizeOfCharacter(int characterIndex)
         {
             return Size;
+        }
+
+        public IDrawableTextElement ShrinkBy(int amountThatMustBeRemoved)
+        {
+            return new ImageElement(Size, EmptyDrawFunction);
+        }
+
+        public IDrawableTextElement AppendEllipse()
+        {
+            // Does nothing, this is technically a bug
+            // should be something like: new TextElement("...", FontMetrics, Color)
+            return new ImageElement(Size, EmptyDrawFunction);
+        }
+
+        private void EmptyDrawFunction(SpriteBatch spriteBatch, TextDrawingArgs args)
+        {
+            // this function is intentionally left blank
         }
     }
 }

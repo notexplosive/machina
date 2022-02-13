@@ -14,5 +14,7 @@ namespace Machina.Data.TextRendering
         void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor);
         Point SizeOfCharacter(int characterIndex);
         char GetCharacterAt(int characterIndex);
+        IDrawableTextElement ShrinkBy(int amountThatMustBeRemoved);
+        IDrawableTextElement AppendEllipse();
     }
 }

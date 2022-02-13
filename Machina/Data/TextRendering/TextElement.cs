@@ -76,5 +76,27 @@ namespace Machina.Data.TextRendering
         {
             return TokenText[characterIndex];
         }
+
+        public IDrawableTextElement ShrinkBy(int amountThatMustBeRemoved)
+        {
+            var chopIndex = 0;
+            for (int i = 0; i < TokenText.Length; i++)
+            {
+                var chunkSize = FontMetrics.MeasureStringRounded(TokenText[i..]).X;
+
+                if (chunkSize > amountThatMustBeRemoved)
+                {
+                    chopIndex = i;
+                }
+            }
+
+            return new TextElement(TokenText[0..chopIndex], FontMetrics, Color);
+        }
+
+        public IDrawableTextElement AppendEllipse()
+        {
+            // Do nothing... yet
+            return new TextElement(TokenText, FontMetrics, Color);
+        }
     }
 }

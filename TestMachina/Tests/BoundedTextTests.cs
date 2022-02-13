@@ -361,5 +361,21 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void elide_long_word()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 30),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("I'm about to walk\noff the edge of the string\nhere I goooooooooooooo!", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
     }
 }
