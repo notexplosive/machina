@@ -37,7 +37,7 @@ namespace Machina.Data.TextRendering
 
         public RenderableText CreateRenderableTextWithDifferentString(Point totalAvailableRectLocation, Point nodeLocation, int substringLength)
         {
-            return new RenderableText(this, TokenText.Substring(0, substringLength), totalAvailableRectLocation, nodeLocation);
+            return CreateRenderableText(totalAvailableRectLocation, nodeLocation);
         }
 
         public void Draw(SpriteBatch spriteBatch, string text, Point origin, Point offset, float angle, Point additionalOffset, Depth depth)
