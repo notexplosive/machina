@@ -14,7 +14,7 @@ namespace Machina.Data.TextRendering
 
         public FormattedTextToken[] Tokens()
         {
-            return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(this.spriteFrame.Size, DrawFunction)) };
+            return new FormattedTextToken[] { new FormattedTextToken(new ImageElement(this.spriteFrame.Size, DrawFunction)) };
         }
 
         private void DrawFunction(SpriteBatch spriteBatch, TextDrawingArgs args)

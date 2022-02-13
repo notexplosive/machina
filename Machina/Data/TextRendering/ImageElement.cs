@@ -5,9 +5,9 @@ namespace Machina.Data.TextRendering
 {
     public delegate void BoundedDrawFunction(SpriteBatch spriteBatch, TextDrawingArgs args);
 
-    public readonly struct ImageToken : IDrawableTextElement
+    public readonly struct ImageElement : IDrawableTextElement
     {
-        public ImageToken(Point size, BoundedDrawFunction drawFunction)
+        public ImageElement(Point size, BoundedDrawFunction drawFunction)
         {
             Size = size;
             this.drawFunction = drawFunction;

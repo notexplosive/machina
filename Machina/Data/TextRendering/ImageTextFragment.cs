@@ -16,7 +16,7 @@ namespace Machina.Data.TextRendering
 
         public FormattedTextToken[] Tokens()
         {
-            return new FormattedTextToken[] { new FormattedTextToken(new ImageToken(Size, this.drawFunction)) };
+            return new FormattedTextToken[] { new FormattedTextToken(new ImageElement(Size, this.drawFunction)) };
         }
     }
 }

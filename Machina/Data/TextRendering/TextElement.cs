@@ -4,7 +4,7 @@ using System;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct DrawableToken : IDrawableTextElement
+    public readonly struct TextElement : IDrawableTextElement
     {
         public Point Size { get; }
         public IFontMetrics FontMetrics { get; }
@@ -12,7 +12,7 @@ namespace Machina.Data.TextRendering
         public string TokenText { get; }
         public int CharacterLength => TokenText.Length;
 
-        public DrawableToken(string tokenText, IFontMetrics fontMetrics, Color color)
+        public TextElement(string tokenText, IFontMetrics fontMetrics, Color color)
         {
             FontMetrics = fontMetrics;
             Color = color;
