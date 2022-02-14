@@ -65,13 +65,13 @@ namespace Machina.Data.TextRendering
                 }
 
                 this.bakedLayout = BakeFromTokens().Item1;
+            }
 
-                foreach (var outputFragment in this.allOutputFragments)
+            foreach (var outputFragment in this.allOutputFragments)
+            {
+                if (outputFragment.WillBeRendered)
                 {
-                    if (outputFragment.WillBeRendered)
-                    {
-                        this.renderedFragments.Add(outputFragment);
-                    }
+                    this.renderedFragments.Add(outputFragment);
                 }
             }
         }
