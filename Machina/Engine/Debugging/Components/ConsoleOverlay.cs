@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Machina.Components;
 using Machina.Data;
+using Machina.Data.TextRendering;
 using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -42,17 +43,33 @@ namespace Machina.Engine.Debugging.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             var screenWidth = this.actor.scene.sceneLayers.gameCanvas.WindowSize.X;
-            var i = 0;
+            var maxHeight = this.spriteFont.LineSpacing * 15;
+            var fragments = new List<ITextInputFragment>();
+
+            foreach (var message in this.messages)
+            {
+                fragments.Add(new FormattedTextFragment(message + "\n", (SpriteFontMetrics)this.spriteFont, new Color(Color.White, this.opacity)));
+            }
+
+            var boundedText = new BoundedText(new Point(screenWidth, maxHeight), Alignment.TopLeft, Overflow.Ignore, new FormattedText(fragments.ToArray()));
+
+            foreach (var renderedLine in boundedText.GetRenderedText())
+            {
+                renderedLine.Draw(spriteBatch, Point.Zero, 0, 0);
+            }
 
             spriteBatch.FillRectangle(
-                new Rectangle(0, 0, screenWidth, this.spriteFont.LineSpacing * this.messages.Count),
+                new Rectangle(0, 0, screenWidth, boundedText.UsedSize.Y),
                 new Color(Color.Black, this.opacity / 2), 0.001f);
+
+            /*
             foreach (var message in this.messages)
             {
                 spriteBatch.DrawString(this.spriteFont, message, new Vector2(8, this.spriteFont.LineSpacing * i),
                     new Color(1, 1, 1, this.opacity), 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
                 i++;
             }
+            */
         }
 
         public override void Update(float dt)

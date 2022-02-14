@@ -282,6 +282,8 @@ namespace TestMachina.Tests
             textList[1].Text.Should().Be("llo");
             textList[2].Text.Should().Be(" ");
             textList[3].Text.Should().Be("World!");
+
+            textMeasurer.UsedSize.Should().Be(new Point(48, 4));
         }
 
         [Fact]
