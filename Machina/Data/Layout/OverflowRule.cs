@@ -11,7 +11,8 @@
         }
 
         public static OverflowRule PermitExtraRows = new OverflowRule(false, false, false, false);
-        public static OverflowRule HaltOnIllegal = new OverflowRule(true, false, true, false);
+        public static OverflowRule HaltOnIllegal = new OverflowRule(true, false, true, true);
+        public static OverflowRule HaltOnIllegalButKeepLastOne = new OverflowRule(true, false, true, false);
         public static OverflowRule CancelRowOnIllegal = new OverflowRule(true, true, true, true);
         public static OverflowRule FinishRowOnIllegal = new OverflowRule(false, false, true, false);
 

@@ -361,6 +361,38 @@ namespace TestMachina.Tests
         }
 
         [Fact]
+        public void elide_one_line_one_long_word()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 4),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("goooooooooooooo!", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
+
+        [Fact]
+        public void elide_one_line_long_word()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(50, 4),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("let's goooooooooooooo!", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
+
+        [Fact]
         public void elide_long_word()
         {
             var font = new MonospacedFontMetrics(new Point(4, 4));
@@ -419,6 +451,22 @@ namespace TestMachina.Tests
                 Overflow.Elide,
                 new FormattedText(
                     new FormattedTextFragment("I'm about to walk\noff the edge of the string\nhere I go!\na b c d e f g", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
+
+        [Fact]
+        public void elide_words_narrow_box()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(10, 30),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("O Nothing fits in this box", font, Color.Orange)
                 )
             );
 

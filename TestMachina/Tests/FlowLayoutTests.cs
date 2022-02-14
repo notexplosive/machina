@@ -177,6 +177,22 @@ namespace TestMachina.Tests
         }
 
         [Fact]
+        public void flow_layout_halts_on_illegal_but_keep_last_overflow()
+        {
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.HaltOnIllegalButKeepLastOne),
+                LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
+                LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
+                LayoutNode.Leaf("itemD", LayoutSize.Pixels(13, 10)),
+                LayoutNode.Leaf("itemE", LayoutSize.Pixels(7, 10)),
+                LayoutNode.Leaf("really-wide-item", LayoutSize.Pixels(21, 10))
+            );
+
+            var result = layout.Bake();
+            Approvals.Verify(LayoutNodeUtils.DrawResult(result));
+        }
+
+        [Fact]
         public void flow_layout_cancels_whole_row_on_failure()
         {
             var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.CancelRowOnIllegal),
