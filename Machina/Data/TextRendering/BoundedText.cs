@@ -78,14 +78,7 @@ namespace Machina.Data.TextRendering
                 childNodes.Add(token.Node);
             }
 
-            var layout = MakeLayout(childNodes);
-
-            return layout.Bake();
-        }
-
-        RawFlowLayout MakeLayout(List<FlowLayout.LayoutNodeOrInstruction> childNodes)
-        {
-            return FlowLayout.HorizontalFlowParent(
+            var layout = FlowLayout.HorizontalFlowParent(
                 "root",
                 LayoutSize.Pixels(TotalAvailableSize),
                 new FlowLayoutStyle(
@@ -94,6 +87,8 @@ namespace Machina.Data.TextRendering
                     overflowRule: OverflowRule.LastRowKeepsGoing),
                 childNodes.ToArray()
             );
+
+            return layout.Bake();
         }
 
         public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default, int occludedCharactersCount = 0)
