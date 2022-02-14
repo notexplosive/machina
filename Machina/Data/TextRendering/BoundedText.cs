@@ -17,7 +17,7 @@ namespace Machina.Data.TextRendering
         public Point TotalAvailableSize { get; }
         public Point UsedSize { get; }
 
-        public BoundedText(Point size, Alignment alignment, Overflow overflow, FormattedText formattedText = default)
+        public BoundedText(Point size, Alignment alignment, Overflow overflow = Overflow.Ignore, FormattedText formattedText = default)
         {
             TotalAvailableSize = size;
             this.alignment = alignment;
