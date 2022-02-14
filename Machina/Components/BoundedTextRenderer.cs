@@ -11,6 +11,7 @@ using MonoGame.Extended;
 
 namespace Machina.Components
 {
+    [Obsolete("Use " + nameof(BoundedFormattedTextRenderer) + " instead")]
     public class BoundedTextRenderer : BaseComponent
     {
         private readonly BoundingRect boundingRect;

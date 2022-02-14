@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +34,11 @@ namespace Machina.Data.TextRendering
         public static FormattedText FromString(string rawText, IFontMetrics fontMetrics, Color color)
         {
             return new FormattedText(new FormattedTextFragment(rawText, fontMetrics, color));
+        }
+
+        public static FormattedText FromString(string rawText, SpriteFont realFont, Color color)
+        {
+            return new FormattedText(new FormattedTextFragment(rawText, (SpriteFontMetrics)realFont, color));
         }
 
         public IEnumerable<TextOutputFragment> OutputFragments()
