@@ -31,14 +31,7 @@ namespace Machina.Data.TextRendering
                 this.allOutputFragments.Add(outputFragment);
             }
 
-            var bakeResult = BakeFromTokens();
-            this.bakedLayout = bakeResult.Item1;
-            var numberOfRemovedTokens = bakeResult.Item2;
-
-            for (int i = 0; i < numberOfRemovedTokens; i++)
-            {
-                this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
-            }
+            this.bakedLayout = BakeFromTokens();
 
             if (this.allOutputFragments.Count > 0)
             {
@@ -54,7 +47,7 @@ namespace Machina.Data.TextRendering
                     lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
                 }
 
-                if (OverflowAmount() > 0 || numberOfRemovedTokens > 0)
+                if (OverflowAmount() > 0)
                 {
                     var lastDrawable = lastToken.Drawable;
 
@@ -64,7 +57,7 @@ namespace Machina.Data.TextRendering
                     this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
                 }
 
-                this.bakedLayout = BakeFromTokens().Item1;
+                this.bakedLayout = BakeFromTokens();
             }
 
             foreach (var outputFragment in this.allOutputFragments)
@@ -76,7 +69,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        private Tuple<BakedFlowLayout, int> BakeFromTokens()
+        private BakedFlowLayout BakeFromTokens()
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
@@ -86,9 +79,8 @@ namespace Machina.Data.TextRendering
             }
 
             var layout = MakeLayout(childNodes);
-            var numberOfRemovedTokens = 0;
 
-            return new Tuple<BakedFlowLayout, int>(layout.Bake(), numberOfRemovedTokens);
+            return layout.Bake();
         }
 
         RawFlowLayout MakeLayout(List<FlowLayout.LayoutNodeOrInstruction> childNodes)
