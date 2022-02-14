@@ -127,8 +127,28 @@ namespace Machina.Data.Layout
                 return;
             }
 
-            AddNewRow();
-            AddItemToCurrentRow(itemToAdd);
+            if (CurrentRow.Content.Count == 0)
+            {
+                AddItemToCurrentRow(itemToAdd);
+            }
+            else if (!HasRoomForAnotherRow(itemToAdd))
+            {
+                AddItemToCurrentRow(itemToAdd);
+            }
+            else
+            {
+                AddNewRow();
+                AddItemToCurrentRow(itemToAdd);
+            }
+        }
+
+        private bool HasRoomForAnotherRow(LayoutNode itemToAdd)
+        {
+
+            var possibleNewRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
+            possibleNewRow.AddItem(itemToAdd);
+            var totalSizeAfterAddingRow = UsedSize.OppositeAxisValue(Orientation.ToAxis()) + possibleNewRow.UsedPerpendicularSize;
+            return totalSizeAfterAddingRow <= AvailablePerpendicularSize;
         }
 
         private void AddNewRow()
