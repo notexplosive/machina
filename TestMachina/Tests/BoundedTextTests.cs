@@ -474,5 +474,21 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void allow_free_overflow()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(25, 25),
+                Alignment.Center,
+                Overflow.Ignore,
+                new FormattedText(
+                    new FormattedTextFragment("It is OK that we overflow here", font, Color.Orange)
+                )
+            );
+
+            Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
+        }
     }
 }

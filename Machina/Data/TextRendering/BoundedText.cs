@@ -32,69 +32,74 @@ namespace Machina.Data.TextRendering
                 allOutputFragments.Add(outputFragment);
             }
 
-            this.fragmentRows = BakeFromFragments(allOutputFragments);
+            this.fragmentRows = BakeFromFragments(allOutputFragments, overflow);
 
-            // first, prune anything that overflows, this will catch any middle lines that happen to be very long
-            var prunedTuples = new List<FragmentAndRow>();
-            foreach (var tuple in this.fragmentRows)
+            if (overflow == Overflow.Elide)
             {
-                var layoutRow = tuple.BakedRow;
-                prunedTuples.Add(tuple);
-                if (layoutRow.UsedRectangle.Width > TotalAvailableSize.X)
+
+                // first, prune anything that overflows, this will catch any middle lines that happen to be very long
+                var prunedTuples = new List<FragmentAndRow>();
+                foreach (var tuple in this.fragmentRows)
                 {
-                    break;
-                }
-            }
-
-            // adopt the pruned list
-            this.fragmentRows = prunedTuples;
-
-            // shrink the oversized row
-            var finalRow = this.fragmentRows[this.fragmentRows.Count - 1];
-            bool needsEllipse = false;
-            while (finalRow.Fragment.Count > 0)
-            {
-                var lastIndex = finalRow.Fragment.Count - 1;
-                var lastFragment = finalRow.Fragment[lastIndex];
-                int ellipseSize = lastFragment.Drawable.EllipseWidth();
-                var overflowAmount = OverflowAmount(finalRow.Fragment);
-
-                if (overflowAmount > 0 || needsEllipse)
-                {
-                    needsEllipse = true;
-                    var shrinkAmount = overflowAmount + ellipseSize;
-                    if (shrinkAmount >= lastFragment.Drawable.Size.X)
+                    var layoutRow = tuple.BakedRow;
+                    prunedTuples.Add(tuple);
+                    if (layoutRow.UsedRectangle.Width > TotalAvailableSize.X)
                     {
-                        finalRow.Fragment.RemoveAt(lastIndex);
-                    }
-                    else
-                    {
-                        var lastDrawable = lastFragment.Drawable;
-                        lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                        lastDrawable = lastDrawable.AppendEllipse();
-                        finalRow.Fragment[lastIndex] = new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
                         break;
                     }
                 }
-                else
+
+                // adopt the pruned list
+                this.fragmentRows = prunedTuples;
+
+                // shrink the oversized row
+                var finalRow = this.fragmentRows[this.fragmentRows.Count - 1];
+                bool needsEllipse = false;
+                while (finalRow.Fragment.Count > 0)
                 {
-                    break;
+                    var lastIndex = finalRow.Fragment.Count - 1;
+                    var lastFragment = finalRow.Fragment[lastIndex];
+                    int ellipseSize = lastFragment.Drawable.EllipseWidth();
+                    var overflowAmount = OverflowAmount(finalRow.Fragment);
+
+                    if (overflowAmount > 0 || needsEllipse)
+                    {
+                        needsEllipse = true;
+                        var shrinkAmount = overflowAmount + ellipseSize;
+                        if (shrinkAmount >= lastFragment.Drawable.Size.X)
+                        {
+                            finalRow.Fragment.RemoveAt(lastIndex);
+                        }
+                        else
+                        {
+                            var lastDrawable = lastFragment.Drawable;
+                            lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+                            lastDrawable = lastDrawable.AppendEllipse();
+                            finalRow.Fragment[lastIndex] = new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
+
+                // replenish allOutputFragments with fragmentRows
+                allOutputFragments.Clear();
+                foreach (var tuple in this.fragmentRows)
+                {
+                    foreach (var fragment in tuple.Fragment)
+                    {
+                        allOutputFragments.Add(fragment);
+                    }
+                }
+
+                // bake again
+                this.fragmentRows = BakeFromFragments(allOutputFragments, overflow);
             }
 
-            // replenish allOutputFragments with fragmentRows
-            allOutputFragments.Clear();
-            foreach (var tuple in this.fragmentRows)
-            {
-                foreach (var fragment in tuple.Fragment)
-                {
-                    allOutputFragments.Add(fragment);
-                }
-            }
-
-            // bake again
-            this.fragmentRows = BakeFromFragments(allOutputFragments);
-
+            // collect final fragments
             foreach (var outputFragment in allOutputFragments)
             {
                 this.renderedFragments.Add(outputFragment);
@@ -149,7 +154,7 @@ namespace Machina.Data.TextRendering
             return usedSize - TotalAvailableSize.X;
         }
 
-        private List<FragmentAndRow> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
+        private List<FragmentAndRow> BakeFromFragments(List<TextOutputFragment> allOutputFragments, Overflow overflow)
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
@@ -164,7 +169,7 @@ namespace Machina.Data.TextRendering
                 new FlowLayoutStyle(
                     alignment: this.alignment,
                     alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom),
-                    overflowRule: OverflowRule.LastRowKeepsGoing),
+                    overflowRule: overflow == Overflow.Elide ? OverflowRule.LastRowKeepsGoing : OverflowRule.Free),
                 childNodes.ToArray()
             );
 
