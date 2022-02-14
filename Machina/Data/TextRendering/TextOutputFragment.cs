@@ -30,5 +30,10 @@ namespace Machina.Data.TextRendering
         public IDrawableTextElement Drawable { get; }
 
         public int CharacterLength => Drawable.CharacterLength;
+
+        public override string ToString()
+        {
+            return $"drawable: {Drawable} pos: {CharacterPosition} length: {CharacterLength} {WillBeRendered}";
+        }
     }
 }

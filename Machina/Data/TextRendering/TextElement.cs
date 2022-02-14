@@ -104,5 +104,10 @@ namespace Machina.Data.TextRendering
         }
 
         public static readonly string EllipseString = "...";
+
+        public override string ToString()
+        {
+            return $"{TokenText}";
+        }
     }
 }
