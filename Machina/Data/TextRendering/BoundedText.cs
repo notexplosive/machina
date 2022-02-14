@@ -106,7 +106,7 @@ namespace Machina.Data.TextRendering
                 new FlowLayoutStyle(
                     alignment: this.alignment,
                     alignmentWithinRow: new Alignment(this.alignment.Horizontal, VerticalAlignment.Bottom),
-                    overflowRule: OverflowRule.HaltOnIllegal),
+                    overflowRule: OverflowRule.LastRowKeepsGoing),
                 childNodes.ToArray()
             );
         }

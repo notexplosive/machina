@@ -31,7 +31,12 @@ namespace Machina.Data.Layout
             {
                 if (item.IsLayoutNode)
                 {
-                    if (rows.CanFitItem(item))
+                    if (!rows.CanFitItemPerpendicular(item))
+                    {
+                        break;
+                    }
+
+                    if (rows.CanFitItemAlongCurrentRow(item))
                     {
                         rows.AddItemToCurrentRow(item);
                     }
@@ -43,11 +48,6 @@ namespace Machina.Data.Layout
                 else if (item.IsInstruction)
                 {
                     rows.ConsumeInstruction(item);
-                }
-
-                if (rows.StopAddingNewItems)
-                {
-                    break;
                 }
             }
 
@@ -144,6 +144,10 @@ namespace Machina.Data.Layout
 
         private bool HasRoomForAnotherRow(LayoutNode itemToAdd)
         {
+            if (Style.OverflowRule.HasInfiniteRows)
+            {
+                return true;
+            }
 
             var possibleNewRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
             possibleNewRow.AddItem(itemToAdd);
@@ -185,40 +189,15 @@ namespace Machina.Data.Layout
             CurrentRow.AddItem(itemToAdd);
 
             var overflowedAlong = CurrentRow.UsedAlongSize > AvailableAlongSize;
-            var failed = UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize || overflowedAlong;
+            var overflowedPerpendicular = UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize;
+            var failed = overflowedPerpendicular || overflowedAlong;
             if (failed)
             {
-                if (Style.OverflowRule.HaltImmediatelyUponFailure)
-                {
-                    StopAddingNewItems = true;
-                }
-
-                if (Style.OverflowRule.LoseFailingItem)
-                {
-                    CurrentRow.PopLastItem();
-                }
-
-                if (Style.OverflowRule.DeletesWholeRowUponFailure)
-                {
-                    PopLastRow();
-                }
-
-                if (Style.OverflowRule.DoNotAddMoreRowsAfterFailure)
-                {
-                    StopAddingNewRows = true;
-                }
             }
 
         }
 
-        private void PopLastRow()
-        {
-            PerpendicularSizeOfAllRowsExceptCurrent -= CurrentRow.UsedPerpendicularSize;
-            Content.RemoveAt(Content.Count - 1);
-            CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
-        }
-
-        public bool CanFitItem(LayoutNode item)
+        public bool CanFitItemAlongCurrentRow(LayoutNode item)
         {
             return RemainingAlongSizeInCurrentRow >= item.Size.GetValueFromOrientation(Orientation).ActualSize;
         }
@@ -227,7 +206,10 @@ namespace Machina.Data.Layout
         {
             if (instruction == FlowLayoutInstruction.Linebreak)
             {
-                AddNewRow();
+                if (HasRoomForAnotherRow(LayoutNode.NamelessLeaf(LayoutSize.Pixels(0, 0))))
+                {
+                    AddNewRow();
+                }
             }
         }
 
@@ -241,6 +223,17 @@ namespace Machina.Data.Layout
             }
 
             return sizes;
+        }
+
+        public bool CanFitItemPerpendicular(LayoutNode item)
+        {
+            if (Style.OverflowRule.HasInfiniteRows)
+            {
+                return true;
+            }
+            var usedPerpendicular = PerpendicularSizeOfAllRowsExceptCurrent;
+            var itemPerpendicular = item.Size.GetValueFromOrientation(Orientation.Opposite()).ActualSize;
+            return AvailablePerpendicularSize >= usedPerpendicular + itemPerpendicular;
         }
     }
 

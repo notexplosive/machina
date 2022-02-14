@@ -5,7 +5,7 @@ namespace Machina.Data.Layout
 {
     public struct FlowLayoutStyle
     {
-        public static FlowLayoutStyle Empty => new FlowLayoutStyle();
+        public static FlowLayoutStyle Empty => new FlowLayoutStyle(overflowRule: OverflowRule.Free);
 
         public int PaddingBetweenRows { get; }
         public int PaddingBetweenItemsInEachRow { get; }

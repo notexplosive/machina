@@ -2,23 +2,17 @@
 {
     public class OverflowRule
     {
-        private OverflowRule(bool haltOnFailure, bool deletesWholeRow, bool doNotAddMoreRowsAfterFailure, bool loseFailingItem)
+        private OverflowRule(bool hasInfiniteRows, bool allowExtraRoomOnLastRow)
         {
-            HaltImmediatelyUponFailure = haltOnFailure;
-            DeletesWholeRowUponFailure = deletesWholeRow;
-            DoNotAddMoreRowsAfterFailure = doNotAddMoreRowsAfterFailure;
-            LoseFailingItem = loseFailingItem;
+            HasInfiniteRows = hasInfiniteRows;
+            AllowExtraRoomOnLastRow = allowExtraRoomOnLastRow;
         }
 
-        public static readonly OverflowRule Free = new OverflowRule(false, false, false, false);
-        public static readonly OverflowRule HaltOnIllegal = new OverflowRule(true, false, true, true);
-        public static readonly OverflowRule HaltOnIllegalButKeepLastOne = new OverflowRule(true, false, true, false);
-        public static readonly OverflowRule CancelRowOnIllegal = new OverflowRule(true, true, true, true);
-        public static readonly OverflowRule FinishRowOnIllegal = new OverflowRule(false, false, true, false);
+        public static readonly OverflowRule Free = new OverflowRule(true, false);
+        public static readonly OverflowRule LastRowKeepsGoing = new OverflowRule(false, true);
+        public static readonly OverflowRule EverythingMustBeInside = new OverflowRule(false, false);
 
-        public bool HaltImmediatelyUponFailure { get; }
-        public bool DeletesWholeRowUponFailure { get; }
-        public bool DoNotAddMoreRowsAfterFailure { get; }
-        public bool LoseFailingItem { get; }
+        public bool HasInfiniteRows { get; }
+        public bool AllowExtraRoomOnLastRow { get; }
     }
 }
