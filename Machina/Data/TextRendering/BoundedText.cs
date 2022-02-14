@@ -105,42 +105,9 @@ namespace Machina.Data.TextRendering
                 this.renderedFragments.Add(outputFragment);
             }
 
-            // this whole UsedSize calculation is temporary, we should use the bakedLayout to find out our used size
-            Point? totalTopLeft = null;
-            Point? totalBottomRight = null;
-            foreach (var row in this.fragmentRows)
+            if (this.fragmentRows.Count > 0)
             {
-                foreach (var item in row.BakedRow)
-                {
-                    var rectangle = item.Rectangle;
-                    var topLeft = rectangle.Location;
-                    var bottomRight = rectangle.Location + rectangle.Size;
-
-                    if (totalTopLeft == null || totalBottomRight == null)
-                    {
-                        totalTopLeft = topLeft;
-                        totalBottomRight = bottomRight;
-                    }
-                    else
-                    {
-                        var leftMost = Math.Min(topLeft.X, totalTopLeft.Value.X);
-                        var rightMost = Math.Max(bottomRight.X, totalBottomRight.Value.X);
-                        var topMost = Math.Min(topLeft.Y, totalTopLeft.Value.Y);
-                        var bottomMost = Math.Max(bottomRight.Y, totalBottomRight.Value.Y);
-
-                        totalTopLeft = new Point(leftMost, topMost);
-                        totalBottomRight = new Point(rightMost, bottomMost);
-                    }
-                }
-            }
-
-            if (totalTopLeft == null || totalBottomRight == null)
-            {
-                UsedSize = Point.Zero;
-            }
-            else
-            {
-                UsedSize = totalBottomRight.Value - totalTopLeft.Value;
+                UsedSize = this.fragmentRows[0].WholeLayout.UsedSpace;
             }
         }
 
@@ -185,7 +152,7 @@ namespace Machina.Data.TextRendering
                     fragmentList.Add(allOutputFragments[fragmentIndex]);
                     fragmentIndex++;
                 }
-                fragmentRows.Add(new FragmentAndRow(row, fragmentList));
+                fragmentRows.Add(new FragmentAndRow(bakedLayout, row, fragmentList));
             }
 
             return fragmentRows;

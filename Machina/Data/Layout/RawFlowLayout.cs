@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 
 namespace Machina.Data.Layout
@@ -12,6 +13,7 @@ namespace Machina.Data.Layout
                 )
             ))
         {
+            this.orientation = orientation;
             this.rowNodes = rows.GetLayoutNodesOfEachRow();
             this.rowUsedSpace = rows.GetUsedSpaceOfEachRow();
         }
@@ -21,9 +23,12 @@ namespace Machina.Data.Layout
             return this.rowNodes[rowIndex].Children;
         }
 
+
         // ew parallel arrays
         private readonly LayoutNode[] rowNodes;
         private readonly Point[] rowUsedSpace;
+
+        private Orientation orientation;
 
         public string GetRowName(int rowIndex)
         {
@@ -38,6 +43,22 @@ namespace Machina.Data.Layout
         public override BakedFlowLayout Bake()
         {
             return new BakedFlowLayout(DefaultBake(), this);
+        }
+
+        public Point CalculateUsedSpace()
+        {
+            var totalUsedAlongSize = 0;
+            var totalUsedPerpendicularSize = 0;
+            foreach (var row in rowUsedSpace)
+            {
+                var along = row.AxisValue(this.orientation.ToAxis());
+                var perpendicular = row.OppositeAxisValue(this.orientation.ToAxis());
+
+                totalUsedAlongSize += along;
+                totalUsedPerpendicularSize = Math.Max(totalUsedPerpendicularSize, perpendicular);
+            }
+
+            return this.orientation.GetPointFromAlongPerpendicular(totalUsedAlongSize, totalUsedPerpendicularSize);
         }
 
         public int RowCount => this.rowNodes.Length;
