@@ -69,5 +69,10 @@ namespace Machina.Data.TextRendering
         {
             return 0;
         }
+
+        public override string ToString()
+        {
+            return $"{Size.X} x {Size.Y} Image";
+        }
     }
 }
