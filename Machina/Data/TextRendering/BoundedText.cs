@@ -11,7 +11,6 @@ namespace Machina.Data.TextRendering
         private readonly Alignment alignment;
         private readonly List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>> fragmentRows;
         private readonly List<TextOutputFragment> renderedFragments;
-        private readonly List<TextOutputFragment> allOutputFragments;
         private readonly FormattedText formattedText;
 
         public int TotalCharacterCount => this.formattedText.TotalCharacterCount;
@@ -23,17 +22,17 @@ namespace Machina.Data.TextRendering
             TotalAvailableSize = size;
             this.alignment = alignment;
             this.renderedFragments = new List<TextOutputFragment>();
-            this.allOutputFragments = new List<TextOutputFragment>();
             this.formattedText = formattedText;
             this.fragmentRows = null;
             UsedSize = Point.Zero;
 
+            var allOutputFragments = new List<TextOutputFragment>();
             foreach (var outputFragment in formattedText.OutputFragments())
             {
-                this.allOutputFragments.Add(outputFragment);
+                allOutputFragments.Add(outputFragment);
             }
 
-            this.fragmentRows = BakeFromFragments();
+            this.fragmentRows = BakeFromFragments(allOutputFragments);
 
             // first, prune anything that overflows, this will catch any middle lines that happen to be very long
             var prunedTuples = new List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>>();
@@ -84,24 +83,21 @@ namespace Machina.Data.TextRendering
             }
 
             // replenish allOutputFragments with fragmentRows
-            this.allOutputFragments.Clear();
+            allOutputFragments.Clear();
             foreach (var tuple in this.fragmentRows)
             {
                 foreach (var fragment in tuple.Item2)
                 {
-                    this.allOutputFragments.Add(fragment);
+                    allOutputFragments.Add(fragment);
                 }
             }
 
             // bake again
-            this.fragmentRows = BakeFromFragments();
+            this.fragmentRows = BakeFromFragments(allOutputFragments);
 
-            foreach (var outputFragment in this.allOutputFragments)
+            foreach (var outputFragment in allOutputFragments)
             {
-                // if (outputFragment.WillBeRendered)
-                {
-                    this.renderedFragments.Add(outputFragment);
-                }
+                this.renderedFragments.Add(outputFragment);
             }
 
             // this whole UsedSize calculation is temporary, we should use the bakedLayout to find out our used size
@@ -153,11 +149,11 @@ namespace Machina.Data.TextRendering
             return usedSize - TotalAvailableSize.X;
         }
 
-        private List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>> BakeFromFragments()
+        private List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
-            foreach (var token in this.allOutputFragments)
+            foreach (var token in allOutputFragments)
             {
                 childNodes.AddRange(token.Nodes);
             }
@@ -181,7 +177,7 @@ namespace Machina.Data.TextRendering
                 var fragmentList = new List<TextOutputFragment>();
                 foreach (var item in row)
                 {
-                    fragmentList.Add(this.allOutputFragments[fragmentIndex]);
+                    fragmentList.Add(allOutputFragments[fragmentIndex]);
                     fragmentIndex++;
                 }
                 fragmentRows.Add(new Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>(row, fragmentList));
