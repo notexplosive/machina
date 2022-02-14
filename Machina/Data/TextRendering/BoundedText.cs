@@ -31,7 +31,7 @@ namespace Machina.Data.TextRendering
                 this.allOutputFragments.Add(outputFragment);
             }
 
-            this.bakedLayout = BakeFromTokens();
+            this.bakedLayout = BakeFromFragments();
 
             //if (this.allOutputFragments.Count > 0)
             //{
@@ -69,7 +69,7 @@ namespace Machina.Data.TextRendering
             }
         }
 
-        private BakedFlowLayout BakeFromTokens()
+        private BakedFlowLayout BakeFromFragments()
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
