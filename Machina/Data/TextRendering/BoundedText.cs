@@ -88,13 +88,6 @@ namespace Machina.Data.TextRendering
             var layout = MakeLayout(childNodes);
             var numberOfRemovedTokens = 0;
 
-            while (layout.HadOverflow)
-            {
-                childNodes.RemoveAt(childNodes.Count - 1);
-                layout = MakeLayout(childNodes);
-                numberOfRemovedTokens++;
-            }
-
             return new Tuple<BakedFlowLayout, int>(layout.Bake(), numberOfRemovedTokens);
         }
 

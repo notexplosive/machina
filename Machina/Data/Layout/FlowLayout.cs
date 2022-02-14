@@ -117,15 +117,9 @@ namespace Machina.Data.Layout
         public bool StopAddingNewItems { get; private set; }
         public bool StopAddingNewRows { get; private set; }
         public int RemainingAlongSizeInCurrentRow => CurrentRow.RemainingAlongSize;
-        public bool HadOverflow => StopAddingNewRows || StopAddingNewItems;
 
         public void CreateNextRowAndAdd(LayoutNode itemToAdd)
         {
-            if (HadOverflow)
-            {
-                return;
-            }
-
             if (CurrentRow.Content.Count == 0)
             {
                 AddItemToCurrentRow(itemToAdd);
@@ -156,11 +150,6 @@ namespace Machina.Data.Layout
 
         private void AddNewRow()
         {
-            if (HadOverflow)
-            {
-                return;
-            }
-
             PerpendicularSizeOfAllRowsExceptCurrent += CurrentRow.UsedPerpendicularSize;
             CurrentRow = new FlowLayoutRow(AvailableAlongSize, Style, Orientation);
             Content.Add(CurrentRow);

@@ -14,7 +14,6 @@ namespace Machina.Data.Layout
         {
             this.rowNodes = rows.GetLayoutNodesOfEachRow();
             this.rowUsedSpace = rows.GetUsedSpaceOfEachRow();
-            HadOverflow = rows.HadOverflow;
         }
 
         public LayoutNode[] GetItemNodes(int rowIndex)
@@ -25,8 +24,6 @@ namespace Machina.Data.Layout
         // ew parallel arrays
         private readonly LayoutNode[] rowNodes;
         private readonly Point[] rowUsedSpace;
-
-        public bool HadOverflow { get; }
 
         public string GetRowName(int rowIndex)
         {

@@ -10,7 +10,6 @@ namespace Machina.Data.Layout
         private readonly BakedLayout bakedLayout;
         private readonly RawFlowLayout rawFlowLayout;
         private readonly BakedRow[] rows;
-        public bool HadOverflow { get; }
         public LayoutNode OriginalRoot => this.bakedLayout.OriginalRoot;
 
         public BakedFlowLayout(BakedLayout bakedLayout, RawFlowLayout rawFlowLayout)
@@ -18,7 +17,6 @@ namespace Machina.Data.Layout
             this.bakedLayout = bakedLayout;
             this.rawFlowLayout = rawFlowLayout;
             this.rows = new BakedRow[this.rawFlowLayout.RowCount];
-            HadOverflow = rawFlowLayout.HadOverflow;
 
             for (int rowIndex = 0; rowIndex < this.rawFlowLayout.RowCount; rowIndex++)
             {
