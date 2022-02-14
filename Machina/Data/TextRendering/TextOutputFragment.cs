@@ -14,6 +14,7 @@ namespace Machina.Data.TextRendering
             if (drawable.TokenText == "\n")
             {
                 WillBeRendered = false;
+                // It's important that Linebreak has an actual node as well as an instruction so we can maintain a 1:1 relationship between nodes and output fragments
                 Nodes = new FlowLayout.LayoutNodeOrInstruction[] { FlowLayoutInstruction.Linebreak, LayoutNode.NamelessLeaf(LayoutSize.Pixels(Point.Zero)) };
             }
             else
