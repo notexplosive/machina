@@ -164,11 +164,17 @@ namespace Machina.Data.Layout
 
             CurrentRow.AddItem(itemToAdd);
 
-            if (UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize)
+            var overflowedAlong = CurrentRow.UsedAlongSize > AvailableAlongSize;
+            var failed = UsedSize.OppositeAxisValue(Orientation.ToAxis()) > AvailablePerpendicularSize || overflowedAlong;
+            if (failed)
             {
                 if (Style.OverflowRule.HaltImmediatelyUponFailure)
                 {
                     StopAddingNewItems = true;
+                }
+
+                if (Style.OverflowRule.LoseFailingItem)
+                {
                     CurrentRow.PopLastItem();
                 }
 
