@@ -6,10 +6,22 @@ using System.Collections.Generic;
 
 namespace Machina.Data.TextRendering
 {
+    public readonly struct Frog
+    {
+        public BakedFlowLayout.BakedRow Item1 { get; }
+        public List<TextOutputFragment> Item2 { get; }
+
+        public Frog(BakedFlowLayout.BakedRow item1, List<TextOutputFragment> item2)
+        {
+            Item1 = item1;
+            Item2 = item2;
+        }
+    }
+
     public readonly struct BoundedText
     {
         private readonly Alignment alignment;
-        private readonly List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>> fragmentRows;
+        private readonly List<Frog> fragmentRows;
         private readonly List<TextOutputFragment> renderedFragments;
         private readonly FormattedText formattedText;
 
@@ -35,7 +47,7 @@ namespace Machina.Data.TextRendering
             this.fragmentRows = BakeFromFragments(allOutputFragments);
 
             // first, prune anything that overflows, this will catch any middle lines that happen to be very long
-            var prunedTuples = new List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>>();
+            var prunedTuples = new List<Frog>();
             foreach (var tuple in this.fragmentRows)
             {
                 var layoutRow = tuple.Item1;
@@ -149,7 +161,7 @@ namespace Machina.Data.TextRendering
             return usedSize - TotalAvailableSize.X;
         }
 
-        private List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
+        private List<Frog> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
@@ -171,7 +183,7 @@ namespace Machina.Data.TextRendering
             var bakedLayout = layout.Bake();
 
             var fragmentIndex = 0;
-            var fragmentRows = new List<Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>>();
+            var fragmentRows = new List<Frog>();
             foreach (var row in bakedLayout.Rows)
             {
                 var fragmentList = new List<TextOutputFragment>();
@@ -180,7 +192,7 @@ namespace Machina.Data.TextRendering
                     fragmentList.Add(allOutputFragments[fragmentIndex]);
                     fragmentIndex++;
                 }
-                fragmentRows.Add(new Tuple<BakedFlowLayout.BakedRow, List<TextOutputFragment>>(row, fragmentList));
+                fragmentRows.Add(new Frog(row, fragmentList));
             }
 
             return fragmentRows;
