@@ -6,22 +6,22 @@ using System.Collections.Generic;
 
 namespace Machina.Data.TextRendering
 {
-    public readonly struct Frog
+    public readonly struct FragmentAndRow
     {
-        public BakedFlowLayout.BakedRow Item1 { get; }
-        public List<TextOutputFragment> Item2 { get; }
+        public BakedFlowLayout.BakedRow BakedRow { get; }
+        public List<TextOutputFragment> Fragment { get; }
 
-        public Frog(BakedFlowLayout.BakedRow item1, List<TextOutputFragment> item2)
+        public FragmentAndRow(BakedFlowLayout.BakedRow bakedRow, List<TextOutputFragment> fragment)
         {
-            Item1 = item1;
-            Item2 = item2;
+            BakedRow = bakedRow;
+            Fragment = fragment;
         }
     }
 
     public readonly struct BoundedText
     {
         private readonly Alignment alignment;
-        private readonly List<Frog> fragmentRows;
+        private readonly List<FragmentAndRow> fragmentRows;
         private readonly List<TextOutputFragment> renderedFragments;
         private readonly FormattedText formattedText;
 
@@ -47,10 +47,10 @@ namespace Machina.Data.TextRendering
             this.fragmentRows = BakeFromFragments(allOutputFragments);
 
             // first, prune anything that overflows, this will catch any middle lines that happen to be very long
-            var prunedTuples = new List<Frog>();
+            var prunedTuples = new List<FragmentAndRow>();
             foreach (var tuple in this.fragmentRows)
             {
-                var layoutRow = tuple.Item1;
+                var layoutRow = tuple.BakedRow;
                 prunedTuples.Add(tuple);
                 if (layoutRow.UsedRectangle.Width > TotalAvailableSize.X)
                 {
@@ -64,12 +64,12 @@ namespace Machina.Data.TextRendering
             // shrink the oversized row
             var finalRow = this.fragmentRows[this.fragmentRows.Count - 1];
             bool needsEllipse = false;
-            while (finalRow.Item2.Count > 0)
+            while (finalRow.Fragment.Count > 0)
             {
-                var lastIndex = finalRow.Item2.Count - 1;
-                var lastFragment = finalRow.Item2[lastIndex];
+                var lastIndex = finalRow.Fragment.Count - 1;
+                var lastFragment = finalRow.Fragment[lastIndex];
                 int ellipseSize = lastFragment.Drawable.EllipseWidth();
-                var overflowAmount = OverflowAmount(finalRow.Item2);
+                var overflowAmount = OverflowAmount(finalRow.Fragment);
 
                 if (overflowAmount > 0 || needsEllipse)
                 {
@@ -77,14 +77,14 @@ namespace Machina.Data.TextRendering
                     var shrinkAmount = overflowAmount + ellipseSize;
                     if (shrinkAmount >= lastFragment.Drawable.Size.X)
                     {
-                        finalRow.Item2.RemoveAt(lastIndex);
+                        finalRow.Fragment.RemoveAt(lastIndex);
                     }
                     else
                     {
                         var lastDrawable = lastFragment.Drawable;
                         lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
                         lastDrawable = lastDrawable.AppendEllipse();
-                        finalRow.Item2[lastIndex] = new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
+                        finalRow.Fragment[lastIndex] = new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
                         break;
                     }
                 }
@@ -98,7 +98,7 @@ namespace Machina.Data.TextRendering
             allOutputFragments.Clear();
             foreach (var tuple in this.fragmentRows)
             {
-                foreach (var fragment in tuple.Item2)
+                foreach (var fragment in tuple.Fragment)
                 {
                     allOutputFragments.Add(fragment);
                 }
@@ -117,7 +117,7 @@ namespace Machina.Data.TextRendering
             Point? totalBottomRight = null;
             foreach (var row in this.fragmentRows)
             {
-                foreach (var item in row.Item1)
+                foreach (var item in row.BakedRow)
                 {
                     var rectangle = item.Rectangle;
                     var topLeft = rectangle.Location;
@@ -161,7 +161,7 @@ namespace Machina.Data.TextRendering
             return usedSize - TotalAvailableSize.X;
         }
 
-        private List<Frog> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
+        private List<FragmentAndRow> BakeFromFragments(List<TextOutputFragment> allOutputFragments)
         {
             var childNodes = new List<FlowLayout.LayoutNodeOrInstruction>();
 
@@ -183,7 +183,7 @@ namespace Machina.Data.TextRendering
             var bakedLayout = layout.Bake();
 
             var fragmentIndex = 0;
-            var fragmentRows = new List<Frog>();
+            var fragmentRows = new List<FragmentAndRow>();
             foreach (var row in bakedLayout.Rows)
             {
                 var fragmentList = new List<TextOutputFragment>();
@@ -192,7 +192,7 @@ namespace Machina.Data.TextRendering
                     fragmentList.Add(allOutputFragments[fragmentIndex]);
                     fragmentIndex++;
                 }
-                fragmentRows.Add(new Frog(row, fragmentList));
+                fragmentRows.Add(new FragmentAndRow(row, fragmentList));
             }
 
             return fragmentRows;
@@ -207,7 +207,7 @@ namespace Machina.Data.TextRendering
             var tokenIndex = 0;
             foreach (var row in this.fragmentRows)
             {
-                foreach (var tokenNode in row.Item1)
+                foreach (var tokenNode in row.BakedRow)
                 {
                     var outputFragment = this.renderedFragments[tokenIndex];
                     tokenIndex++;
@@ -242,7 +242,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle GetRectOfLine(int lineIndex)
         {
-            return fragmentRows[lineIndex].Item1.UsedRectangle;
+            return fragmentRows[lineIndex].BakedRow.UsedRectangle;
         }
 
         public Point TopLeftOfText()
@@ -257,7 +257,7 @@ namespace Machina.Data.TextRendering
             var lineIndex = 0;
             foreach (var row in this.fragmentRows)
             {
-                var lineRelativePositionX = row.Item1.UsedRectangle.Location.X;
+                var lineRelativePositionX = row.BakedRow.UsedRectangle.Location.X;
                 if (!hasFirstOffset)
                 {
                     xOffset = lineRelativePositionX;
