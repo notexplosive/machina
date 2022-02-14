@@ -33,32 +33,32 @@ namespace Machina.Data.TextRendering
 
             this.bakedLayout = BakeFromTokens();
 
-            if (this.allOutputFragments.Count > 0)
-            {
-                var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
-                int ellipseSize = lastToken.Drawable.EllipseWidth();
-                var shrinkAmount = OverflowAmount() + ellipseSize;
+            //if (this.allOutputFragments.Count > 0)
+            //{
+            //    var lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
+            //    int ellipseSize = lastToken.Drawable.EllipseWidth();
+            //    var shrinkAmount = OverflowAmount() + ellipseSize;
 
-                while (shrinkAmount > lastToken.Drawable.Size.X)
-                {
-                    shrinkAmount -= lastToken.Drawable.Size.X;
+            //    while (shrinkAmount > lastToken.Drawable.Size.X)
+            //    {
+            //        shrinkAmount -= lastToken.Drawable.Size.X;
 
-                    this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
-                    lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
-                }
+            //        this.allOutputFragments.RemoveAt(this.allOutputFragments.Count - 1);
+            //        lastToken = this.allOutputFragments[this.allOutputFragments.Count - 1];
+            //    }
 
-                if (OverflowAmount() > 0)
-                {
-                    var lastDrawable = lastToken.Drawable;
+            //    if (OverflowAmount() > 0)
+            //    {
+            //        var lastDrawable = lastToken.Drawable;
 
-                    lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
-                    lastDrawable = lastDrawable.AppendEllipse();
+            //        lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
+            //        lastDrawable = lastDrawable.AppendEllipse();
 
-                    this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
-                }
+            //        this.allOutputFragments[this.allOutputFragments.Count - 1] = new TextOutputFragment(lastDrawable, lastToken.CharacterPosition);
+            //    }
 
-                this.bakedLayout = BakeFromTokens();
-            }
+            //    this.bakedLayout = BakeFromTokens();
+            //}
 
             foreach (var outputFragment in this.allOutputFragments)
             {
@@ -94,24 +94,6 @@ namespace Machina.Data.TextRendering
                     overflowRule: OverflowRule.LastRowKeepsGoing),
                 childNodes.ToArray()
             );
-        }
-
-        private int OverflowAmount()
-        {
-            var lastItemRect = this.bakedLayout.GetLastRow().GetLastItemNode().Rectangle;
-            var bottomRightOfLastItem = lastItemRect.Location + lastItemRect.Size;
-            var rightOverflow = bottomRightOfLastItem.X - TotalAvailableSize.X;
-            var leftOverflow = 0;
-
-            foreach (var row in this.bakedLayout.Rows)
-            {
-                foreach (var item in row)
-                {
-                    leftOverflow = Math.Min(leftOverflow, row.UsedRectangle.Location.X);
-                }
-            }
-
-            return -leftOverflow + rightOverflow;
         }
 
         public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default, int occludedCharactersCount = 0)
