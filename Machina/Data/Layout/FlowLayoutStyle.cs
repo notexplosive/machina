@@ -24,7 +24,7 @@ namespace Machina.Data.Layout
         {
             if (overflowRule == default)
             {
-                overflowRule = OverflowRule.PermitExtraRows;
+                overflowRule = OverflowRule.Free;
             }
 
             Margin = margin;

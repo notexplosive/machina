@@ -144,7 +144,7 @@ namespace TestMachina.Tests
         [Fact]
         public void flow_layout_can_permit_overflow_extra_rows()
         {
-            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.PermitExtraRows),
+            var layout = FlowLayout.HorizontalFlowParent("root", LayoutSize.Pixels(40, 20), new FlowLayoutStyle(overflowRule: OverflowRule.Free),
                 LayoutNode.Leaf("itemA", LayoutSize.Pixels(12, 10)),
                 LayoutNode.Leaf("itemB", LayoutSize.Pixels(7, 10)),
                 LayoutNode.Leaf("itemC", LayoutSize.Pixels(9, 10)),
