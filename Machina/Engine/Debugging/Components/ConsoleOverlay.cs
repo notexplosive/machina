@@ -61,15 +61,6 @@ namespace Machina.Engine.Debugging.Components
             spriteBatch.FillRectangle(
                 new Rectangle(0, 0, screenWidth, boundedText.UsedSize.Y),
                 new Color(Color.Black, this.opacity / 2), 0.001f);
-
-            /*
-            foreach (var message in this.messages)
-            {
-                spriteBatch.DrawString(this.spriteFont, message, new Vector2(8, this.spriteFont.LineSpacing * i),
-                    new Color(1, 1, 1, this.opacity), 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
-                i++;
-            }
-            */
         }
 
         public override void Update(float dt)
