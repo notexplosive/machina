@@ -14,17 +14,16 @@ namespace Machina.Data.TextRendering
             if (drawable.TokenText == "\n")
             {
                 WillBeRendered = false;
-
-                Node = FlowLayoutInstruction.Linebreak;
+                Nodes = new FlowLayout.LayoutNodeOrInstruction[] { FlowLayoutInstruction.Linebreak, LayoutNode.NamelessLeaf(LayoutSize.Pixels(Point.Zero)) };
             }
             else
             {
                 WillBeRendered = true;
-                Node = LayoutNode.NamelessLeaf(LayoutSize.Pixels(drawable.Size));
+                Nodes = new FlowLayout.LayoutNodeOrInstruction[] { LayoutNode.NamelessLeaf(LayoutSize.Pixels(drawable.Size)) };
             }
         }
 
-        public readonly FlowLayout.LayoutNodeOrInstruction Node;
+        public readonly FlowLayout.LayoutNodeOrInstruction[] Nodes;
         public bool WillBeRendered { get; }
         public int CharacterPosition { get; }
         public IDrawableTextElement Drawable { get; }
