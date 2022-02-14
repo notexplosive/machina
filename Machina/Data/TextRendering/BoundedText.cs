@@ -116,8 +116,17 @@ namespace Machina.Data.TextRendering
             var lastItemRect = this.bakedLayout.GetLastRow().GetLastItemNode().Rectangle;
             var bottomRightOfLastItem = lastItemRect.Location + lastItemRect.Size;
             var rightOverflow = bottomRightOfLastItem.X - TotalAvailableSize.X;
-            var leftOverflow = Math.Max(0, -lastItemRect.Location.X);
-            return leftOverflow + rightOverflow;
+            var leftOverflow = 0;
+
+            foreach (var row in this.bakedLayout.Rows)
+            {
+                foreach (var item in row)
+                {
+                    leftOverflow = Math.Min(leftOverflow, row.UsedRectangle.Location.X);
+                }
+            }
+
+            return -leftOverflow + rightOverflow;
         }
 
         public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default, int occludedCharactersCount = 0)
