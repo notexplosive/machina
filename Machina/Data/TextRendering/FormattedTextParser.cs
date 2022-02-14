@@ -98,6 +98,14 @@ namespace Machina.Data.TextRendering
                 {
                     currentFont = (SpriteFontMetrics)MachinaClient.Assets.GetSpriteFont(command.Arguments);
                 }
+                else if (command.IsSameAsCommand(FormattedTextCommand.SpriteFrame))
+                {
+                    // [#spriteframe <spritesheet-name> <index>]
+                    var split = command.Arguments.Split(" ");
+                    var spriteSheetName = split[0];
+                    var frameNumber = int.Parse(split[1]);
+                    result.Add(new SpriteFrameFragment(new SpriteFrame(MachinaClient.Assets.GetMachinaAsset<SpriteSheet>(spriteSheetName), frameNumber)));
+                }
             }
 
             return result.ToArray();

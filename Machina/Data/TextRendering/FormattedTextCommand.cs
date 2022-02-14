@@ -23,6 +23,8 @@ namespace Machina.Data.TextRendering
                     return Color;
                 case "font":
                     return Font;
+                case "spriteframe":
+                    return SpriteFrame;
                 default: throw new Exception($"Unrecognized command {commandName}");
             }
         }
@@ -34,6 +36,7 @@ namespace Machina.Data.TextRendering
 
         public static readonly FormattedTextCommand Color = new FormattedTextCommand("color");
         public static readonly FormattedTextCommand Font = new FormattedTextCommand("font");
+        public static readonly FormattedTextCommand SpriteFrame = new FormattedTextCommand("spriteframe");
         public static readonly FormattedTextCommand PlainText = new FormattedTextCommand("plaintext");
 
         public string CommandName { get; }
