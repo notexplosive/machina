@@ -23,50 +23,50 @@ jobs:
       - name: Test
         run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
 
-build-and-test-windows:
-  runs-on: windows-latest
+  build-and-test-windows:
+    runs-on: windows-latest
 
-  steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-    - name: Restore dependencies
-      run: dotnet restore TestMachina/TestMachina.csproj
-    - name: Build
-      run: dotnet build TestMachina/TestMachina.csproj --no-restore
-    - name: Test
-      run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Restore dependencies
+        run: dotnet restore TestMachina/TestMachina.csproj
+      - name: Build
+        run: dotnet build TestMachina/TestMachina.csproj --no-restore
+      - name: Test
+        run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
 
-build-and-test-mac-catalina:
-  runs-on: macos-10.15
+  build-and-test-mac-catalina:
+    runs-on: macos-10.15
 
-  steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-    - name: Restore dependencies
-      run: dotnet restore TestMachina/TestMachina.csproj
-    - name: Build
-      run: dotnet build TestMachina/TestMachina.csproj --no-restore
-    - name: Test
-      run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Restore dependencies
+        run: dotnet restore TestMachina/TestMachina.csproj
+      - name: Build
+        run: dotnet build TestMachina/TestMachina.csproj --no-restore
+      - name: Test
+        run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
 
-build-and-test-mac-big-sur:
-  runs-on: macos-latest
+  build-and-test-mac-big-sur:
+    runs-on: macos-latest
 
-  steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.x
-    - name: Restore dependencies
-      run: dotnet restore TestMachina/TestMachina.csproj
-    - name: Build
-      run: dotnet build TestMachina/TestMachina.csproj --no-restore
-    - name: Test
-      run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Restore dependencies
+        run: dotnet restore TestMachina/TestMachina.csproj
+      - name: Build
+        run: dotnet build TestMachina/TestMachina.csproj --no-restore
+      - name: Test
+        run: dotnet test TestMachina/TestMachina.csproj --no-build --verbosity normal
