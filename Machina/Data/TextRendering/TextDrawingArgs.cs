@@ -41,5 +41,10 @@ namespace Machina.Data.TextRendering
 
             return Vector2.Transform(Vector2.Zero, originToTopLeft * offset * rotation * origin);
         }
+
+        public Vector2 GetTextOffset()
+        {
+            return OriginToTopLeftTranslation() + ResultOffset();
+        }
     }
 }
