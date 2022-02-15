@@ -45,22 +45,6 @@ namespace Machina.Data.Layout
             return new BakedFlowLayout(DefaultBake(), this);
         }
 
-        public Point CalculateUsedSpace()
-        {
-            var totalUsedAlongSize = 0;
-            var totalUsedPerpendicularSize = 0;
-            foreach (var row in rowUsedSpace)
-            {
-                var along = row.AxisValue(this.orientation.ToAxis());
-                var perpendicular = row.OppositeAxisValue(this.orientation.ToAxis());
-
-                totalUsedAlongSize += along;
-                totalUsedPerpendicularSize = Math.Max(totalUsedPerpendicularSize, perpendicular);
-            }
-
-            return this.orientation.GetPointFromAlongPerpendicular(totalUsedAlongSize, totalUsedPerpendicularSize);
-        }
-
         public int RowCount => this.rowNodes.Length;
     }
 }
