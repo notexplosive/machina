@@ -46,13 +46,13 @@ namespace Machina.Data.TextRendering
             {
                 return;
             }
-            var textOffset = -args.OriginToTopLeftTranslation() + args.ResultOffset();
+            var textOffset = args.GetTextOffset();
             spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), Color, args.Angle, textOffset, 1f, SpriteEffects.None, args.Depth);
         }
 
         public void DrawDropShadow(SpriteBatch spriteBatch, string text, TextDrawingArgs args, Color dropShadowColor)
         {
-            var textOffset = args.ResultOffset() - args.ResultTopLeft();
+            var textOffset = args.GetTextOffset();
             var finalDropShadowColor = new Color(dropShadowColor, dropShadowColor.A / 255f * (Color.A / 255f));
             spriteBatch.DrawString(GetFont(), text, args.ResultOrigin(), finalDropShadowColor, args.Angle, textOffset, 1f, SpriteEffects.None, args.Depth);
         }

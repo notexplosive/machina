@@ -30,8 +30,7 @@ namespace Machina.Engine.Debugging.Components
                     titleActor =>
                     {
                         new BoundedTextRenderer(titleActor, "Machina Debug Dock",
-                            MachinaClient.DefaultStyle.uiElementFont, Color.White, HorizontalAlignment.Center,
-                            VerticalAlignment.Center);
+                            MachinaClient.DefaultStyle.uiElementFont, Color.White, Alignment.Center);
                     })
                 .SetMarginSize(new Point(this.dockMargin, this.dockMargin));
 
@@ -86,7 +85,7 @@ namespace Machina.Engine.Debugging.Components
                         iconTextActor =>
                         {
                             new BoundedTextRenderer(iconTextActor, app.appName,
-                                MachinaClient.Assets.GetSpriteFont("TinyFont"), Color.White, HorizontalAlignment.Center);
+                                MachinaClient.Assets.GetSpriteFont("TinyFont"), Color.White, Alignment.TopCenter);
                         });
             });
         }

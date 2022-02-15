@@ -29,7 +29,7 @@ namespace Machina.Data.TextRendering
 
         public Vector2 ResultOffset()
         {
-            return AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();
+            return -AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();
         }
 
         public Vector2 FinalPosition()
@@ -40,6 +40,11 @@ namespace Machina.Data.TextRendering
             var offset = Matrix.CreateTranslation(new Vector3(-ResultOffset(), 0));
 
             return Vector2.Transform(Vector2.Zero, originToTopLeft * offset * rotation * origin);
+        }
+
+        public Vector2 GetTextOffset()
+        {
+            return OriginToTopLeftTranslation() + ResultOffset();
         }
     }
 }

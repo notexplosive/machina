@@ -490,5 +490,69 @@ namespace TestMachina.Tests
 
             Approvals.Verify(TextMeasureUtils.DrawResult(textMeasurer));
         }
+
+        [Fact]
+        public void can_get_used_space_elided()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(25, 25),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("How\nbig\nis\nthis?", font, Color.Orange)
+                )
+            );
+
+            textMeasurer.UsedSize.Should().Be(new Point(20, 16));
+        }
+
+        [Fact]
+        public void can_get_used_space_not_elided()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(25, 25),
+                Alignment.Center,
+                Overflow.Ignore,
+                new FormattedText(
+                    new FormattedTextFragment("Really big string\nHow big is this?", font, Color.Orange)
+                )
+            );
+
+            textMeasurer.UsedSize.Should().Be(new Point(24, 24));
+        }
+
+        [Fact]
+        public void can_get_used_space_with_extra_room()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(100, 100),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("Really big string\nHow big is this?", font, Color.Orange)
+                )
+            );
+
+            textMeasurer.UsedSize.Should().Be(new Point(68, 8));
+        }
+
+        [Fact]
+        public void can_get_used_space_with_forced_linebreak()
+        {
+            var font = new MonospacedFontMetrics(new Point(4, 4));
+            var textMeasurer = new BoundedText(
+                new Point(100, 100),
+                Alignment.Center,
+                Overflow.Elide,
+                new FormattedText(
+                    new FormattedTextFragment("Really loooooonnnng string that will linebreak\nHow big is this?", font, Color.Orange)
+                )
+            );
+
+            textMeasurer.UsedSize.Should().Be(new Point(80, 16));
+        }
     }
 }
