@@ -29,7 +29,7 @@ namespace Machina.Data.TextRendering
 
         public Vector2 ResultOffset()
         {
-            return AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();
+            return -AdditionalOffset.ToVector2() - OffsetFromTopLeft.ToVector2();
         }
 
         public Vector2 FinalPosition()
