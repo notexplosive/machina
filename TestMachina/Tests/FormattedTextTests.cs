@@ -124,6 +124,8 @@ namespace TestMachina.Tests
 
             outputFragment[6].CharacterPosition.Should().Be(14);
             outputFragment[6].CharacterLength.Should().Be(4);
+
+            subject.TotalCharacterCount.Should().Be(18);
         }
 
         [Fact]

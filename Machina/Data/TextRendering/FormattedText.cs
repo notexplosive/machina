@@ -26,9 +26,8 @@ namespace Machina.Data.TextRendering
             foreach (var token in GetTokens())
             {
                 OutputString += token.Drawable.TokenText;
+                TotalCharacterCount += token.Drawable.CharacterLength;
             }
-
-            TotalCharacterCount = OutputString.Length;
         }
 
         public static FormattedText FromString(string rawText, IFontMetrics fontMetrics, Color color)
