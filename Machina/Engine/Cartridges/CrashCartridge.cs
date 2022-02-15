@@ -41,7 +41,7 @@ namespace Machina.Engine.Cartridges
                 })
                 .AddHorizontallyStretchedElement("contact-info", 80, contactInfoActor =>
                 {
-                    new BoundedTextRenderer(contactInfoActor, contactInfoText, MachinaClient.DefaultStyle.uiElementFont, Color.White, HorizontalAlignment.Left, VerticalAlignment.Top, Overflow.Ignore);
+                    new BoundedTextRenderer(contactInfoActor, contactInfoText, MachinaClient.DefaultStyle.uiElementFont, Color.White, Alignment.TopLeft, Overflow.Ignore);
                 })
                 .AddBothStretchedElement("content", contentActor =>
                 {

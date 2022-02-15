@@ -81,7 +81,7 @@ namespace Machina.Data
                     titleActor =>
                     {
                         this.titleTextRenderer = new BoundedTextRenderer(titleActor, "Window title goes here",
-                            style.uiElementFont, Color.White, verticalAlignment: VerticalAlignment.Center,
+                            style.uiElementFont, Color.White, Alignment.CenterLeft,
                             depthOffset: -2).EnableDropShadow(Color.Black);
                     });
 

@@ -16,17 +16,15 @@ namespace Machina.Components
     {
         private readonly BoundingRect boundingRect;
         private readonly Depth depthOffset;
-        private readonly HorizontalAlignment horizontalAlignment;
+        private readonly Alignment alignment;
         private readonly Overflow overflow;
-        private readonly VerticalAlignment verticalAlignment;
         private Color dropShadowColor;
         private bool isDropShadowEnabled;
         public Color TextColor;
 
         public BoundedTextRenderer(Actor actor, string text, SpriteFont font,
             Color textColor,
-            HorizontalAlignment horizontalAlignment = HorizontalAlignment.Left,
-            VerticalAlignment verticalAlignment = VerticalAlignment.Top,
+            Alignment alignment = default,
             Overflow overflow = Overflow.Elide,
             Depth depthOffset = default) : base(actor)
         {
@@ -37,8 +35,7 @@ namespace Machina.Components
             FontMetrics = new SpriteFontMetrics(font);
             this.boundingRect = RequireComponent<BoundingRect>();
             this.TextColor = textColor;
-            this.horizontalAlignment = horizontalAlignment;
-            this.verticalAlignment = verticalAlignment;
+            this.alignment = alignment;
             this.depthOffset = depthOffset;
             this.overflow = overflow;
         }
@@ -58,7 +55,7 @@ namespace Machina.Components
 
         private BoundedText CreateMeasuredText()
         {
-            var measurer = new BoundedText(this.boundingRect.Size, new Alignment(this.horizontalAlignment, this.verticalAlignment), this.overflow, new FormattedText(new FormattedTextFragment(Text, FontMetrics, TextColor)));
+            var measurer = new BoundedText(this.boundingRect.Size, this.alignment, this.overflow, new FormattedText(new FormattedTextFragment(Text, FontMetrics, TextColor)));
 
             return measurer;
         }
