@@ -341,7 +341,6 @@ namespace Machina.Components
                     var currentSize = this.currentRect.Size;
                     var deltaX = Math.Max(currentSize.X + rawSizeDelta.X, this.minSize.X) - currentSize.X;
                     var deltaY = Math.Max(currentSize.Y + rawSizeDelta.Y, this.minSize.Y) - currentSize.Y;
-                    MachinaClient.Print(deltaX, deltaY);
                     return new Vector2(deltaX, deltaY);
                 }
             }
