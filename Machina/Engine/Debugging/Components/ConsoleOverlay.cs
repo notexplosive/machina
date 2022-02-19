@@ -48,7 +48,7 @@ namespace Machina.Engine.Debugging.Components
 
             foreach (var message in this.messages)
             {
-                fragments.Add(new FormattedTextFragment(message + "\n", (SpriteFontMetrics)this.spriteFont, new Color(Color.White, this.opacity)));
+                fragments.Add(new FormattedTextFragment(message + "\n", (SpriteFontMetrics) this.spriteFont, Color.White.WithMultipliedOpacity(this.opacity)));
             }
 
             var boundedText = new BoundedText(new Point(screenWidth, maxHeight), Alignment.TopLeft, Overflow.Ignore, new FormattedText(fragments.ToArray()));
@@ -60,7 +60,7 @@ namespace Machina.Engine.Debugging.Components
 
             spriteBatch.FillRectangle(
                 new Rectangle(0, 0, screenWidth, boundedText.UsedSize.Y),
-                new Color(Color.Black, this.opacity / 2), 0.001f);
+                Color.Black.WithMultipliedOpacity(this.opacity / 2), 0.001f);
         }
 
         public override void Update(float dt)

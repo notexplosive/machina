@@ -1,4 +1,5 @@
 ﻿using System;
+using Machina.Data;
 using Machina.Engine;
 using Machina.Engine.Input;
 using Microsoft.Xna.Framework;
@@ -85,7 +86,7 @@ namespace Machina.Components
         {
             if (IsHovered)
             {
-                spriteBatch.FillRectangle(this.boundingRect.Rect, new Color(Color.Blue, 0.25f),
+                spriteBatch.FillRectangle(this.boundingRect.Rect, Color.Blue.WithMultipliedOpacity(0.25f),
                     (this.actor.transform.Depth - 1).AsFloat);
             }
 

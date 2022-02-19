@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -21,7 +22,7 @@ namespace Machina.Components
             var color = Color.Transparent;
             if (this.hoverable.IsHovered)
             {
-                color = new Color(Color.LightBlue, 0.5f);
+                color = Color.LightBlue.WithMultipliedOpacity(0.5f);
             }
 
             spriteBatch.FillRectangle(this.boundingRect.Rect, color, transform.Depth + 1);

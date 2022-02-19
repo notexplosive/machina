@@ -105,8 +105,7 @@ namespace Machina.Engine
             public void DrawCanvasToScreen(RenderTarget2D canvas, Rectangle canvasRect, MachinaRuntime runtime, Painter painter)
             {
                 painter.ClearRenderTarget();
-                painter.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied, runtime.CurrentCartridge.SamplerState,
-                    DepthStencilState.DepthRead);
+                painter.SpriteBatch.Begin(SpriteSortMode.BackToFront, null, runtime.CurrentCartridge.SamplerState, DepthStencilState.DepthRead);
                 painter.SpriteBatch.Draw(canvas,
                     canvasRect,
                     null, Color.White);

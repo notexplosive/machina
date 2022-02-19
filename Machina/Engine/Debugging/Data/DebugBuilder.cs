@@ -34,7 +34,7 @@ namespace Machina.Engine.Debugging.Data
             new Hoverable(dockActor);
             new Draggable(dockActor);
             new MoveOnDrag(dockActor);
-            new BoundingRectFill(dockActor, new Color(Color.Black, 0.5f));
+            new BoundingRectFill(dockActor, Color.Black.WithMultipliedOpacity(0.5f));
             new LayoutGroup(dockActor, Orientation.Vertical);
             var dock = new DebugDock(dockActor);
 

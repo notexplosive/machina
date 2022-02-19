@@ -122,7 +122,7 @@ namespace Machina.Data
                 var source =
                     new Rectangle(0, 0, dest.Width,
                         dest.Height); // Source is the size of the destination rect so we tile
-                spriteBatch.Draw(this.textures[i], dest.Location.ToVector2(), source, new Color(Color.White, opacity),
+                spriteBatch.Draw(this.textures[i], dest.Location.ToVector2(), source, Color.White.WithMultipliedOpacity(opacity),
                     0f, new Vector2(), Vector2.One, SpriteEffects.None, layerDepth.AsFloat);
             }
         }

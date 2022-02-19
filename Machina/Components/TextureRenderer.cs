@@ -1,4 +1,5 @@
-﻿using Machina.Engine;
+﻿using Machina.Data;
+using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -31,7 +32,7 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(this.texture, this.actor.transform.Position, null, new Color(Color.White, Opacity), this.actor.transform.Angle,
+            spriteBatch.Draw(this.texture, this.actor.transform.Position, null, Color.White.WithMultipliedOpacity(Opacity), this.actor.transform.Angle,
                 this.offset, Vector2.One, SpriteEffects.None, this.actor.transform.Depth.AsFloat);
         }
 
