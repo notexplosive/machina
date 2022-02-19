@@ -44,7 +44,7 @@ namespace Machina.Data.TextRendering
 
         public Vector2 GetTextOffset()
         {
-            return OriginToTopLeftTranslation() + ResultOffset();
+            return ResultOffset() - OriginToTopLeftTranslation();
         }
     }
 }
