@@ -16,5 +16,15 @@ namespace Machina.Data
             copy.Normalize();
             return copy;
         }
+
+        public static Vector2 Rounded( this Vector2 original)
+        {
+            return new Vector2(MathF.Round(original.X), MathF.Round(original.Y));
+        }
+        
+        public static bool HasNonzeroLength( this Vector2 original)
+        {
+            return original.X != 0 || original.Y != 0;
+        }
     }
 }
