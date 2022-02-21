@@ -126,6 +126,13 @@ namespace Machina.Engine
             );
         }
 
+        public Vector2 WorldToCanvas(Vector2 worldPosition)
+        {
+            return Vector2.Transform(worldPosition,
+                GraphicsTransformMatrix
+            );
+        }
+
         /// <summary>
         ///     Used to translate screen-based concepts (like mouse position) to the world
         /// </summary>
