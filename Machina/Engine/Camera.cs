@@ -8,15 +8,16 @@ namespace Machina.Engine
     {
         private readonly IGameViewport gameCanvas;
 
-        public Action<float, float> OnChangeZoom;
+        public event Action<float, float> OnChangeZoom;
 
         private float zoom;
 
         public Camera(IGameViewport gameCanvas)
         {
-            Zoom = 1.0f;
             this.gameCanvas = gameCanvas;
-            ZoomTarget = () => { return UnscaledViewportCenter; };
+            ZoomTarget = () => Vector2.Zero;
+            Zoom = 1.0f;
+            ZoomTarget = () => { return ViewportCenter; };
         }
 
         /// <summary>
@@ -29,8 +30,15 @@ namespace Machina.Engine
             get => this.zoom;
             set
             {
-                this.zoom = value;
+                var oldZoomTarget = WorldToScreen(ZoomTarget());
                 this.OnChangeZoom?.Invoke(this.zoom, value);
+                this.zoom = value;
+                var currentZoomTarget = WorldToScreen(ZoomTarget());
+
+                var oldTarget = ScreenToWorld(oldZoomTarget);
+                var newTarget = ScreenToWorld(currentZoomTarget);
+                
+                UnscaledPosition += newTarget - oldTarget;
             }
         }
 
@@ -65,9 +73,7 @@ namespace Machina.Engine
 
         public Func<Vector2> ZoomTarget { get; set; }
 
-        public Vector2 ViewportCenter => ScaledViewportSize / 2f;
-
-        public Vector2 UnscaledViewportCenter => UnscaledViewportSize.ToVector2() / 2f;
+        public Vector2 ViewportCenter => ScaledViewportSize / 2f + ScaledPosition.ToVector2();
 
         public Matrix MouseDeltaMatrix =>
             Matrix.CreateScale(NativeScaleFactor, NativeScaleFactor, 1)
@@ -86,9 +92,8 @@ namespace Machina.Engine
         /// </summary>
         public Matrix GraphicsTransformMatrix =>
             Matrix.CreateTranslation(-(int) UnscaledPosition.X, -(int) UnscaledPosition.Y, 0)
-            * Matrix.CreateTranslation(new Vector3(-ZoomTarget(), 0))
             * RotationAndZoomMatrix
-            * Matrix.CreateTranslation(new Vector3(ZoomTarget(), 0));
+            ;
 
         public float NativeScaleFactor => this.gameCanvas.ScaleFactor;
 

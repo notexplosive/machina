@@ -66,8 +66,8 @@ namespace TestMachina.Tests
                 new InputFrameState(KeyboardFrameState.Empty,
                     new MouseFrameState(MouseButtonList.None, MouseButtonList.None, new Point(220, 250), mouseDelta,
                         0)));
-
-            Assert.Equal(new Point(361, 478), savedPosition.ToPoint()); // Mouse Postion
+            
+            Assert.Equal(new Point(115, 292), savedPosition.ToPoint()); // Mouse Position, this used to be (361, 478), but after I made the zoom/pan change it changed. I think that's on purpose
             Assert.Equal(new Vector2(4.2735047f, 10.683762f), savedPositionDelta); // Mouse Position Delta
             Assert.Equal(new Vector2(20, 50), savedRawDelta); // Mouse raw delta
         }

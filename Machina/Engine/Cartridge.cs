@@ -12,7 +12,7 @@ namespace Machina.Engine
     {
         private bool hasBeenSetup = false;
         public SceneLayers SceneLayers { get; private set; }
-        public SamplerState SamplerState { get; set; } = SamplerState.PointClamp;
+        public SamplerState UsedSamplerState { get; set; } = SamplerState.PointClamp;
         public GameViewport CurrentGameCanvas => this.SceneLayers.gameCanvas as GameViewport;
         public Stack<ILogger> loggerStack = new Stack<ILogger>();
 
