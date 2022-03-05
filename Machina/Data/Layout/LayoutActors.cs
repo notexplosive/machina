@@ -12,20 +12,18 @@ namespace Machina.Data.Layout
         private readonly Dictionary<string, Actor> actorTable = new Dictionary<string, Actor>();
         private readonly Actor rootActor;
 
-        public LayoutActors(Scene scene, RawLayout unbakedLayout, Point position = default)
+        public LayoutActors(Scene scene, IBakedLayout layout, Point position = default)
         {
-            var layout = unbakedLayout.Bake();
-
-            var actorName = unbakedLayout.RootNode.Name.Text;
+            var actorName = layout.OriginalRoot.Name.Text;
             this.rootActor = scene.AddActor(actorName);
             new BoundingRect(this.rootActor, layout.GetNode(actorName).Size);
 
             AddActorToTable(actorName, this.rootActor);
             SetupRootActor(this.rootActor, actorName, layout, position.ToVector2());
-            CreateActorsForChildren(unbakedLayout, layout);
+            CreateActorsForChildren(layout.OriginalRoot, layout);
         }
 
-        private void CreateActorsForChildren(LayoutNode parent, BakedLayout layout)
+        private void CreateActorsForChildren(LayoutNode parent, IBakedLayout layout)
         {
             if (!parent.HasChildren)
             {
@@ -51,7 +49,7 @@ namespace Machina.Data.Layout
             }
         }
 
-        private void SetupChildActor(Actor actor, string actorName, BakedLayout layout)
+        private void SetupChildActor(Actor actor, string actorName, IBakedLayout layout)
         {
             var bakedLayoutNode = layout.GetNode(actorName);
             var size = bakedLayoutNode.Size;
@@ -61,7 +59,7 @@ namespace Machina.Data.Layout
 
         }
 
-        private void SetupRootActor(Actor actor, string actorName, BakedLayout layout, Vector2 absolutePosition)
+        private void SetupRootActor(Actor actor, string actorName, IBakedLayout layout, Vector2 absolutePosition)
         {
             actor.GetComponent<BoundingRect>().SetSize(layout.GetNode(actorName).Size); // we might want to cache the Component lookup for perf
             actor.transform.Position = absolutePosition;
