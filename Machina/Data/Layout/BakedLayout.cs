@@ -14,11 +14,15 @@ namespace Machina.Data.Layout
             OriginalRoot = originalRoot;
         }
 
-        public BakedLayoutNode GetNode(string name)
+        public BakedLayoutNode GetNode(string name, Point offset)
         {
             var node = OriginalRoot.FindChildNodeWithName(name);
 
-            return this.rawToBakedLookup[node];
+            var result = this.rawToBakedLookup[node];
+
+            result = new BakedLayoutNode(result.PositionRelativeToRoot + offset, result.Size, result.NestingLevel);
+            
+            return result;
         }
 
         public BakedLayoutNode GetNode(LayoutNode unbakedNode)
@@ -54,6 +58,11 @@ namespace Machina.Data.Layout
 
             AddAndRecurse(OriginalRoot);
             return result;
+        }
+
+        public BakedLayoutNode GetNode(string name)
+        {
+            return GetNode(name, Point.Zero);
         }
 
         public IEnumerable<string> AllResultNodeNames()
