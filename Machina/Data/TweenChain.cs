@@ -9,7 +9,7 @@ namespace Machina.Data
     public class TweenChain
     {
         private static readonly TweenAccessors<float> dummyAccessors =
-            new TweenAccessors<float>(dummyGetter, dummySetter);
+            new TweenAccessors<float>(TweenChain.dummyGetter, TweenChain.dummySetter);
 
         private readonly List<IChainItem> chainInternal;
         private int currentIndex;
@@ -68,14 +68,14 @@ namespace Machina.Data
 
         public TweenChain AppendWaitTween(float duration)
         {
-            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, dummyAccessors,
+            return Append(new ChainItem<float>(0, duration, EaseFuncs.Linear, TweenChain.dummyAccessors,
                 FloatTween.LerpFloat));
         }
 
         public TweenChain AppendIntTween(int targetVal, float duration, EaseFunc easeFunc,
             TweenAccessors<int> accessors)
         {
-            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, LerpInt));
+            return Append(new ChainItem<int>(targetVal, duration, easeFunc, accessors, TweenChain.LerpInt));
         }
 
         public TweenChain AppendCallback(Action func)
@@ -98,7 +98,7 @@ namespace Machina.Data
         public TweenChain AppendPointTween(Point targetVal, float duration, EaseFunc easeFunc,
             TweenAccessors<Point> accessors)
         {
-            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, PointLerp));
+            return Append(new ChainItem<Point>(targetVal, duration, easeFunc, accessors, TweenChain.PointLerp));
         }
 
         private static Point PointLerp(Point p1, Point p2, float amount)
@@ -146,7 +146,8 @@ namespace Machina.Data
 
         public bool IsDone()
         {
-            return this.currentIndex == this.chainInternal.Count && this.currentItem == null; // this is clunky af
+            return this.currentIndex == this.chainInternal.Count && this.currentItem == null ||
+                   this.chainInternal.Count == 0; // this is clunky af
         }
 
         /// <summary>
