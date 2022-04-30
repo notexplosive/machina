@@ -7,7 +7,7 @@ namespace Machina.Data
     ///     Pair of values representing a minimum and maximum
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public struct MinMax<T> where T : struct, IComparable<T>
+    public readonly struct MinMax<T> where T : struct, IComparable<T>
     {
         public readonly T min;
         public readonly T max;
