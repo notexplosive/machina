@@ -52,6 +52,7 @@ namespace Machina.Engine
         public bool IsDestroyed { get; private set; }
 
         public event Action Destroyed;
+        public event Action Deleted;
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -113,6 +114,7 @@ namespace Machina.Engine
             // We make actors invisible while we're trying to delete them
             // Sometimes they'll linger for a frame... can we fix that?
             Visible = false;
+            Deleted?.Invoke();
             this.scene.DeleteActor(this);
         }
 
