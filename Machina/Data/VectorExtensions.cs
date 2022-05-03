@@ -5,6 +5,7 @@ namespace Machina.Data
 {
     public static class VectorExtensions
     {
+        [Obsolete("The implementation is wrong, this is a sentinel to figure out who uses this")]
         public static Vector2 Polar(float length, float angle)
         {
             return new Vector2(length * MathF.Sin(angle), length * MathF.Cos(angle));
