@@ -1,8 +1,8 @@
-﻿using Machina.Components;
+﻿using System;
+using System.Collections.Generic;
 using Machina.Data.Layout;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Machina.Data.TextRendering
 {
@@ -17,7 +17,8 @@ namespace Machina.Data.TextRendering
         public Point TotalAvailableSize { get; }
         public Point UsedSize { get; }
 
-        public BoundedText(Point size, Alignment alignment, Overflow overflow = Overflow.Ignore, FormattedText formattedText = default)
+        public BoundedText(Point size, Alignment alignment, Overflow overflow = Overflow.Ignore,
+            FormattedText formattedText = default)
         {
             TotalAvailableSize = size;
             this.alignment = alignment;
@@ -36,7 +37,6 @@ namespace Machina.Data.TextRendering
 
             if (overflow == Overflow.Elide)
             {
-
                 // first, prune anything that overflows, this will catch any middle lines that happen to be very long
                 var prunedTuples = new List<FragmentAndRow>();
                 foreach (var tuple in this.fragmentRows)
@@ -54,12 +54,12 @@ namespace Machina.Data.TextRendering
 
                 // shrink the oversized row
                 var finalRow = this.fragmentRows[this.fragmentRows.Count - 1];
-                bool needsEllipse = false;
+                var needsEllipse = false;
                 while (finalRow.Fragment.Count > 0)
                 {
                     var lastIndex = finalRow.Fragment.Count - 1;
                     var lastFragment = finalRow.Fragment[lastIndex];
-                    int ellipseSize = lastFragment.Drawable.EllipseWidth();
+                    var ellipseSize = lastFragment.Drawable.EllipseWidth();
                     var overflowAmount = OverflowAmount(finalRow.Fragment);
 
                     if (overflowAmount > 0 || needsEllipse)
@@ -75,7 +75,8 @@ namespace Machina.Data.TextRendering
                             var lastDrawable = lastFragment.Drawable;
                             lastDrawable = lastDrawable.ShrinkBy(shrinkAmount);
                             lastDrawable = lastDrawable.AppendEllipse();
-                            finalRow.Fragment[lastIndex] = new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
+                            finalRow.Fragment[lastIndex] =
+                                new TextOutputFragment(lastDrawable, lastFragment.CharacterPosition);
                             break;
                         }
                     }
@@ -118,6 +119,7 @@ namespace Machina.Data.TextRendering
             {
                 usedSize += item.Drawable.Size.X;
             }
+
             return usedSize - TotalAvailableSize.X;
         }
 
@@ -152,13 +154,15 @@ namespace Machina.Data.TextRendering
                     fragmentList.Add(allOutputFragments[fragmentIndex]);
                     fragmentIndex++;
                 }
+
                 fragmentRows.Add(new FragmentAndRow(bakedLayout, row, fragmentList));
             }
 
             return fragmentRows;
         }
 
-        public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default, int occludedCharactersCount = 0)
+        public List<RenderableText> GetRenderedText(Point origin = default, Point topLeft = default,
+            int occludedCharactersCount = 0)
         {
             var result = new List<RenderableText>();
 
@@ -177,19 +181,22 @@ namespace Machina.Data.TextRendering
                         continue;
                     }
 
-                    var pendingRenderableText = outputFragment.Drawable.CreateRenderableText(origin, topLeft, tokenNode.Rectangle.Location);
+                    var pendingRenderableText =
+                        outputFragment.Drawable.CreateRenderableText(origin, topLeft, tokenNode.Rectangle.Location);
 
                     var lastCharacterInThisText = outputFragment.CharacterPosition + outputFragment.CharacterLength;
                     if (renderCutoffIndex <= lastCharacterInThisText)
                     {
-                        var substringLength = renderCutoffIndex - lastCharacterInThisText + outputFragment.CharacterLength;
+                        var substringLength =
+                            renderCutoffIndex - lastCharacterInThisText + outputFragment.CharacterLength;
 
                         if (substringLength <= 0)
                         {
                             return result;
                         }
 
-                        result.Add(outputFragment.Drawable.CreateRenderableText(origin, topLeft, tokenNode.Rectangle.Location, substringLength));
+                        result.Add(outputFragment.Drawable.CreateRenderableText(origin, topLeft,
+                            tokenNode.Rectangle.Location, substringLength));
                         return result;
                     }
 
@@ -202,7 +209,7 @@ namespace Machina.Data.TextRendering
 
         public Rectangle GetRectOfLine(int lineIndex)
         {
-            return fragmentRows[lineIndex].BakedRow.UsedRectangle;
+            return this.fragmentRows[lineIndex].BakedRow.UsedRectangle;
         }
 
         public Point TopLeftOfText()
@@ -232,6 +239,15 @@ namespace Machina.Data.TextRendering
             }
 
             return xOffset;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Point topLeft = default, Point additionalOffset = default,
+            Point origin = default, float angle = 0f, Depth depth = default)
+        {
+            foreach (var line in GetRenderedText(origin, topLeft))
+            {
+                line.Draw(spriteBatch, additionalOffset, angle, depth);
+            }
         }
     }
 }
