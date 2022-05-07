@@ -27,7 +27,7 @@ namespace Machina.Data
 
         public override string ToString()
         {
-            return this.min + " - " + this.max;
+            return this.min + " to " + this.max;
         }
     }
 }
