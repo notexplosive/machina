@@ -11,9 +11,9 @@ namespace Machina.Engine.Cartridges
 
         public static Point RenderResolution(GameSettings settings)
         {
-            const int desiredWidth = 1920 / 4;
-            var AspectRatio = (float) settings.startingWindowSize.X / desiredWidth;
-            return new Vector2(settings.startingWindowSize.X / AspectRatio, settings.startingWindowSize.Y / AspectRatio).ToPoint();
+            int desiredWidth = MachinaClient.Graphics.GraphicsDevice.Viewport.Width;
+            var aspect = (float) settings.startingWindowSize.X / desiredWidth;
+            return new Vector2(settings.startingWindowSize.X / aspect, settings.startingWindowSize.Y / aspect).ToPoint();
         }
 
         public IntroCartridge(GameSettings settings, Action onEnd) : base(RenderResolution(settings), ResizeBehavior.KeepAspectRatio)
@@ -25,11 +25,10 @@ namespace Machina.Engine.Cartridges
         {
             var introScene = SceneLayers.AddNewScene();
 
+            SceneLayers.BackgroundColor = new Color(0.1f, 0.1f, 0.1f);
+            
             var textActor = introScene.AddActor("text");
-            new BoundingRect(textActor, 20, 20);
-            new BoundingRectToViewportSize(textActor);
-            new BoundedTextRenderer(textActor, "", MachinaClient.Assets.GetSpriteFont("LogoFont"), Color.White, Alignment.Center);
-            new IntroTextAnimation(textActor);
+            new IntroTextAnimation(textActor, new Vector2(MachinaClient.Graphics.GraphicsDevice.Viewport.Width, MachinaClient.Graphics.GraphicsDevice.Viewport.Height));
             new CallbackOnDestroy(textActor, onEnd);
         }
     }
