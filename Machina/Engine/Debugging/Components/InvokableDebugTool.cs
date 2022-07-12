@@ -1,7 +1,8 @@
 ﻿using System;
+using ExTween;
+using ExTween.MonoGame;
 using Machina.Data;
 using Machina.Engine;
-using Machina.ThirdParty;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,10 +10,10 @@ namespace Machina.Components
 {
     internal class InvokableDebugTool : BaseComponent
     {
-        private readonly TweenChain enterTweenChain;
-        private readonly TweenChain exitTweenChain;
+        private readonly SequenceTween enterTweenChain;
+        private readonly SequenceTween exitTweenChain;
         private readonly KeyCombination invokingKeyCombo;
-        private TweenChain currentTweenChain;
+        private SequenceTween currentTweenChain;
         public Action<bool> onToolToggle;
         private bool toolActive;
 
@@ -20,16 +21,20 @@ namespace Machina.Components
         {
             this.invokingKeyCombo = invokingKeyCombo;
 
-            this.enterTweenChain = new TweenChain()
-                    .AppendCallback(() => { this.actor.transform.Position = new Vector2(-64, 32); })
-                    .AppendPositionTween(this.actor, new Vector2(32, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                    .AppendCallback(() => { this.currentTweenChain = null; })
+            var tweenablePosition = new TweenableVector2(
+                () => this.actor.transform.Position,
+                val => this.actor.transform.Position = val);
+
+            this.enterTweenChain = new SequenceTween()
+                    .Add(new CallbackTween(() => { this.actor.transform.Position = new Vector2(-500, 32); }))
+                    .Add(new Tween<Vector2>(tweenablePosition,  new Vector2(32, 32), 0.25f, Ease.QuadSlowFast))
+                    .Add(new CallbackTween(() => { this.currentTweenChain = null; }))
                 ;
 
-            this.exitTweenChain = new TweenChain()
-                    .AppendPositionTween(this.actor, new Vector2(0, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                    .AppendPositionTween(this.actor, new Vector2(-512, 32), 0.25f, EaseFuncs.QuinticEaseOut)
-                    .AppendCallback(() => { this.currentTweenChain = null; })
+            this.exitTweenChain = new SequenceTween()
+                    .Add(new Tween<Vector2>(tweenablePosition, new Vector2(0, 32), 0.25f, Ease.QuadFastSlow))
+                    .Add(new Tween<Vector2>(tweenablePosition, new Vector2(-512, 32), 0.25f, Ease.QuadFastSlow))
+                    .Add(new CallbackTween(() => { this.currentTweenChain = null; }))
                 ;
 
             // start out off screen
@@ -66,7 +71,7 @@ namespace Machina.Components
             this.toolActive = false;
             this.onToolToggle?.Invoke(this.toolActive);
             this.currentTweenChain = this.exitTweenChain;
-            this.currentTweenChain.Refresh();
+            this.currentTweenChain.Reset();
         }
 
         public void Open()
@@ -74,7 +79,7 @@ namespace Machina.Components
             this.toolActive = true;
             this.onToolToggle?.Invoke(this.toolActive);
             this.currentTweenChain = this.enterTweenChain;
-            this.currentTweenChain.Refresh();
+            this.currentTweenChain.Reset();
         }
     }
 }

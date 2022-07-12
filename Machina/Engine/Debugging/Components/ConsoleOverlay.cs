@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ExTween;
 using Machina.Components;
 using Machina.Data;
 using Machina.Data.TextRendering;
@@ -13,7 +14,7 @@ namespace Machina.Engine.Debugging.Components
     {
         private readonly List<string> messages;
         private readonly SpriteFont spriteFont;
-        private readonly TweenChain tweenChain;
+        private readonly SequenceTween tweenChain;
         private float opacity;
 
         public ConsoleOverlay(Actor actor, SpriteFont spriteFont) : base(actor)
@@ -21,11 +22,11 @@ namespace Machina.Engine.Debugging.Components
             this.spriteFont = spriteFont;
             this.messages = new List<string>();
             this.opacity = 0f;
-            this.tweenChain = new TweenChain()
-                .AppendWaitTween(3f)
-                .AppendFloatTween(0f, 2f, EaseFuncs.QuadraticEaseIn,
-                    new TweenAccessors<float>(() => { return this.opacity; }, val => { this.opacity = val; }))
-                .AppendCallback(() => { this.messages.Clear(); });
+            var tweenable = new TweenableFloat(() => { return this.opacity; }, val => { this.opacity = val; });
+            this.tweenChain = new SequenceTween()
+                .Add(new WaitSecondsTween(3f))
+                .Add(new Tween<float>(tweenable, 0f, 2f, Ease.QuadSlowFast))
+                .Add(new CallbackTween(() => { this.messages.Clear(); }));
         }
 
         public void OnMessageLog(string line)
@@ -71,7 +72,7 @@ namespace Machina.Engine.Debugging.Components
         private void RestartFade()
         {
             this.opacity = 1;
-            this.tweenChain.Refresh();
+            this.tweenChain.Reset();
         }
     }
 }

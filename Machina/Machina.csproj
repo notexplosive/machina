@@ -8,4 +8,8 @@
             <PrivateAssets>All</PrivateAssets>
         </PackageReference>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\extween\ExTween.MonoGame\ExTween.MonoGame.csproj" />
+      <ProjectReference Include="..\extween\ExTween\ExTween.csproj" />
+    </ItemGroup>
 </Project>
