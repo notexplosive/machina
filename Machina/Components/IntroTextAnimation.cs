@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ExTween;
-using ExTween.MonoGame;
 using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
@@ -59,10 +58,7 @@ namespace Machina.Components
                 notexplosiveArranged.Add(arranged);
 
                 var elevated = arranged;
-                elevated.Position = new Vector2(
-                    letter.Position.Value.X,
-                    letter.Position.Value.Y - 200 - this.random.NextFloat() * 50);
-                
+                elevated.Position = arranged.Position + new Vector2(0, -200 - this.random.NextFloat() * 50);
                 notexplosiveElevated.Add(elevated);
 
                 var slightlyOff = arranged;
@@ -70,30 +66,21 @@ namespace Machina.Components
                 slightlyOff.Position += new Vector2(0, 10);
                 notexplosiveArrangedSlightOff.Add(slightlyOff);
 
-                letter.Position.ForceSetValue(
-                        new Vector2(
-                            this.random.NextFloat() * center.X,
-                            this.random.NextFloat() * center.Y) * 2)
-                    ;
-                letter.Angle.ForceSetValue(this.random.NextFloat() * MathF.PI * 2);
+                var scattered = arranged;
+                scattered.Position = new Vector2(
+                    this.random.NextFloat() * center.X,
+                    this.random.NextFloat() * center.Y) * 2;
+                scattered.Angle = this.random.NextFloat() * MathF.PI * 2;
                 var scaleFactor = 5;
-                letter.Scale.ForceSetValue(this.random.NextBool()
+                scattered.Scale = this.random.NextBool()
                     ? this.random.NextFloat() * scaleFactor
-                    : this.random.NextFloat() / scaleFactor);
-
-                var scattered = letter.Data();
+                    : this.random.NextFloat() / scaleFactor;
                 notexplosiveScattered.Add(scattered);
 
-                letter.Position.ForceSetValue(
-                        // reuse scattered position, I want it to be the same
-                        scattered.Position
-                        // add offset
-                        + new Vector2(0, 1000)
-                    )
-                    ;
+                letter.ForceSetPosition(scattered.Position + new Vector2(0, 1000));
                 letter.Angle.ForceSetValue(this.random.NextFloat() * MathF.PI * 2);
-
                 letter.Opacity.ForceSetValue(0f);
+                letter.Scale.ForceSetValue(scattered.Scale);
             }
 
             var lateLetterIndex = Math.Abs(this.random.Next()) % (notexplosive.Count - 1);
@@ -112,13 +99,11 @@ namespace Machina.Components
                                 result.AddChannel(
                                     new SequenceTween()
                                         .Add(new WaitSecondsTween(2))
-                                        .Add(letter.Tween(notexplosiveScattered[i], 0.25f,
-                                            Ease.QuadFastSlow))
-                                        .Add(letter.Tween(notexplosiveElevated[i], 0.25f,
-                                            Ease.QuadSlowFast))
+                                        .Add(letter.TweenAllValues(notexplosiveScattered[i], 0.25f, Ease.QuadFastSlow))
+                                        .Add(letter.TweenAllValues(notexplosiveElevated[i], 0.25f, Ease.QuadSlowFast))
                                         .Add(new WaitSecondsTween(0.1f))
-                                        .Add(letter.Tween(notexplosiveArrangedSlightOff[i],
-                                            0.05f, Ease.QuadSlowFast))
+                                        .Add(letter.TweenAllValues(notexplosiveArrangedSlightOff[i], 0.05f,
+                                            Ease.QuadSlowFast))
                                         .Add(
                                             new MultiplexTween()
                                                 .AddChannel(
@@ -131,7 +116,7 @@ namespace Machina.Components
                                                             var letter2 = notexplosive[j];
                                                             if (j != lateLetterIndex)
                                                             {
-                                                                // LATE LETTER IMPACT
+                                                                // LATE LETTER IMPACT SHOCKWAVE
                                                                 var arranged = notexplosiveArranged[j];
                                                                 var tweaked = notexplosiveArranged[j];
                                                                 var distance = Math.Abs(lateLetterIndex - j);
@@ -141,9 +126,9 @@ namespace Machina.Components
                                                                 result2.AddChannel(
                                                                         new SequenceTween()
                                                                             .Add(new WaitSecondsTween(distance / 40f))
-                                                                            .Add(letter2.Tween(tweaked, 0.15f,
+                                                                            .Add(letter2.TweenAllValues(tweaked, 0.15f,
                                                                                 Ease.QuadFastSlow))
-                                                                            .Add(letter2.Tween(arranged, 0.15f,
+                                                                            .Add(letter2.TweenAllValues(arranged, 0.15f,
                                                                                 Ease.QuadSlowFast))
                                                                     )
                                                                     ;
@@ -153,7 +138,7 @@ namespace Machina.Components
                                                         return result2;
                                                     })
                                                 )
-                                                .AddChannel(letter.Tween(notexplosiveArranged[i], 0.1f,
+                                                .AddChannel(letter.TweenAllValues(notexplosiveArranged[i], 0.1f,
                                                     Ease.QuadSlowFast))
                                         )
                                 );
@@ -163,13 +148,16 @@ namespace Machina.Components
                                 result.AddChannel(
                                     new SequenceTween()
                                         .Add(new WaitSecondsTween(i * 0.01f))
-                                        .Add(letter.Tween(notexplosiveScattered[i], 0.5f + this.random.NextFloat() / 2,
+                                        .Add(letter.TweenAllValues(notexplosiveScattered[i],
+                                            0.5f + this.random.NextFloat() / 2,
                                             Ease.QuadFastSlow))
-                                        .Add(letter.Tween(notexplosiveElevated[i], 0.5f + this.random.NextFloat() / 2,
+                                        .Add(letter.TweenAllValues(notexplosiveElevated[i],
+                                            0.5f + this.random.NextFloat() / 2,
                                             Ease.QuadFastSlow))
-                                        .Add(letter.Tween(notexplosiveArrangedSlightOff[i],
+                                        .Add(letter.TweenAllValues(notexplosiveArrangedSlightOff[i],
                                             0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast))
-                                        .Add(letter.Tween(notexplosiveArranged[i], 0.05f + this.random.NextFloat() / 8,
+                                        .Add(letter.TweenAllValues(notexplosiveArranged[i],
+                                            0.05f + this.random.NextFloat() / 8,
                                             Ease.QuadSlowFast))
                                 );
                             }
@@ -194,7 +182,7 @@ namespace Machina.Components
 
             foreach (var letter in tweenableLetters)
             {
-                letter.Position.ForceSetValue(startPosition + letterOffset);
+                letter.ForceSetPosition(startPosition + letterOffset);
                 letterOffset.X += letter.Size.X;
             }
         }
@@ -222,8 +210,23 @@ namespace Machina.Components
             public float Scale { get; set; }
             public float ScaleX { get; set; }
             public float ScaleY { get; set; }
+            public float PositionX { get; set; }
+            public float PositionY { get; set; }
             public float Angle { get; set; }
-            public Vector2 Position { get; set; }
+
+            public Vector2 Position
+            {
+                get
+                {
+                    return new Vector2(PositionX, PositionY);
+                }
+
+                set
+                {
+                    PositionX = value.X;
+                    PositionY = value.Y;
+                }
+            }
         }
 
         private class TweenableLetter
@@ -243,13 +246,15 @@ namespace Machina.Components
             public TweenableFloat ScaleX { get; } = new TweenableFloat(1f);
             public TweenableFloat ScaleY { get; } = new TweenableFloat(1f);
             public TweenableFloat Angle { get; } = new TweenableFloat();
-            public TweenableVector2 Position { get; } = new TweenableVector2();
+            public TweenableFloat PositionX { get; } = new TweenableFloat();
+            public TweenableFloat PositionY { get; } = new TweenableFloat();
             public Vector2 Size { get; }
 
             public void Draw(SpriteBatch spriteBatch)
             {
                 var offset = new Vector2(Size.X, Size.Y) / 2;
-                spriteBatch.DrawString(this.font, this.content, Position + offset - new Vector2(0, offset.Y),
+                spriteBatch.DrawString(this.font, this.content,
+                    new Vector2(PositionX, PositionY) + offset - new Vector2(0, offset.Y),
                     Color.White.WithMultipliedOpacity(Opacity),
                     Angle, offset, new Vector2(ScaleX, ScaleY) * Scale, SpriteEffects.None, 0f);
             }
@@ -261,23 +266,55 @@ namespace Machina.Components
                     Opacity = Opacity.Value,
                     Scale = Scale.Value,
                     Angle = Angle.Value,
-                    Position = Position.Value,
+                    PositionX = PositionX.Value,
+                    PositionY = PositionY.Value,
                     ScaleX = ScaleX.Value,
-                    ScaleY = ScaleY.Value,
+                    ScaleY = ScaleY.Value
                 };
             }
 
-            public ITween Tween(LetterData data, float duration, Ease.Delegate ease)
+            public ITween TweenAllValuesSomeLinear(LetterData data, float duration, Ease.Delegate ease)
             {
                 return new MultiplexTween()
-                    .AddChannel(new Tween<Vector2>(Position, data.Position,
+                    .AddChannel(new Tween<float>(PositionX, data.PositionY,
+                        duration, ease))
+                    .AddChannel(new Tween<float>(PositionX, data.PositionY,
+                        duration, Ease.Linear))
+                    .AddChannel(new Tween<float>(Angle, data.Angle, duration,
+                        Ease.Linear))
+                    .AddChannel(new Tween<float>(Scale, data.Scale, duration,
+                        ease))
+                    .AddChannel(new Tween<float>(ScaleX, data.ScaleX, duration,
+                        ease))
+                    .AddChannel(new Tween<float>(ScaleY, data.ScaleY, duration,
+                        ease))
+                    .AddChannel(new Tween<float>(Opacity, data.Opacity, duration,
+                        ease));
+            }
+
+            public ITween TweenAllValues(LetterData data, float duration, Ease.Delegate ease)
+            {
+                return new MultiplexTween()
+                    .AddChannel(new Tween<float>(PositionX, data.PositionX,
+                        duration, ease))
+                    .AddChannel(new Tween<float>(PositionY, data.PositionY,
                         duration, ease))
                     .AddChannel(new Tween<float>(Angle, data.Angle, duration,
                         ease))
                     .AddChannel(new Tween<float>(Scale, data.Scale, duration,
                         ease))
+                    .AddChannel(new Tween<float>(ScaleX, data.ScaleX, duration,
+                        ease))
+                    .AddChannel(new Tween<float>(ScaleY, data.ScaleY, duration,
+                        ease))
                     .AddChannel(new Tween<float>(Opacity, data.Opacity, duration,
                         ease));
+            }
+
+            public void ForceSetPosition(Vector2 position)
+            {
+                PositionX.ForceSetValue(position.X);
+                PositionY.ForceSetValue(position.Y);
             }
         }
     }
