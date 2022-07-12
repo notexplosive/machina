@@ -43,34 +43,28 @@ namespace Machina.Components
 
             var center = size / 2;
 
-            ArrangeLettersCenter(notexplosive, center + new Vector2(0, -200));
-            //ArrangeLettersCenter(and, center);
-            //ArrangeLettersCenter(quarkimo, center + new Vector2(0, 200));
+            // GetArrangedLetterData(and, center);
+            // GetArrangedLetterData(quarkimo, center + new Vector2(0, 200));
 
-            var notexplosiveArranged = new List<LetterData>();
-            var notexplosiveArrangedSlightOff = new List<LetterData>();
+            var notexplosiveArranged = GetArrangedLetterData(notexplosive, center + new Vector2(0, -200));
             var notexplosiveScattered = new List<LetterData>();
             var notexplosiveElevated = new List<LetterData>();
 
-            foreach (var letter in notexplosive)
+            for (var i = 0; i < notexplosive.Count; i++)
             {
-                var arranged = letter.Data();
-                notexplosiveArranged.Add(arranged);
+                var letter = notexplosive[i];
+                var arranged = notexplosiveArranged[i];
 
                 var elevated = arranged;
-                elevated.Position = arranged.Position + new Vector2(0, -200 - this.random.NextFloat() * 50);
+                elevated.Position = arranged.Position + new Vector2(0, -150 - this.random.NextFloat() * 50);
                 notexplosiveElevated.Add(elevated);
-
-                var slightlyOff = arranged;
-                slightlyOff.Angle += (this.random.NextFloat() - 0.5f) * MathF.PI / 4;
-                slightlyOff.Position += new Vector2(0, 10);
-                notexplosiveArrangedSlightOff.Add(slightlyOff);
 
                 var scattered = arranged;
                 scattered.Position = new Vector2(
                     this.random.NextFloat() * center.X,
                     this.random.NextFloat() * center.Y) * 2;
                 scattered.Angle = this.random.NextFloat() * MathF.PI * 2;
+                scattered.Opacity = 0.5f;
                 var scaleFactor = 5;
                 scattered.Scale = this.random.NextBool()
                     ? this.random.NextFloat() * scaleFactor
@@ -82,10 +76,21 @@ namespace Machina.Components
                 letter.Opacity.ForceSetValue(0f);
                 letter.Scale.ForceSetValue(scattered.Scale);
             }
+            
+            var andKeyframe = LetterData.Default();
+            andKeyframe.Position = center;
+
+            foreach (var letter in and)
+            {
+                letter.ForceSetPosition(andKeyframe.Position + new Vector2(-100,0));
+                letter.Angle.ForceSetValue(-MathF.PI * 2);
+                letter.Opacity.ForceSetValue(0);
+            }
 
             var lateLetterIndex = Math.Abs(this.random.Next()) % (notexplosive.Count - 1);
 
             this.tween = new SequenceTween()
+                    .Add(new WaitSecondsTween(0.25f))
                     .Add(new DynamicTween(() =>
                     {
                         var result = new MultiplexTween();
@@ -93,86 +98,114 @@ namespace Machina.Components
                         for (var i = 0; i < notexplosive.Count; i++)
                         {
                             var letter = notexplosive[i];
-                            if (i == lateLetterIndex)
-                            {
-                                // LATE LETTER
-                                result.AddChannel(
-                                    new SequenceTween()
-                                        .Add(new WaitSecondsTween(2))
-                                        .Add(letter.TweenAllValues(notexplosiveScattered[i], 0.25f, Ease.QuadFastSlow))
-                                        .Add(letter.TweenAllValues(notexplosiveElevated[i], 0.25f, Ease.QuadSlowFast))
-                                        .Add(new WaitSecondsTween(0.1f))
-                                        .Add(letter.TweenAllValues(notexplosiveArrangedSlightOff[i], 0.05f,
-                                            Ease.QuadSlowFast))
-                                        .Add(
-                                            new MultiplexTween()
-                                                .AddChannel(
-                                                    new DynamicTween(() =>
-                                                    {
-                                                        var result2 = new MultiplexTween();
-
-                                                        for (var j = 0; j < notexplosive.Count; j++)
-                                                        {
-                                                            var letter2 = notexplosive[j];
-                                                            if (j != lateLetterIndex)
-                                                            {
-                                                                // LATE LETTER IMPACT SHOCKWAVE
-                                                                var arranged = notexplosiveArranged[j];
-                                                                var tweaked = notexplosiveArranged[j];
-                                                                var distance = Math.Abs(lateLetterIndex - j);
-                                                                tweaked.Scale = 1 + 0.25f / distance;
-                                                                tweaked.Position += new Vector2(0, -40f);
-                                                                tweaked.Angle = this.random.NextFloat() - 0.5f;
-                                                                result2.AddChannel(
-                                                                        new SequenceTween()
-                                                                            .Add(new WaitSecondsTween(distance / 40f))
-                                                                            .Add(letter2.TweenAllValues(tweaked, 0.15f,
-                                                                                Ease.QuadFastSlow))
-                                                                            .Add(letter2.TweenAllValues(arranged, 0.15f,
-                                                                                Ease.QuadSlowFast))
-                                                                    )
-                                                                    ;
-                                                            }
-                                                        }
-
-                                                        return result2;
-                                                    })
-                                                )
-                                                .AddChannel(letter.TweenAllValues(notexplosiveArranged[i], 0.1f,
-                                                    Ease.QuadSlowFast))
-                                        )
-                                );
-                            }
-                            else
+                            var arranged = notexplosiveArranged[i];
+                            if (i != lateLetterIndex)
                             {
                                 result.AddChannel(
                                     new SequenceTween()
                                         .Add(new WaitSecondsTween(i * 0.01f))
                                         .Add(letter.TweenAllValues(notexplosiveScattered[i],
+                                            0.25f + this.random.NextFloat() * 0.75f,
+                                            Ease.QuadFastSlow))
+                                        .Add(letter.TweenAllValuesSomeLinear(notexplosiveElevated[i],
                                             0.5f + this.random.NextFloat() / 2,
                                             Ease.QuadFastSlow))
-                                        .Add(letter.TweenAllValues(notexplosiveElevated[i],
-                                            0.5f + this.random.NextFloat() / 2,
-                                            Ease.QuadFastSlow))
-                                        .Add(letter.TweenAllValues(notexplosiveArrangedSlightOff[i],
-                                            0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast))
-                                        .Add(letter.TweenAllValues(notexplosiveArranged[i],
-                                            0.05f + this.random.NextFloat() / 8,
-                                            Ease.QuadSlowFast))
+                                        .Add(new WaitSecondsTween(0.2f))
+                                        .Add(
+                                            new DynamicTween(() =>
+                                            {
+                                                var slightlyOff = arranged;
+                                                slightlyOff.Angle += (this.random.NextFloat() - 0.5f) * MathF.PI / 4;
+                                                slightlyOff.Position += new Vector2(0, 10);
+                                                return letter.TweenAllValues(slightlyOff,
+                                                    0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast);
+                                            })
+                                        )
+                                        .Add(
+                                            letter.TweenAllValues(arranged, 0.05f + this.random.NextFloat() / 8,
+                                                Ease.QuadSlowFast)
+                                        )
                                 );
                             }
                         }
 
+                        // LATE LETTER
+                        var lateLetter = notexplosive[lateLetterIndex];
+                        var arrangedLateLetter = notexplosiveArranged[lateLetterIndex];
+
+                        result.AddChannel(
+                            new SequenceTween()
+                                .Add(new WaitSecondsTween(2))
+                                .Add(lateLetter.TweenAllValues(notexplosiveScattered[lateLetterIndex], 0.45f,
+                                    Ease.QuadFastSlow))
+                                .Add(lateLetter.TweenAllValuesSomeLinear(notexplosiveElevated[lateLetterIndex], 0.25f,
+                                    Ease.QuadSlowFast))
+                                .Add(new WaitSecondsTween(0.1f))
+                                .Add(
+                                    new DynamicTween(() =>
+                                    {
+                                        var target = arrangedLateLetter;
+                                        target.Position += new Vector2(0, 50);
+                                        return lateLetter.TweenAllValues(target, 0.05f, Ease.QuadSlowFast);
+                                    })
+                                )
+                                .Add(
+                                    new MultiplexTween()
+                                        .AddChannel(
+                                            new DynamicTween(() =>
+                                            {
+                                                var result2 = new MultiplexTween();
+
+                                                for (var i = 0; i < notexplosive.Count; i++)
+                                                {
+                                                    var letter = notexplosive[i];
+                                                    if (i != lateLetterIndex)
+                                                    {
+                                                        // LATE LETTER IMPACT SHOCKWAVE
+                                                        var arranged = notexplosiveArranged[i];
+                                                        var tweaked = notexplosiveArranged[i];
+                                                        var distance = Math.Abs(lateLetterIndex - i);
+                                                        tweaked.Position += new Vector2(0, -80f);
+                                                        tweaked.Angle = 0;
+                                                        result2.AddChannel(
+                                                                new SequenceTween()
+                                                                    .Add(new WaitSecondsTween(distance / 40f))
+                                                                    .Add(letter.TweenAllValues(tweaked, 0.15f,
+                                                                        Ease.QuadFastSlow))
+                                                                    .Add(letter.TweenAllValues(arranged, 0.15f,
+                                                                        Ease.QuadSlowFast))
+                                                            )
+                                                            ;
+                                                    }
+                                                }
+
+                                                return result2;
+                                            })
+                                        )
+                                        // Late letter corrects itself
+                                        .AddChannel(lateLetter.TweenAllValues(notexplosiveArranged[lateLetterIndex],
+                                            0.1f,
+                                            Ease.QuadSlowFast))
+                                )
+                        );
+
                         return result;
                     }))
-                // .Add() and quarkimo down here
+                    .Add(and[0].TweenAllValues(andKeyframe, 0.25f, Ease.QuadFastSlow))
+                    .Add(
+                        new DynamicTween(() =>
+                        {
+                            // todo: quarkimo
+                            return new CallbackTween(() => { }); // placeholder
+                        }))
                 ;
         }
 
-        private void ArrangeLettersCenter(List<TweenableLetter> tweenableLetters, Vector2 centerPos)
+        private LetterData[] GetArrangedLetterData(List<TweenableLetter> letters, Vector2 centerPos)
         {
+            var result = new LetterData[letters.Count];
             var totalStringWidth = 0f;
-            foreach (var letter in tweenableLetters)
+            foreach (var letter in letters)
             {
                 totalStringWidth += letter.Size.X;
             }
@@ -180,11 +213,14 @@ namespace Machina.Components
             var startPosition = centerPos - new Vector2(totalStringWidth, 0) / 2;
             var letterOffset = Vector2.Zero;
 
-            foreach (var letter in tweenableLetters)
+            for (var i = 0; i < letters.Count; i++)
             {
-                letter.ForceSetPosition(startPosition + letterOffset);
-                letterOffset.X += letter.Size.X;
+                result[i] = LetterData.Default();
+                result[i].Position = startPosition + letterOffset;
+                letterOffset.X += letters[i].Size.X;
             }
+
+            return result;
         }
 
         public override void Update(float dt)
@@ -216,16 +252,24 @@ namespace Machina.Components
 
             public Vector2 Position
             {
-                get
-                {
-                    return new Vector2(PositionX, PositionY);
-                }
+                get => new Vector2(PositionX, PositionY);
 
                 set
                 {
                     PositionX = value.X;
                     PositionY = value.Y;
                 }
+            }
+
+            public static LetterData Default()
+            {
+                return new LetterData
+                {
+                    Scale = 1f,
+                    ScaleX = 1f,
+                    ScaleY = 1f,
+                    Opacity = 1f
+                };
             }
         }
 
@@ -275,11 +319,12 @@ namespace Machina.Components
 
             public ITween TweenAllValuesSomeLinear(LetterData data, float duration, Ease.Delegate ease)
             {
+                // Position X and Angle are interpolated linearly
                 return new MultiplexTween()
-                    .AddChannel(new Tween<float>(PositionX, data.PositionY,
-                        duration, ease))
-                    .AddChannel(new Tween<float>(PositionX, data.PositionY,
+                    .AddChannel(new Tween<float>(PositionX, data.PositionX,
                         duration, Ease.Linear))
+                    .AddChannel(new Tween<float>(PositionY, data.PositionY,
+                        duration, ease))
                     .AddChannel(new Tween<float>(Angle, data.Angle, duration,
                         Ease.Linear))
                     .AddChannel(new Tween<float>(Scale, data.Scale, duration,
