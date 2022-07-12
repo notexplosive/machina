@@ -22,7 +22,7 @@ namespace Machina.Engine.Debugging.Components
             this.spriteFont = spriteFont;
             this.messages = new List<string>();
             this.opacity = 0f;
-            var tweenable = new TweenableFloat(() => { return this.opacity; }, val => { this.opacity = val; });
+            var tweenable = new TweenableFloat(() => this.opacity, val => { this.opacity = val; });
             this.tweenChain = new SequenceTween()
                 .Add(new WaitSecondsTween(3f))
                 .Add(new Tween<float>(tweenable, 0f, 2f, Ease.QuadSlowFast))
