@@ -169,8 +169,8 @@ namespace Machina.Engine
                 () => { DebugLevel = DebugLevel.Active; });
 
 #if DEBUG
-            // PlayIntroAndLoadGame(gameCartridge);
-            InsertGameCartridgeAndRun(gameCartridge);
+            PlayIntroAndLoadGame(gameCartridge);
+            // InsertGameCartridgeAndRun(gameCartridge);
 #else
             if (SkipIntro)
             {
@@ -179,7 +179,6 @@ namespace Machina.Engine
             else
             {
                 PlayIntroAndLoadGame(gameCartridge);
-
             }
 #endif
             // Currently we go [SetupDebugScene] -> [LoadGame] -> [LateSetup], hopefully the cartridge system will mitigate the need for this.

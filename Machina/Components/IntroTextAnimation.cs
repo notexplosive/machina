@@ -5,22 +5,29 @@ using Machina.Data;
 using Machina.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 
 namespace Machina.Components
 {
     public class IntroTextAnimation : BaseComponent
     {
         private readonly List<TweenableLetter> allLetters = new List<TweenableLetter>();
+        private readonly TweenableFloat circleRadius = new TweenableFloat();
 
         private readonly NoiseBasedRNG random;
+        private readonly Vector2 screenSize;
         private readonly SequenceTween tween;
+        private float totalTime;
 
-        public IntroTextAnimation(Actor actor, Vector2 size) : base(actor)
+        public IntroTextAnimation(Actor actor, Vector2 screenSize) : base(actor)
         {
+            this.screenSize = screenSize;
             var and = new List<TweenableLetter>();
             var notexplosive = new List<TweenableLetter>();
             var quarkimo = new List<TweenableLetter>();
-            this.random = new NoiseBasedRNG((uint) new Random().Next());
+            var gmtk = new List<TweenableLetter>();
+            this.random = new NoiseBasedRNG((uint) MachinaClient.RandomDirty.Next());
 
             foreach (var letter in "NotExplosive")
             {
@@ -32,19 +39,24 @@ namespace Machina.Components
                 and.Add(new TweenableLetter(letter.ToString()));
             }
 
-            foreach (var letter in "quarkimo")
+            foreach (var letter in "Ryan Yoshikami")
             {
                 quarkimo.Add(new TweenableLetter(letter.ToString()));
+            }
+
+            foreach (var letter in "GMTK2022")
+            {
+                gmtk.Add(new TweenableLetter(letter.ToString()));
             }
 
             this.allLetters.AddRange(notexplosive);
             this.allLetters.AddRange(and);
             this.allLetters.AddRange(quarkimo);
+            this.allLetters.AddRange(gmtk);
 
-            var center = size / 2;
+            var center = screenSize / 2;
 
             // GetArrangedLetterData(and, center);
-            // GetArrangedLetterData(quarkimo, center + new Vector2(0, 200));
 
             var notexplosiveArranged = GetArrangedLetterData(notexplosive, center + new Vector2(0, -200));
             var notexplosiveScattered = new List<LetterData>();
@@ -65,6 +77,16 @@ namespace Machina.Components
                     this.random.NextFloat() * center.Y) * 2;
                 scattered.Angle = this.random.NextFloat() * MathF.PI * 2;
                 scattered.Opacity = 0.5f;
+
+                if (this.random.NextBool())
+                {
+                    scattered.ScaleX = this.random.NextFloat();
+                }
+                else
+                {
+                    scattered.ScaleY = this.random.NextFloat();
+                }
+
                 var scaleFactor = 5;
                 scattered.Scale = this.random.NextBool()
                     ? this.random.NextFloat() * scaleFactor
@@ -75,22 +97,42 @@ namespace Machina.Components
                 letter.Angle.ForceSetValue(this.random.NextFloat() * MathF.PI * 2);
                 letter.Opacity.ForceSetValue(0f);
                 letter.Scale.ForceSetValue(scattered.Scale);
+                letter.ScaleX.ForceSetValue(scattered.ScaleX);
+                letter.ScaleY.ForceSetValue(scattered.ScaleY);
             }
-            
+
+            foreach (var letter in gmtk)
+            {
+                letter.ForceSetPosition(center);
+                letter.Opacity.ForceSetValue(0);
+            }
+
             var andKeyframe = LetterData.Default();
             andKeyframe.Position = center;
 
             foreach (var letter in and)
             {
-                letter.ForceSetPosition(andKeyframe.Position + new Vector2(-100,0));
+                letter.ForceSetPosition(andKeyframe.Position + new Vector2(-100, 0));
                 letter.Angle.ForceSetValue(-MathF.PI * 2);
                 letter.Opacity.ForceSetValue(0);
             }
+
+            foreach (var letter in quarkimo)
+            {
+                letter.ScaleY.ForceSetValue(0);
+                letter.Opacity.ForceSetValue(0);
+            }
+
+            var screenLength = Math.Max(screenSize.X, screenSize.Y);
 
             var lateLetterIndex = Math.Abs(this.random.Next()) % (notexplosive.Count - 1);
 
             this.tween = new SequenceTween()
                     .Add(new WaitSecondsTween(0.25f))
+                    .Add(new Tween<float>(this.circleRadius, screenLength * 0.60f, 0.4f,
+                        Ease.SineFastSlow))
+                    .Add(new Tween<float>(this.circleRadius, screenLength * 0.55f, 0.1f,
+                        Ease.SineFastSlow))
                     .Add(new DynamicTween(() =>
                     {
                         var result = new MultiplexTween();
@@ -103,7 +145,7 @@ namespace Machina.Components
                             {
                                 result.AddChannel(
                                     new SequenceTween()
-                                        .Add(new WaitSecondsTween(i * 0.01f))
+                                        .Add(new WaitSecondsTween(i * 0.02f))
                                         .Add(letter.TweenAllValues(notexplosiveScattered[i],
                                             0.25f + this.random.NextFloat() * 0.75f,
                                             Ease.QuadFastSlow))
@@ -121,6 +163,7 @@ namespace Machina.Components
                                                     0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast);
                                             })
                                         )
+                                        .Add(new CallbackTween(() => MachinaClient.SoundEffectPlayer.PlaySound("jar2", baseVolume: 0.75f, this.random.NextFloat() / 2f)))
                                         .Add(
                                             letter.TweenAllValues(arranged, 0.05f + this.random.NextFloat() / 8,
                                                 Ease.QuadSlowFast)
@@ -149,6 +192,10 @@ namespace Machina.Components
                                         return lateLetter.TweenAllValues(target, 0.05f, Ease.QuadSlowFast);
                                     })
                                 )
+                                .Add(new CallbackTween(() =>
+                                {
+                                    MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.5f);
+                                }))
                                 .Add(
                                     new MultiplexTween()
                                         .AddChannel(
@@ -195,9 +242,114 @@ namespace Machina.Components
                     .Add(
                         new DynamicTween(() =>
                         {
-                            // todo: quarkimo
-                            return new CallbackTween(() => { }); // placeholder
+                            var result = new MultiplexTween();
+                            var arrangedWord = GetArrangedLetterData(quarkimo, center + new Vector2(0, 200));
+                            var deployedWord = GetArrangedLetterData(quarkimo, center + new Vector2(0, 200));
+
+                            for (var i = 0; i < quarkimo.Count; i++)
+                            {
+                                deployedWord[i] = arrangedWord[i];
+                                deployedWord[i].PositionY += 50;
+
+                                quarkimo[i].ForceSetPosition(arrangedWord[i].Position);
+                            }
+
+                            for (var i = 0; i < quarkimo.Count; i++)
+                            {
+                                var letter = quarkimo[i];
+                                result.AddChannel(
+                                    new SequenceTween()
+                                        .Add(new WaitSecondsTween(i / 10f))
+                                        .Add(letter.TweenAllValues(deployedWord[i], 0.1f, Ease.SineFastSlow))
+                                        .Add(letter.TweenAllValues(arrangedWord[i], 0.1f, Ease.SineSlowFast))
+                                );
+                            }
+
+                            return result;
                         }))
+                    .Add(new WaitSecondsTween(1))
+                    .Add(new MultiplexTween()
+                        .AddChannel(
+                            new SequenceTween()
+                                .Add(new Tween<float>(this.circleRadius, screenLength * 0.6f, 0.1f, Ease.SineSlowFast))
+                                .Add(new Tween<float>(this.circleRadius, screenLength * 0.3f, 0.3f, Ease.SineFastSlow))
+                        )
+                        .AddChannel(
+                            new DynamicTween(() =>
+                            {
+                                var result = new MultiplexTween();
+                                var allNames = new List<TweenableLetter>();
+                                allNames.AddRange(notexplosive);
+                                allNames.AddRange(quarkimo);
+                                allNames.AddRange(and);
+
+                                foreach (var letter in allNames)
+                                {
+                                    var data = letter.Data();
+                                    data.Position = center;
+                                    data.Opacity = 0f;
+                                    result.AddChannel(letter.TweenAllValues(data, 0.4f, Ease.SineFastSlow));
+                                }
+
+                                return result;
+                            })
+                        )
+                    )
+                    .Add(new DynamicTween(() =>
+                    {
+                        var result = new MultiplexTween();
+
+                        var arranged = GetArrangedLetterData(gmtk, center);
+
+                        for (var i = 0; i < gmtk.Count; i++)
+                        {
+                            var letter = gmtk[i];
+
+                            var target = letter.Data();
+                            target.Position = arranged[i].Position;
+                            target.Opacity = 1f;
+                            result.AddChannel(
+                                new SequenceTween()
+                                    .Add(new WaitSecondsTween((target.Position - arranged[i].Position).Length() / 25))
+                                    .Add(letter.TweenAllValues(target, 0.5f, Ease.SineFastSlow))
+                            );
+                        }
+
+                        return result;
+                    }))
+                    .Add(new WaitSecondsTween(1.5f))
+                    .Add(
+                        new MultiplexTween()
+                            .AddChannel(new SequenceTween()
+                                .Add(new Tween<float>(this.circleRadius, screenLength * 0.35f, 0.1f, Ease.SineSlowFast))
+                                .Add(new Tween<float>(this.circleRadius, 0, 0.3f, Ease.SineFastSlow))
+                            )
+                            .AddChannel(new DynamicTween(() =>
+                            {
+                                var result = new MultiplexTween();
+
+                                for (var i = 0; i < gmtk.Count; i++)
+                                {
+                                    var letter = gmtk[i];
+                                    var target = letter.Data();
+                                    target.ScaleX = 0f;
+                                    target.Opacity = 0f;
+                                    target.Position = center;
+                                    result.AddChannel(
+                                        new SequenceTween()
+                                            .Add(letter.TweenAllValues(target, 0.25f, Ease.SineFastSlow))
+                                    );
+                                }
+
+                                return result;
+                            }))
+                    )
+                    .Add(new WaitSecondsTween(0.25f))
+                    .Add(new CallbackTween(() =>
+                    {
+                        // this will trigger the load into the next scene
+                        this.actor.Destroy();
+                    }))
                 ;
         }
 
@@ -215,16 +367,26 @@ namespace Machina.Components
 
             for (var i = 0; i < letters.Count; i++)
             {
+                letterOffset.X += letters[i].Size.X / 2;
                 result[i] = LetterData.Default();
                 result[i].Position = startPosition + letterOffset;
-                letterOffset.X += letters[i].Size.X;
+                letterOffset.X += letters[i].Size.X / 2;
             }
 
             return result;
         }
 
+        public override void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
+        {
+            if (state == ButtonState.Pressed && modifiers.None)
+            {
+                this.actor.Destroy();
+            }
+        }
+
         public override void Update(float dt)
         {
+            this.totalTime += dt;
             this.tween.Update(dt);
 
             foreach (var letter in this.allLetters)
@@ -234,9 +396,25 @@ namespace Machina.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (this.circleRadius > 0f)
+            {
+                var richBlack = new Color(0x07, 0x39, 0x3C);
+                var ming = new Color(0x2C, 0x66, 0x6E);
+                var spaceCadet = new Color(0x11, 0x1D, 0x4A);
+
+                var radius = this.circleRadius + MathF.Sin(this.totalTime / 10f) * this.circleRadius * 0.1f;
+
+                spriteBatch.DrawCircle(new CircleF(this.screenSize / 2, radius * 0.9f), 50, richBlack, 5,
+                    Depth.Max - 2);
+                spriteBatch.DrawCircle(new CircleF(this.screenSize / 2, radius * 0.8f), 50, ming,
+                    radius * 0.8f, Depth.Max - 1);
+                spriteBatch.DrawCircle(new CircleF(this.screenSize / 2, radius), 50, spaceCadet,
+                    radius, Depth.Max);
+            }
+
             foreach (var letter in this.allLetters)
             {
-                letter.Draw(spriteBatch);
+                letter.Draw(spriteBatch, Runtime.DebugLevel == DebugLevel.Active);
             }
         }
 
@@ -294,12 +472,19 @@ namespace Machina.Components
             public TweenableFloat PositionY { get; } = new TweenableFloat();
             public Vector2 Size { get; }
 
-            public void Draw(SpriteBatch spriteBatch)
+            public void Draw(SpriteBatch spriteBatch, bool isDebug)
             {
+                if (isDebug)
+                {
+                    spriteBatch.DrawCircle(new CircleF(new Vector2(PositionX, PositionY), 15), 10, Color.Red, 3f);
+                }
+
+                var textColor = new Color(0x90, 0xDD, 0xF0);
+
                 var offset = new Vector2(Size.X, Size.Y) / 2;
                 spriteBatch.DrawString(this.font, this.content,
-                    new Vector2(PositionX, PositionY) + offset - new Vector2(0, offset.Y),
-                    Color.White.WithMultipliedOpacity(Opacity),
+                    new Vector2(PositionX, PositionY),
+                    textColor.WithMultipliedOpacity(Opacity),
                     Angle, offset, new Vector2(ScaleX, ScaleY) * Scale, SpriteEffects.None, 0f);
             }
 

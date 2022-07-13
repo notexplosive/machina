@@ -25,7 +25,7 @@ namespace Machina.Engine.Cartridges
         {
             var introScene = SceneLayers.AddNewScene();
 
-            SceneLayers.BackgroundColor = new Color(0.1f, 0.1f, 0.1f);
+            SceneLayers.BackgroundColor = Color.Black;
             
             var textActor = introScene.AddActor("text");
             new IntroTextAnimation(textActor, new Vector2(MachinaClient.Graphics.GraphicsDevice.Viewport.Width, MachinaClient.Graphics.GraphicsDevice.Viewport.Height));

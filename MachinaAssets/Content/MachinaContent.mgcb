@@ -23,6 +23,9 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/DefaultFont.spritefont
 
+#begin fonts/FredokaOne.ttf
+/copy:fonts/FredokaOne.ttf
+
 #begin fonts/LogoFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -79,6 +82,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sounds/blblblbl.ogg
+
+#begin sounds/jar2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/jar2.ogg
 
 #begin sounds/ouch.ogg
 /importer:OggImporter
