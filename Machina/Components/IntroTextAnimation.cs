@@ -257,7 +257,7 @@ namespace Machina.Components
 
                             for (var i = 0; i < quarkimo.Count; i++)
                             {
-                                var waitTime = (float) i / (quarkimo.Count - 1) * 1.5f;
+                                var waitTime = (float) i / (quarkimo.Count - 1) * 1.3f;
                                 var letter = quarkimo[i];
                                 result.AddChannel(
                                     new SequenceTween()
