@@ -169,8 +169,8 @@ namespace Machina.Engine
                 () => { DebugLevel = DebugLevel.Active; });
 
 #if DEBUG
-            PlayIntroAndLoadGame(gameCartridge);
-            // InsertGameCartridgeAndRun(gameCartridge);
+            // PlayIntroAndLoadGame(gameCartridge);
+            InsertGameCartridgeAndRun(gameCartridge);
 #else
             if (SkipIntro)
             {
