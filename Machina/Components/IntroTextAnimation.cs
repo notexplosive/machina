@@ -39,12 +39,12 @@ namespace Machina.Components
                 and.Add(new TweenableLetter(letter.ToString()));
             }
 
-            foreach (var letter in "Ryan Yoshikami")
+            foreach (var letter in "quarkimo")
             {
                 quarkimo.Add(new TweenableLetter(letter.ToString()));
             }
 
-            foreach (var letter in "GMTK2022")
+            foreach (var letter in "For GMTK2022")
             {
                 gmtk.Add(new TweenableLetter(letter.ToString()));
             }
@@ -55,8 +55,6 @@ namespace Machina.Components
             this.allLetters.AddRange(gmtk);
 
             var center = screenSize / 2;
-
-            // GetArrangedLetterData(and, center);
 
             var notexplosiveArranged = GetArrangedLetterData(notexplosive, center + new Vector2(0, -200));
             var notexplosiveScattered = new List<LetterData>();
@@ -128,7 +126,7 @@ namespace Machina.Components
             var lateLetterIndex = Math.Abs(this.random.Next()) % (notexplosive.Count - 1);
 
             this.tween = new SequenceTween()
-                    .Add(new WaitSecondsTween(0.25f))
+                    .Add(new WaitSecondsTween(0.1f))
                     .Add(new Tween<float>(this.circleRadius, screenLength * 0.60f, 0.4f,
                         Ease.SineFastSlow))
                     .Add(new Tween<float>(this.circleRadius, screenLength * 0.55f, 0.1f,
@@ -163,7 +161,7 @@ namespace Machina.Components
                                                     0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast);
                                             })
                                         )
-                                        .Add(new CallbackTween(() => MachinaClient.SoundEffectPlayer.PlaySound("jar2", baseVolume: 0.75f, this.random.NextFloat() / 2f)))
+                                        .Add(new CallbackTween(() => MachinaClient.SoundEffectPlayer.PlaySound("jar2", baseVolume: 1.5f, this.random.NextFloat() / 2f)))
                                         .Add(
                                             letter.TweenAllValues(arranged, 0.05f + this.random.NextFloat() / 8,
                                                 Ease.QuadSlowFast)
@@ -194,7 +192,7 @@ namespace Machina.Components
                                 )
                                 .Add(new CallbackTween(() =>
                                 {
-                                    MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.5f);
+                                    MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.65f);
                                 }))
                                 .Add(
                                     new MultiplexTween()
@@ -239,6 +237,7 @@ namespace Machina.Components
                         return result;
                     }))
                     .Add(and[0].TweenAllValues(andKeyframe, 0.25f, Ease.QuadFastSlow))
+                    // TODO: play Ryan jingle here as callback
                     .Add(
                         new DynamicTween(() =>
                         {
@@ -259,15 +258,15 @@ namespace Machina.Components
                                 var letter = quarkimo[i];
                                 result.AddChannel(
                                     new SequenceTween()
-                                        .Add(new WaitSecondsTween(i / 10f))
-                                        .Add(letter.TweenAllValues(deployedWord[i], 0.1f, Ease.SineFastSlow))
+                                        .Add(new WaitSecondsTween(i / 4.666f))
+                                        .Add(letter.TweenAllValues(deployedWord[i], 0.05f, Ease.SineFastSlow))
                                         .Add(letter.TweenAllValues(arrangedWord[i], 0.1f, Ease.SineSlowFast))
                                 );
                             }
 
                             return result;
                         }))
-                    .Add(new WaitSecondsTween(1))
+                    .Add(new WaitSecondsTween(1.5f))
                     .Add(new MultiplexTween()
                         .AddChannel(
                             new SequenceTween()
@@ -308,6 +307,7 @@ namespace Machina.Components
                             var target = letter.Data();
                             target.Position = arranged[i].Position;
                             target.Opacity = 1f;
+                            target.Angle = MathF.PI * 2;
                             result.AddChannel(
                                 new SequenceTween()
                                     .Add(new WaitSecondsTween((target.Position - arranged[i].Position).Length() / 25))
