@@ -28,6 +28,7 @@ namespace Machina.Components
             var quarkimo = new List<TweenableLetter>();
             var gmtk = new List<TweenableLetter>();
             this.random = new NoiseBasedRNG((uint) MachinaClient.RandomDirty.Next());
+            DateTime time = DateTime.Now;
 
             foreach (var letter in "NotExplosive")
             {
@@ -238,6 +239,7 @@ namespace Machina.Components
                     }))
                     .Add(and[0].TweenAllValues(andKeyframe, 0.25f, Ease.QuadFastSlow))
                     // TODO: play Ryan jingle here as callback
+                    .Add(new CallbackTween(() => { time = DateTime.Now; }))
                     .Add(
                         new DynamicTween(() =>
                         {
@@ -255,11 +257,12 @@ namespace Machina.Components
 
                             for (var i = 0; i < quarkimo.Count; i++)
                             {
+                                var waitTime = (float) i / (quarkimo.Count - 1) * 1.5f;
                                 var letter = quarkimo[i];
                                 result.AddChannel(
                                     new SequenceTween()
-                                        .Add(new WaitSecondsTween(i / 4.666f))
-                                        .Add(letter.TweenAllValues(deployedWord[i], 0.05f, Ease.SineFastSlow))
+                                        .Add(new WaitSecondsTween(waitTime))
+                                        .Add(letter.TweenAllValues(deployedWord[i], 0.1f, Ease.SineFastSlow))
                                         .Add(letter.TweenAllValues(arrangedWord[i], 0.1f, Ease.SineSlowFast))
                                 );
                             }
