@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Machina.Data;
 using Machina.Engine.Input;
-using Machina.Internals;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -113,77 +112,120 @@ namespace Machina.Engine
 
         public virtual void Update(float dt)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.Update(dt); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.Update(dt);
+            }
+
+            ;
             OnPostUpdate();
         }
 
         public void FlushBuffers()
         {
             FlushCreatedIterables();
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.FlushBuffers(); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.FlushBuffers();
+            }
+
             FlushRemovedAndDeletedIterables();
         }
 
         public virtual void OnPostUpdate()
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnPostUpdate(); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnPostUpdate();
+            }
         }
 
         public virtual void Start()
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.Start(); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.Start();
+            }
         }
 
         public virtual void PreDraw(SpriteBatch spriteBatch)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.PreDraw(spriteBatch); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.PreDraw(spriteBatch);
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.Draw(spriteBatch); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.Draw(spriteBatch);
+            }
         }
 
         public virtual void DebugDraw(SpriteBatch spriteBatch)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.DebugDraw(spriteBatch); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.DebugDraw(spriteBatch);
+            }
         }
 
         public virtual void OnScroll(int scrollDelta)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnScroll(scrollDelta); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnScroll(scrollDelta);
+            }
         }
 
         public virtual void OnDeleteFinished()
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnDeleteFinished(); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnDeleteFinished();
+            }
         }
 
         public virtual void OnKey(Keys key, ButtonState state, ModifierKeys modifiers)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnKey(key, state, modifiers); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnKey(key, state, modifiers);
+            }
         }
 
         public virtual void OnTextInput(TextInputEventArgs textInputEventArgs)
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnTextInput(textInputEventArgs); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnTextInput(textInputEventArgs);
+            }
         }
 
         public virtual void OnMouseUpdate(Vector2 currentPosition, Vector2 positionDelta, Vector2 rawDelta)
         {
-            Functions.ResilientForEach(this.iterables,
-                iterable => { iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnMouseUpdate(currentPosition, positionDelta, rawDelta);
+            }
         }
 
         public virtual void OnMouseButton(MouseButton button, Vector2 currentPosition, ButtonState state)
         {
-            Functions.ResilientForEach(this.iterables,
-                iterable => { iterable.OnMouseButton(button, currentPosition, state); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnMouseButton(button, currentPosition, state);
+            }
         }
 
         public void OnDeleteImmediate()
         {
-            Functions.ResilientForEach(this.iterables, iterable => { iterable.OnDeleteImmediate(); });
+            foreach (var iterable in this.iterables)
+            {
+                iterable.OnDeleteImmediate();
+            }
         }
 
         protected void AddIterable(T newIterable)

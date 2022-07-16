@@ -16,39 +16,9 @@ namespace Machina.Internals
         /// <param name="forEachAction"></param>
         public static void ResilientForEach<T>(IList<T> items, Action<T> forEachAction)
         {
-            var whileLoopIterationCount = 0;
-            var visited = new HashSet<T>();
-            while (true)
+            foreach (var item in items)
             {
-                whileLoopIterationCount++;
-                if (whileLoopIterationCount > 256)
-                {
-                    throw new TooManyIterationsException();
-                }
-
-                for (var i = 0; i < items.Count; i++)
-                {
-                    var item = items[i];
-                    if (!visited.Contains(item))
-                    {
-                        forEachAction(item);
-                        visited.Add(item);
-                    }
-                }
-
-                var visitedValidItemCount = 0;
-                foreach (var item in items)
-                {
-                    if (visited.Contains(item))
-                    {
-                        visitedValidItemCount++;
-                    }
-                }
-
-                if (visitedValidItemCount == items.Count)
-                {
-                    return;
-                }
+                forEachAction(item);
             }
         }
 
