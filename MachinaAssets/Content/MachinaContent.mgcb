@@ -95,3 +95,9 @@
 /processorParam:Quality=Best
 /build:sounds/ouch.ogg
 
+#begin sounds/quarkimo_logo.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/quarkimo_logo.ogg
+

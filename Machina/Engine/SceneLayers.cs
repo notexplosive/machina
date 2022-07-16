@@ -241,7 +241,7 @@ namespace Machina.Engine
             }
             catch (System.Exception exception)
             {
-                MachinaClient.Print("caught exception");
+                MachinaClient.Print($"{exception.Message}");
                 OnError?.Invoke(exception);
             }
 #endif

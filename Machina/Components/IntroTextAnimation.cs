@@ -162,7 +162,11 @@ namespace Machina.Components
                                                     0.15f + this.random.NextFloat() / 8, Ease.QuadSlowFast);
                                             })
                                         )
-                                        .Add(new CallbackTween(() => MachinaClient.SoundEffectPlayer.PlaySound("jar2", baseVolume: 1.5f, this.random.NextFloat() / 2f)))
+                                        .Add(new CallbackTween(() =>
+                                        {
+                                            MachinaClient.SoundEffectPlayer.PlaySound("jar2", baseVolume: 1.5f,
+                                                    this.random.NextFloat() / 2f);
+                                        }))
                                         .Add(
                                             letter.TweenAllValues(arranged, 0.05f + this.random.NextFloat() / 8,
                                                 Ease.QuadSlowFast)
@@ -193,7 +197,7 @@ namespace Machina.Components
                                 )
                                 .Add(new CallbackTween(() =>
                                 {
-                                    MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.65f);
+                                    MachinaClient.SoundEffectPlayer.PlaySound("ouch", 0.8f);
                                 }))
                                 .Add(
                                     new MultiplexTween()
@@ -238,8 +242,6 @@ namespace Machina.Components
                         return result;
                     }))
                     .Add(and[0].TweenAllValues(andKeyframe, 0.25f, Ease.QuadFastSlow))
-                    // TODO: play Ryan jingle here as callback
-                    .Add(new CallbackTween(() => { time = DateTime.Now; }))
                     .Add(
                         new DynamicTween(() =>
                         {
@@ -259,10 +261,18 @@ namespace Machina.Components
                             {
                                 var waitTime = (float) i / (quarkimo.Count - 1) * 1.3f;
                                 var letter = quarkimo[i];
+                                var capturedIndex = i;
                                 result.AddChannel(
                                     new SequenceTween()
                                         .Add(new WaitSecondsTween(waitTime))
                                         .Add(letter.TweenAllValues(deployedWord[i], 0.1f, Ease.SineFastSlow))
+                                        .Add(new CallbackTween(() =>
+                                        {
+                                            if (capturedIndex == 0)
+                                            {
+                                                MachinaClient.SoundEffectPlayer.PlaySound("quarkimo_logo", 1f);
+                                            }
+                                        }))
                                         .Add(letter.TweenAllValues(arrangedWord[i], 0.1f, Ease.SineSlowFast))
                                 );
                             }
