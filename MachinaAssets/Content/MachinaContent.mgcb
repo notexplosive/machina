@@ -23,8 +23,8 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/DefaultFont.spritefont
 
-#begin fonts/FredokaOne.ttf
-/copy:fonts/FredokaOne.ttf
+#begin fonts/FredokaOne-Regular.ttf
+/copy:fonts/FredokaOne-Regular.ttf
 
 #begin fonts/LogoFont.spritefont
 /importer:FontDescriptionImporter
