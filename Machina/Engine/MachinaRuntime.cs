@@ -15,7 +15,7 @@ namespace Machina.Engine
     public class MachinaRuntime : IMachinaRuntime
     {
         public static bool SkipIntro = false;
-        private readonly GameSpecification specification;
+        public GameSpecification Specification { get; }
         private readonly MachinaGame game;
         public readonly IPlatformContext platformContext;
         public readonly MachinaInput input = new MachinaInput();
@@ -24,7 +24,7 @@ namespace Machina.Engine
 
         public MachinaRuntime(MachinaGame game, GameSpecification specification, IPlatformContext platformContext, Painter painter)
         {
-            this.specification = specification;
+            this.Specification = specification;
             this.game = game;
             this.platformContext = platformContext;
             this.Painter = painter;
@@ -36,7 +36,7 @@ namespace Machina.Engine
         public void InsertCartridge(Cartridge cartridge)
         {
             CurrentCartridge = cartridge;
-            CurrentCartridge.Setup(this, this.specification);
+            CurrentCartridge.Setup(this, this.Specification);
             CurrentCartridge.CurrentGameCanvas.SetWindowSize(WindowInterface.CurrentWindowSize);
             MachinaClient.Graphics.ApplyChanges();
         }
@@ -69,11 +69,11 @@ namespace Machina.Engine
             this.WindowInterface = windowInterface;
 
             Console.Out.WriteLine("Applying settings");
-            this.specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, windowInterface);
+            this.Specification.settings.LoadSavedSettingsIfExist(MachinaClient.FileSystem, windowInterface);
             Console.Out.WriteLine("Settings Window Size");
-            this.WindowInterface.SetWindowSize(this.specification.settings.startingWindowSize);
+            this.WindowInterface.SetWindowSize(this.Specification.settings.startingWindowSize);
 
-            var loadingCartridge = new LoadingScreenCartridge(this.specification.settings);
+            var loadingCartridge = new LoadingScreenCartridge(this.Specification.settings);
             InsertCartridge(loadingCartridge);
             loadingCartridge.PrepareLoadingScreen(gameCartridge, this, MachinaClient.Assets as AssetLibrary, this.WindowInterface, FinishLoadingContent);
         }
@@ -127,7 +127,7 @@ namespace Machina.Engine
 #endif
 
             // Most cartridges get setup automatically but since the gamecartridge hasn't been inserted yet we have to do it early here
-            gameCartridge.SetupSceneLayers(this, specification, WindowInterface);
+            gameCartridge.SetupSceneLayers(this, Specification, WindowInterface);
 
             var debugActor = gameCartridge.SceneLayers.DebugScene.AddActor("DebugActor");
             var demoPlaybackComponent = new DemoPlaybackComponent(debugActor);
@@ -141,11 +141,11 @@ namespace Machina.Engine
                 gameCartridge.Random.Seed = (int)NoiseBasedRNG.SeedFromString(seed);
             }
 
-            this.specification.commandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
-            this.specification.commandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
-            this.specification.commandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
-            this.specification.commandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
-            this.specification.commandLineArgs.RegisterEarlyValueArg("demo", arg =>
+            this.Specification.commandLineArgs.RegisterEarlyFlagArg("skipsnapshot", () => { shouldSkipSnapshot = true; });
+            this.Specification.commandLineArgs.RegisterEarlyValueArg("randomseed", SetRandomSeedFromString);
+            this.Specification.commandLineArgs.RegisterEarlyValueArg("demopath", arg => { demoName = arg; });
+            this.Specification.commandLineArgs.RegisterEarlyValueArg("demospeed", arg => { demoSpeed = int.Parse(arg); });
+            this.Specification.commandLineArgs.RegisterEarlyValueArg("demo", arg =>
             {
                 switch (arg)
                 {
@@ -165,7 +165,7 @@ namespace Machina.Engine
                 }
             });
 
-            this.specification.commandLineArgs.RegisterEarlyFlagArg("debug",
+            this.Specification.commandLineArgs.RegisterEarlyFlagArg("debug",
                 () => { DebugLevel = DebugLevel.Active; });
 
 #if DEBUG
@@ -191,9 +191,9 @@ namespace Machina.Engine
 
         private void InsertGameCartridgeAndRun(GameCartridge gameCartridge)
         {
-            this.specification.commandLineArgs.ExecuteEarlyArgs();
+            this.Specification.commandLineArgs.ExecuteEarlyArgs();
             InsertCartridge(gameCartridge);
-            this.specification.commandLineArgs.ExecuteArgs();
+            this.Specification.commandLineArgs.ExecuteArgs();
 
             if (DebugLevel >= DebugLevel.Passive)
             {
@@ -210,7 +210,7 @@ namespace Machina.Engine
                 // Start the actual game
                 InsertGameCartridgeAndRun(gameCartridge);
             }
-            InsertCartridge(new IntroCartridge(this.specification.settings, OnEnd));
+            InsertCartridge(new IntroCartridge(this.Specification.settings, OnEnd));
         }
     }
 }

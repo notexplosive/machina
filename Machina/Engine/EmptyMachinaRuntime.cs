@@ -3,6 +3,7 @@
     public class EmptyMachinaRuntime : IMachinaRuntime
     {
         public Painter Painter => null;
+        public GameSpecification Specification => null;
 
         public WindowInterface WindowInterface => null;
 

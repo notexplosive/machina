@@ -6,6 +6,7 @@
         WindowInterface WindowInterface { get; }
         DebugLevel DebugLevel { get; set; }
         Cartridge CurrentCartridge { get; }
+        public GameSpecification Specification { get; }
 
         void Quit();
         void RunDemo(string demoPath);
